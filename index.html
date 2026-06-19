@@ -5,634 +5,855 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>⚔️ جنگ قبایل | آنلاین</title>
     <style>
-        /* تمام استایل‌های قبلی را اینجا قرار دهید */
-        /* (برای کوتاهی، استایل کامل در فایل‌های قبلی موجود است) */
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Rubik',system-ui,'Segoe UI',Tahoma,sans-serif}
+        body{min-height:100vh;background:radial-gradient(ellipse at center,#1a0a0a 0%,#0d0505 50%,#000 100%);padding:10px;color:#e8d5b8;overflow-x:hidden;position:relative}
+        body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" opacity="0.06"><path d="M70 20 L80 40 L100 45 L85 60 L90 80 L70 70 L50 80 L55 60 L40 45 L60 40 Z" fill="%23ff6b35"/><path d="M130 120 L140 140 L160 145 L145 160 L150 180 L130 170 L110 180 L115 160 L100 145 L120 140 Z" fill="%23ff6b35"/><path d="M30 120 L40 130 L55 125 L50 140 L60 150 L45 155 L40 170 L30 160 L20 170 L25 155 L15 150 L25 140 L20 125 Z" fill="%23ff6b35"/></svg>');background-repeat:repeat;pointer-events:none;z-index:0}
+        .game-container{max-width:980px;margin:0 auto;background:linear-gradient(145deg,rgba(30,15,10,0.95),rgba(10,5,5,0.98));border-radius:2rem;overflow:hidden;border:2px solid #b8860b;box-shadow:0 0 80px rgba(184,134,11,0.2),inset 0 0 80px rgba(184,134,11,0.05);position:relative;z-index:1;backdrop-filter:blur(4px)}
+        .header{background:linear-gradient(135deg,#2d0a0a,#1a0505);padding:0.8rem 1.2rem;color:#ffd700;text-align:center;border-bottom:3px solid #b8860b;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;position:relative;box-shadow:0 4px 30px rgba(184,134,11,0.15)}
+        .header::after{content:'⚔️';position:absolute;left:20px;font-size:1.8rem;opacity:0.2;transform:rotate(-15deg)}
+        .header h2{font-size:1.3rem;letter-spacing:2px;text-shadow:0 0 20px rgba(255,215,0,0.3),0 2px 4px rgba(0,0,0,0.8);display:flex;align-items:center;gap:10px}
+        .header h2::before{content:'🗡️';font-size:1.6rem;filter:drop-shadow(0 0 8px #ff6b35)}
+        .sync-status{font-size:0.65rem;color:#b8a080;background:rgba(0,0,0,0.6);padding:4px 16px;border-radius:30px;border:1px solid #5a3a2a;backdrop-filter:blur(4px)}
+        .announcement-bar{background:linear-gradient(90deg,#2a0a0a,#1a0505,#2a0a0a);border-bottom:2px solid #b8860b;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-left:4px solid #ff6b35;border-right:4px solid #ff6b35}
+        .announcement-bar .msg{color:#ffd700;font-size:0.9rem;flex:1;text-shadow:0 0 10px rgba(255,215,0,0.2)}
+        .announcement-bar .time{color:#b8a080;font-size:0.65rem}
+        .announcement-bar .close-btn{background:rgba(60,20,20,0.8);border:1px solid #8b3a2a;border-radius:30px;padding:2px 16px;cursor:pointer;color:#ff6b6b;font-size:0.8rem;transition:0.3s}
+        .announcement-bar .close-btn:hover{background:#5a2a1a;border-color:#b8860b;color:#ffd700}
+        .login-box{padding:30px 20px;background:rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:14px;max-width:420px;margin:20px auto;border-radius:1.5rem;border:1px solid #5a3a2a;backdrop-filter:blur(8px);box-shadow:0 0 40px rgba(184,134,11,0.08)}
+        .login-box input{padding:14px;border-radius:30px;border:1px solid #6a4a3a;background:rgba(20,10,10,0.8);color:#e8d5b8;text-align:center;font-size:1rem;transition:0.3s}
+        .login-box input:focus{outline:none;border-color:#b8860b;box-shadow:0 0 20px rgba(184,134,11,0.15)}
+        .login-box input::placeholder{color:#8a7a6a}
+        .login-box button{background:linear-gradient(135deg,#8b3a1a,#5a1a0a);border:none;padding:14px;border-radius:30px;font-weight:700;cursor:pointer;color:#ffd700;font-size:1rem;transition:0.3s;text-shadow:0 1px 4px rgba(0,0,0,0.5);border:1px solid #b8860b;box-shadow:0 4px 20px rgba(184,134,11,0.2)}
+        .login-box button:hover{transform:scale(1.02);background:linear-gradient(135deg,#aa4a2a,#6a2a1a);box-shadow:0 4px 30px rgba(184,134,11,0.3)}
+        .login-box .hint{font-size:0.7rem;color:#8a7a6a;text-align:center}
+        .resources-bar{display:flex;justify-content:space-around;padding:8px 10px;background:rgba(0,0,0,0.7);flex-wrap:wrap;gap:6px;border-bottom:2px solid #3a2a1a;border-top:1px solid #3a2a1a}
+        .resource{background:rgba(20,10,10,0.7);padding:4px 16px;border-radius:40px;font-weight:700;font-size:0.75rem;border:1px solid #4a3a2a;backdrop-filter:blur(4px);display:flex;align-items:center;gap:6px}
+        .resource span{color:#ffd700}
+        .resource .gold{color:#ffd700;text-shadow:0 0 10px rgba(255,215,0,0.3)}
+        .resource .elixir{color:#ff6bff;text-shadow:0 0 10px rgba(255,107,255,0.3)}
+        .resource .gem{color:#00d4ff;text-shadow:0 0 10px rgba(0,212,255,0.3)}
+        .resource .daily{color:#8a7a6a;font-size:0.6rem}
+        .tabs{display:flex;background:rgba(0,0,0,0.8);border-bottom:2px solid #b8860b;flex-wrap:wrap;overflow-x:auto;gap:2px;padding:4px 4px 0 4px}
+        .tab{flex:1;min-width:60px;text-align:center;padding:10px 6px;cursor:pointer;font-weight:700;color:#b8a080;font-size:0.8rem;border-bottom:3px solid transparent;transition:0.3s;white-space:nowrap;border-radius:8px 8px 0 0;background:rgba(30,15,10,0.3)}
+        .tab.active{color:#ffd700;border-bottom-color:#b8860b;background:rgba(60,30,20,0.4);text-shadow:0 0 20px rgba(255,215,0,0.2)}
+        .tab:hover{color:#ffd700;background:rgba(60,30,20,0.2)}
+        .panel{display:none;padding:1rem;min-height:450px;background:radial-gradient(ellipse at 50% 0%,rgba(40,20,10,0.3),transparent 70%)}
+        .panel.active{display:block}
+        .village-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+        .building-card{background:linear-gradient(145deg,rgba(30,15,10,0.9),rgba(10,5,5,0.9));border-radius:1.2rem;padding:14px 8px;text-align:center;border:1px solid #4a3a2a;cursor:pointer;transition:0.3s;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+        .building-card:hover{transform:scale(1.04);border-color:#b8860b;box-shadow:0 4px 30px rgba(184,134,11,0.15)}
+        .building-card .icon{font-size:2.6rem;display:block;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.5))}
+        .building-card .bname{font-size:0.8rem;font-weight:700;color:#e8d5b8;margin:4px 0;text-shadow:0 1px 4px rgba(0,0,0,0.5)}
+        .building-card .blevel{font-size:0.65rem;color:#b8a080}
+        .building-card .bprod{font-size:0.6rem;color:#ffd700}
+        .building-card .bcost{font-size:0.6rem;color:#ff6b6b}
+        .action-btn{width:100%;padding:12px;margin-bottom:8px;border-radius:30px;border:none;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#6a3a1a,#3a1a0a);color:#ffd700;transition:0.3s;font-size:0.85rem;border:1px solid #b8860b;text-shadow:0 1px 4px rgba(0,0,0,0.5);box-shadow:0 4px 15px rgba(184,134,11,0.1)}
+        .action-btn:hover{transform:scale(1.02);background:linear-gradient(135deg,#8a4a2a,#4a2a1a);box-shadow:0 4px 25px rgba(184,134,11,0.2)}
+        .action-btn.secondary{background:linear-gradient(135deg,#2a3a2a,#1a2a1a);border-color:#4a5a4a;color:#b8d5b8}
+        .action-btn.secondary:hover{background:linear-gradient(135deg,#3a4a3a,#2a3a2a)}
+        .action-btn.danger{background:linear-gradient(135deg,#6a1a1a,#3a0a0a);border-color:#8b2a2a;color:#ff6b6b}
+        .action-btn.danger:hover{background:linear-gradient(135deg,#8a2a2a,#4a1a1a)}
+        .action-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none!important}
+        .clan-header{background:linear-gradient(145deg,rgba(30,15,10,0.9),rgba(10,5,5,0.9));border-radius:1.2rem;padding:1rem;border:1px solid #5a3a2a;margin-bottom:1rem;display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+        .clan-header .clan-name{font-size:1.3rem;color:#ffd700;text-shadow:0 0 20px rgba(255,215,0,0.2)}
+        .clan-header .clan-status{font-size:0.7rem;padding:4px 14px;border-radius:30px;background:rgba(0,0,0,0.6);border:1px solid #4a3a2a}
+        .clan-member-list{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+        .clan-member{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(0,0,0,0.5);border-radius:30px;border:1px solid #3a2a1a;font-size:0.85rem;flex-wrap:wrap;gap:6px;backdrop-filter:blur(4px)}
+        .clan-member .rank-badge{font-size:0.6rem;padding:2px 10px;border-radius:20px;background:#5a3a1a;color:#ffd700}
+        .clan-member .rank-badge.leader{background:#b8860b;color:#1a0a0a}
+        .clan-member .rank-badge.coleader{background:#8a5a2a;color:#1a0a0a}
+        .clan-member .rank-badge.elder{background:#4a6a3a;color:#e8d5b8}
+        .clan-chat{background:rgba(0,0,0,0.6);border-radius:1.2rem;padding:1rem;border:1px solid #3a2a1a;max-height:200px;overflow-y:auto;margin:10px 0;backdrop-filter:blur(4px)}
+        .clan-chat .msg{padding:4px 0;font-size:0.8rem;border-bottom:1px solid rgba(60,40,30,0.3)}
+        .clan-chat .msg .sender{font-weight:700}
+        .clan-chat .msg .time{color:#8a7a6a;font-size:0.6rem;margin-right:8px}
+        .clan-chat-input{display:flex;gap:8px;margin-top:8px}
+        .clan-chat-input input{flex:1;padding:10px;border-radius:30px;border:1px solid #3a2a1a;background:rgba(20,10,10,0.8);color:#e8d5b8}
+        .clan-chat-input button{padding:10px 20px;border-radius:30px;border:none;background:linear-gradient(135deg,#6a3a1a,#3a1a0a);font-weight:700;cursor:pointer;color:#ffd700;border:1px solid #b8860b}
+        .clan-settings{background:rgba(0,0,0,0.5);border-radius:1.2rem;padding:1rem;border:1px solid #3a2a1a;margin-top:10px;backdrop-filter:blur(4px)}
+        .clan-settings label{display:flex;align-items:center;gap:10px;font-size:0.85rem;margin:6px 0}
+        .clan-settings input,.clan-settings textarea{width:100%;padding:8px;border-radius:10px;border:1px solid #3a2a1a;background:rgba(20,10,10,0.8);color:#e8d5b8;margin:4px 0}
+        .clan-settings textarea{min-height:60px;resize:vertical}
+        .war-card{background:linear-gradient(145deg,rgba(30,15,10,0.9),rgba(10,5,5,0.9));border-radius:1.2rem;padding:1rem;border:1px solid #5a3a2a;margin-bottom:1rem;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+        .war-card .war-title{font-size:1.1rem;color:#ffd700;text-shadow:0 0 20px rgba(255,215,0,0.15)}
+        .war-card .war-stars{display:flex;justify-content:space-around;padding:10px 0;font-size:1.5rem}
+        .war-card .war-stars span{font-size:1rem;color:#b8a080}
+        .war-card .war-stars .stars{color:#ffd700}
+        .war-card .war-status{font-size:0.7rem;color:#b8a080;text-align:center}
+        .war-attack-btn{width:100%;padding:10px;border-radius:30px;border:none;background:linear-gradient(135deg,#6a1a1a,#3a0a0a);color:#ff6b6b;font-weight:700;cursor:pointer;margin-top:8px;border:1px solid #8b2a2a;transition:0.3s}
+        .war-attack-btn:hover{background:linear-gradient(135deg,#8a2a2a,#4a1a1a);transform:scale(1.02)}
+        .war-attack-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none!important}
+        .rank-item{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(0,0,0,0.5);border-radius:30px;border:1px solid #3a2a1a;margin-bottom:4px;font-size:0.85rem;backdrop-filter:blur(4px)}
+        .rank-item .pos{font-weight:700;color:#b8860b;width:30px}
+        .rank-item .rname{flex:1;padding:0 10px}
+        .rank-item .rscore{color:#ffd700}
+        .shop-item{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.5);padding:10px 14px;border-radius:30px;border:1px solid #3a2a1a;margin-bottom:6px;flex-wrap:wrap;gap:6px;backdrop-filter:blur(4px)}
+        .shop-item .sinfo{font-size:0.85rem}
+        .shop-item .sprice{color:#00d4ff;font-size:0.8rem}
+        .shop-item .sstock{color:#8a7a6a;font-size:0.7rem}
+        .shop-item button{padding:6px 16px;border-radius:30px;border:none;background:linear-gradient(135deg,#6a3a1a,#3a1a0a);font-weight:700;cursor:pointer;color:#ffd700;border:1px solid #b8860b}
+        .shop-item button:disabled{opacity:0.4;cursor:not-allowed}
+        .admin-panel{background:rgba(30,15,10,0.9);padding:1rem;border-radius:1.2rem;border:1px solid #6a2a2a;margin-top:1rem;box-shadow:0 4px 30px rgba(200,50,0,0.05)}
+        .admin-panel h3{color:#ff6b6b;text-shadow:0 0 20px rgba(255,100,0,0.15)}
+        .admin-panel input,.admin-panel select{padding:8px;border-radius:10px;border:1px solid #3a2a1a;background:rgba(20,10,10,0.8);color:#e8d5b8;margin:4px 0;width:100%}
+        .admin-panel button{padding:8px 16px;border-radius:30px;border:none;background:linear-gradient(135deg,#6a3a1a,#3a1a0a);font-weight:700;cursor:pointer;color:#ffd700;border:1px solid #b8860b;margin:4px 0}
+        .empty{text-align:center;padding:40px 10px;color:#8a7a6a}
+        .toast{position:fixed;bottom:25px;right:25px;background:linear-gradient(135deg,#1a0a0a,#2a1a0a);color:#ffd700;padding:16px 28px;border-radius:60px;border-right:6px solid #b8860b;z-index:1000;animation:toastIn 0.5s ease, fadeOut 4s forwards 0.5s;font-size:1rem;max-width:90vw;backdrop-filter:blur(12px);box-shadow:0 8px 40px rgba(0,0,0,0.6);display:flex;align-items:center;gap:14px;border:1px solid rgba(184,134,11,0.3)}
+        .toast .icon{font-size:1.8rem;filter:drop-shadow(0 0 6px rgba(255,215,0,0.3))}
+        .toast .text{flex:1;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,0.5)}
+        .toast .sub{font-weight:400;font-size:0.75rem;color:#b8a080;display:block;margin-top:2px}
+        .toast.error{border-right-color:#ff4444;background:linear-gradient(135deg,#1a0a0a,#2a0a0a)}
+        .toast.error .icon{color:#ff6b6b}
+        .toast.success{border-right-color:#4ade80;background:linear-gradient(135deg,#0a1a0a,#1a2a0a)}
+        .toast.success .icon{color:#4ade80}
+        .toast.warning{border-right-color:#ffa500;background:linear-gradient(135deg,#1a1a0a,#2a1a0a)}
+        .toast.warning .icon{color:#ffa500}
+        @keyframes toastIn{0%{opacity:0;transform:translateX(60px) scale(0.8)}100%{opacity:1;transform:translateX(0) scale(1)}}
+        @keyframes fadeOut{0%{opacity:1;transform:translateX(0) scale(1)}70%{opacity:1;transform:translateX(0) scale(1)}100%{opacity:0;transform:translateX(30px) scale(0.9);visibility:hidden}}
+        .toast .close-toast{background:rgba(255,255,255,0.1);border:1px solid rgba(184,134,11,0.3);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#b8a080;font-size:0.8rem;transition:0.3s}
+        .toast .close-toast:hover{background:rgba(255,215,0,0.15);color:#ffd700}
+        .shield-alert{background:rgba(0,0,0,0.5);border-radius:1rem;padding:10px 16px;border:1px solid #4ade80;color:#4ade80;display:flex;align-items:center;gap:12px;margin-bottom:12px}
+        .shield-alert .icon{font-size:1.4rem}
+        .loading{text-align:center;padding:30px;color:#8a7a6a}
+        .flex-between{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+        .badge{font-size:0.6rem;padding:2px 10px;border-radius:20px;background:#2a1a1a}
+        .mt-8{margin-top:8px}
+        .mb-8{margin-bottom:8px}
+        .text-gold{color:#ffd700}
+        .text-elixir{color:#ff6bff}
+        .text-gem{color:#00d4ff}
+        .text-sm{font-size:0.75rem}
+        .text-xs{font-size:0.65rem}
+        .debug-info{background:rgba(0,0,0,0.8);padding:8px;border-radius:10px;margin:8px;font-size:0.6rem;color:#4a4a4a;direction:ltr;text-align:left;max-height:100px;overflow-y:auto;display:none}
+        .pending-clan-item{background:rgba(0,0,0,0.5);border-radius:1.2rem;padding:0.8rem;border:1px solid #5a3a2a;margin-bottom:0.5rem;backdrop-filter:blur(4px)}
+        .pending-clan-item .info{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+        .pending-clan-item .actions{display:flex;gap:8px;margin-top:6px}
+        .cooldown-badge{background:#2a1a1a;color:#ff6b6b;border:1px solid #6a1a1a;border-radius:20px;padding:2px 10px;font-size:0.6rem}
+        .profile-box{background:rgba(0,0,0,0.5);padding:1rem;border-radius:1.2rem;border:1px solid #3a2a1a;margin:10px 0;backdrop-filter:blur(4px)}
+        .profile-box .emoji-select{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+        .profile-box .emoji-select label{padding:6px 12px;border-radius:20px;border:1px solid #3a2a1a;cursor:pointer;background:rgba(20,10,10,0.6)}
+        .profile-box .emoji-select label input{margin:0 4px}
+        .profile-box .color-select{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+        .profile-box .color-select label{padding:4px 10px;border-radius:20px;border:1px solid #3a2a1a;cursor:pointer;background:rgba(20,10,10,0.6);display:flex;align-items:center;gap:4px}
+        .profile-box .color-select label input{margin:0 4px}
+        .cooldown-timer{color:#ff6b6b;font-size:0.7rem;padding:4px 12px;background:#2a1a1a;border-radius:20px;border:1px solid #6a1a1a;display:inline-block}
+        .treasury-info{background:rgba(0,0,0,0.4);border-radius:1.2rem;padding:1rem;border:1px solid #3a2a1a;margin:10px 0}
+        .treasury-info .level{color:#ffd700}
+        .war-setup{background:rgba(0,0,0,0.5);padding:1rem;border-radius:1.2rem;border:1px solid #3a2a1a;margin-top:10px;backdrop-filter:blur(4px)}
+        .war-setup select,.war-setup input{padding:8px;border-radius:10px;border:1px solid #3a2a1a;background:rgba(20,10,10,0.8);color:#e8d5b8;margin:4px 0;width:100%}
+        .participant-select{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+        .participant-select label{display:flex;align-items:center;gap:4px;background:rgba(20,10,10,0.6);padding:4px 12px;border-radius:20px;border:1px solid #3a2a1a;cursor:pointer}
+        .participant-select label input{margin:0 4px}
+        @media(max-width:600px){.village-grid{grid-template-columns:repeat(2,1fr)}.header h2{font-size:1rem}.tab{font-size:0.7rem;min-width:50px;padding:8px 4px}.resource{font-size:0.65rem;padding:3px 10px}.building-card .icon{font-size:2rem}}
+        ::-webkit-scrollbar{width:6px;background:#1a0a0a}
+        ::-webkit-scrollbar-track{background:#1a0a0a}
+        ::-webkit-scrollbar-thumb{background:#5a3a2a;border-radius:10px}
+        ::-webkit-scrollbar-thumb:hover{background:#8a5a3a}
     </style>
 </head>
 <body>
-    <!-- تمام HTML بازی را اینجا قرار دهید -->
-    <!-- (مشابه فایل قبلی) -->
-    <script>
-        // ============================================================
-        //  CONFIG – آدرس هاست PHP خود را اینجا قرار دهید
-        // ============================================================
-        const API_URL = 'https://clashgamemini.fastino.site/data.php'; // ← این را به آدرس data.php روی هاست خود تغییر دهید
-        const TOKEN = 'clash2025secure';
-        const GEM_INTERVAL = 12 * 3600 * 1000;
-        const TRAIN_COOLDOWN = 5 * 60 * 1000;
-        const ATTACK_COOLDOWN = 15 * 60 * 1000;
-        const CLAN_CREATE_COST = 30;
-        const PVP_COOLDOWN = 24 * 3600 * 1000;
-        const PVP_LOSS_COOLDOWN = 5 * 60 * 1000;
-        const PVP_DEFENDER_SHIELD = 30 * 60 * 1000;
+<div class="game-container">
+    <div class="header">
+        <h2>⚔️ جنگ قبایل</h2>
+        <div class="sync-status" id="syncStatus">✅ متصل</div>
+    </div>
 
-        let currentPlayer = null;
-        let allPlayers = [];
-        let allClans = [];
-        let allShop = [];
-        let allWars = [];
-        let pendingClans = [];
-        let announcementData = null;
+    <div id="announcementBar" class="announcement-bar" style="display:none;">
+        <span class="msg" id="announcementMsg"></span>
+        <span class="time" id="announcementTime"></span>
+        <span class="close-btn" onclick="closeAnnouncement()">✕ بستن</span>
+    </div>
 
-        // ============================================================
-        //  TOAST
-        // ============================================================
-        function showToast(msg, type = 'info', icon = '📢', duration = 4000) {
-            const existing = document.querySelector('.toast');
-            if (existing) existing.remove();
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `
-                <span class="icon">${icon}</span>
-                <span class="text">${msg}</span>
-                <span class="close-toast" onclick="this.parentElement.remove()">✕</span>
-            `;
-            document.body.appendChild(toast);
-            setTimeout(() => { if (toast.parentElement) toast.remove(); }, duration);
-        }
+    <div id="loginBox" class="login-box">
+        <input type="text" id="playerName" placeholder="نام قبیله‌ای (حداقل ۳ حرف)" dir="rtl">
+        <input type="password" id="playerPassword" placeholder="رمز (حداقل ۴ حرف)" dir="rtl">
+        <button id="loginBtn">🎮 ورود / ثبت نام</button>
+        <div class="hint">ادمین: نام <b>Admin</b> / رمز <b>admin123</b></div>
+    </div>
 
-        // ============================================================
-        //  HELPERS
-        // ============================================================
-        function log(msg) { console.log(msg); }
-        function toast(msg, err = false) {
-            if (err) showToast(msg, 'error', '❌');
-            else showToast(msg, 'success', '✅');
-        }
-        function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-        function uid() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 6); }
+    <div id="gameContent" style="display:none;">
+        <div class="resources-bar">
+            <div class="resource">🥇 طلا: <span class="gold" id="goldAmount">0</span> <span class="daily" id="goldDaily">(امروز: 0)</span></div>
+            <div class="resource">🔮 اکسیر: <span class="elixir" id="elixirAmount">0</span> <span class="daily" id="elixirDaily">(امروز: 0)</span></div>
+            <div class="resource">💎 جواهر: <span class="gem" id="gemAmount">0</span> <span class="daily" id="gemTimer">(۱۲س)</span></div>
+            <div class="resource">🛡️ سپر: <span id="shieldStatus">ندارد</span></div>
+            <div class="resource">🏠 تالار: <span id="townHallLevel">1</span></div>
+            <div class="resource">⚔️ قدرت: <span id="totalPower">0</span> <span id="attackCooldownDisplay" class="cooldown-timer" style="display:none;"></span></div>
+        </div>
 
-        // ============================================================
-        //  API
-        // ============================================================
-        async function apiGet() {
-            try {
-                const r = await fetch(API_URL + '?token=' + TOKEN);
-                const text = await r.text();
-                try {
-                    const d = JSON.parse(text);
-                    if (d.ok) {
-                        allPlayers = d.players || [];
-                        allClans = d.clans || [];
-                        allShop = d.shop || [];
-                        allWars = d.wars || [];
-                        pendingClans = d.pendingClans || [];
-                        announcementData = d.announcement || null;
-                        return true;
-                    }
-                    return false;
-                } catch (e) { log('API GET parse error'); return false; }
-            } catch (e) { log('API GET fetch error'); return false; }
-        }
+        <div class="tabs">
+            <div class="tab active" data-tab="base">🏡 پایگاه</div>
+            <div class="tab" data-tab="profile">👤 پروفایل</div>
+            <div class="tab" data-tab="attack">⚔️ حمله</div>
+            <div class="tab" data-tab="clan">🏴 اتحاد</div>
+            <div class="tab" data-tab="war">🔥 نبرد</div>
+            <div class="tab" data-tab="army">🪖 ارتش</div>
+            <div class="tab" data-tab="rank">🏆 رنکینگ</div>
+            <div class="tab" data-tab="shop">🛒 بازار</div>
+            <div class="tab" id="adminTab" style="display:none;" data-tab="admin">🔧 مدیریت</div>
+        </div>
 
-        async function apiSave() {
-            try {
-                const payload = {
-                    token: TOKEN,
-                    players: allPlayers,
-                    clans: allClans,
-                    shop: allShop,
-                    wars: allWars,
-                    pendingClans: pendingClans,
-                    announcement: announcementData
-                };
-                const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                const text = await r.text();
-                try {
-                    const d = JSON.parse(text);
-                    if (d.ok) { document.getElementById('syncStatus').textContent = '✅ ذخیره شد | ' + allPlayers.length + ' بازیکن'; return true; }
-                    return false;
-                } catch (e) { return false; }
-            } catch (e) { return false; }
-        }
+        <!-- BASE -->
+        <div id="basePanel" class="panel active">
+            <div class="village-grid" id="villageGrid"></div>
+            <button class="action-btn" id="collectBtn">💰 جمع‌آوری منابع (روزانه)</button>
+            <button class="action-btn secondary" id="upgradeTownHallBtn">🏠 ارتقاء تالار (۵۰۰ طلا + ۲۰۰ اکسیر)</button>
+            <button class="action-btn secondary" id="buildDefenseBtn">🛡️ ساخت برج دفاعی (۳۰۰ طلا)</button>
+            <hr style="border-color:#3a2a1a;margin:12px 0;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;">
+                <button class="action-btn secondary" onclick="buyShield(1)">🛡️ سپر ۱س (۱💎)</button>
+                <button class="action-btn secondary" onclick="buyShield(2)">🛡️ سپر ۲س (۲💎)</button>
+                <button class="action-btn secondary" onclick="buyShield(3)">🛡️ سپر ۳س (۳💎)</button>
+                <button class="action-btn secondary" onclick="buyShield(4)">🛡️ سپر ۴س (۴💎)</button>
+                <button class="action-btn secondary" onclick="buyShield(6)">🛡️ سپر ۶س (۶💎)</button>
+                <button class="action-btn secondary" onclick="buyShield(12)">🛡️ سپر ۱۲س (۱۰💎)</button>
+                <button class="action-btn secondary" onclick="buyShield(168)">🛡️ سپر ۱هفته (۵۰💎)</button>
+            </div>
+        </div>
 
-        // ============================================================
-        //  CLASSES
-        // ============================================================
-        class Player {
-            constructor(name, pass) {
-                this.id = uid();
-                this.name = name;
-                this.password = pass;
-                this.gold = 300;
-                this.elixir = 100;
-                this.gems = 10;
-                this.townHall = 1;
-                this.defenseLevel = 0;
-                this.troops = { barbarian: 0, archer: 0, giant: 0, goblin: 0 };
-                this.clanId = null;
-                this.clanRank = null;
-                this.respect = 100;
-                this.wins = 0;
-                this.losses = 0;
-                this.lastActive = Date.now();
-                this.createdAt = Date.now();
-                this.history = [];
-                this.isAdmin = false;
-                this.goldCollectedToday = 0;
-                this.elixirCollectedToday = 0;
-                this.lastCollectionDate = new Date().toISOString().split('T')[0];
-                this.lastTroopRequest = 0;
-                this.chatColor = '#ffd700';
-                this.emoji = '';
-                this.lastGemTime = Date.now() - GEM_INTERVAL;
-                this.shieldExpiry = 0;
-                this.lastTrainTime = 0;
-                this.purchasedEmojis = [];
-                this.purchasedColors = [];
-                this.lastAttackTime = 0;
-                this.lastAttackTimes = {};
-                this.lastAttackReceived = {};
-                this.lastPvPAttempt = 0;
-            }
-        }
+        <!-- PROFILE -->
+        <div id="profilePanel" class="panel">
+            <div class="profile-box">
+                <h3 class="text-gold">👤 پروفایل بازیکن</h3>
+                <div><strong>نام:</strong> <span id="profileName"></span></div>
+                <div><strong>ایموجی فعلی:</strong> <span id="profileEmoji"></span></div>
+                <div><strong>رنگ فعلی:</strong> <span id="profileColor" style="padding:2px 10px;border-radius:10px;"></span></div>
+                <hr style="border-color:#3a2a1a;margin:12px 0;">
+                <div><label>ایموجی‌های خریداری‌شده:</label><div class="emoji-select" id="emojiSelectContainer"></div></div>
+                <div><label>رنگ‌های خریداری‌شده:</label><div class="color-select" id="colorSelectContainer"></div></div>
+                <button class="action-btn secondary" onclick="saveProfile()" style="width:auto;padding:6px 20px;">💾 ذخیره پروفایل</button>
+            </div>
+        </div>
 
-        class Clan {
-            constructor(name, leaderId, leaderName) {
-                this.id = uid();
-                this.name = name;
-                this.description = 'اتحاد جدید';
-                this.isOpen = true;
-                this.leaderId = leaderId;
-                this.coLeaders = [];
-                this.elders = [];
-                this.members = [];
-                this.chat = [];
-                this.createdAt = Date.now();
-                this.totalStars = 0;
-                this.warWins = 0;
-                this.warLosses = 0;
-                this.members.push(leaderId);
-                this.treasuryGold = 0;
-                this.treasuryElixir = 0;
-                this.treasuryLevel = 1;
-                this.lastWarParticipants = [];
-            }
-        }
+        <!-- ATTACK -->
+        <div id="attackPanel" class="panel">
+            <div class="clan-header">
+                <div>⚔️ حمله به بازیکنان</div>
+                <div style="display:flex;gap:10px;align-items:center;">
+                    <span id="shieldAlertContainer"></span>
+                    <button class="refresh-btn" onclick="renderAttackList()" style="background:#2a1a1a;border:1px solid #4a3a2a;border:none;padding:6px 16px;border-radius:30px;color:#b8a080;cursor:pointer;">🔄 بروزرسانی</button>
+                </div>
+            </div>
+            <div id="attackList" class="loading">در حال بارگذاری...</div>
+        </div>
 
-        class War {
-            constructor(clan1Id, clan2Id, type, attackers1, attackers2) {
-                this.id = uid();
-                this.clan1Id = clan1Id;
-                this.clan2Id = clan2Id;
-                this.type = type;
-                this.attackers1 = attackers1;
-                this.attackers2 = attackers2;
-                this.attacks1 = [];
-                this.attacks2 = [];
-                this.status = 'preparation';
-                this.startTime = Date.now();
-                const days = type === '5v5' ? 5 : 10;
-                this.endTime = Date.now() + days * 24 * 3600 * 1000;
-                this.winner = null;
-                this.stars1 = 0;
-                this.stars2 = 0;
-                this.participantsConfirmed1 = false;
-                this.participantsConfirmed2 = false;
-            }
-        }
+        <!-- CLAN -->
+        <div id="clanPanel" class="panel"><div id="clanContainer"><div class="loading">⏳ در حال بارگذاری...</div></div></div>
 
-        // ============================================================
-        //  HELPERS
-        // ============================================================
-        function getPlayerById(id) { return allPlayers.find(p => p.id === id); }
-        function getClanById(id) { return allClans.find(c => c.id === id); }
-        function getClanByPlayerId(pid) {
-            const p = getPlayerById(pid);
-            if (!p || !p.clanId) return null;
-            return getClanById(p.clanId);
-        }
-        function getClanMembers(clanId) {
-            const c = getClanById(clanId);
-            if (!c) return [];
-            const all = [c.leaderId, ...c.coLeaders, ...c.elders, ...c.members];
-            return all.filter((v, i, a) => a.indexOf(v) === i);
-        }
-        function getClanMemberCount(clanId) {
-            const c = getClanById(clanId);
-            if (!c) return 0;
-            return getClanMembers(clanId).length;
-        }
+        <!-- WAR -->
+        <div id="warPanel" class="panel"><div id="warContainer"><div class="loading">⏳ در حال بارگذاری...</div></div></div>
 
-        function getPlayerPower(p) {
-            if (!p) return 0;
-            let totalTroops = 0;
-            for (let t in p.troops) totalTroops += p.troops[t];
-            return (p.townHall * 5) + (p.defenseLevel * 3) + (totalTroops * 3);
-        }
+        <!-- ARMY -->
+        <div id="armyPanel" class="panel"><div id="armyContainer"><div class="loading">⏳ در حال بارگذاری...</div></div></div>
 
-        function getClanLevel(clan) {
-            if (!clan) return 1;
-            let stars = clan.totalStars || 0;
-            let level = Math.floor(stars / 50) + 1;
-            if (level > 10) level = 10;
-            return level;
-        }
+        <!-- RANK -->
+        <div id="rankPanel" class="panel">
+            <button class="action-btn secondary" id="refreshRankBtn">🔄 بروزرسانی رنکینگ</button>
+            <div id="rankContainer"><div class="loading">در حال بارگذاری...</div></div>
+        </div>
 
-        function getGoldCap(player) {
-            return 50 + player.townHall * player.townHall * 15;
-        }
-        function getElixirCap(player) {
-            return 30 + player.townHall * player.townHall * 8;
-        }
+        <!-- SHOP -->
+        <div id="shopPanel" class="panel"><div id="shopContainer"><div class="loading">در حال بارگذاری...</div></div></div>
 
-        function resetDailyIfNeeded(player) {
-            const today = new Date().toISOString().split('T')[0];
-            if (player.lastCollectionDate !== today) {
-                player.goldCollectedToday = 0;
-                player.elixirCollectedToday = 0;
-                player.lastCollectionDate = today;
-            }
-        }
-
-        function getShieldRemaining(player) {
-            if (!player || !player.shieldExpiry) return 0;
-            const remaining = player.shieldExpiry - Date.now();
-            return remaining > 0 ? remaining : 0;
-        }
-        function hasShield(player) { return getShieldRemaining(player) > 0; }
-        function formatShieldTime(ms) {
-            if (ms <= 0) return 'ندارد';
-            const hours = Math.floor(ms / 3600000);
-            const minutes = Math.floor((ms % 3600000) / 60000);
-            if (hours >= 24) return `${Math.floor(hours/24)} روز ${hours%24} ساعت`;
-            if (hours > 0) return `${hours} ساعت ${minutes} دقیقه`;
-            return `${minutes} دقیقه`;
-        }
-        function loseAllTroops(player) {
-            const types = ['barbarian', 'archer', 'giant', 'goblin'];
-            let totalLost = 0;
-            for (let t of types) {
-                if (player.troops[t] > 0) {
-                    totalLost += player.troops[t];
-                    player.troops[t] = 0;
-                }
-            }
-            return totalLost;
-        }
-
-        // ============================================================
-        //  ANNOUNCEMENT
-        // ============================================================
-        function showAnnouncement() {
-            const bar = document.getElementById('announcementBar');
-            const msgEl = document.getElementById('announcementMsg');
-            const timeEl = document.getElementById('announcementTime');
-            if (announcementData && announcementData.text) {
-                msgEl.textContent = announcementData.text;
-                if (announcementData.time) {
-                    const d = new Date(announcementData.time);
-                    timeEl.textContent = '📅 ' + d.toLocaleString('fa-IR');
-                } else { timeEl.textContent = ''; }
-                bar.style.display = 'flex';
-            } else { bar.style.display = 'none'; }
-        }
-        window.closeAnnouncement = function() { document.getElementById('announcementBar').style.display = 'none'; };
-        window.sendAnnouncement = async function() {
-            if (!currentPlayer || !currentPlayer.isAdmin) { showToast('فقط ادمین می‌تواند اطلاعیه ارسال کند!', 'error', '🚫'); return; }
-            const text = document.getElementById('announcementText').value.trim();
-            if (!text) { showToast('متن اطلاعیه را وارد کنید!', 'warning', '⚠️'); return; }
-            announcementData = { text: text, time: Date.now() };
-            await apiSave();
-            showToast('📢 اطلاعیه با موفقیت ارسال شد!', 'success', '📢');
-            document.getElementById('announcementText').value = '';
-            showAnnouncement();
-        };
-        window.clearAnnouncement = async function() {
-            if (!currentPlayer || !currentPlayer.isAdmin) { showToast('فقط ادمین می‌تواند اطلاعیه را حذف کند!', 'error', '🚫'); return; }
-            if (!confirm('آیا از حذف اطلاعیه اطمینان دارید؟')) return;
-            announcementData = null;
-            await apiSave();
-            showToast('🗑️ اطلاعیه حذف شد', 'warning', '🗑️');
-            showAnnouncement();
-        };
-
-        // ============================================================
-        //  PENDING CLANS
-        // ============================================================
-        async function renderPendingClans() {
-            const container = document.getElementById('pendingClansContainer');
-            if (!container) return;
-            if (!currentPlayer || !currentPlayer.isAdmin) {
-                container.innerHTML = '<div class="empty">فقط ادمین می‌تواند درخواست‌ها را مدیریت کند.</div>';
-                return;
-            }
-            await apiGet();
-            if (pendingClans.length === 0) {
-                container.innerHTML = '<div class="empty">هیچ درخواستی وجود ندارد.</div>';
-                return;
-            }
-            container.innerHTML = pendingClans.map(req => {
-                const p = getPlayerById(req.leaderId);
-                const name = p ? p.name : req.leaderName;
-                return `
-                    <div class="pending-clan-item">
-                        <div class="info">
-                            <span><strong>${req.name}</strong> توسط <span style="color:#ffd700;">${name}</span></span>
-                            <span>💎 ${req.gemsPaid} جواهر</span>
-                            <span class="text-xs">${new Date(req.time).toLocaleString('fa-IR')}</span>
-                        </div>
-                        <div class="actions">
-                            <button onclick="approveClan('${req.id}')" style="background:#2a5a2a;border:1px solid #4a8a4a;color:#8a8a8a;padding:4px 14px;border-radius:20px;cursor:pointer;">✅ تایید</button>
-                            <button onclick="rejectClan('${req.id}')" style="background:#5a2a2a;border:1px solid #8a4a4a;color:#8a8a8a;padding:4px 14px;border-radius:20px;cursor:pointer;">❌ رد</button>
-                        </div>
+        <!-- ADMIN -->
+        <div id="adminPanel" class="panel">
+            <div class="admin-panel">
+                <h3>🔧 مدیریت</h3>
+                <div class="mt-8"><label>بن کردن بازیکن:</label><select id="banSelect"></select><button onclick="banPlayer()">🚫 بن</button></div>
+                <div class="mt-8">
+                    <h4>🏴 درخواست‌های ساخت اتحاد</h4>
+                    <div id="pendingClansContainer"><div class="loading">بارگذاری...</div></div>
+                </div>
+                <div class="mt-8"><h4>مدیریت بازار (با موجودی محدود)</h4>
+                    <input type="text" id="shopItemName" placeholder="نام کالا">
+                    <input type="number" id="shopItemPrice" placeholder="قیمت (جواهر)" min="1">
+                    <input type="text" id="shopItemEffect" placeholder="اثر (gold,elixir,troop,chatColor,emoji)">
+                    <input type="text" id="shopItemValue" placeholder="مقدار یا رنگ یا ایموجی">
+                    <input type="number" id="shopItemStock" placeholder="تعداد موجودی" min="1">
+                    <button onclick="addShopItem()">➕ افزودن کالا</button>
+                    <div class="mt-8">
+                        <h4>حذف کالا</h4>
+                        <input type="text" id="removeShopName" placeholder="نام کالا (فارسی)">
+                        <button onclick="removeShopItemByName()">🗑️ حذف بر اساس نام</button>
+                        <div style="margin-top:4px;font-size:0.7rem;color:#8a7a6a;">(همچنین با ID: <input type="number" id="removeShopId" min="0" style="width:80px;"><button onclick="removeShopItem()">حذف با ID</button>)</div>
                     </div>
-                `;
-            }).join('');
-        }
+                </div>
+                <div class="mt-8">
+                    <h4>📢 ارسال اطلاعیه همگانی</h4>
+                    <textarea id="announcementText" placeholder="متن اطلاعیه..." style="width:100%;padding:8px;border-radius:10px;border:1px solid #3a2a1a;background:rgba(20,10,10,0.8);color:#e8d5b8;min-height:80px;resize:vertical;"></textarea>
+                    <button onclick="sendAnnouncement()" style="margin-top:4px;">📨 ارسال به همه کاربران</button>
+                    <button onclick="clearAnnouncement()" class="danger" style="background:#6a1a1a;color:#ff6b6b;border:1px solid #8b2a2a;margin-top:4px;">🗑️ حذف اطلاعیه</button>
+                </div>
+                <div class="mt-8"><button onclick="resetAllData()" class="danger" style="background:#6a1a1a;color:#ff6b6b;border:1px solid #8b2a2a;">⚠️ ریست کامل</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="debug-info" id="debugInfo"></div>
+</div>
 
-        window.approveClan = async function(reqId) {
-            if (!currentPlayer || !currentPlayer.isAdmin) return;
-            const reqIdx = pendingClans.findIndex(r => r.id === reqId);
-            if (reqIdx === -1) { showToast('درخواست یافت نشد!', 'error', '❌'); return; }
-            const req = pendingClans[reqIdx];
-            const leader = getPlayerById(req.leaderId);
-            if (!leader) { showToast('رهبر اتحاد یافت نشد!', 'error', '❌'); return; }
-            if (allClans.some(c => c.name === req.name)) {
-                showToast('اتحادی با این نام قبلاً وجود دارد!', 'error', '❌');
-                pendingClans.splice(reqIdx, 1);
-                await apiSave();
-                renderPendingClans();
-                return;
-            }
-            const clan = new Clan(req.name, req.leaderId, leader.name);
-            allClans.push(clan);
-            leader.clanId = clan.id;
-            leader.clanRank = 'leader';
-            pendingClans.splice(reqIdx, 1);
-            await savePlayer();
-            await apiSave();
-            showToast(`🏴 اتحاد ${req.name} با موفقیت ساخته شد!`, 'success', '🏴');
-            renderPendingClans();
-            renderClan();
-            updateUI();
-        };
+<script>
+    // ============================================================
+    //  CONFIG – آدرس دیتابیس شما
+    // ============================================================
+    const API_URL = 'https://clashgamemini.s12.viptelbot.top/data.php';
+    const TOKEN = 'clash2025secure';
+    const GEM_INTERVAL = 12 * 3600 * 1000;
+    const TRAIN_COOLDOWN = 5 * 60 * 1000;
+    const ATTACK_COOLDOWN = 15 * 60 * 1000;
+    const CLAN_CREATE_COST = 30;
+    const PVP_COOLDOWN = 24 * 3600 * 1000;
+    const PVP_LOSS_COOLDOWN = 5 * 60 * 1000;
+    const PVP_DEFENDER_SHIELD = 30 * 60 * 1000;
 
-        window.rejectClan = async function(reqId) {
-            if (!currentPlayer || !currentPlayer.isAdmin) return;
-            const reqIdx = pendingClans.findIndex(r => r.id === reqId);
-            if (reqIdx === -1) { showToast('درخواست یافت نشد!', 'error', '❌'); return; }
-            const req = pendingClans[reqIdx];
-            const leader = getPlayerById(req.leaderId);
-            if (leader) {
-                leader.gems = (leader.gems || 0) + req.gemsPaid;
-                leader.history.push({ time: Date.now(), text: `بازگشت ${req.gemsPaid} جواهر (رد درخواست اتحاد ${req.name})`, type: 'neutral' });
-            }
-            pendingClans.splice(reqIdx, 1);
-            await savePlayer();
-            await apiSave();
-            showToast(`❌ درخواست اتحاد ${req.name} رد شد و ${req.gemsPaid} جواهر برگشت داده شد.`, 'warning', '🔁');
-            renderPendingClans();
-            updateUI();
-        };
+    let currentPlayer = null;
+    let allPlayers = [];
+    let allClans = [];
+    let allShop = [];
+    let allWars = [];
+    let pendingClans = [];
+    let announcementData = null;
 
-        // ============================================================
-        //  GEM GENERATION
-        // ============================================================
-        function checkGemGeneration(player) {
-            if (!player) return;
-            const now = Date.now();
-            if (now - player.lastGemTime >= GEM_INTERVAL) {
-                const gemsToAdd = Math.floor((now - player.lastGemTime) / GEM_INTERVAL);
-                if (gemsToAdd > 0) {
-                    player.gems += gemsToAdd;
-                    player.lastGemTime += gemsToAdd * GEM_INTERVAL;
-                    if (gemsToAdd > 10) {
-                        player.gems -= (gemsToAdd - 10);
-                        player.lastGemTime = now - GEM_INTERVAL * 10;
-                    }
-                    showToast(`💎 +${Math.min(gemsToAdd, 10)} جواهر دریافت کردید!`, 'success', '💎');
+    // ============================================================
+    //  TOAST
+    // ============================================================
+    function showToast(msg, type = 'info', icon = '📢', duration = 4000) {
+        const existing = document.querySelector('.toast');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `
+            <span class="icon">${icon}</span>
+            <span class="text">${msg}</span>
+            <span class="close-toast" onclick="this.parentElement.remove()">✕</span>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => { if (toast.parentElement) toast.remove(); }, duration);
+    }
+
+    // ============================================================
+    //  HELPERS
+    // ============================================================
+    function log(msg) { console.log(msg); }
+    function toast(msg, err = false) {
+        if (err) showToast(msg, 'error', '❌');
+        else showToast(msg, 'success', '✅');
+    }
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function uid() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 6); }
+
+    // ============================================================
+    //  API
+    // ============================================================
+    async function apiGet() {
+        try {
+            const r = await fetch(API_URL + '?token=' + TOKEN);
+            const text = await r.text();
+            try {
+                const d = JSON.parse(text);
+                if (d.ok) {
+                    allPlayers = d.players || [];
+                    allClans = d.clans || [];
+                    allShop = d.shop || [];
+                    allWars = d.wars || [];
+                    pendingClans = d.pendingClans || [];
+                    announcementData = d.announcement || null;
+                    return true;
                 }
-            }
-        }
-
-        // ============================================================
-        //  SHIELD BUY
-        // ============================================================
-        window.buyShield = async function(hours) {
-            if (!currentPlayer) return;
-            const costs = {1:1,2:2,3:3,4:4,6:6,12:10,168:50};
-            const cost = costs[hours];
-            if (!cost) { showToast('مدت نامعتبر!', 'error', '❌'); return; }
-            if (currentPlayer.gems < cost) {
-                showToast(`جواهر کافی نیست! نیاز به ${cost} جواهر دارید.`, 'error', '💎');
-                return;
-            }
-            currentPlayer.gems -= cost;
-            const duration = hours * 3600 * 1000;
-            const newExpiry = Math.max(Date.now() + duration, (currentPlayer.shieldExpiry || 0) + duration);
-            currentPlayer.shieldExpiry = newExpiry;
-            currentPlayer.history.push({ time: Date.now(), text: `خرید سپر ${hours} ساعته با ${cost} جواهر`, type: 'neutral' });
-            showToast(`🛡️ سپر ${hours} ساعته فعال شد!`, 'success', '🛡️');
-            await savePlayer();
-            updateUI();
-        };
-
-        // ============================================================
-        //  SAVE CURRENT PLAYER
-        // ============================================================
-        async function savePlayer() {
-            if (!currentPlayer) return;
-            currentPlayer.lastActive = Date.now();
-            const idx = allPlayers.findIndex(p => p.id === currentPlayer.id);
-            if (idx !== -1) allPlayers[idx] = JSON.parse(JSON.stringify(currentPlayer));
-            else allPlayers.push(JSON.parse(JSON.stringify(currentPlayer)));
-            return await apiSave();
-        }
-
-        // ============================================================
-        //  AUTH
-        // ============================================================
-        async function registerPlayer(name, pass) {
-            const loaded = await apiGet();
-            if (!loaded) { showToast('❌ اتصال به سرور برقرار نیست!', 'error', '❌'); return false; }
-            if (allPlayers.some(p => p.name === name)) { showToast('❌ این نام قبلاً ثبت شده!', 'error', '❌'); return false; }
-            const newPlayer = new Player(name, pass);
-            if (name === 'Admin' && pass === 'admin123') newPlayer.isAdmin = true;
-            currentPlayer = newPlayer;
-            allPlayers.push(JSON.parse(JSON.stringify(currentPlayer)));
-            const saved = await apiSave();
-            if (!saved) {
-                allPlayers = allPlayers.filter(p => p.id !== currentPlayer.id);
-                currentPlayer = null;
-                showToast('❌ خطا در ثبت نام در سرور!', 'error', '❌');
                 return false;
-            }
-            return true;
-        }
+            } catch (e) { log('API GET parse error'); return false; }
+        } catch (e) { log('API GET fetch error'); return false; }
+    }
 
-        async function loginPlayer(name, pass) {
-            const loaded = await apiGet();
-            if (!loaded) { showToast('❌ اتصال به سرور برقرار نیست!', 'error', '❌'); return false; }
-            const found = allPlayers.find(p => p.name === name && p.password === pass);
-            if (found) {
-                currentPlayer = new Player(found.name, found.password);
-                Object.assign(currentPlayer, found);
-                if (!currentPlayer.history) currentPlayer.history = [];
-                resetDailyIfNeeded(currentPlayer);
-                checkGemGeneration(currentPlayer);
-                await savePlayer();
-                return true;
+    async function apiSave() {
+        try {
+            const payload = {
+                token: TOKEN,
+                players: allPlayers,
+                clans: allClans,
+                shop: allShop,
+                wars: allWars,
+                pendingClans: pendingClans,
+                announcement: announcementData
+            };
+            const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            const text = await r.text();
+            try {
+                const d = JSON.parse(text);
+                if (d.ok) { document.getElementById('syncStatus').textContent = '✅ ذخیره شد | ' + allPlayers.length + ' بازیکن'; return true; }
+                return false;
+            } catch (e) { return false; }
+        } catch (e) { return false; }
+    }
+
+    // ============================================================
+    //  CLASSES
+    // ============================================================
+    class Player {
+        constructor(name, pass) {
+            this.id = uid();
+            this.name = name;
+            this.password = pass;
+            this.gold = 300;
+            this.elixir = 100;
+            this.gems = 10;
+            this.townHall = 1;
+            this.defenseLevel = 0;
+            this.troops = { barbarian: 0, archer: 0, giant: 0, goblin: 0 };
+            this.clanId = null;
+            this.clanRank = null;
+            this.respect = 100;
+            this.wins = 0;
+            this.losses = 0;
+            this.lastActive = Date.now();
+            this.createdAt = Date.now();
+            this.history = [];
+            this.isAdmin = false;
+            this.goldCollectedToday = 0;
+            this.elixirCollectedToday = 0;
+            this.lastCollectionDate = new Date().toISOString().split('T')[0];
+            this.lastTroopRequest = 0;
+            this.chatColor = '#ffd700';
+            this.emoji = '';
+            this.lastGemTime = Date.now() - GEM_INTERVAL;
+            this.shieldExpiry = 0;
+            this.lastTrainTime = 0;
+            this.purchasedEmojis = [];
+            this.purchasedColors = [];
+            this.lastAttackTime = 0;
+            this.lastAttackTimes = {};
+            this.lastAttackReceived = {};
+            this.lastPvPAttempt = 0;
+        }
+    }
+
+    class Clan {
+        constructor(name, leaderId, leaderName) {
+            this.id = uid();
+            this.name = name;
+            this.description = 'اتحاد جدید';
+            this.isOpen = true;
+            this.leaderId = leaderId;
+            this.coLeaders = [];
+            this.elders = [];
+            this.members = [];
+            this.chat = [];
+            this.createdAt = Date.now();
+            this.totalStars = 0;
+            this.warWins = 0;
+            this.warLosses = 0;
+            this.members.push(leaderId);
+            this.treasuryGold = 0;
+            this.treasuryElixir = 0;
+            this.treasuryLevel = 1;
+            this.lastWarParticipants = [];
+        }
+    }
+
+    class War {
+        constructor(clan1Id, clan2Id, type, attackers1, attackers2) {
+            this.id = uid();
+            this.clan1Id = clan1Id;
+            this.clan2Id = clan2Id;
+            this.type = type;
+            this.attackers1 = attackers1;
+            this.attackers2 = attackers2;
+            this.attacks1 = [];
+            this.attacks2 = [];
+            this.status = 'preparation';
+            this.startTime = Date.now();
+            const days = type === '5v5' ? 5 : 10;
+            this.endTime = Date.now() + days * 24 * 3600 * 1000;
+            this.winner = null;
+            this.stars1 = 0;
+            this.stars2 = 0;
+            this.participantsConfirmed1 = false;
+            this.participantsConfirmed2 = false;
+        }
+    }
+
+    // ============================================================
+    //  HELPERS
+    // ============================================================
+    function getPlayerById(id) { return allPlayers.find(p => p.id === id); }
+    function getClanById(id) { return allClans.find(c => c.id === id); }
+    function getClanByPlayerId(pid) {
+        const p = getPlayerById(pid);
+        if (!p || !p.clanId) return null;
+        return getClanById(p.clanId);
+    }
+    function getClanMembers(clanId) {
+        const c = getClanById(clanId);
+        if (!c) return [];
+        const all = [c.leaderId, ...c.coLeaders, ...c.elders, ...c.members];
+        return all.filter((v, i, a) => a.indexOf(v) === i);
+    }
+    function getClanMemberCount(clanId) {
+        const c = getClanById(clanId);
+        if (!c) return 0;
+        return getClanMembers(clanId).length;
+    }
+
+    function getPlayerPower(p) {
+        if (!p) return 0;
+        let totalTroops = 0;
+        for (let t in p.troops) totalTroops += p.troops[t];
+        return (p.townHall * 5) + (p.defenseLevel * 3) + (totalTroops * 3);
+    }
+
+    function getClanLevel(clan) {
+        if (!clan) return 1;
+        let stars = clan.totalStars || 0;
+        let level = Math.floor(stars / 50) + 1;
+        if (level > 10) level = 10;
+        return level;
+    }
+
+    function getGoldCap(player) {
+        return 50 + player.townHall * player.townHall * 15;
+    }
+    function getElixirCap(player) {
+        return 30 + player.townHall * player.townHall * 8;
+    }
+
+    function resetDailyIfNeeded(player) {
+        const today = new Date().toISOString().split('T')[0];
+        if (player.lastCollectionDate !== today) {
+            player.goldCollectedToday = 0;
+            player.elixirCollectedToday = 0;
+            player.lastCollectionDate = today;
+        }
+    }
+
+    function getShieldRemaining(player) {
+        if (!player || !player.shieldExpiry) return 0;
+        const remaining = player.shieldExpiry - Date.now();
+        return remaining > 0 ? remaining : 0;
+    }
+    function hasShield(player) { return getShieldRemaining(player) > 0; }
+    function formatShieldTime(ms) {
+        if (ms <= 0) return 'ندارد';
+        const hours = Math.floor(ms / 3600000);
+        const minutes = Math.floor((ms % 3600000) / 60000);
+        if (hours >= 24) return `${Math.floor(hours/24)} روز ${hours%24} ساعت`;
+        if (hours > 0) return `${hours} ساعت ${minutes} دقیقه`;
+        return `${minutes} دقیقه`;
+    }
+    function loseAllTroops(player) {
+        const types = ['barbarian', 'archer', 'giant', 'goblin'];
+        let totalLost = 0;
+        for (let t of types) {
+            if (player.troops[t] > 0) {
+                totalLost += player.troops[t];
+                player.troops[t] = 0;
             }
+        }
+        return totalLost;
+    }
+
+    // ============================================================
+    //  ANNOUNCEMENT
+    // ============================================================
+    function showAnnouncement() {
+        const bar = document.getElementById('announcementBar');
+        const msgEl = document.getElementById('announcementMsg');
+        const timeEl = document.getElementById('announcementTime');
+        if (announcementData && announcementData.text) {
+            msgEl.textContent = announcementData.text;
+            if (announcementData.time) {
+                const d = new Date(announcementData.time);
+                timeEl.textContent = '📅 ' + d.toLocaleString('fa-IR');
+            } else { timeEl.textContent = ''; }
+            bar.style.display = 'flex';
+        } else { bar.style.display = 'none'; }
+    }
+    window.closeAnnouncement = function() { document.getElementById('announcementBar').style.display = 'none'; };
+    window.sendAnnouncement = async function() {
+        if (!currentPlayer || !currentPlayer.isAdmin) { showToast('فقط ادمین می‌تواند اطلاعیه ارسال کند!', 'error', '🚫'); return; }
+        const text = document.getElementById('announcementText').value.trim();
+        if (!text) { showToast('متن اطلاعیه را وارد کنید!', 'warning', '⚠️'); return; }
+        announcementData = { text: text, time: Date.now() };
+        await apiSave();
+        showToast('📢 اطلاعیه با موفقیت ارسال شد!', 'success', '📢');
+        document.getElementById('announcementText').value = '';
+        showAnnouncement();
+    };
+    window.clearAnnouncement = async function() {
+        if (!currentPlayer || !currentPlayer.isAdmin) { showToast('فقط ادمین می‌تواند اطلاعیه را حذف کند!', 'error', '🚫'); return; }
+        if (!confirm('آیا از حذف اطلاعیه اطمینان دارید؟')) return;
+        announcementData = null;
+        await apiSave();
+        showToast('🗑️ اطلاعیه حذف شد', 'warning', '🗑️');
+        showAnnouncement();
+    };
+
+    // ============================================================
+    //  PENDING CLANS
+    // ============================================================
+    async function renderPendingClans() {
+        const container = document.getElementById('pendingClansContainer');
+        if (!container) return;
+        if (!currentPlayer || !currentPlayer.isAdmin) {
+            container.innerHTML = '<div class="empty">فقط ادمین می‌تواند درخواست‌ها را مدیریت کند.</div>';
+            return;
+        }
+        await apiGet();
+        if (pendingClans.length === 0) {
+            container.innerHTML = '<div class="empty">هیچ درخواستی وجود ندارد.</div>';
+            return;
+        }
+        container.innerHTML = pendingClans.map(req => {
+            const p = getPlayerById(req.leaderId);
+            const name = p ? p.name : req.leaderName;
+            return `
+                <div class="pending-clan-item">
+                    <div class="info">
+                        <span><strong>${req.name}</strong> توسط <span style="color:#ffd700;">${name}</span></span>
+                        <span>💎 ${req.gemsPaid} جواهر</span>
+                        <span class="text-xs">${new Date(req.time).toLocaleString('fa-IR')}</span>
+                    </div>
+                    <div class="actions">
+                        <button onclick="approveClan('${req.id}')" style="background:#2a5a2a;border:1px solid #4a8a4a;color:#8a8a8a;padding:4px 14px;border-radius:20px;cursor:pointer;">✅ تایید</button>
+                        <button onclick="rejectClan('${req.id}')" style="background:#5a2a2a;border:1px solid #8a4a4a;color:#8a8a8a;padding:4px 14px;border-radius:20px;cursor:pointer;">❌ رد</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    window.approveClan = async function(reqId) {
+        if (!currentPlayer || !currentPlayer.isAdmin) return;
+        const reqIdx = pendingClans.findIndex(r => r.id === reqId);
+        if (reqIdx === -1) { showToast('درخواست یافت نشد!', 'error', '❌'); return; }
+        const req = pendingClans[reqIdx];
+        const leader = getPlayerById(req.leaderId);
+        if (!leader) { showToast('رهبر اتحاد یافت نشد!', 'error', '❌'); return; }
+        if (allClans.some(c => c.name === req.name)) {
+            showToast('اتحادی با این نام قبلاً وجود دارد!', 'error', '❌');
+            pendingClans.splice(reqIdx, 1);
+            await apiSave();
+            renderPendingClans();
+            return;
+        }
+        const clan = new Clan(req.name, req.leaderId, leader.name);
+        allClans.push(clan);
+        leader.clanId = clan.id;
+        leader.clanRank = 'leader';
+        pendingClans.splice(reqIdx, 1);
+        await savePlayer();
+        await apiSave();
+        showToast(`🏴 اتحاد ${req.name} با موفقیت ساخته شد!`, 'success', '🏴');
+        renderPendingClans();
+        renderClan();
+        updateUI();
+    };
+
+    window.rejectClan = async function(reqId) {
+        if (!currentPlayer || !currentPlayer.isAdmin) return;
+        const reqIdx = pendingClans.findIndex(r => r.id === reqId);
+        if (reqIdx === -1) { showToast('درخواست یافت نشد!', 'error', '❌'); return; }
+        const req = pendingClans[reqIdx];
+        const leader = getPlayerById(req.leaderId);
+        if (leader) {
+            leader.gems = (leader.gems || 0) + req.gemsPaid;
+            leader.history.push({ time: Date.now(), text: `بازگشت ${req.gemsPaid} جواهر (رد درخواست اتحاد ${req.name})`, type: 'neutral' });
+        }
+        pendingClans.splice(reqIdx, 1);
+        await savePlayer();
+        await apiSave();
+        showToast(`❌ درخواست اتحاد ${req.name} رد شد و ${req.gemsPaid} جواهر برگشت داده شد.`, 'warning', '🔁');
+        renderPendingClans();
+        updateUI();
+    };
+
+    // ============================================================
+    //  GEM GENERATION
+    // ============================================================
+    function checkGemGeneration(player) {
+        if (!player) return;
+        const now = Date.now();
+        if (now - player.lastGemTime >= GEM_INTERVAL) {
+            const gemsToAdd = Math.floor((now - player.lastGemTime) / GEM_INTERVAL);
+            if (gemsToAdd > 0) {
+                player.gems += gemsToAdd;
+                player.lastGemTime += gemsToAdd * GEM_INTERVAL;
+                if (gemsToAdd > 10) {
+                    player.gems -= (gemsToAdd - 10);
+                    player.lastGemTime = now - GEM_INTERVAL * 10;
+                }
+                showToast(`💎 +${Math.min(gemsToAdd, 10)} جواهر دریافت کردید!`, 'success', '💎');
+            }
+        }
+    }
+
+    // ============================================================
+    //  SHIELD BUY
+    // ============================================================
+    window.buyShield = async function(hours) {
+        if (!currentPlayer) return;
+        const costs = {1:1,2:2,3:3,4:4,6:6,12:10,168:50};
+        const cost = costs[hours];
+        if (!cost) { showToast('مدت نامعتبر!', 'error', '❌'); return; }
+        if (currentPlayer.gems < cost) {
+            showToast(`جواهر کافی نیست! نیاز به ${cost} جواهر دارید.`, 'error', '💎');
+            return;
+        }
+        currentPlayer.gems -= cost;
+        const duration = hours * 3600 * 1000;
+        const newExpiry = Math.max(Date.now() + duration, (currentPlayer.shieldExpiry || 0) + duration);
+        currentPlayer.shieldExpiry = newExpiry;
+        currentPlayer.history.push({ time: Date.now(), text: `خرید سپر ${hours} ساعته با ${cost} جواهر`, type: 'neutral' });
+        showToast(`🛡️ سپر ${hours} ساعته فعال شد!`, 'success', '🛡️');
+        await savePlayer();
+        updateUI();
+    };
+
+    // ============================================================
+    //  SAVE CURRENT PLAYER
+    // ============================================================
+    async function savePlayer() {
+        if (!currentPlayer) return;
+        currentPlayer.lastActive = Date.now();
+        const idx = allPlayers.findIndex(p => p.id === currentPlayer.id);
+        if (idx !== -1) allPlayers[idx] = JSON.parse(JSON.stringify(currentPlayer));
+        else allPlayers.push(JSON.parse(JSON.stringify(currentPlayer)));
+        return await apiSave();
+    }
+
+    // ============================================================
+    //  AUTH
+    // ============================================================
+    async function registerPlayer(name, pass) {
+        const loaded = await apiGet();
+        if (!loaded) { showToast('❌ اتصال به سرور برقرار نیست!', 'error', '❌'); return false; }
+        if (allPlayers.some(p => p.name === name)) { showToast('❌ این نام قبلاً ثبت شده!', 'error', '❌'); return false; }
+        const newPlayer = new Player(name, pass);
+        if (name === 'Admin' && pass === 'admin123') newPlayer.isAdmin = true;
+        currentPlayer = newPlayer;
+        allPlayers.push(JSON.parse(JSON.stringify(currentPlayer)));
+        const saved = await apiSave();
+        if (!saved) {
+            allPlayers = allPlayers.filter(p => p.id !== currentPlayer.id);
+            currentPlayer = null;
+            showToast('❌ خطا در ثبت نام در سرور!', 'error', '❌');
             return false;
         }
+        return true;
+    }
 
-        // ============================================================
-        //  UI UPDATE
-        // ============================================================
-        function updateUI() {
-            if (!currentPlayer) return;
+    async function loginPlayer(name, pass) {
+        const loaded = await apiGet();
+        if (!loaded) { showToast('❌ اتصال به سرور برقرار نیست!', 'error', '❌'); return false; }
+        const found = allPlayers.find(p => p.name === name && p.password === pass);
+        if (found) {
+            currentPlayer = new Player(found.name, found.password);
+            Object.assign(currentPlayer, found);
+            if (!currentPlayer.history) currentPlayer.history = [];
             resetDailyIfNeeded(currentPlayer);
             checkGemGeneration(currentPlayer);
-
-            document.getElementById('goldAmount').textContent = currentPlayer.gold;
-            document.getElementById('elixirAmount').textContent = currentPlayer.elixir;
-            document.getElementById('gemAmount').textContent = currentPlayer.gems;
-            document.getElementById('townHallLevel').textContent = currentPlayer.townHall;
-            document.getElementById('totalPower').textContent = getPlayerPower(currentPlayer);
-
-            const goldCap = getGoldCap(currentPlayer);
-            const elixirCap = getElixirCap(currentPlayer);
-            document.getElementById('goldDaily').textContent = `(امروز: ${currentPlayer.goldCollectedToday}/${goldCap})`;
-            document.getElementById('elixirDaily').textContent = `(امروز: ${currentPlayer.elixirCollectedToday}/${elixirCap})`;
-
-            const shieldMs = getShieldRemaining(currentPlayer);
-            if (shieldMs > 0) {
-                document.getElementById('shieldStatus').textContent = formatShieldTime(shieldMs);
-                document.getElementById('shieldStatus').style.color = '#4ade80';
-            } else {
-                document.getElementById('shieldStatus').textContent = 'ندارد';
-                document.getElementById('shieldStatus').style.color = '#ff6b6b';
-            }
-
-            const nextGem = Math.max(0, currentPlayer.lastGemTime + GEM_INTERVAL - Date.now());
-            const nextGemHours = Math.floor(nextGem / 3600000);
-            const nextGemMins = Math.floor((nextGem % 3600000) / 60000);
-            document.getElementById('gemTimer').textContent = nextGem > 0 ? `(${nextGemHours}h ${nextGemMins}m)` : '🟢 آماده';
-
-            const power = getPlayerPower(currentPlayer);
-            const cdEl = document.getElementById('attackCooldownDisplay');
-            const elapsedSinceLoss = Date.now() - currentPlayer.lastPvPAttempt;
-            if (elapsedSinceLoss < PVP_LOSS_COOLDOWN) {
-                const remaining = Math.ceil((PVP_LOSS_COOLDOWN - elapsedSinceLoss) / 60000);
-                cdEl.textContent = `⏳ ${remaining} دقیقه`;
-                cdEl.style.display = 'inline-block';
-            } else if (power < 10) {
-                const elapsed = Date.now() - currentPlayer.lastAttackTime;
-                const remaining = Math.max(0, ATTACK_COOLDOWN - elapsed);
-                if (remaining > 0) {
-                    const mins = Math.ceil(remaining / 60000);
-                    cdEl.textContent = `⏳ ${mins} دقیقه`;
-                    cdEl.style.display = 'inline-block';
-                } else { cdEl.style.display = 'none'; }
-            } else { cdEl.style.display = 'none'; }
-
-            renderVillage();
-            renderProfile();
-            renderClan();
-            renderWar();
-            renderArmy();
-            renderShop();
-            renderAttackList();
-            if (currentPlayer.isAdmin) {
-                document.getElementById('adminTab').style.display = 'block';
-                populateBanSelect();
-                renderPendingClans();
-            } else {
-                document.getElementById('adminTab').style.display = 'none';
-            }
-            showAnnouncement();
-        }
-
-        // ============================================================
-        //  VILLAGE
-        // ============================================================
-        function renderVillage() {
-            const grid = document.getElementById('villageGrid');
-            if (!grid || !currentPlayer) return;
-            const shieldMs = getShieldRemaining(currentPlayer);
-            const shieldText = shieldMs > 0 ? formatShieldTime(shieldMs) : 'غیرفعال';
-            const buildings = [
-                { icon: '🏰', name: 'تالار قبیله', level: currentPlayer.townHall, desc: 'مرکز قدرت', prod: 'سطح ' + currentPlayer.townHall },
-                { icon: '⛏️', name: 'معدن طلا', level: Math.floor(currentPlayer.townHall / 2) + 1, desc: 'تولید طلا', prod: '+۵/دقیقه' },
-                { icon: '🧪', name: 'مزرعه اکسیر', level: Math.floor(currentPlayer.townHall / 2) + 1, desc: 'تولید اکسیر', prod: '+۳/دقیقه' },
-                { icon: '🛡️', name: 'برج دفاعی', level: currentPlayer.defenseLevel || 0, desc: 'دفاع از پایگاه', prod: 'قدرت دفاع: ' + (currentPlayer.defenseLevel * 5) },
-                { icon: '🏹', name: 'سربازخانه', level: Math.floor(currentPlayer.townHall / 2) + 1, desc: 'آموزش سرباز', prod: 'سطح ' + (Math.floor(currentPlayer.townHall / 2) + 1) },
-                { icon: '💎', name: 'جواهر', level: '∞', desc: `سپر: ${shieldText}`, prod: 'هر ۱۲س +۱' }
-            ];
-            grid.innerHTML = buildings.map(b => `
-                <div class="building-card" onclick="upgradeBuilding('${b.name}')">
-                    <span class="icon">${b.icon}</span>
-                    <div class="bname">${b.name}</div>
-                    <div class="blevel">سطح ${b.level}</div>
-                    <div class="bprod">${b.prod}</div>
-                    <div class="bcost">${b.desc}</div>
-                </div>
-            `).join('');
-        }
-
-        window.upgradeBuilding = async function(name) {
-            if (!currentPlayer) return;
-            if (name === 'تالار قبیله') {
-                const costGold = currentPlayer.townHall * 500;
-                const costElixir = currentPlayer.townHall * 200;
-                if (currentPlayer.gold >= costGold && currentPlayer.elixir >= costElixir) {
-                    currentPlayer.gold -= costGold;
-                    currentPlayer.elixir -= costElixir;
-                    currentPlayer.townHall += 1;
-                    currentPlayer.respect += 20;
-                    currentPlayer.goldCollectedToday = 0;
-                    currentPlayer.elixirCollectedToday = 0;
-                    currentPlayer.history.push({ time: Date.now(), text: `تالار به سطح ${currentPlayer.townHall} ارتقاء یافت`, type: 'neutral' });
-                    showToast(`🏰 تالار به سطح ${currentPlayer.townHall} ارتقاء یافت!`, 'success', '🏰');
-                    await savePlayer();
-                } else showToast('💰 منابع کافی نیست!', 'error', '💰');
-            } else if (name === 'برج دفاعی') {
-                const cost = 300 + currentPlayer.defenseLevel * 100;
-                if (currentPlayer.gold >= cost) {
-                    currentPlayer.gold -= cost;
-                    currentPlayer.defenseLevel += 1;
-                    currentPlayer.respect += 5;
-                    currentPlayer.history.push({ time: Date.now(), text: `برج دفاعی به سطح ${currentPlayer.defenseLevel} ارتقاء یافت`, type: 'neutral' });
-                    showToast(`🛡️ برج دفاعی سطح ${currentPlayer.defenseLevel}!`, 'success', '🛡️');
-                    await savePlayer();
-                } else showToast('💰 طلا کافی نیست!', 'error', '💰');
-            } else { showToast('📌 این ساختمان قابل ارتقاء نیست', 'warning', '📌'); }
-        };
-
-        // ============================================================
-        //  COLLECT
-        // ============================================================
-        document.getElementById('collectBtn')?.addEventListener('click', async function() {
-            if (!currentPlayer) return;
-            resetDailyIfNeeded(currentPlayer);
-            const goldCap = getGoldCap(currentPlayer);
-            const elixirCap = getElixirCap(currentPlayer);
-            let goldRemaining = goldCap - currentPlayer.goldCollectedToday;
-            let elixirRemaining = elixirCap - currentPlayer.elixirCollectedToday;
-            if (goldRemaining <= 0 && elixirRemaining <= 0) {
-                showToast('⛔ امروز به سقف جمع‌آوری رسیده‌اید!', 'warning', '⛔');
-                return;
-            }
-            let goldGain = 0, elixirGain = 0;
-            if (goldRemaining > 0) {
-                goldGain = Math.min(rand(3, 8), goldRemaining);
-                currentPlayer.gold += goldGain;
-                currentPlayer.goldCollectedToday += goldGain;
-            }
-            if (elixirRemaining > 0) {
-                elixirGain = Math.min(rand(1, 4), elixirRemaining);
-                currentPlayer.elixir += elixirGain;
-                currentPlayer.elixirCollectedToday += elixirGain;
-            }
-            currentPlayer.history.push({ time: Date.now(), text: `جمع‌آوری: +${goldGain} طلا، +${elixirGain} اکسیر`, type: 'neutral' });
-            showToast(`💰 +${goldGain} طلا  🔮 +${elixirGain} اکسیر`, 'success', '💰');
             await savePlayer();
-            updateUI();
-        });
+            return true;
+        }
+        return false;
+    }
 
-        document.getElementById('upgradeTownHallBtn')?.addEventListener('click', async function() {
-            if (!currentPlayer) return;
+    // ============================================================
+    //  UI UPDATE
+    // ============================================================
+    function updateUI() {
+        if (!currentPlayer) return;
+        resetDailyIfNeeded(currentPlayer);
+        checkGemGeneration(currentPlayer);
+
+        document.getElementById('goldAmount').textContent = currentPlayer.gold;
+        document.getElementById('elixirAmount').textContent = currentPlayer.elixir;
+        document.getElementById('gemAmount').textContent = currentPlayer.gems;
+        document.getElementById('townHallLevel').textContent = currentPlayer.townHall;
+        document.getElementById('totalPower').textContent = getPlayerPower(currentPlayer);
+
+        const goldCap = getGoldCap(currentPlayer);
+        const elixirCap = getElixirCap(currentPlayer);
+        document.getElementById('goldDaily').textContent = `(امروز: ${currentPlayer.goldCollectedToday}/${goldCap})`;
+        document.getElementById('elixirDaily').textContent = `(امروز: ${currentPlayer.elixirCollectedToday}/${elixirCap})`;
+
+        const shieldMs = getShieldRemaining(currentPlayer);
+        if (shieldMs > 0) {
+            document.getElementById('shieldStatus').textContent = formatShieldTime(shieldMs);
+            document.getElementById('shieldStatus').style.color = '#4ade80';
+        } else {
+            document.getElementById('shieldStatus').textContent = 'ندارد';
+            document.getElementById('shieldStatus').style.color = '#ff6b6b';
+        }
+
+        const nextGem = Math.max(0, currentPlayer.lastGemTime + GEM_INTERVAL - Date.now());
+        const nextGemHours = Math.floor(nextGem / 3600000);
+        const nextGemMins = Math.floor((nextGem % 3600000) / 60000);
+        document.getElementById('gemTimer').textContent = nextGem > 0 ? `(${nextGemHours}h ${nextGemMins}m)` : '🟢 آماده';
+
+        const power = getPlayerPower(currentPlayer);
+        const cdEl = document.getElementById('attackCooldownDisplay');
+        const elapsedSinceLoss = Date.now() - currentPlayer.lastPvPAttempt;
+        if (elapsedSinceLoss < PVP_LOSS_COOLDOWN) {
+            const remaining = Math.ceil((PVP_LOSS_COOLDOWN - elapsedSinceLoss) / 60000);
+            cdEl.textContent = `⏳ ${remaining} دقیقه`;
+            cdEl.style.display = 'inline-block';
+        } else if (power < 10) {
+            const elapsed = Date.now() - currentPlayer.lastAttackTime;
+            const remaining = Math.max(0, ATTACK_COOLDOWN - elapsed);
+            if (remaining > 0) {
+                const mins = Math.ceil(remaining / 60000);
+                cdEl.textContent = `⏳ ${mins} دقیقه`;
+                cdEl.style.display = 'inline-block';
+            } else { cdEl.style.display = 'none'; }
+        } else { cdEl.style.display = 'none'; }
+
+        renderVillage();
+        renderProfile();
+        renderClan();
+        renderWar();
+        renderArmy();
+        renderShop();
+        renderAttackList();
+        if (currentPlayer.isAdmin) {
+            document.getElementById('adminTab').style.display = 'block';
+            populateBanSelect();
+            renderPendingClans();
+        } else {
+            document.getElementById('adminTab').style.display = 'none';
+        }
+        showAnnouncement();
+    }
+
+    // ============================================================
+    //  VILLAGE
+    // ============================================================
+    function renderVillage() {
+        const grid = document.getElementById('villageGrid');
+        if (!grid || !currentPlayer) return;
+        const shieldMs = getShieldRemaining(currentPlayer);
+        const shieldText = shieldMs > 0 ? formatShieldTime(shieldMs) : 'غیرفعال';
+        const buildings = [
+            { icon: '🏰', name: 'تالار قبیله', level: currentPlayer.townHall, desc: 'مرکز قدرت', prod: 'سطح ' + currentPlayer.townHall },
+            { icon: '⛏️', name: 'معدن طلا', level: Math.floor(currentPlayer.townHall / 2) + 1, desc: 'تولید طلا', prod: '+۵/دقیقه' },
+            { icon: '🧪', name: 'مزرعه اکسیر', level: Math.floor(currentPlayer.townHall / 2) + 1, desc: 'تولید اکسیر', prod: '+۳/دقیقه' },
+            { icon: '🛡️', name: 'برج دفاعی', level: currentPlayer.defenseLevel || 0, desc: 'دفاع از پایگاه', prod: 'قدرت دفاع: ' + (currentPlayer.defenseLevel * 5) },
+            { icon: '🏹', name: 'سربازخانه', level: Math.floor(currentPlayer.townHall / 2) + 1, desc: 'آموزش سرباز', prod: 'سطح ' + (Math.floor(currentPlayer.townHall / 2) + 1) },
+            { icon: '💎', name: 'جواهر', level: '∞', desc: `سپر: ${shieldText}`, prod: 'هر ۱۲س +۱' }
+        ];
+        grid.innerHTML = buildings.map(b => `
+            <div class="building-card" onclick="upgradeBuilding('${b.name}')">
+                <span class="icon">${b.icon}</span>
+                <div class="bname">${b.name}</div>
+                <div class="blevel">سطح ${b.level}</div>
+                <div class="bprod">${b.prod}</div>
+                <div class="bcost">${b.desc}</div>
+            </div>
+        `).join('');
+    }
+
+    window.upgradeBuilding = async function(name) {
+        if (!currentPlayer) return;
+        if (name === 'تالار قبیله') {
             const costGold = currentPlayer.townHall * 500;
             const costElixir = currentPlayer.townHall * 200;
             if (currentPlayer.gold >= costGold && currentPlayer.elixir >= costElixir) {
@@ -646,10 +867,7 @@
                 showToast(`🏰 تالار به سطح ${currentPlayer.townHall} ارتقاء یافت!`, 'success', '🏰');
                 await savePlayer();
             } else showToast('💰 منابع کافی نیست!', 'error', '💰');
-        });
-
-        document.getElementById('buildDefenseBtn')?.addEventListener('click', async function() {
-            if (!currentPlayer) return;
+        } else if (name === 'برج دفاعی') {
             const cost = 300 + currentPlayer.defenseLevel * 100;
             if (currentPlayer.gold >= cost) {
                 currentPlayer.gold -= cost;
@@ -659,251 +877,1327 @@
                 showToast(`🛡️ برج دفاعی سطح ${currentPlayer.defenseLevel}!`, 'success', '🛡️');
                 await savePlayer();
             } else showToast('💰 طلا کافی نیست!', 'error', '💰');
-        });
+        } else { showToast('📌 این ساختمان قابل ارتقاء نیست', 'warning', '📌'); }
+    };
 
-        // ============================================================
-        //  PROFILE
-        // ============================================================
-        function renderProfile() {
-            if (!currentPlayer) return;
-            document.getElementById('profileName').textContent = currentPlayer.name;
-            document.getElementById('profileEmoji').textContent = currentPlayer.emoji || '❌';
-            const colorEl = document.getElementById('profileColor');
-            colorEl.textContent = currentPlayer.chatColor || '#ffd700';
-            colorEl.style.backgroundColor = currentPlayer.chatColor || '#ffd700';
-            colorEl.style.color = '#000';
+    // ============================================================
+    //  COLLECT
+    // ============================================================
+    document.getElementById('collectBtn')?.addEventListener('click', async function() {
+        if (!currentPlayer) return;
+        resetDailyIfNeeded(currentPlayer);
+        const goldCap = getGoldCap(currentPlayer);
+        const elixirCap = getElixirCap(currentPlayer);
+        let goldRemaining = goldCap - currentPlayer.goldCollectedToday;
+        let elixirRemaining = elixirCap - currentPlayer.elixirCollectedToday;
+        if (goldRemaining <= 0 && elixirRemaining <= 0) {
+            showToast('⛔ امروز به سقف جمع‌آوری رسیده‌اید!', 'warning', '⛔');
+            return;
+        }
+        let goldGain = 0, elixirGain = 0;
+        if (goldRemaining > 0) {
+            goldGain = Math.min(rand(3, 8), goldRemaining);
+            currentPlayer.gold += goldGain;
+            currentPlayer.goldCollectedToday += goldGain;
+        }
+        if (elixirRemaining > 0) {
+            elixirGain = Math.min(rand(1, 4), elixirRemaining);
+            currentPlayer.elixir += elixirGain;
+            currentPlayer.elixirCollectedToday += elixirGain;
+        }
+        currentPlayer.history.push({ time: Date.now(), text: `جمع‌آوری: +${goldGain} طلا، +${elixirGain} اکسیر`, type: 'neutral' });
+        showToast(`💰 +${goldGain} طلا  🔮 +${elixirGain} اکسیر`, 'success', '💰');
+        await savePlayer();
+        updateUI();
+    });
 
-            const emojiContainer = document.getElementById('emojiSelectContainer');
-            const emojis = currentPlayer.purchasedEmojis || [];
-            if (emojis.length === 0) {
-                emojiContainer.innerHTML = '<span class="text-xs" style="color:#8a7a6a;">هیچ ایموجی خریداری نشده است.</span>';
-            } else {
-                emojiContainer.innerHTML = emojis.map(e => `
-                    <label style="background:${currentPlayer.emoji === e ? '#6a3a1a' : 'rgba(20,10,10,0.6)'};border-color:${currentPlayer.emoji === e ? '#b8860b' : '#3a2a1a'};">
-                        <input type="radio" name="profileEmoji" value="${e}" ${currentPlayer.emoji === e ? 'checked' : ''}> ${e}
-                    </label>
-                `).join('');
+    document.getElementById('upgradeTownHallBtn')?.addEventListener('click', async function() {
+        if (!currentPlayer) return;
+        const costGold = currentPlayer.townHall * 500;
+        const costElixir = currentPlayer.townHall * 200;
+        if (currentPlayer.gold >= costGold && currentPlayer.elixir >= costElixir) {
+            currentPlayer.gold -= costGold;
+            currentPlayer.elixir -= costElixir;
+            currentPlayer.townHall += 1;
+            currentPlayer.respect += 20;
+            currentPlayer.goldCollectedToday = 0;
+            currentPlayer.elixirCollectedToday = 0;
+            currentPlayer.history.push({ time: Date.now(), text: `تالار به سطح ${currentPlayer.townHall} ارتقاء یافت`, type: 'neutral' });
+            showToast(`🏰 تالار به سطح ${currentPlayer.townHall} ارتقاء یافت!`, 'success', '🏰');
+            await savePlayer();
+        } else showToast('💰 منابع کافی نیست!', 'error', '💰');
+    });
+
+    document.getElementById('buildDefenseBtn')?.addEventListener('click', async function() {
+        if (!currentPlayer) return;
+        const cost = 300 + currentPlayer.defenseLevel * 100;
+        if (currentPlayer.gold >= cost) {
+            currentPlayer.gold -= cost;
+            currentPlayer.defenseLevel += 1;
+            currentPlayer.respect += 5;
+            currentPlayer.history.push({ time: Date.now(), text: `برج دفاعی به سطح ${currentPlayer.defenseLevel} ارتقاء یافت`, type: 'neutral' });
+            showToast(`🛡️ برج دفاعی سطح ${currentPlayer.defenseLevel}!`, 'success', '🛡️');
+            await savePlayer();
+        } else showToast('💰 طلا کافی نیست!', 'error', '💰');
+    });
+
+    // ============================================================
+    //  PROFILE
+    // ============================================================
+    function renderProfile() {
+        if (!currentPlayer) return;
+        document.getElementById('profileName').textContent = currentPlayer.name;
+        document.getElementById('profileEmoji').textContent = currentPlayer.emoji || '❌';
+        const colorEl = document.getElementById('profileColor');
+        colorEl.textContent = currentPlayer.chatColor || '#ffd700';
+        colorEl.style.backgroundColor = currentPlayer.chatColor || '#ffd700';
+        colorEl.style.color = '#000';
+
+        const emojiContainer = document.getElementById('emojiSelectContainer');
+        const emojis = currentPlayer.purchasedEmojis || [];
+        if (emojis.length === 0) {
+            emojiContainer.innerHTML = '<span class="text-xs" style="color:#8a7a6a;">هیچ ایموجی خریداری نشده است.</span>';
+        } else {
+            emojiContainer.innerHTML = emojis.map(e => `
+                <label style="background:${currentPlayer.emoji === e ? '#6a3a1a' : 'rgba(20,10,10,0.6)'};border-color:${currentPlayer.emoji === e ? '#b8860b' : '#3a2a1a'};">
+                    <input type="radio" name="profileEmoji" value="${e}" ${currentPlayer.emoji === e ? 'checked' : ''}> ${e}
+                </label>
+            `).join('');
+        }
+
+        const colorContainer = document.getElementById('colorSelectContainer');
+        const colors = currentPlayer.purchasedColors || [];
+        if (colors.length === 0) {
+            colorContainer.innerHTML = '<span class="text-xs" style="color:#8a7a6a;">هیچ رنگی خریداری نشده است.</span>';
+        } else {
+            colorContainer.innerHTML = colors.map(c => `
+                <label style="background:${currentPlayer.chatColor === c ? '#6a3a1a' : 'rgba(20,10,10,0.6)'};border-color:${c};">
+                    <input type="radio" name="profileColor" value="${c}" ${currentPlayer.chatColor === c ? 'checked' : ''}>
+                    <span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:${c};border:1px solid #fff;"></span>
+                    ${c}
+                </label>
+            `).join('');
+        }
+    }
+
+    window.saveProfile = async function() {
+        if (!currentPlayer) return;
+        const selectedEmoji = document.querySelector('input[name="profileEmoji"]:checked');
+        if (selectedEmoji) currentPlayer.emoji = selectedEmoji.value;
+        const selectedColor = document.querySelector('input[name="profileColor"]:checked');
+        if (selectedColor) currentPlayer.chatColor = selectedColor.value;
+        await savePlayer();
+        showToast('✅ پروفایل ذخیره شد!', 'success', '✅');
+        updateUI();
+    };
+
+    // ============================================================
+    //  ATTACK (PvP)
+    // ============================================================
+    async function renderAttackList() {
+        const container = document.getElementById('attackList');
+        if (!container || !currentPlayer) return;
+        await apiGet();
+
+        const alertContainer = document.getElementById('shieldAlertContainer');
+        if (hasShield(currentPlayer)) {
+            const remaining = getShieldRemaining(currentPlayer);
+            alertContainer.innerHTML = `
+                <div class="shield-alert" style="background:rgba(0,0,0,0.5);border-radius:1rem;padding:6px 14px;border:1px solid #4ade80;color:#4ade80;display:flex;align-items:center;gap:8px;font-size:0.75rem;">
+                    <span class="icon">🛡️</span>
+                    <span>سپر فعال (${formatShieldTime(remaining)})</span>
+                </div>
+            `;
+        } else {
+            alertContainer.innerHTML = '';
+        }
+
+        const others = allPlayers.filter(p => p.id !== currentPlayer.id && p.id !== 'admin_');
+
+        let recentAttack = false;
+        for (let targetId in currentPlayer.lastAttackReceived) {
+            if (Date.now() - currentPlayer.lastAttackReceived[targetId] < 30 * 60 * 1000) {
+                recentAttack = true;
+                break;
+            }
+        }
+        if (recentAttack) {
+            showToast('⚔️ شما اخیراً مورد حمله قرار گرفته‌اید! برای انتقام به بخش «حمله» بروید.', 'warning', '⚔️');
+        }
+
+        if (!others.length) {
+            container.innerHTML = '<div class="empty">هیچ بازیکن دیگری برای حمله وجود ندارد.</div>';
+            return;
+        }
+
+        const now = Date.now();
+        const attackerLossCooldown = now - currentPlayer.lastPvPAttempt < PVP_LOSS_COOLDOWN;
+
+        container.innerHTML = others.map(p => {
+            const hasShieldTarget = hasShield(p);
+            const hasShieldAttacker = hasShield(currentPlayer);
+            const color = p.chatColor || '#ffd700';
+
+            const lastAttackTime = currentPlayer.lastAttackTimes[p.id] || 0;
+            const canAttackTarget = (now - lastAttackTime >= PVP_COOLDOWN);
+            const timeRemaining = Math.ceil((PVP_COOLDOWN - (now - lastAttackTime)) / 3600000);
+
+            const lastReceived = currentPlayer.lastAttackReceived[p.id] || 0;
+            const canRevenge = (now - lastReceived < PVP_COOLDOWN);
+
+            const normalDisabled = !canAttackTarget || attackerLossCooldown;
+            const revengeDisabled = !canRevenge || attackerLossCooldown;
+
+            let normalButton = `<button class="war-attack-btn" style="width:auto;padding:6px 16px;" onclick="attackPlayer('${p.id}', false)" ${normalDisabled ? 'disabled' : ''}>⚔️ حمله</button>`;
+            if (!canAttackTarget && !attackerLossCooldown) {
+                normalButton = `<span class="cooldown-badge">⏳ ${timeRemaining} ساعت</span>`;
             }
 
-            const colorContainer = document.getElementById('colorSelectContainer');
-            const colors = currentPlayer.purchasedColors || [];
-            if (colors.length === 0) {
-                colorContainer.innerHTML = '<span class="text-xs" style="color:#8a7a6a;">هیچ رنگی خریداری نشده است.</span>';
-            } else {
-                colorContainer.innerHTML = colors.map(c => `
-                    <label style="background:${currentPlayer.chatColor === c ? '#6a3a1a' : 'rgba(20,10,10,0.6)'};border-color:${c};">
-                        <input type="radio" name="profileColor" value="${c}" ${currentPlayer.chatColor === c ? 'checked' : ''}>
-                        <span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:${c};border:1px solid #fff;"></span>
-                        ${c}
-                    </label>
-                `).join('');
+            let revengeButton = '';
+            if (canRevenge) {
+                revengeButton = `<button class="war-attack-btn" style="width:auto;padding:6px 16px;background:#6a3a1a;border:1px solid #b8860b;" onclick="attackPlayer('${p.id}', true)" ${revengeDisabled ? 'disabled' : ''}>🔥 انتقام</button>`;
+            }
+
+            let lossCooldownMsg = '';
+            if (attackerLossCooldown) {
+                const remaining = Math.ceil((PVP_LOSS_COOLDOWN - (now - currentPlayer.lastPvPAttempt)) / 60000);
+                lossCooldownMsg = `<span class="cooldown-badge" style="display:block;margin-top:4px;">⏳ ${remaining} دقیقه تا حمله بعدی</span>`;
+            }
+
+            let shieldHint = hasShieldAttacker ? ' (🛡️ سپر دارید)' : '';
+
+            return `
+                <div class="clan-member">
+                    <span><span style="color:${color}">${p.emoji||''} ${p.name}</span> ${hasShieldTarget ? '🛡️' : ''}</span>
+                    <span>⚔️${getPlayerPower(p)} | 💰${p.gold}</span>
+                    <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+                        ${normalButton}${shieldHint}
+                        ${revengeButton}
+                        ${lossCooldownMsg}
+                    </span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    window.attackPlayer = async function(targetId, isRevenge = false) {
+        if (!currentPlayer) return;
+
+        if (hasShield(currentPlayer)) {
+            showToast('🛡️ شما سپر دارید! نمی‌توانید در نبردهای تک‌نفره حمله کنید.', 'error', '🛡️');
+            return;
+        }
+
+        const elapsedSinceLoss = Date.now() - currentPlayer.lastPvPAttempt;
+        if (elapsedSinceLoss < PVP_LOSS_COOLDOWN) {
+            const remaining = Math.ceil((PVP_LOSS_COOLDOWN - elapsedSinceLoss) / 60000);
+            showToast(`⏳ شما اخیراً در حمله شکست خورده‌اید! ${remaining} دقیقه دیگر می‌توانید حمله کنید.`, 'warning', '⏳');
+            return;
+        }
+
+        const target = getPlayerById(targetId);
+        if (!target) { showToast('هدف یافت نشد!', 'error', '❌'); return; }
+        if (target.id === currentPlayer.id) { showToast('نمی‌توانید به خودتان حمله کنید!', 'error', '❌'); return; }
+        if (hasShield(target)) {
+            showToast('🛡️ این بازیکن سپر دارد! نمی‌توانید حمله کنید.', 'error', '🛡️');
+            return;
+        }
+
+        if (!isRevenge) {
+            const lastAttackTime = currentPlayer.lastAttackTimes[targetId] || 0;
+            if (Date.now() - lastAttackTime < PVP_COOLDOWN) {
+                const hoursLeft = Math.ceil((PVP_COOLDOWN - (Date.now() - lastAttackTime)) / 3600000);
+                showToast(`⏳ شما قبلاً به این بازیکن حمله کرده‌اید! ${hoursLeft} ساعت دیگر می‌توانید دوباره حمله کنید.`, 'warning', '⏳');
+                return;
             }
         }
 
-        window.saveProfile = async function() {
-            if (!currentPlayer) return;
-            const selectedEmoji = document.querySelector('input[name="profileEmoji"]:checked');
-            if (selectedEmoji) currentPlayer.emoji = selectedEmoji.value;
-            const selectedColor = document.querySelector('input[name="profileColor"]:checked');
-            if (selectedColor) currentPlayer.chatColor = selectedColor.value;
-            await savePlayer();
-            showToast('✅ پروفایل ذخیره شد!', 'success', '✅');
-            updateUI();
-        };
+        const myPower = getPlayerPower(currentPlayer);
+        const targetPower = getPlayerPower(target);
+        const myRoll = myPower + rand(0, 20);
+        const targetRoll = targetPower + rand(0, 20);
+        const troopsLost = loseAllTroops(currentPlayer);
 
-        // ============================================================
-        //  ATTACK (PvP)
-        // ============================================================
-        async function renderAttackList() {
-            const container = document.getElementById('attackList');
-            if (!container || !currentPlayer) return;
-            await apiGet();
+        let attackerWin = myRoll > targetRoll;
+        let lootGold = 0, lootElixir = 0;
+        let defenderRespectGain = 0;
+        let attackerRespectGain = 0;
 
-            const alertContainer = document.getElementById('shieldAlertContainer');
-            if (hasShield(currentPlayer)) {
-                const remaining = getShieldRemaining(currentPlayer);
-                alertContainer.innerHTML = `
-                    <div class="shield-alert" style="background:rgba(0,0,0,0.5);border-radius:1rem;padding:6px 14px;border:1px solid #4ade80;color:#4ade80;display:flex;align-items:center;gap:8px;font-size:0.75rem;">
-                        <span class="icon">🛡️</span>
-                        <span>سپر فعال (${formatShieldTime(remaining)})</span>
-                    </div>
-                `;
+        if (attackerWin) {
+            lootGold = Math.floor(target.gold * 0.1);
+            lootElixir = Math.floor(target.elixir * 0.1);
+            target.gold = Math.max(0, target.gold - lootGold);
+            target.elixir = Math.max(0, target.elixir - lootElixir);
+            attackerRespectGain = Math.floor(currentPlayer.respect * 0.08);
+            if (attackerRespectGain < 1) attackerRespectGain = 1;
+            currentPlayer.respect += attackerRespectGain;
+            currentPlayer.history.push({ time: Date.now(), text: `🎉 پیروزی در حمله به ${target.name}! +${lootGold} طلا +${lootElixir} اکسیر، +${attackerRespectGain} احترام (همه سربازان از دست رفتند: ${troopsLost})`, type: 'victory' });
+            target.history.push({ time: Date.now(), text: `💔 شکست از ${currentPlayer.name} (از دست دادن ${lootGold} طلا و ${lootElixir} اکسیر)`, type: 'defeat' });
+            showToast(`🎉 پیروزی! +${lootGold} طلا +${lootElixir} اکسیر، +${attackerRespectGain} احترام (همه ${troopsLost} سرباز از دست رفتند)`, 'success', '🏆');
+            currentPlayer.gold += lootGold;
+            currentPlayer.elixir += lootElixir;
+            currentPlayer.wins += 1;
+            target.losses += 1;
+            target.shieldExpiry = Math.max(target.shieldExpiry || 0, Date.now() + PVP_DEFENDER_SHIELD);
+            showToast(`🛡️ ${target.name} به مدت ۳۰ دقیقه سپر دریافت کرد!`, 'warning', '🛡️');
+        } else {
+            defenderRespectGain = Math.floor(target.respect * 0.05);
+            if (defenderRespectGain < 1) defenderRespectGain = 1;
+            target.respect += defenderRespectGain;
+            const respectLoss = Math.floor(currentPlayer.respect * 0.05);
+            currentPlayer.respect = Math.max(0, currentPlayer.respect - respectLoss);
+            currentPlayer.history.push({ time: Date.now(), text: `💔 شکست در حمله به ${target.name}! (از دست دادن ${respectLoss} احترام و همه ${troopsLost} سرباز)`, type: 'defeat' });
+            target.history.push({ time: Date.now(), text: `🎉 دفاع موفق در برابر ${currentPlayer.name}! +${defenderRespectGain} احترام`, type: 'victory' });
+            showToast(`💔 شکست خوردید! -${respectLoss} احترام، همه ${troopsLost} سرباز از دست رفتند`, 'error', '💔');
+            currentPlayer.losses += 1;
+            target.wins += 1;
+            currentPlayer.lastPvPAttempt = Date.now();
+        }
+
+        const now = Date.now();
+        currentPlayer.lastAttackTimes[targetId] = now;
+        target.lastAttackReceived[currentPlayer.id] = now;
+
+        const idx = allPlayers.findIndex(p => p.id === target.id);
+        if (idx !== -1) allPlayers[idx] = JSON.parse(JSON.stringify(target));
+
+        await savePlayer();
+        await apiSave();
+        renderAttackList();
+        updateUI();
+    };
+
+    // ============================================================
+    //  CLAN (کامل)
+    // ============================================================
+    async function renderClan() {
+        const container = document.getElementById('clanContainer');
+        if (!container || !currentPlayer) return;
+        await apiGet();
+        const myClan = getClanByPlayerId(currentPlayer.id);
+
+        if (!myClan) {
+            let clanOptionsHtml = '';
+            const openClans = allClans.filter(c => c.isOpen);
+            if (openClans.length === 0) {
+                clanOptionsHtml = '<option value="">هیچ اتحادی موجود نیست</option>';
             } else {
-                alertContainer.innerHTML = '';
+                clanOptionsHtml = '<option value="">انتخاب اتحاد...</option>' +
+                    openClans.map(c => `<option value="${c.id}">${c.name} (${getClanMemberCount(c.id)} عضو)</option>`).join('');
             }
 
-            const others = allPlayers.filter(p => p.id !== currentPlayer.id && p.id !== 'admin_');
+            container.innerHTML = `
+                <div class="clan-header"><div>🚫 شما در هیچ اتحادی نیستید</div></div>
+                <div style="display:flex;flex-direction:column;gap:10px;max-width:400px;margin:0 auto;">
+                    <input type="text" id="newClanName" placeholder="نام اتحاد جدید..." style="padding:10px;border-radius:30px;border:1px solid #4a3a2a;background:rgba(20,10,10,0.8);color:#e8d5b8;text-align:center;">
+                    <button class="action-btn" onclick="requestClanCreation()">🏴 درخواست ساخت اتحاد (۳۰💎)</button>
+                    <div style="text-align:center;color:#8a7a6a;font-size:0.8rem;">— یا —</div>
+                    <select id="joinClanSelect" style="padding:10px;border-radius:30px;border:1px solid #4a3a2a;background:rgba(20,10,10,0.8);color:#e8d5b8;">
+                        ${clanOptionsHtml}
+                    </select>
+                    <button class="action-btn secondary" onclick="joinClan()">📥 پیوستن به اتحاد</button>
+                </div>
+            `;
+            return;
+        }
 
-            let recentAttack = false;
-            for (let targetId in currentPlayer.lastAttackReceived) {
-                if (Date.now() - currentPlayer.lastAttackReceived[targetId] < 30 * 60 * 1000) {
-                    recentAttack = true;
-                    break;
-                }
-            }
-            if (recentAttack) {
-                showToast('⚔️ شما اخیراً مورد حمله قرار گرفته‌اید! برای انتقام به بخش «حمله» بروید.', 'warning', '⚔️');
-            }
+        const clanLevel = getClanLevel(myClan);
+        const members = getClanMembers(myClan.id);
+        const memberList = members.map(id => {
+            const p = getPlayerById(id);
+            if (!p) return null;
+            let rank = 'عضو', cls = '';
+            if (id === myClan.leaderId) { rank = 'رهبر'; cls = 'leader'; }
+            else if (myClan.coLeaders.includes(id)) { rank = 'هم‌رهبر'; cls = 'coleader'; }
+            else if (myClan.elders.includes(id)) { rank = 'بزرگ'; cls = 'elder'; }
+            return { id, name: p.name, rank, cls, power: getPlayerPower(p), emoji: p.emoji || '', color: p.chatColor || '#ffd700' };
+        }).filter(Boolean);
 
-            if (!others.length) {
-                container.innerHTML = '<div class="empty">هیچ بازیکن دیگری برای حمله وجود ندارد.</div>';
+        const chatHtml = myClan.chat.slice(-20).map(m => {
+            const sender = getPlayerById(m.senderId) || { name: m.sender, chatColor: '#ffd700', emoji: '' };
+            const color = sender.chatColor || '#ffd700';
+            const emoji = sender.emoji || '';
+            return `<div class="msg"><span class="sender" style="color:${color}">${emoji} ${sender.name}</span> <span class="time">${new Date(m.time).toLocaleTimeString()}</span> : ${m.text}</div>`;
+        }).join('') || '<div class="empty">هنوز پیامی نیست</div>';
+
+        const isLeader = currentPlayer.id === myClan.leaderId;
+        const canManage = isLeader || myClan.coLeaders.includes(currentPlayer.id) || myClan.elders.includes(currentPlayer.id);
+
+        const cooldown = 21600000;
+        const now = Date.now();
+        const canRequest = (now - currentPlayer.lastTroopRequest) >= cooldown;
+        const requestAmount = clanLevel * 2;
+
+        const treasuryLevel = myClan.treasuryLevel || 1;
+        const nextLevelCost = treasuryLevel < 10 ? treasuryLevel * 20 : null;
+
+        container.innerHTML = `
+            <div class="clan-header">
+                <div>
+                    <div class="clan-name">🏴 ${myClan.name}</div>
+                    <div class="text-sm text-gold">سطح اتحاد: ${clanLevel} ⭐ ${myClan.totalStars} ستاره | 🏆 ${myClan.warWins} برد</div>
+                </div>
+                <div><span class="clan-status">${myClan.isOpen ? '🟢 باز' : '🔴 بسته'}</span><span class="badge">${members.length} عضو</span></div>
+            </div>
+            <div style="font-size:0.8rem;color:#8a7a6a;padding:4px 0;">${myClan.description}</div>
+            <div class="treasury-info">
+                <div class="flex-between"><span>🏦 خزانه</span><span class="level">سطح ${treasuryLevel}</span></div>
+                <div class="flex-between"><span>🥇 طلا: ${myClan.treasuryGold || 0}</span><span>🔮 اکسیر: ${myClan.treasuryElixir || 0}</span></div>
+                ${isLeader ? `
+                    <div class="mt-8">
+                        ${treasuryLevel < 10 ? `<button class="action-btn secondary" style="width:auto;padding:4px 12px;" onclick="upgradeTreasury()">⬆️ ارتقاء خزانه (${nextLevelCost} 💎)</button>` : '<span class="text-gold">سطح خزانه بیشینه</span>'}
+                        ${myClan.treasuryGold > 0 || myClan.treasuryElixir > 0 ? `<button class="action-btn" style="width:auto;padding:4px 12px;" onclick="distributeLoot()">🎁 تقسیم غنایم به شرکت‌کنندگان</button>` : ''}
+                    </div>
+                ` : ''}
+            </div>
+            <div class="clan-member-list">
+                ${memberList.map(m => `
+                    <div class="clan-member">
+                        <span style="color:${m.color}">${m.emoji} ${m.name}</span>
+                        <span>
+                            <span class="rank-badge ${m.cls}">${m.rank}</span>
+                            <span class="text-xs">⚔️${m.power}</span>
+                            ${(canManage && m.id !== currentPlayer.id) ? `
+                                <button onclick="changeClanRank('${m.id}','coleader')" class="text-xs" style="background:#3a5a3a;border:1px solid #4a6a4a;border:none;padding:2px 8px;border-radius:10px;color:#b8a080;cursor:pointer;">+هم‌رهبر</button>
+                                <button onclick="changeClanRank('${m.id}','elder')" class="text-xs" style="background:#4a5a3a;border:1px solid #5a6a4a;border:none;padding:2px 8px;border-radius:10px;color:#b8a080;cursor:pointer;">+بزرگ</button>
+                                <button onclick="kickFromClan('${m.id}')" class="text-xs" style="background:#5a2a2a;border:1px solid #8a4a4a;border:none;padding:2px 8px;border-radius:10px;color:#b8a080;cursor:pointer;">اخراج</button>
+                            ` : ''}
+                        </span>
+                    </div>
+                `).join('')}
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;">
+                <button class="action-btn secondary" style="flex:1;" onclick="requestTroops()" ${canRequest ? '' : 'disabled'}>
+                    🪖 درخواست سرباز (سطح ${clanLevel} -> ${requestAmount} سرباز)
+                    ${!canRequest ? ` (${Math.ceil((cooldown - (now - currentPlayer.lastTroopRequest)) / 60000)} دقیقه دیگر)` : ''}
+                </button>
+            </div>
+            <div class="clan-chat" id="clanChatBox">${chatHtml}</div>
+            <div class="clan-chat-input">
+                <input type="text" id="clanChatInput" placeholder="پیام به اتحاد..." dir="rtl">
+                <button onclick="sendClanChat()">📨 ارسال</button>
+            </div>
+            ${isLeader ? `
+                <div class="clan-settings">
+                    <h4 class="text-gold">⚙️ تنظیمات</h4>
+                    <label><input type="checkbox" id="clanOpenToggle" ${myClan.isOpen ? 'checked' : ''}> اتحاد باز</label>
+                    <label><input type="text" id="clanDescInput" value="${myClan.description}" placeholder="توضیحات"></label>
+                    <button onclick="saveClanSettings()" class="action-btn secondary" style="width:auto;padding:6px 20px;">💾 ذخیره</button>
+                    <button onclick="leaveClan()" class="action-btn danger" style="width:auto;padding:6px 20px;">🚪 ترک اتحاد</button>
+                </div>
+            ` : `<button onclick="leaveClan()" class="action-btn danger" style="width:auto;padding:6px 20px;margin-top:8px;">🚪 ترک اتحاد</button>`}
+        `;
+        const chatBox = document.getElementById('clanChatBox');
+        if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // ============================================================
+    //  REQUEST CLAN CREATION
+    // ============================================================
+    window.requestClanCreation = async function() {
+        if (!currentPlayer) return;
+        if (currentPlayer.gems < CLAN_CREATE_COST) {
+            showToast(`❌ جواهر کافی نیست! برای درخواست اتحاد به ${CLAN_CREATE_COST} جواهر نیاز دارید.`, 'error', '💎');
+            return;
+        }
+        const name = document.getElementById('newClanName')?.value.trim();
+        if (!name || name.length < 3) { showToast('نام حداقل ۳ حرف!', 'error', '❌'); return; }
+        if (allClans.some(c => c.name === name)) { showToast('این نام قبلاً ثبت شده!', 'error', '❌'); return; }
+        if (getClanByPlayerId(currentPlayer.id)) { showToast('شما قبلاً در یک اتحاد هستید!', 'error', '❌'); return; }
+        currentPlayer.gems -= CLAN_CREATE_COST;
+        const newRequest = {
+            id: uid(),
+            name: name,
+            leaderId: currentPlayer.id,
+            leaderName: currentPlayer.name,
+            gemsPaid: CLAN_CREATE_COST,
+            time: Date.now()
+        };
+        pendingClans.push(newRequest);
+        await savePlayer();
+        await apiSave();
+        showToast(`📨 درخواست اتحاد "${name}" به ادمین ارسال شد. منتظر تایید باشید.`, 'success', '📨');
+        document.getElementById('newClanName').value = '';
+        renderClan();
+        updateUI();
+    };
+
+    // ============================================================
+    //  JOIN CLAN
+    // ============================================================
+    window.joinClan = async function() {
+        if (!currentPlayer) return;
+        const clanId = document.getElementById('joinClanSelect')?.value;
+        if (!clanId) { showToast('اتحادی انتخاب کنید!', 'error', '❌'); return; }
+        const clan = getClanById(clanId);
+        if (!clan) { showToast('اتحاد یافت نشد!', 'error', '❌'); return; }
+        if (!clan.isOpen) { showToast('این اتحاد بسته است!', 'error', '❌'); return; }
+        if (getClanByPlayerId(currentPlayer.id)) { showToast('شما قبلاً در یک اتحاد هستید!', 'error', '❌'); return; }
+        clan.members.push(currentPlayer.id);
+        currentPlayer.clanId = clan.id;
+        currentPlayer.clanRank = 'member';
+        await savePlayer();
+        await apiSave();
+        await apiGet();
+        showToast(`📥 به اتحاد ${clan.name} پیوستید!`, 'success', '📥');
+        renderClan();
+        updateUI();
+    };
+
+    // ============================================================
+    //  LEAVE CLAN
+    // ============================================================
+    window.leaveClan = async function() {
+        if (!currentPlayer) return;
+        const clan = getClanByPlayerId(currentPlayer.id);
+        if (!clan) return;
+        if (currentPlayer.id === clan.leaderId) {
+            const members = getClanMembers(clan.id).filter(id => id !== currentPlayer.id);
+            if (members.length === 0) {
+                allClans = allClans.filter(c => c.id !== clan.id);
+                currentPlayer.clanId = null;
+                currentPlayer.clanRank = null;
+                await savePlayer();
+                await apiSave();
+                showToast('اتحاد منحل شد', 'warning', '💔');
+                renderClan();
                 return;
             }
+            let newLeader = clan.coLeaders[0] || clan.elders[0] || members[0];
+            clan.leaderId = newLeader;
+            clan.coLeaders = clan.coLeaders.filter(id => id !== newLeader);
+            showToast(`رهبری به ${getPlayerById(newLeader)?.name} منتقل شد`, 'warning', '👑');
+        }
+        if (currentPlayer.id === clan.leaderId) { /* handled */ } else {
+            clan.members = clan.members.filter(id => id !== currentPlayer.id);
+            clan.coLeaders = clan.coLeaders.filter(id => id !== currentPlayer.id);
+            clan.elders = clan.elders.filter(id => id !== currentPlayer.id);
+        }
+        currentPlayer.clanId = null;
+        currentPlayer.clanRank = null;
+        await savePlayer();
+        await apiSave();
+        showToast('🚪 از اتحاد خارج شدید', 'warning', '🚪');
+        renderClan();
+        updateUI();
+    };
 
-            const now = Date.now();
-            const attackerLossCooldown = now - currentPlayer.lastPvPAttempt < PVP_LOSS_COOLDOWN;
+    // ============================================================
+    //  OTHER CLAN FUNCTIONS
+    // ============================================================
+    window.changeClanRank = async function(playerId, rank) {
+        if (!currentPlayer) return;
+        const clan = getClanByPlayerId(currentPlayer.id);
+        if (!clan) return;
+        if (currentPlayer.id !== clan.leaderId && !clan.coLeaders.includes(currentPlayer.id)) {
+            showToast('شما اجازه این کار را ندارید!', 'error', '🚫');
+            return;
+        }
+        const p = getPlayerById(playerId);
+        if (!p) return;
+        clan.coLeaders = clan.coLeaders.filter(id => id !== playerId);
+        clan.elders = clan.elders.filter(id => id !== playerId);
+        clan.members = clan.members.filter(id => id !== playerId);
+        if (rank === 'coleader') {
+            if (clan.coLeaders.length >= 5) { showToast('حداکثر ۵ هم‌رهبر!', 'error', '🚫'); return; }
+            clan.coLeaders.push(playerId);
+            p.clanRank = 'coleader';
+        } else if (rank === 'elder') {
+            if (clan.elders.length >= 10) { showToast('حداکثر ۱۰ بزرگ!', 'error', '🚫'); return; }
+            clan.elders.push(playerId);
+            p.clanRank = 'elder';
+        } else {
+            clan.members.push(playerId);
+            p.clanRank = 'member';
+        }
+        await apiSave();
+        showToast(`🔱 رتبه ${p.name} تغییر کرد`, 'success', '🔱');
+        renderClan();
+    };
 
-            container.innerHTML = others.map(p => {
-                const hasShieldTarget = hasShield(p);
-                const hasShieldAttacker = hasShield(currentPlayer);
+    window.kickFromClan = async function(playerId) {
+        if (!currentPlayer) return;
+        const clan = getClanByPlayerId(currentPlayer.id);
+        if (!clan) return;
+        if (currentPlayer.id !== clan.leaderId && !clan.coLeaders.includes(currentPlayer.id)) {
+            showToast('شما اجازه این کار را ندارید!', 'error', '🚫');
+            return;
+        }
+        if (playerId === clan.leaderId) { showToast('نمی‌توان رهبر را اخراج کرد!', 'error', '🚫'); return; }
+        clan.members = clan.members.filter(id => id !== playerId);
+        clan.coLeaders = clan.coLeaders.filter(id => id !== playerId);
+        clan.elders = clan.elders.filter(id => id !== playerId);
+        const p = getPlayerById(playerId);
+        if (p) { p.clanId = null; p.clanRank = null; }
+        await apiSave();
+        showToast('🚫 بازیکن اخراج شد', 'warning', '🚫');
+        renderClan();
+    };
+
+    window.saveClanSettings = async function() {
+        if (!currentPlayer) return;
+        const clan = getClanByPlayerId(currentPlayer.id);
+        if (!clan || currentPlayer.id !== clan.leaderId) { showToast('فقط رهبر می‌تواند تنظیمات را تغییر دهد!', 'error', '🚫'); return; }
+        const open = document.getElementById('clanOpenToggle')?.checked || false;
+        const desc = document.getElementById('clanDescInput')?.value || '';
+        clan.isOpen = open;
+        clan.description = desc;
+        await apiSave();
+        showToast('✅ تنظیمات ذخیره شد', 'success', '✅');
+        renderClan();
+    };
+
+    window.sendClanChat = async function() {
+        if (!currentPlayer) return;
+        const clan = getClanByPlayerId(currentPlayer.id);
+        if (!clan) { showToast('شما در اتحاد نیستید!', 'error', '🚫'); return; }
+        const input = document.getElementById('clanChatInput');
+        const text = input?.value.trim();
+        if (!text) return;
+        clan.chat.push({ sender: currentPlayer.name, senderId: currentPlayer.id, text, time: Date.now() });
+        if (clan.chat.length > 100) clan.chat = clan.chat.slice(-100);
+        await apiSave();
+        input.value = '';
+        renderClan();
+    };
+
+    window.requestTroops = async function() {
+        if (!currentPlayer) return;
+        const clan = getClanByPlayerId(currentPlayer.id);
+        if (!clan) { showToast('شما در اتحاد نیستید!', 'error', '🚫'); return; }
+        const cooldown = 21600000;
+        const now = Date.now();
+        if (now - currentPlayer.lastTroopRequest < cooldown) {
+            const remaining = Math.ceil((cooldown - (now - currentPlayer.lastTroopRequest)) / 60000);
+            showToast(`لطفاً ${remaining} دقیقه صبر کنید!`, 'warning', '⏳');
+            return;
+        }
+        const clanLevel = getClanLevel(clan);
+        const amount = clanLevel * 2;
+        const barb = Math.ceil(amount * 0.6);
+        const arch = amount - barb;
+        if (!currentPlayer.troops.barbarian) currentPlayer.troops.barbarian = 0;
+        if (!currentPlayer.troops.archer) currentPlayer.troops.archer = 0;
+        currentPlayer.troops.barbarian += barb;
+        currentPlayer.troops.archer += arch;
+        currentPlayer.lastTroopRequest = now;
+        currentPlayer.history.push({ time: Date.now(), text: `درخواست سرباز: ${barb} بربر و ${arch} کماندار`, type: 'neutral' });
+        showToast(`🪖 ${barb} بربر و ${arch} کماندار دریافت کردید!`, 'success', '🪖');
+        await savePlayer();
+        renderClan();
+        renderArmy();
+        updateUI();
+    };
+
+    window.upgradeTreasury = async function() {
+        if (!currentPlayer) return;
+        const clan = getClanByPlayerId(currentPlayer.id);
+        if (!clan || currentPlayer.id !== clan.leaderId) { showToast('فقط رهبر می‌تواند خزانه را ارتقاء دهد!', 'error', '🚫'); return; }
+        const currentLevel = clan.treasuryLevel || 1;
+        if (currentLevel >= 10) { showToast('خزانه در بالاترین سطح است!', 'warning', '⭐'); return; }
+        const cost = currentLevel * 20;
+        if (currentPlayer.gems < cost) {
+            showToast(`جواهر کافی نیست! نیاز به ${cost} جواهر دارید.`, 'error', '💎');
+            return;
+        }
+        currentPlayer.gems -= cost;
+        clan.treasuryLevel = currentLevel + 1;
+        await savePlayer();
+        await apiSave();
+        showToast(`🏦 خزانه به سطح ${clan.treasuryLevel} ارتقاء یافت!`, 'success', '🏦');
+        renderClan();
+        updateUI();
+    };
+
+    window.distributeLoot = async function() {
+        if (!currentPlayer) return;
+        const clan = getClanByPlayerId(currentPlayer.id);
+        if (!clan || currentPlayer.id !== clan.leaderId) { showToast('فقط رهبر می‌تواند غنایم را تقسیم کند!', 'error', '🚫'); return; }
+        const participants = clan.lastWarParticipants || [];
+        if (participants.length === 0) { showToast('هیچ شرکت‌کننده‌ای در آخرین نبرد وجود ندارد!', 'warning', '⚠️'); return; }
+        const totalGold = clan.treasuryGold || 0;
+        const totalElixir = clan.treasuryElixir || 0;
+        if (totalGold === 0 && totalElixir === 0) { showToast('خزانه خالی است!', 'warning', '⚠️'); return; }
+        const shareGold = Math.floor(totalGold / participants.length);
+        const shareElixir = Math.floor(totalElixir / participants.length);
+        if (shareGold === 0 && shareElixir === 0) { showToast('مقدار غنایم بسیار کم است!', 'warning', '⚠️'); return; }
+        for (let pid of participants) {
+            const p = getPlayerById(pid);
+            if (p) {
+                p.gold += shareGold;
+                p.elixir += shareElixir;
+                p.history.push({ time: Date.now(), text: `دریافت ${shareGold} طلا و ${shareElixir} اکسیر از خزانهٔ اتحاد`, type: 'neutral' });
+            }
+        }
+        clan.treasuryGold = 0;
+        clan.treasuryElixir = 0;
+        clan.lastWarParticipants = [];
+        await apiSave();
+        await savePlayer();
+        showToast(`🎁 غنایم بین ${participants.length} نفر تقسیم شد! هرکس ${shareGold} طلا و ${shareElixir} اکسیر گرفت.`, 'success', '🎁');
+        renderClan();
+        updateUI();
+    };
+
+    // ============================================================
+    //  WAR
+    // ============================================================
+    async function renderWar() {
+        const container = document.getElementById('warContainer');
+        if (!container || !currentPlayer) return;
+        await apiGet();
+        const myClan = getClanByPlayerId(currentPlayer.id);
+
+        if (!myClan) {
+            container.innerHTML = `<div class="empty">برای شرکت در نبرد، ابتدا به یک اتحاد بپیوندید.</div>`;
+            return;
+        }
+
+        let activeWar = allWars.find(w => (w.clan1Id === myClan.id || w.clan2Id === myClan.id) && w.status !== 'ended');
+
+        if (!activeWar) {
+            const canStart = currentPlayer.id === myClan.leaderId || myClan.coLeaders.includes(currentPlayer.id);
+            const enemyClans = allClans.filter(c => c.id !== myClan.id && getClanMemberCount(c.id) >= 2);
+            container.innerHTML = `
+                <div class="war-card">
+                    <div class="war-title">⚔️ شروع نبرد جدید</div>
+                    ${canStart ? `
+                        <div class="war-setup">
+                            <div style="margin:8px 0;">
+                                <label>انتخاب حریف:</label>
+                                <select id="warEnemySelect" style="padding:8px;border-radius:10px;border:1px solid #4a3a2a;background:rgba(20,10,10,0.8);color:#e8d5b8;width:100%;">
+                                    <option value="">انتخاب اتحاد حریف...</option>
+                                    ${enemyClans.map(c => `<option value="${c.id}">${c.name} (${getClanMemberCount(c.id)} عضو)</option>`).join('')}
+                                </select>
+                            </div>
+                            <div style="margin:8px 0;">
+                                <label>نوع نبرد:</label>
+                                <select id="warTypeSelect" style="padding:8px;border-radius:10px;border:1px solid #4a3a2a;background:rgba(20,10,10,0.8);color:#e8d5b8;width:100%;">
+                                    <option value="5v5">۵ نفر (۵ روز)</option>
+                                    <option value="10v10">۱۰ نفر (۱۰ روز)</option>
+                                </select>
+                            </div>
+                            <div style="margin:8px 0;">
+                                <label>انتخاب شرکت‌کنندگان (حداقل ${myClan.members.length >= 5 ? 5 : myClan.members.length} نفر):</label>
+                                <div class="participant-select" id="participantSelect">
+                                    ${getClanMembers(myClan.id).map(id => {
+                                        const p = getPlayerById(id);
+                                        if (!p) return '';
+                                        return `<label><input type="checkbox" value="${id}" class="war-participant" ${id === currentPlayer.id ? 'checked' : ''}> ${p.name}</label>`;
+                                    }).join('')}
+                                </div>
+                                <span class="text-xs" style="color:#8a7a6a;">حداقل تعداد: ۵ نفر برای ۵v۵ و ۱۰ نفر برای ۱۰v۱۰</span>
+                            </div>
+                            <button class="war-attack-btn" onclick="startNewWar()" style="background:#6a3a1a;border:1px solid #b8860b;color:#ffd700;">🔥 شروع نبرد</button>
+                        </div>
+                    ` : '<div class="text-xs" style="color:#8a7a6a;">فقط رهبر یا هم‌رهبر می‌توانند نبرد را شروع کنند</div>'}
+                </div>
+            `;
+            return;
+        }
+
+        const clan1 = getClanById(activeWar.clan1Id);
+        const clan2 = getClanById(activeWar.clan2Id);
+        const isClan1 = myClan.id === activeWar.clan1Id;
+        const myAttackers = isClan1 ? activeWar.attackers1 : activeWar.attackers2;
+        const enemyAttackers = isClan1 ? activeWar.attackers2 : activeWar.attackers1;
+        const myAttacks = isClan1 ? activeWar.attacks1 : activeWar.attacks2;
+        const enemyAttacks = isClan1 ? activeWar.attacks2 : activeWar.attacks1;
+        const myStars = isClan1 ? activeWar.stars1 : activeWar.stars2;
+        const enemyStars = isClan1 ? activeWar.stars2 : activeWar.stars1;
+        const enemyClan = isClan1 ? clan2 : clan1;
+
+        const isAttacker = myAttackers.includes(currentPlayer.id);
+        const hasAttacked = myAttacks.some(a => a.playerId === currentPlayer.id);
+        const canAttack = activeWar.status === 'war' && isAttacker && !hasAttacked;
+
+        const attackListHtml = myAttackers.map(pid => {
+            const p = getPlayerById(pid);
+            if (!p) return '';
+            const attack = myAttacks.find(a => a.playerId === pid);
+            const stars = attack ? attack.stars : '—';
+            const status = attack ? `⭐ ${stars}` : '⏳ منتظر';
+            return `<div class="clan-member"><span>${p.name}</span><span>${status}</span></div>`;
+        }).join('');
+
+        const enemyAttackListHtml = enemyAttackers.map(pid => {
+            const p = getPlayerById(pid);
+            if (!p) return '';
+            const attack = enemyAttacks.find(a => a.playerId === pid);
+            const stars = attack ? attack.stars : '—';
+            const status = attack ? `⭐ ${stars}` : '⏳';
+            return `<div class="clan-member"><span>${p.name}</span><span>${status}</span></div>`;
+        }).join('');
+
+        const warDuration = activeWar.type === '5v5' ? 5 : 10;
+        const timeLeft = Math.max(0, activeWar.endTime - Date.now());
+        const daysLeft = Math.floor(timeLeft / (24*3600*1000));
+        const hoursLeft = Math.floor((timeLeft % (24*3600*1000)) / 3600000);
+
+        container.innerHTML = `
+            <div class="war-card">
+                <div class="war-title">⚔️ ${clan1?.name || '?'} vs ${clan2?.name || '?'}</div>
+                <div class="war-stars">
+                    <span>${clan1?.name || '?'} ⭐ <span class="stars">${activeWar.stars1}</span></span>
+                    <span>${clan2?.name || '?'} ⭐ <span class="stars">${activeWar.stars2}</span></span>
+                </div>
+                <div class="war-status">نوع: ${activeWar.type} | مدت: ${warDuration} روز</div>
+                <div class="war-status">وضعیت: ${activeWar.status === 'preparation' ? '⏳ آماده‌سازی' : activeWar.status === 'war' ? '⚔️ در حال نبرد' : '✅ پایان یافته'}</div>
+                <div class="war-status">زمان باقیمانده: ${daysLeft} روز ${hoursLeft} ساعت</div>
+                <div style="margin-top:10px;">
+                    <div><strong>🛡️ مهاجمان ${clan1?.name || '?'}:</strong></div>
+                    <div class="clan-member-list">${attackListHtml}</div>
+                    <div><strong>🛡️ مهاجمان ${clan2?.name || '?'}:</strong></div>
+                    <div class="clan-member-list">${enemyAttackListHtml}</div>
+                </div>
+                ${activeWar.status === 'war' ? `
+                    <div style="margin-top:8px;">
+                        ${canAttack ? `
+                            <button class="war-attack-btn" onclick="performWarAttack('${activeWar.id}')">⚔️ حمله به ${enemyClan?.name || 'حریف'}</button>
+                        ` : `
+                            <div class="text-xs" style="color:#8a7a6a;margin-top:6px;">
+                                ${!isAttacker ? 'شما در لیست مهاجمان این نبرد نیستید.' : hasAttacked ? 'شما قبلاً حمله کرده‌اید.' : 'نبرد هنوز فعال نشده است.'}
+                            </div>
+                        `}
+                    </div>
+                ` : activeWar.status === 'preparation' ? `<div class="text-xs" style="color:#ffd700;">نبرد به زودی شروع می‌شود...</div>` :
+                `<div class="text-xs" style="color:#4ade80;">🏆 برنده: ${activeWar.winner ? (getClanById(activeWar.winner)?.name || 'نامشخص') : 'مساوی'}</div>`}
+            </div>
+        `;
+    }
+
+    window.startNewWar = async function() {
+        if (!currentPlayer) return;
+        const clan = getClanByPlayerId(currentPlayer.id);
+        if (!clan) return;
+        if (currentPlayer.id !== clan.leaderId && !clan.coLeaders.includes(currentPlayer.id)) {
+            showToast('فقط رهبر یا هم‌رهبر می‌توانند نبرد را شروع کنند!', 'error', '🚫');
+            return;
+        }
+
+        const enemyId = document.getElementById('warEnemySelect')?.value;
+        if (!enemyId) { showToast('حریف را انتخاب کنید!', 'error', '❌'); return; }
+        const enemy = getClanById(enemyId);
+        if (!enemy) { showToast('حریف یافت نشد!', 'error', '❌'); return; }
+
+        const type = document.getElementById('warTypeSelect')?.value;
+        if (!type) { showToast('نوع نبرد را انتخاب کنید!', 'error', '❌'); return; }
+        const required = type === '5v5' ? 5 : 10;
+
+        const checkboxes = document.querySelectorAll('.war-participant:checked');
+        const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+        if (selectedIds.length < required) {
+            showToast(`حداقل ${required} شرکت‌کننده انتخاب کنید!`, 'error', '❌');
+            return;
+        }
+        if (!selectedIds.includes(currentPlayer.id)) {
+            showToast('شما باید در لیست شرکت‌کنندگان باشید!', 'error', '❌');
+            return;
+        }
+        if (allWars.some(w => (w.clan1Id === clan.id || w.clan2Id === clan.id) && w.status !== 'ended')) {
+            showToast('اتحاد شما در حال حاضر در نبرد است!', 'error', '❌');
+            return;
+        }
+
+        const war = new War(clan.id, enemy.id, type, selectedIds, []);
+        allWars.push(war);
+        await apiSave();
+        showToast(`🔥 نبرد ${type} با ${enemy.name} شروع شد!`, 'success', '🔥');
+        renderWar();
+    };
+
+    window.performWarAttack = async function(warId) {
+        if (!currentPlayer) return;
+        const war = allWars.find(w => w.id === warId);
+        if (!war) { showToast('نبرد یافت نشد!', 'error', '❌'); return; }
+        if (war.status !== 'war') { showToast('نبرد فعال نیست!', 'error', '❌'); return; }
+
+        const isClan1 = war.clan1Id === currentPlayer.clanId;
+        const attackers = isClan1 ? war.attackers1 : war.attackers2;
+        const attacks = isClan1 ? war.attacks1 : war.attacks2;
+
+        if (!attackers.includes(currentPlayer.id)) {
+            showToast('شما در لیست مهاجمان این نبرد نیستید!', 'error', '🚫');
+            return;
+        }
+        if (attacks.some(a => a.playerId === currentPlayer.id)) {
+            showToast('شما قبلاً حمله کرده‌اید!', 'error', '🚫');
+            return;
+        }
+
+        const enemyClanId = isClan1 ? war.clan2Id : war.clan1Id;
+        const enemyClan = getClanById(enemyClanId);
+        if (!enemyClan) { showToast('حریف یافت نشد!', 'error', '❌'); return; }
+
+        const myPower = getPlayerPower(currentPlayer);
+        const enemyMembers = getClanMembers(enemyClanId);
+        const enemyPower = enemyMembers.reduce((sum, id) => {
+            const p = getPlayerById(id);
+            return sum + (p ? getPlayerPower(p) : 0);
+        }, 0);
+        const myRoll = myPower + rand(0, 20);
+        const enemyRoll = enemyPower + rand(0, 20);
+
+        const troopsLost = loseAllTroops(currentPlayer);
+
+        let stars = 0;
+        let win = false;
+        if (myRoll > enemyRoll) {
+            stars = rand(1, 3);
+            win = true;
+            currentPlayer.respect += Math.floor(currentPlayer.respect * 0.08);
+            currentPlayer.wins += 1;
+            currentPlayer.history.push({ time: Date.now(), text: `🎉 پیروزی در نبرد اتحاد! ${stars} ستاره کسب کردید. (همه ${troopsLost} سرباز از دست رفتند)`, type: 'victory' });
+            showToast(`🎉 پیروزی! ${stars} ستاره گرفتید (همه ${troopsLost} سرباز از دست رفتند)`, 'success', '⭐');
+        } else {
+            stars = rand(0, 1);
+            win = false;
+            currentPlayer.respect = Math.max(0, currentPlayer.respect - Math.floor(currentPlayer.respect * 0.05));
+            currentPlayer.losses += 1;
+            currentPlayer.history.push({ time: Date.now(), text: `💔 شکست در نبرد اتحاد! ${stars} ستاره کسب کردید. (همه ${troopsLost} سرباز از دست رفتند)`, type: 'defeat' });
+            showToast(`💔 شکست! ${stars} ستاره (همه ${troopsLost} سرباز از دست رفتند)`, 'error', '💔');
+        }
+
+        attacks.push({ playerId: currentPlayer.id, stars, time: Date.now() });
+        if (isClan1) war.stars1 += stars;
+        else war.stars2 += stars;
+
+        const totalAttackers = war.attackers1.length + war.attackers2.length;
+        const totalAttacksDone = war.attacks1.length + war.attacks2.length;
+        if (totalAttacksDone >= totalAttackers || Date.now() > war.endTime) {
+            war.status = 'ended';
+            if (war.stars1 > war.stars2) {
+                war.winner = war.clan1Id;
+                const c = getClanById(war.clan1Id);
+                if (c) c.warWins += 1;
+                const rewardGold = 1000 * (war.type === '5v5' ? 5 : 10) * (c.treasuryLevel || 1);
+                const rewardElixir = 500 * (war.type === '5v5' ? 5 : 10) * (c.treasuryLevel || 1);
+                c.treasuryGold = (c.treasuryGold || 0) + rewardGold;
+                c.treasuryElixir = (c.treasuryElixir || 0) + rewardElixir;
+                c.lastWarParticipants = war.attackers1;
+                showToast(`🏆 اتحاد ${c.name} برنده شد! ${rewardGold} طلا و ${rewardElixir} اکسیر به خزانه واریز شد.`, 'success', '🏆');
+            } else if (war.stars2 > war.stars1) {
+                war.winner = war.clan2Id;
+                const c = getClanById(war.clan2Id);
+                if (c) c.warWins += 1;
+                const rewardGold = 1000 * (war.type === '5v5' ? 5 : 10) * (c.treasuryLevel || 1);
+                const rewardElixir = 500 * (war.type === '5v5' ? 5 : 10) * (c.treasuryLevel || 1);
+                c.treasuryGold = (c.treasuryGold || 0) + rewardGold;
+                c.treasuryElixir = (c.treasuryElixir || 0) + rewardElixir;
+                c.lastWarParticipants = war.attackers2;
+                showToast(`🏆 اتحاد ${c.name} برنده شد! ${rewardGold} طلا و ${rewardElixir} اکسیر به خزانه واریز شد.`, 'success', '🏆');
+            } else {
+                showToast('نبرد مساوی شد!', 'warning', '🤝');
+            }
+        }
+
+        await savePlayer();
+        await apiSave();
+        renderWar();
+        updateUI();
+    };
+
+    // ============================================================
+    //  ARMY
+    // ============================================================
+    function renderArmy() {
+        const container = document.getElementById('armyContainer');
+        if (!container || !currentPlayer) return;
+        const troops = [
+            { key: 'barbarian', label: '🪓 بربر', cost: 200, power: 5 },
+            { key: 'archer', label: '🏹 کماندار', cost: 300, power: 8 },
+            { key: 'giant', label: '🦍 غول', cost: 600, power: 15 },
+            { key: 'goblin', label: '👺 کوتوله', cost: 120, power: 3 }
+        ];
+
+        const now = Date.now();
+        const canTrain = (now - currentPlayer.lastTrainTime) >= TRAIN_COOLDOWN;
+        const remaining = Math.max(0, Math.ceil((TRAIN_COOLDOWN - (now - currentPlayer.lastTrainTime)) / 60000));
+
+        container.innerHTML = `
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+                ${troops.map(t => `
+                    <div class="building-card" style="border-color:#4a3a2a;">
+                        <span class="icon">${t.label.split(' ')[0]}</span>
+                        <div class="bname">${t.label}</div>
+                        <div class="blevel">تعداد: ${currentPlayer.troops[t.key] || 0}</div>
+                        <div class="bprod">قدرت: ${t.power}</div>
+                        <button onclick="trainTroop('${t.key}')" class="action-btn secondary" style="margin-top:6px;padding:4px;" ${canTrain ? '' : 'disabled'}>
+                            🎯 آموزش (${t.cost} طلا)
+                            ${!canTrain ? `<span class="cooldown-badge">⏳ ${remaining} دقیقه</span>` : ''}
+                        </button>
+                    </div>
+                `).join('')}
+            </div>
+            <div style="margin-top:12px;font-size:0.8rem;color:#8a7a6a;text-align:center;">
+                قدرت کل ارتش: ${getPlayerPower(currentPlayer)}
+                ${!canTrain ? `<br><span class="text-xs" style="color:#ff6b6b;">⏳ صبر کنید تا آموزش دوباره فعال شود (${remaining} دقیقه)</span>` : ''}
+            </div>
+        `;
+    }
+
+    window.trainTroop = async function(type) {
+        if (!currentPlayer) return;
+        const now = Date.now();
+        if (now - currentPlayer.lastTrainTime < TRAIN_COOLDOWN) {
+            const remaining = Math.ceil((TRAIN_COOLDOWN - (now - currentPlayer.lastTrainTime)) / 60000);
+            showToast(`⏳ لطفاً ${remaining} دقیقه صبر کنید تا دوباره آموزش دهید!`, 'warning', '⏳');
+            return;
+        }
+        const costs = { barbarian: 200, archer: 300, giant: 600, goblin: 120 };
+        const cost = costs[type] || 200;
+        if (currentPlayer.gold < cost) {
+            showToast(`طلا کافی نیست! نیاز به ${cost} طلا دارید.`, 'error', '💰');
+            return;
+        }
+        currentPlayer.gold -= cost;
+        if (!currentPlayer.troops[type]) currentPlayer.troops[type] = 0;
+        currentPlayer.troops[type] += 1;
+        currentPlayer.lastTrainTime = now;
+        currentPlayer.history.push({ time: Date.now(), text: `آموزش یک ${type} با ${cost} طلا`, type: 'neutral' });
+        showToast(`🎯 یک ${type} آموزش داده شد! (هزینه: ${cost} طلا)`, 'success', '🎯');
+        await savePlayer();
+        renderArmy();
+        updateUI();
+    };
+
+    // ============================================================
+    //  RANK
+    // ============================================================
+    async function renderRank() {
+        const container = document.getElementById('rankContainer');
+        if (!container) return;
+        await apiGet();
+        const sorted = [...allPlayers].sort((a, b) => (b.respect || 0) - (a.respect || 0));
+        let html = `<div style="font-size:0.9rem;color:#ffd700;margin-bottom:8px;">🏆 رنکینگ بازیکنان</div>`;
+        if (!sorted.length) { html += '<div class="empty">هنوز بازیکنی ثبت نشده</div>'; }
+        else {
+            html += sorted.slice(0, 50).map((p, i) => {
                 const color = p.chatColor || '#ffd700';
-
-                const lastAttackTime = currentPlayer.lastAttackTimes[p.id] || 0;
-                const canAttackTarget = (now - lastAttackTime >= PVP_COOLDOWN);
-                const timeRemaining = Math.ceil((PVP_COOLDOWN - (now - lastAttackTime)) / 3600000);
-
-                const lastReceived = currentPlayer.lastAttackReceived[p.id] || 0;
-                const canRevenge = (now - lastReceived < PVP_COOLDOWN);
-
-                const normalDisabled = !canAttackTarget || attackerLossCooldown;
-                const revengeDisabled = !canRevenge || attackerLossCooldown;
-
-                let normalButton = `<button class="war-attack-btn" style="width:auto;padding:6px 16px;" onclick="attackPlayer('${p.id}', false)" ${normalDisabled ? 'disabled' : ''}>⚔️ حمله</button>`;
-                if (!canAttackTarget && !attackerLossCooldown) {
-                    normalButton = `<span class="cooldown-badge">⏳ ${timeRemaining} ساعت</span>`;
-                }
-
-                let revengeButton = '';
-                if (canRevenge) {
-                    revengeButton = `<button class="war-attack-btn" style="width:auto;padding:6px 16px;background:#6a3a1a;border:1px solid #b8860b;" onclick="attackPlayer('${p.id}', true)" ${revengeDisabled ? 'disabled' : ''}>🔥 انتقام</button>`;
-                }
-
-                let lossCooldownMsg = '';
-                if (attackerLossCooldown) {
-                    const remaining = Math.ceil((PVP_LOSS_COOLDOWN - (now - currentPlayer.lastPvPAttempt)) / 60000);
-                    lossCooldownMsg = `<span class="cooldown-badge" style="display:block;margin-top:4px;">⏳ ${remaining} دقیقه تا حمله بعدی</span>`;
-                }
-
-                let shieldHint = hasShieldAttacker ? ' (🛡️ سپر دارید)' : '';
-
                 return `
-                    <div class="clan-member">
-                        <span><span style="color:${color}">${p.emoji||''} ${p.name}</span> ${hasShieldTarget ? '🛡️' : ''}</span>
-                        <span>⚔️${getPlayerPower(p)} | 💰${p.gold}</span>
-                        <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-                            ${normalButton}${shieldHint}
-                            ${revengeButton}
-                            ${lossCooldownMsg}
-                        </span>
+                    <div class="rank-item">
+                        <span class="pos">${i+1}</span>
+                        <span class="rname"><span style="color:${color}">${p.emoji || ''} ${p.name}</span> ${p.id === currentPlayer?.id ? '👈' : ''} ${hasShield(p) ? '🛡️' : ''}</span>
+                        <span class="rscore">⭐ ${p.respect || 0}</span>
+                        <span class="text-xs">🏠${p.townHall || 1} ⚔️${getPlayerPower(p)}</span>
                     </div>
                 `;
             }).join('');
         }
+        const sortedClans = [...allClans].sort((a, b) => (b.totalStars || 0) - (a.totalStars || 0));
+        html += `<div style="font-size:0.9rem;color:#ffd700;margin-top:20px;margin-bottom:8px;">🏴 رنکینگ اتحادها (بر اساس ستاره)</div>`;
+        if (!sortedClans.length) { html += '<div class="empty">هنوز اتحادی وجود ندارد</div>'; }
+        else {
+            html += sortedClans.slice(0, 20).map((c, i) => `
+                <div class="rank-item">
+                    <span class="pos">${i+1}</span>
+                    <span class="rname">${c.name}</span>
+                    <span class="rscore">⭐ ${c.totalStars || 0}</span>
+                    <span class="text-xs">سطح ${getClanLevel(c)} | ${getClanMemberCount(c.id)} عضو</span>
+                </div>
+            `).join('');
+        }
+        container.innerHTML = html;
+    }
 
-        window.attackPlayer = async function(targetId, isRevenge = false) {
-            if (!currentPlayer) return;
+    document.getElementById('refreshRankBtn')?.addEventListener('click', renderRank);
 
-            if (hasShield(currentPlayer)) {
-                showToast('🛡️ شما سپر دارید! نمی‌توانید در نبردهای تک‌نفره حمله کنید.', 'error', '🛡️');
-                return;
-            }
+    // ============================================================
+    //  SHOP
+    // ============================================================
+    async function renderShop() {
+        const container = document.getElementById('shopContainer');
+        if (!container) return;
+        await apiGet();
+        if (!allShop.length) {
+            container.innerHTML = '<div class="empty">🛒 بازار خالی است. ادمین کالا اضافه کند.</div>';
+            return;
+        }
+        container.innerHTML = allShop.map(item => {
+            const stock = item.stock || 0;
+            const disabled = stock <= 0;
+            return `
+                <div class="shop-item">
+                    <div class="sinfo">${item.name}</div>
+                    <div class="sprice">💎 ${item.price}</div>
+                    <div class="sstock">موجودی: ${stock}</div>
+                    <button onclick="buyShopItem('${item.id}')" ${disabled ? 'disabled' : ''}>
+                        ${disabled ? 'تمام شده' : 'خرید'}
+                    </button>
+                </div>
+            `;
+        }).join('');
+    }
 
-            const elapsedSinceLoss = Date.now() - currentPlayer.lastPvPAttempt;
-            if (elapsedSinceLoss < PVP_LOSS_COOLDOWN) {
-                const remaining = Math.ceil((PVP_LOSS_COOLDOWN - elapsedSinceLoss) / 60000);
-                showToast(`⏳ شما اخیراً در حمله شکست خورده‌اید! ${remaining} دقیقه دیگر می‌توانید حمله کنید.`, 'warning', '⏳');
-                return;
-            }
-
-            const target = getPlayerById(targetId);
-            if (!target) { showToast('هدف یافت نشد!', 'error', '❌'); return; }
-            if (target.id === currentPlayer.id) { showToast('نمی‌توانید به خودتان حمله کنید!', 'error', '❌'); return; }
-            if (hasShield(target)) {
-                showToast('🛡️ این بازیکن سپر دارد! نمی‌توانید حمله کنید.', 'error', '🛡️');
-                return;
-            }
-
-            if (!isRevenge) {
-                const lastAttackTime = currentPlayer.lastAttackTimes[targetId] || 0;
-                if (Date.now() - lastAttackTime < PVP_COOLDOWN) {
-                    const hoursLeft = Math.ceil((PVP_COOLDOWN - (Date.now() - lastAttackTime)) / 3600000);
-                    showToast(`⏳ شما قبلاً به این بازیکن حمله کرده‌اید! ${hoursLeft} ساعت دیگر می‌توانید دوباره حمله کنید.`, 'warning', '⏳');
-                    return;
-                }
-            }
-
-            const myPower = getPlayerPower(currentPlayer);
-            const targetPower = getPlayerPower(target);
-            const myRoll = myPower + rand(0, 20);
-            const targetRoll = targetPower + rand(0, 20);
-            const troopsLost = loseAllTroops(currentPlayer);
-
-            let attackerWin = myRoll > targetRoll;
-            let lootGold = 0, lootElixir = 0;
-            let defenderRespectGain = 0;
-            let attackerRespectGain = 0;
-
-            if (attackerWin) {
-                lootGold = Math.floor(target.gold * 0.1);
-                lootElixir = Math.floor(target.elixir * 0.1);
-                target.gold = Math.max(0, target.gold - lootGold);
-                target.elixir = Math.max(0, target.elixir - lootElixir);
-                attackerRespectGain = Math.floor(currentPlayer.respect * 0.08);
-                if (attackerRespectGain < 1) attackerRespectGain = 1;
-                currentPlayer.respect += attackerRespectGain;
-                currentPlayer.history.push({ time: Date.now(), text: `🎉 پیروزی در حمله به ${target.name}! +${lootGold} طلا +${lootElixir} اکسیر، +${attackerRespectGain} احترام (همه سربازان از دست رفتند: ${troopsLost})`, type: 'victory' });
-                target.history.push({ time: Date.now(), text: `💔 شکست از ${currentPlayer.name} (از دست دادن ${lootGold} طلا و ${lootElixir} اکسیر)`, type: 'defeat' });
-                showToast(`🎉 پیروزی! +${lootGold} طلا +${lootElixir} اکسیر، +${attackerRespectGain} احترام (همه ${troopsLost} سرباز از دست رفتند)`, 'success', '🏆');
-                currentPlayer.gold += lootGold;
-                currentPlayer.elixir += lootElixir;
-                currentPlayer.wins += 1;
-                target.losses += 1;
-                target.shieldExpiry = Math.max(target.shieldExpiry || 0, Date.now() + PVP_DEFENDER_SHIELD);
-                showToast(`🛡️ ${target.name} به مدت ۳۰ دقیقه سپر دریافت کرد!`, 'warning', '🛡️');
-            } else {
-                defenderRespectGain = Math.floor(target.respect * 0.05);
-                if (defenderRespectGain < 1) defenderRespectGain = 1;
-                target.respect += defenderRespectGain;
-                const respectLoss = Math.floor(currentPlayer.respect * 0.05);
-                currentPlayer.respect = Math.max(0, currentPlayer.respect - respectLoss);
-                currentPlayer.history.push({ time: Date.now(), text: `💔 شکست در حمله به ${target.name}! (از دست دادن ${respectLoss} احترام و همه ${troopsLost} سرباز)`, type: 'defeat' });
-                target.history.push({ time: Date.now(), text: `🎉 دفاع موفق در برابر ${currentPlayer.name}! +${defenderRespectGain} احترام`, type: 'victory' });
-                showToast(`💔 شکست خوردید! -${respectLoss} احترام، همه ${troopsLost} سرباز از دست رفتند`, 'error', '💔');
-                currentPlayer.losses += 1;
-                target.wins += 1;
-                currentPlayer.lastPvPAttempt = Date.now();
-            }
-
-            const now = Date.now();
-            currentPlayer.lastAttackTimes[targetId] = now;
-            target.lastAttackReceived[currentPlayer.id] = now;
-
-            const idx = allPlayers.findIndex(p => p.id === target.id);
-            if (idx !== -1) allPlayers[idx] = JSON.parse(JSON.stringify(target));
-
-            await savePlayer();
-            await apiSave();
-            renderAttackList();
-            updateUI();
-        };
-
-        // ============================================================
-        //  CLAN (کامل)
-        // ============================================================
-        async function renderClan() {
-            // (کد کامل Clan مشابه نسخه قبلی)
-            // برای جلوگیری از طولانی شدن، بقیه توابع در ادامه آمده‌اند.
+    window.buyShopItem = async function(itemId) {
+        if (!currentPlayer) return;
+        await apiGet();
+        const idx = allShop.findIndex(i => i.id == itemId);
+        if (idx === -1) { showToast('کالا یافت نشد!', 'error', '❌'); return; }
+        const item = allShop[idx];
+        if (item.stock <= 0) { showToast('موجودی این کالا تمام شده!', 'error', '⚠️'); return; }
+        if (currentPlayer.gems < item.price) {
+            showToast(`جواهر کافی نیست! نیاز به ${item.price} جواهر دارید.`, 'error', '💎');
+            return;
         }
 
-        // ============================================================
-        //  REST OF FUNCTIONS (WAR, ARMY, RANK, SHOP, ADMIN, TABS, LOGIN, INIT)
-        // ============================================================
-        // (تمام توابع دیگر دقیقاً مشابه نسخه قبلی هستند)
-        // در فایل نهایی کامل هستند.
+        currentPlayer.gems -= item.price;
+        item.stock -= 1;
 
-        console.log('⚔️ جنگ قبایل - نسخه گیت‌هاب + هاست PHP');
-        console.log('🔑 توکن:', TOKEN);
-        console.log('👤 API:', API_URL);
-    </script>
+        if (item.effect === 'gold') {
+            currentPlayer.gold += parseInt(item.value) || 0;
+        } else if (item.effect === 'elixir') {
+            currentPlayer.elixir += parseInt(item.value) || 0;
+        } else if (item.effect === 'troop') {
+            const type = item.value || 'barbarian';
+            if (!currentPlayer.troops[type]) currentPlayer.troops[type] = 0;
+            currentPlayer.troops[type] += parseInt(item.value) || 2;
+        } else if (item.effect === 'defense') {
+            currentPlayer.defenseLevel += parseInt(item.value) || 1;
+        } else if (item.effect === 'emoji') {
+            const emoji = item.value || '';
+            if (!currentPlayer.purchasedEmojis) currentPlayer.purchasedEmojis = [];
+            if (emoji && !currentPlayer.purchasedEmojis.includes(emoji)) {
+                currentPlayer.purchasedEmojis.push(emoji);
+            }
+            showToast(`😊 ایموجی ${emoji} خریداری شد! در پروفایل انتخاب کنید.`, 'success', '😊');
+        } else if (item.effect === 'chatColor') {
+            const color = item.value || '#ffd700';
+            if (!currentPlayer.purchasedColors) currentPlayer.purchasedColors = [];
+            if (color && !currentPlayer.purchasedColors.includes(color)) {
+                currentPlayer.purchasedColors.push(color);
+            }
+            showToast(`🎨 رنگ ${color} خریداری شد! در پروفایل انتخاب کنید.`, 'success', '🎨');
+        }
+
+        if (item.stock <= 0) {
+            allShop.splice(idx, 1);
+            showToast(`🛒 ${item.name} به پایان رسید!`, 'warning', '⚠️');
+        }
+
+        currentPlayer.history.push({ time: Date.now(), text: `خرید ${item.name} با ${item.price} جواهر`, type: 'neutral' });
+        await savePlayer();
+        await apiSave();
+        renderShop();
+        updateUI();
+    };
+
+    // ============================================================
+    //  ADMIN
+    // ============================================================
+    function populateBanSelect() {
+        const sel = document.getElementById('banSelect');
+        if (!sel) return;
+        sel.innerHTML = allPlayers.filter(p => p.id !== currentPlayer?.id).map(p =>
+            `<option value="${p.id}">${p.name}</option>`
+        ).join('');
+    }
+
+    window.banPlayer = async function() {
+        if (!currentPlayer || !currentPlayer.isAdmin) return;
+        const sel = document.getElementById('banSelect');
+        const id = sel?.value;
+        if (!id) { showToast('بازیکنی انتخاب کنید!', 'error', '❌'); return; }
+        allPlayers = allPlayers.filter(p => p.id !== id);
+        for (let c of allClans) {
+            c.members = c.members.filter(mid => mid !== id);
+            c.coLeaders = c.coLeaders.filter(mid => mid !== id);
+            c.elders = c.elders.filter(mid => mid !== id);
+            if (c.leaderId === id) {
+                const newLeader = c.members[0] || c.coLeaders[0] || c.elders[0];
+                if (newLeader) c.leaderId = newLeader;
+                else allClans = allClans.filter(cl => cl.id !== c.id);
+            }
+        }
+        await apiSave();
+        showToast('🚫 بازیکن بن شد', 'warning', '🚫');
+        populateBanSelect();
+        renderRank();
+    };
+
+    window.addShopItem = async function() {
+        if (!currentPlayer || !currentPlayer.isAdmin) return;
+        const name = document.getElementById('shopItemName')?.value.trim();
+        const price = parseInt(document.getElementById('shopItemPrice')?.value);
+        const effect = document.getElementById('shopItemEffect')?.value.trim();
+        const value = document.getElementById('shopItemValue')?.value.trim();
+        const stock = parseInt(document.getElementById('shopItemStock')?.value);
+        if (!name || !price || !effect || !value || !stock) {
+            showToast('همه فیلدها را پر کنید!', 'error', '❌');
+            return;
+        }
+        await apiGet();
+        allShop.push({
+            id: Date.now(),
+            name,
+            price,
+            effect,
+            value: isNaN(value) ? value : parseInt(value),
+            stock: stock
+        });
+        await apiSave();
+        showToast('➕ کالا اضافه شد', 'success', '➕');
+        renderShop();
+        document.getElementById('shopItemName').value = '';
+        document.getElementById('shopItemPrice').value = '';
+        document.getElementById('shopItemEffect').value = '';
+        document.getElementById('shopItemValue').value = '';
+        document.getElementById('shopItemStock').value = '';
+    };
+
+    window.removeShopItem = async function() {
+        if (!currentPlayer || !currentPlayer.isAdmin) return;
+        const id = parseInt(document.getElementById('removeShopId')?.value);
+        if (!id) { showToast('ID معتبر وارد کنید!', 'error', '❌'); return; }
+        await apiGet();
+        allShop = allShop.filter(i => i.id !== id);
+        await apiSave();
+        showToast('🗑️ کالا حذف شد', 'warning', '🗑️');
+        renderShop();
+    };
+
+    window.removeShopItemByName = async function() {
+        if (!currentPlayer || !currentPlayer.isAdmin) return;
+        const name = document.getElementById('removeShopName')?.value.trim();
+        if (!name) { showToast('نام کالا را وارد کنید!', 'error', '❌'); return; }
+        await apiGet();
+        const found = allShop.filter(i => i.name === name);
+        if (found.length === 0) { showToast('کالایی با این نام یافت نشد!', 'error', '❌'); return; }
+        allShop = allShop.filter(i => i.name !== name);
+        await apiSave();
+        showToast(`🗑️ ${found.length} کالا با نام "${name}" حذف شد`, 'warning', '🗑️');
+        renderShop();
+        document.getElementById('removeShopName').value = '';
+    };
+
+    window.resetAllData = async function() {
+        if (!currentPlayer || !currentPlayer.isAdmin) return;
+        if (!confirm('⚠️ آیا مطمئن هستید؟ تمام داده‌ها پاک می‌شوند!')) return;
+        allPlayers = [];
+        allClans = [];
+        allShop = [];
+        allWars = [];
+        pendingClans = [];
+        announcementData = null;
+        await apiSave();
+        showToast('🔄 همه داده‌ها ریست شدند', 'warning', '🔄');
+        location.reload();
+    };
+
+    // ============================================================
+    //  TABS
+    // ============================================================
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', async function() {
+            const tabName = this.dataset.tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            const panel = document.getElementById(tabName + 'Panel');
+            if (panel) panel.classList.add('active');
+
+            if (tabName === 'profile') renderProfile();
+            if (tabName === 'clan') renderClan();
+            if (tabName === 'war') renderWar();
+            if (tabName === 'army') renderArmy();
+            if (tabName === 'rank') await renderRank();
+            if (tabName === 'shop') await renderShop();
+            if (tabName === 'attack') renderAttackList();
+            if (tabName === 'admin' && currentPlayer?.isAdmin) {
+                populateBanSelect();
+                renderPendingClans();
+            }
+        });
+    });
+
+    // ============================================================
+    //  LOGIN
+    // ============================================================
+    document.getElementById('loginBtn')?.addEventListener('click', async function() {
+        const name = document.getElementById('playerName').value.trim();
+        const pass = document.getElementById('playerPassword').value.trim();
+        if (!name || name.length < 3) { showToast('نام حداقل ۳ حرف!', 'error', '❌'); return; }
+        if (!pass || pass.length < 4) { showToast('رمز حداقل ۴ حرف!', 'error', '❌'); return; }
+
+        this.disabled = true;
+        this.textContent = '⏳ در حال بررسی...';
+
+        if (await loginPlayer(name, pass)) {
+            showToast(`👋 خوش آمدی ${name}!`, 'success', '👋');
+        } else if (await registerPlayer(name, pass)) {
+            showToast(`🎮 قبیله ${name} ساخته شد!`, 'success', '🎮');
+        } else {
+            this.disabled = false;
+            this.textContent = '🎮 ورود / ثبت نام';
+            return;
+        }
+
+        document.getElementById('loginBox').style.display = 'none';
+        document.getElementById('gameContent').style.display = 'block';
+        updateUI();
+        await renderRank();
+        await renderShop();
+        renderAttackList();
+        if (currentPlayer?.isAdmin) {
+            populateBanSelect();
+            renderPendingClans();
+        }
+
+        setInterval(async () => {
+            await apiGet();
+            if (currentPlayer) {
+                const fresh = getPlayerById(currentPlayer.id);
+                if (fresh) Object.assign(currentPlayer, fresh);
+                resetDailyIfNeeded(currentPlayer);
+                checkGemGeneration(currentPlayer);
+                updateUI();
+                if (document.getElementById('clanPanel')?.classList.contains('active')) renderClan();
+                if (document.getElementById('warPanel')?.classList.contains('active')) renderWar();
+                if (document.getElementById('attackPanel')?.classList.contains('active')) renderAttackList();
+                if (document.getElementById('profilePanel')?.classList.contains('active')) renderProfile();
+                if (document.getElementById('adminPanel')?.classList.contains('active') && currentPlayer.isAdmin) {
+                    renderPendingClans();
+                }
+            }
+            showAnnouncement();
+        }, 30000);
+
+        this.disabled = false;
+        this.textContent = '🎮 ورود / ثبت نام';
+    });
+
+    // ============================================================
+    //  INIT
+    // ============================================================
+    (async function init() {
+        await apiGet();
+        if (!allPlayers.find(p => p.name === 'Admin')) {
+            const admin = new Player('Admin', 'admin123');
+            admin.isAdmin = true;
+            admin.gold = 99999;
+            admin.elixir = 99999;
+            admin.gems = 999;
+            admin.townHall = 10;
+            admin.defenseLevel = 10;
+            allPlayers.push(admin);
+            await apiSave();
+        }
+        document.getElementById('syncStatus').textContent = '✅ آماده | ' + allPlayers.length + ' بازیکن';
+        showAnnouncement();
+    })();
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const chatInput = document.getElementById('clanChatInput');
+            if (chatInput && document.activeElement === chatInput) {
+                sendClanChat();
+            }
+        }
+    });
+
+    console.log('⚔️ جنگ قبایل - نسخه گیت‌هاب + هاست PHP');
+    console.log('🔑 توکن:', TOKEN);
+    console.log('👤 API:', API_URL);
+</script>
 </body>
 </html>
