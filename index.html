@@ -41,7 +41,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            opacity: 0.1;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.07"><text x="2" y="28" font-size="14" fill="%23fbbf24" font-weight="bold">WORLD</text><text x="2" y="52" font-size="20" fill="%23fbbf24" font-weight="bold">EMPIRE</text><text x="2" y="78" font-size="12" fill="%23f59e0b">2027</text></svg>');
+            background-size: cover;
+            background-position: center;
             pointer-events: none;
         }
         .header h1 {
@@ -59,22 +61,6 @@
             color: #f59e0b;
             letter-spacing: 4px;
             opacity: 0.8;
-            margin-top: 5px;
-        }
-        .channel-info {
-            background: #0a0a1a;
-            padding: 8px 12px;
-            text-align: center;
-            font-size: 0.65rem;
-            color: #fbbf24;
-            border-bottom: 1px solid #f59e0b33;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-        .channel-info span {
-            color: #94a3b8;
         }
         .sync-status {
             background: #0a0a1a;
@@ -83,6 +69,29 @@
             font-size: 0.6rem;
             color: #fbbf24;
             border-bottom: 1px solid #f59e0b33;
+        }
+        .channel-info {
+            background: linear-gradient(135deg, #1a1a2e, #0f172a);
+            padding: 8px 12px;
+            border-bottom: 1px solid #f59e0b33;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 6px;
+            font-size: 0.55rem;
+        }
+        .channel-info-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #94a3b8;
+        }
+        .channel-info-item strong {
+            color: #fbbf24;
+        }
+        .channel-info-item a {
+            color: #7dd3fc;
+            text-decoration: none;
         }
         .login-box {
             padding: 18px 16px 20px;
@@ -151,6 +160,19 @@
         .res-item span {
             color: #fbbf24;
             font-weight: 700;
+        }
+        .online-bar {
+            background: #0a1a0a;
+            padding: 4px 10px;
+            text-align: center;
+            font-size: 0.55rem;
+            color: #4ade80;
+            border-bottom: 1px solid #10b98133;
+        }
+        .online-bar.offline {
+            background: #1a0a0a;
+            color: #fca5a5;
+            border-bottom-color: #ef444433;
         }
         .tabs {
             display: flex;
@@ -221,413 +243,2465 @@
             color: #fbbf24;
             margin-top: 4px;
         }
+        .player-row {
+            background: #0a0a1a;
+            border-radius: 1.2rem;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border: 1px solid #f59e0b44;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .btn {
+            transition: 0.2s;
+            cursor: pointer;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.6rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .btn:active {
+            transform: scale(0.94);
+        }
+        .btn-attack {
+            background: #ef4444;
+            color: #fff;
+        }
+        .btn-attack:hover {
+            background: #dc2626;
+        }
+        .btn-gold {
+            background: #f59e0b;
+            color: #0f172a;
+        }
+        .btn-gold:hover {
+            background: #d97706;
+        }
+        .btn-green {
+            background: #10b981;
+            color: #fff;
+        }
+        .btn-green:hover {
+            background: #059669;
+        }
+        .btn-purple {
+            background: #8b5cf6;
+            color: #fff;
+        }
+        .btn-purple:hover {
+            background: #7c3aed;
+        }
+        .btn-blue {
+            background: #3b82f6;
+            color: #fff;
+        }
+        .btn-blue:hover {
+            background: #2563eb;
+        }
+        .btn-red {
+            background: #dc2626;
+            color: #fff;
+        }
+        .btn-red:hover {
+            background: #b91c1c;
+        }
+        .btn-defense {
+            background: #1e40af;
+            color: #fff;
+        }
+        .btn-defense:hover {
+            background: #1e3a8a;
+        }
+        .btn-missile {
+            background: #b91c1c;
+            color: #fff;
+        }
+        .btn-missile:hover {
+            background: #991b1b;
+        }
+        .btn-admin {
+            background: #ef4444;
+            color: #fff;
+        }
+        .btn-admin:hover {
+            background: #dc2626;
+        }
+        .btn-naval {
+            background: #0ea5e9;
+            color: #fff;
+        }
+        .btn-naval:hover {
+            background: #0284c7;
+        }
+        .btn-extend {
+            background: #8b5cf6;
+            color: #fff;
+        }
+        .btn-extend:hover {
+            background: #7c3aed;
+        }
+        .btn-sm {
+            padding: 4px 10px;
+            font-size: 0.5rem;
+        }
         .toast {
             position: fixed;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 20px;
             background: #1a1a2e;
-            color: white;
-            padding: 12px 20px;
+            color: #fbbf24;
+            padding: 12px 18px;
             border-radius: 40px;
-            border: 1px solid #f59e0b44;
-            z-index: 10000;
-            animation: slideUp 0.3s ease-out;
-            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.2);
+            border-right: 4px solid #f59e0b;
+            z-index: 9999;
+            animation: fadeOut 4.5s forwards;
+            max-width: 92%;
+            font-size: 0.8rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
         }
-        @keyframes slideUp {
-            from {
-                transform: translateX(-50%) translateY(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(-50%) translateY(0);
+        .toast.error {
+            border-right-color: #ef4444;
+            color: #fca5a5;
+        }
+        .toast.war {
+            background: #1a0a0a;
+            border-right-color: #ef4444;
+            color: #fca5a5;
+        }
+        .toast.peace {
+            background: #0a1a0a;
+            border-right-color: #10b981;
+            color: #4ade80;
+        }
+        .toast.missile {
+            background: #1a0a0a;
+            border-right-color: #f59e0b;
+            color: #fbbf24;
+        }
+        .toast.naval {
+            background: #0a1a2a;
+            border-right-color: #0ea5e9;
+            color: #7dd3fc;
+        }
+        .toast.warning {
+            background: #1a1a0a;
+            border-right-color: #f59e0b;
+            color: #fbbf24;
+        }
+        @keyframes fadeOut {
+            0% {
                 opacity: 1;
+                transform: translateY(0);
+            }
+            70% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(20px);
+                visibility: hidden;
             }
         }
-        .telegram-status {
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .empty {
+            text-align: center;
+            padding: 24px 10px;
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+        .loading {
+            text-align: center;
+            padding: 24px;
+            color: #fbbf24;
+        }
+        .info-bar {
+            background: #0a0a1a;
+            padding: 6px 10px;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 0.5rem;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            border: 1px solid #334155;
+        }
+        .section-title {
+            color: #fbbf24;
+            margin: 10px 0 6px;
+            font-size: 0.7rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 4px;
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 12px;
+        }
+        input,
+        select {
             background: #1a1a2e;
-            border-radius: 20px;
+            border: 1px solid #334155;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 12px;
+            text-align: center;
+            width: 100%;
+            margin: 3px 0;
             font-size: 0.6rem;
-            margin-top: 10px;
         }
-        .telegram-status.connected {
-            border: 1px solid #22c55e;
-            color: #22c55e;
+        .inline-form {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
         }
-        .telegram-status.disconnected {
-            border: 1px solid #ef4444;
-            color: #ef4444;
+        .inline-form input,
+        .inline-form select {
+            flex: 1;
+            min-width: 60px;
         }
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.45rem;
+            font-weight: 700;
+            margin: 2px;
         }
-        .telegram-status.connected .status-dot {
-            background: #22c55e;
+        .badge-green {
+            background: #166534;
+            color: #4ade80;
         }
-        .telegram-status.disconnected .status-dot {
-            background: #ef4444;
+        .badge-red {
+            background: #991b1b;
+            color: #fca5a5;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        .badge-yellow {
+            background: #854d0e;
+            color: #fbbf24;
         }
-        canvas {
+        .badge-blue {
+            background: #1e40af;
+            color: #93c5fd;
+        }
+        .badge-purple {
+            background: #4c1d95;
+            color: #c4b5fd;
+        }
+        .badge-gray {
+            background: #334155;
+            color: #94a3b8;
+        }
+        .badge-naval {
+            background: #0ea5e9;
+            color: #fff;
+        }
+        .badge-orange {
+            background: #b45309;
+            color: #fbbf24;
+        }
+        .hp-bar {
+            height: 6px;
+            background: #334155;
+            border-radius: 6px;
+            margin: 4px 0;
+            overflow: hidden;
+        }
+        .hp-fill {
+            height: 100%;
+            background: #4ade80;
+            border-radius: 6px;
+            transition: width 0.3s;
+        }
+        .xp-bar {
+            background: #1a1a2e;
+            border-radius: 30px;
+            padding: 4px 14px;
+            display: inline-block;
+            font-size: 0.55rem;
+            border: 1px solid #8b5cf6;
+        }
+        .base-card {
+            background: linear-gradient(145deg, #1a3a2a, #0a1a12);
+            border-radius: 1.2rem;
+            padding: 12px;
+            border: 2px solid #10b981;
+            margin-bottom: 8px;
+        }
+        .carrier-card {
+            background: linear-gradient(145deg, #0a1a3a, #0a0a2a);
+            border-radius: 1.2rem;
+            padding: 12px;
+            border: 2px solid #0ea5e9;
+            margin-bottom: 8px;
+        }
+        .fighter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 8px;
+        }
+        .fighter-card {
+            background: #1a1a2e;
+            border-radius: 1rem;
+            padding: 8px 4px;
+            text-align: center;
+            border: 2px solid #f59e0b44;
+            transition: 0.2s;
+        }
+        .fighter-card:hover {
+            transform: scale(1.03);
+            border-color: #f59e0b;
+        }
+        .fighter-card .icon {
+            font-size: 1.6rem;
+        }
+        .fighter-card .country {
+            font-size: 0.4rem;
+            color: #94a3b8;
+        }
+        .fighter-select-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 6px;
+            margin: 8px 0;
+        }
+        .fighter-select-card {
+            background: #1a1a2e;
+            border-radius: 10px;
+            padding: 6px 2px;
+            text-align: center;
+            border: 2px solid #334155;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .fighter-select-card:hover {
+            transform: scale(1.04);
+            border-color: #f59e0b;
+        }
+        .fighter-select-card.selected {
+            border-color: #10b981;
+            background: #0a2a1a;
+        }
+        .fighter-select-card .icon {
+            font-size: 1.2rem;
+        }
+        .fighter-select-card .name {
+            font-size: 0.5rem;
+            font-weight: 700;
+        }
+        .fighter-select-card .stats {
+            font-size: 0.4rem;
+            color: #94a3b8;
+        }
+        .carrier-fighter-list {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin: 4px 0;
+        }
+        .carrier-fighter-tag {
+            background: #0f172a;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.45rem;
+            border: 1px solid #0ea5e9;
+        }
+        .defense-card {
+            background: linear-gradient(145deg, #1a2a4a, #0f1a2a);
+            border-radius: 1.2rem;
+            padding: 10px;
+            border: 2px solid #3b82f6;
+            margin-bottom: 6px;
+        }
+        .war-declaration {
+            background: #1a0a0a;
+            border: 2px solid #ef4444;
+            border-radius: 1.2rem;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+        .bg-canvas {
             position: fixed;
             top: 0;
             left: 0;
-            z-index: -1;
             width: 100%;
             height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f59e0b;
+            border-radius: 10px;
+        }
+        .fighter-legend {
+            background: linear-gradient(145deg, #0f172a, #0a0a1a);
+            border-radius: 1rem;
+            padding: 6px 10px;
+            border: 1px solid #f59e0b44;
+            margin-bottom: 8px;
+            font-size: 0.5rem;
+            color: #94a3b8;
+        }
+        .fighter-legend span {
+            color: #fbbf24;
+        }
+        .weapon-card {
+            background: linear-gradient(145deg, #1a1a2e, #0a0a1a);
+            border-radius: 1.2rem;
+            padding: 10px;
+            border: 2px solid #8b5cf6;
+            margin-bottom: 6px;
+        }
+        .expire-card {
+            background: linear-gradient(145deg, #1a0a0a, #0a1a0a);
+            border-radius: 1.2rem;
+            padding: 10px;
+            border: 2px solid #f59e0b;
+            margin-bottom: 6px;
+        }
+        .expire-card.urgent {
+            border-color: #ef4444;
+            background: #1a0a0a;
+        }
+        .expire-card.warning {
+            border-color: #f59e0b;
+            background: #1a1a0a;
+        }
+        .expire-card.safe {
+            border-color: #10b981;
+            background: #0a1a0a;
+        }
+        .admin-player-card {
+            background: #1a1a2e;
+            border-radius: 1.2rem;
+            padding: 10px;
+            border: 1px solid #f59e0b44;
+            margin-bottom: 6px;
+        }
+        .admin-player-card .details {
+            font-size: 0.6rem;
+            color: #94a3b8;
+        }
+        .admin-player-card .pass {
+            color: #fbbf24;
+            font-weight: 700;
+            font-size: 0.7rem;
+        }
+        .admin-player-card .ip {
+            color: #7dd3fc;
+            font-size: 0.55rem;
+        }
+        .mine-card {
+            background: linear-gradient(145deg, #1a2a1a, #0a1a0a);
+            border-radius: 1.2rem;
+            padding: 12px;
+            border: 2px solid #f59e0b;
+            margin-bottom: 8px;
+        }
+        .mine-card .amount {
+            color: #4ade80;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .battle-log {
+            background: #0a0a1a;
+            border: 1px solid #f59e0b44;
+            border-radius: 1rem;
+            padding: 10px;
+            margin-top: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.6rem;
+        }
+        .battle-log .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid #1a1a2e;
+        }
+        .battle-log .log-entry .attacker {
+            color: #fca5a5;
+        }
+        .battle-log .log-entry .defender {
+            color: #7dd3fc;
+        }
+        .battle-log .log-entry .loot {
+            color: #4ade80;
+        }
+        .battle-log .log-entry .damage {
+            color: #fbbf24;
+        }
+        .battle-log .log-entry .lost {
+            color: #ef4444;
+        }
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.2rem;
+            }
+            .tab {
+                font-size: 0.5rem;
+                padding: 8px 8px;
+                min-width: 40px;
+            }
+            .res-item {
+                font-size: 0.5rem;
+                padding: 2px 8px;
+            }
+            .card .icon {
+                font-size: 1.4rem;
+            }
+            .fighter-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            }
+            .battle-log {
+                max-height: 200px;
+                font-size: 0.5rem;
+            }
+        }
+        .market-sell-form {
+            background: #1a1a2e;
+            border-radius: 1rem;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #f59e0b44;
+        }
+        .market-sell-form input {
+            width: 80px;
+            display: inline-block;
+            margin: 4px;
         }
     </style>
 </head>
 <body>
-    <canvas id="bgCanvas"></canvas>
-    <div class="container">
+    <canvas class="bg-canvas" id="bgCanvas"></canvas>
+    <div class="container" id="app">
         <div class="header">
-            <h1>⚔️ امپراتوری جهانی 2027</h1>
-            <div class="sub">WORLD EMPIRE - استراتژی و فتح</div>
-            <div class="channel-info">
-                <span>🌐 کانال:</span>
-                <span id="channelName">درحال اتصال...</span>
-            </div>
+            <div class="header-bg"></div>
+            <h1>🌍 امپراتوری جهانی <span style="color:#f59e0b">2027</span></h1>
+            <div class="sub">✈️ WORLD EMPIRE 🔥</div>
+            <div class="sync-status" id="syncStatus">🔌 در حال اتصال...</div>
         </div>
 
-        <div class="sync-status">
-            <span id="syncText">✅ سیستم آنلاین و مستقل</span>
-            <div class="telegram-status disconnected" id="telegramStatus">
-                <div class="status-dot"></div>
-                <span id="statusText">تلگرام: آفلاین</span>
-            </div>
+        <!-- نمایش اطلاعات کانال و ربات در بالای صفحه -->
+        <div class="channel-info" id="channelInfo">
+            <div class="channel-info-item">📢 کانال: <strong id="chName">@pudgyparty7</strong></div>
+            <div class="channel-info-item">🤖 ربات: <strong id="botName">EmpireBot</strong></div>
+            <div class="channel-info-item">👥 بازیکنان: <strong id="playerCount">0</strong></div>
+            <div class="channel-info-item">📜 آخرین ذخیره: <strong id="lastSave">--</strong></div>
         </div>
 
-        <div id="loginBox" class="login-box">
-            <h2 style="text-align: center; color: #fbbf24;">🏴 ایجاد یا ورود</h2>
-            <input type="text" id="playerName" placeholder="نام کشور/شما" maxlength="20">
-            <input type="password" id="playerPassword" placeholder="رمز عبور" maxlength="20">
-            <button id="startBtn">🎮 شروع بازی</button>
-            <p style="text-align: center; font-size: 0.7rem; color: #94a3b8; margin-top: 10px;">
-                💾 تمام اطلاعات محلی ذخیره می‌شود
-            </p>
+        <div class="online-bar" id="onlineBar">🟢 <span id="onlineText">همگام‌سازی با کانال...</span></div>
+
+        <div class="login-box" id="loginBox">
+            <input type="text" id="playerName" placeholder="نام کشور (حداقل ۳ حرف)...">
+            <input type="password" id="playerPassword" placeholder="رمز عبور (حداقل ۴ حرف)...">
+            <button id="startBtn">🏴 ورود / تأسیس کشور</button>
+            <div style="text-align:center;font-size:0.55rem;color:#94a3b8">⚠️ هر بازیکن با یک IP ثبت می‌شود</div>
         </div>
 
-        <div id="gameUI" style="display: none;">
+        <div id="gameUI" style="display:none">
             <div class="res-bar">
-                <div class="res-item">🪙 سکه: <span id="resGold">0</span></div>
-                <div class="res-item">⚙️ فولاد: <span id="resSteel">0</span></div>
-                <div class="res-item">🌾 غذا: <span id="resFood">0</span></div>
-                <div class="res-item">💎 الماس: <span id="resDiamond">0</span></div>
-                <div class="res-item">⚡ انرژی: <span id="resEnergy">0</span></div>
+                <div class="res-item">💰 طلا: <span id="rGold">0</span></div>
+                <div class="res-item">🛢️ نفت: <span id="rOil">0</span></div>
+                <div class="res-item">⛏️ فلز: <span id="rMetal">0</span></div>
+                <div class="res-item">⭐ XP: <span id="rXP">0</span></div>
             </div>
-
-            <div class="tabs">
-                <div class="tab active" data-tab="city">🏛️ شهر</div>
-                <div class="tab" data-tab="mine">⛏️ معدن</div>
-                <div class="tab" data-tab="military">🎖️ ارتش</div>
-                <div class="tab" data-tab="weapons">🔫 اسلحه</div>
-                <div class="tab" data-tab="storage">📦 انبار</div>
+            <div class="tabs" id="tabBar">
+                <div class="tab active" data-tab="city">🏙️ شهر</div>
+                <div class="tab" data-tab="mine">🪙 معدن</div>
+                <div class="tab" data-tab="military">⚔️ نظامی</div>
+                <div class="tab" data-tab="weapons">🔫 سلاح</div>
+                <div class="tab" data-tab="storage">🛡️ انبار</div>
                 <div class="tab" data-tab="market">🛒 بازار</div>
                 <div class="tab" data-tab="research">🔬 تحقیق</div>
-                <div class="tab" data-tab="bases">🏰 پایگاه‌ها</div>
+                <div class="tab" data-tab="bases">🏰 پایگاه</div>
                 <div class="tab" data-tab="rank">🏆 رتبه</div>
-                <div class="tab" data-tab="battles">⚔️ جنگ</div>
+                <div class="tab" data-tab="admin">👑 ادمین</div>
+                <div class="tab" data-tab="battlelog">📜 گزارش جنگ</div>
             </div>
-
-            <div id="panelCity" class="panel active">
-                <h3 style="color: #fbbf24; margin-bottom: 12px;">🏛️ شهر شما</h3>
-                <div class="grid2">
-                    <div class="card" onclick="buildBuilding('townHall')">
-                        <div class="icon">🏢</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">شهرداری</div>
-                        <div class="cost">💰 <span id="costTH">500</span></div>
-                    </div>
-                    <div class="card" onclick="buildBuilding('farm')">
-                        <div class="icon">🌾</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">مزرعه</div>
-                        <div class="cost">💰 <span id="costFarm">300</span></div>
-                    </div>
-                    <div class="card" onclick="buildBuilding('barracks')">
-                        <div class="icon">🎖️</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">پادگان</div>
-                        <div class="cost">💰 <span id="costBarracks">800</span></div>
-                    </div>
-                    <div class="card" onclick="buildBuilding('library')">
-                        <div class="icon">📚</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">کتابخانه</div>
-                        <div class="cost">💰 <span id="costLibrary">600</span></div>
-                    </div>
-                </div>
-                <div id="buildingsList" style="margin-top: 15px;">
-                    <h4 style="color: #94a3b8; font-size: 0.8rem; margin-bottom: 8px;">ساختمان‌های شما:</h4>
-                    <div id="cityBuildings" style="font-size: 0.7rem; color: #cbd5e1;"></div>
-                </div>
-            </div>
-
-            <div id="panelMine" class="panel">
-                <h3 style="color: #fbbf24; margin-bottom: 12px;">⛏️ معادن</h3>
-                <div class="grid2">
-                    <div class="card" onclick="minResource('gold')">
-                        <div class="icon">🪙</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">استخراج سکه</div>
-                        <div class="cost">⏱️ <span id="mineGoldTime">5s</span></div>
-                    </div>
-                    <div class="card" onclick="minResource('steel')">
-                        <div class="icon">⚙️</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">استخراج فولاد</div>
-                        <div class="cost">⏱️ <span id="mineSteelTime">8s</span></div>
-                    </div>
-                    <div class="card" onclick="minResource('food')">
-                        <div class="icon">🌾</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">برداشت غذا</div>
-                        <div class="cost">⏱️ <span id="mineFoodTime">6s</span></div>
-                    </div>
-                    <div class="card" onclick="minResource('diamond')">
-                        <div class="icon">💎</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">استخراج الماس</div>
-                        <div class="cost">⏱️ <span id="mineDiamondTime">15s</span></div>
-                    </div>
-                </div>
-                <div id="miningStatus" style="margin-top: 15px; font-size: 0.8rem; color: #cbd5e1;">
-                    اطلاعات استخراج اینجا نمایش داده خواهد شد
-                </div>
-            </div>
-
-            <div id="panelMilitary" class="panel">
-                <h3 style="color: #fbbf24; margin-bottom: 12px;">🎖️ ارتش و سربازان</h3>
-                <div class="grid2">
-                    <div class="card" onclick="trainUnit('soldier')">
-                        <div class="icon">🪖</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">سرباز</div>
-                        <div class="cost">💰 <span id="costSoldier">100</span></div>
-                    </div>
-                    <div class="card" onclick="trainUnit('knight')">
-                        <div class="icon">🗡️</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">شوالیه</div>
-                        <div class="cost">💰 <span id="costKnight">300</span></div>
-                    </div>
-                    <div class="card" onclick="trainUnit('archer')">
-                        <div class="icon">🏹</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">تیرانداز</div>
-                        <div class="cost">💰 <span id="costArcher">200</span></div>
-                    </div>
-                    <div class="card" onclick="trainUnit('mage')">
-                        <div class="icon">🧙</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">جادوگر</div>
-                        <div class="cost">💰 <span id="costMage">500</span></div>
-                    </div>
-                </div>
-                <div id="militaryList" style="margin-top: 15px;"></div>
-            </div>
-
-            <div id="panelWeapons" class="panel">
-                <h3 style="color: #fbbf24; margin-bottom: 12px;">🔫 اسلحه و تجهیزات</h3>
-                <div class="grid2">
-                    <div class="card" onclick="craftWeapon('sword')">
-                        <div class="icon">⚔️</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">شمشیر</div>
-                        <div class="cost">⚙️ <span id="costSwordSteel">50</span></div>
-                    </div>
-                    <div class="card" onclick="craftWeapon('shield')">
-                        <div class="icon">🛡️</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">سپر</div>
-                        <div class="cost">⚙️ <span id="costShieldSteel">40</span></div>
-                    </div>
-                    <div class="card" onclick="craftWeapon('bow')">
-                        <div class="icon">🏹</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">کمان</div>
-                        <div class="cost">⚙️ <span id="costBowSteel">60</span></div>
-                    </div>
-                    <div class="card" onclick="craftWeapon('staff')">
-                        <div class="icon">✨</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">عصا جادویی</div>
-                        <div class="cost">💎 <span id="costStaffDiamond">30</span></div>
-                    </div>
-                </div>
-                <div id="weaponsList" style="margin-top: 15px;"></div>
-            </div>
-
-            <div id="panelStorage" class="panel">
-                <h3 style="color: #fbbf24; margin-bottom: 12px;">📦 انبار</h3>
-                <div style="display: grid; gap: 10px;">
-                    <div style="background: #1a1a2e; padding: 12px; border-radius: 12px; border: 1px solid #f59e0b44;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
-                            <span>🪙 سکه:</span>
-                            <span id="storageGold" style="color: #fbbf24;">0</span>
-                        </div>
-                    </div>
-                    <div style="background: #1a1a2e; padding: 12px; border-radius: 12px; border: 1px solid #f59e0b44;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
-                            <span>⚙️ فولاد:</span>
-                            <span id="storageSteel" style="color: #fbbf24;">0</span>
-                        </div>
-                    </div>
-                    <div style="background: #1a1a2e; padding: 12px; border-radius: 12px; border: 1px solid #f59e0b44;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
-                            <span>🌾 غذا:</span>
-                            <span id="storageFood" style="color: #fbbf24;">0</span>
-                        </div>
-                    </div>
-                    <div style="background: #1a1a2e; padding: 12px; border-radius: 12px; border: 1px solid #f59e0b44;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
-                            <span>💎 الماس:</span>
-                            <span id="storageDiamond" style="color: #fbbf24;">0</span>
-                        </div>
-                    </div>
-                    <div style="background: #1a1a2e; padding: 12px; border-radius: 12px; border: 1px solid #f59e0b44;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
-                            <span>⚡ انرژی:</span>
-                            <span id="storageEnergy" style="color: #fbbf24;">0</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="panelMarket" class="panel">
-                <h3 style="color: #fbbf24; margin-bottom: 12px;">🛒 بازار تبادل</h3>
-                <div class="grid2">
-                    <div class="card" onclick="exchange('goldToSteel')">
-                        <div class="icon">💱</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">سکه → فولاد</div>
-                        <div class="cost">نسبت: 1:1</div>
-                    </div>
-                    <div class="card" onclick="exchange('foodToDiamond')">
-                        <div class="icon">💱</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">غذا → الماس</div>
-                        <div class="cost">نسبت: 10:1</div>
-                    </div>
-                    <div class="card" onclick="exchange('steelToFood')">
-                        <div class="icon">💱</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">فولاد → غذا</div>
-                        <div class="cost">نسبت: 1:2</div>
-                    </div>
-                    <div class="card" onclick="exchange('diamondToAll')">
-                        <div class="icon">💱</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">الماس → همه</div>
-                        <div class="cost">1 = +1K</div>
-                    </div>
-                </div>
-                <div id="marketStatus" style="margin-top: 15px; font-size: 0.8rem; color: #cbd5e1;">
-                    قیمت‌ها در بازار لحظه‌ای به‌روز می‌شوند
-                </div>
-            </div>
-
-            <div id="panelResearch" class="panel">
-                <h3 style="color: #fbbf24; margin-bottom: 12px;">🔬 تحقیقات و فن‌آوری</h3>
-                <div class="grid2">
-                    <div class="card" onclick="research('ironTools')">
-                        <div class="icon">🛠️</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">ابزار آهن</div>
-                        <div class="cost">💰 <span id="researchCost1">1000</span></div>
-                    </div>
-                    <div class="card" onclick="research('metalWorking')">
-                        <div class="icon">⚒️</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">کار فلز</div>
-                        <div class="cost">💰 <span id="researchCost2">2000</span></div>
-                    </div>
-                    <div class="card" onclick="research('archery')">
-                        <div class="icon">🏹</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">تکنیک تیر</div>
-                        <div class="cost">💰 <span id="researchCost3">1500</span></div>
-                    </div>
-                    <div class="card" onclick="research('magic')">
-                        <div class="icon">✨</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">جادو پایه</div>
-                        <div class="cost">💎 <span id="researchCost4">50</span></div>
-                    </div>
-                </div>
-                <div id="researchList" style="margin-top: 15px;"></div>
-            </div>
-
-            <div id="panelBases" class="panel">
-                <h3 style="color: #fbbf24; margin-bottom: 12px;">🏰 پایگاه‌های نظامی</h3>
-                <div class="grid2">
-                    <div class="card" onclick="buildBase('outpost')">
-                        <div class="icon">🚩</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">پاسگاه</div>
-                        <div class="cost">💰 <span id="costOutpost">5000</span></div>
-                    </div>
-                    <div class="card" onclick="buildBase('fortress')">
-                        <div class="icon">🏯</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">قلعه</div>
-                        <div class="cost">💰 <span id="costFortress">15000</span></div>
-                    </div>
-                    <div class="card" onclick="buildBase('castle')">
-                        <div class="icon">🏰</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">قصر</div>
-                        <div class="cost">💰 <span id="costCastle">50000</span></div>
-                    </div>
-                    <div class="card" onclick="buildBase('empire')">
-                        <div class="icon">👑</div>
-                        <div style="font-size: 0.75rem; font-weight: 600;">امپراتوری</div>
-                        <div class="cost">💎 <span id="costEmpire">500</span></div>
-                    </div>
-                </div>
-                <div id="basesList" style="margin-top: 15px;"></div>
-            </div>
-
-            <div id="panelRank" class="panel">
-                <h3 style="color: #fbbf24; margin-bottom: 12px;">🏆 رتبه‌بندی کشورها</h3>
-                <div style="margin-top: 12px;">
-                    <div id="rankingList" style="font-size: 0.75rem;"></div>
-                </div>
-            </div>
-
-            <div id="panelBattles" class="panel">
-                <h3 style="color: #fbbf24; margin-bottom: 12px;">⚔️ سیاق نبرد</h3>
-                <div style="margin-top: 12px;">
-                    <div id="battleLogList" style="font-size: 0.75rem;"></div>
-                </div>
-            </div>
+            <div id="panelCity" class="panel active"><div class="grid2" id="cityGrid"></div></div>
+            <div id="panelMine" class="panel"><div id="mineContent"></div></div>
+            <div id="panelMilitary" class="panel"><div id="militaryContent"></div></div>
+            <div id="panelWeapons" class="panel"><div id="weaponsContent"></div></div>
+            <div id="panelStorage" class="panel"><div id="storageContent"></div></div>
+            <div id="panelMarket" class="panel"><div id="marketContent"></div></div>
+            <div id="panelResearch" class="panel"><div id="researchContent"></div></div>
+            <div id="panelBases" class="panel"><div id="basesContent"></div></div>
+            <div id="panelRank" class="panel"><div id="rankContent" class="loading">⏳ بارگذاری...</div></div>
+            <div id="panelAdmin" class="panel"><div id="adminContent"></div></div>
+            <div id="panelBattlelog" class="panel"><div id="battlelogContent"></div></div>
         </div>
     </div>
 
     <script>
         // ============================================================
-        //  CONFIGURATION
+        //  CONFIG - همانطور که خواسته شده دست به توکن و کانال نمیزنیم
         // ============================================================
-        const BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE'; // جایگزین با توکن واقعی
-        const CHAT_ID = 'YOUR_CHAT_ID_HERE'; // جایگزین با آی‌دی چت واقعی
-        const CHANNEL_NAME = '@YourChannelName'; // جایگزین با نام کانال واقعی
-        const TELEGRAM_API = 'https://api.telegram.org/bot';
+        const BOT_TOKEN = "8909027468:AAFLHya_9KhgazMKK1N6GG9RBRBuPH_T-5o";
+        const CHANNEL_ID = "@pudgyparty7";
+        const DATA_KEY = "EMPIRE_DATA_V29";
+        const ATTACK_COOLDOWN = 60;
+        const XP_PER_LEVEL = 10;
+        const DAILY_XP = 2;
+        const MAX_FIGHTERS_PER_BASE = 20;
+        const MAX_NAVAL = 12;
+        const CARRIER_SLOTS = 6;
+        const ADMIN_PASSWORD = "Admin@2026";
+        const STEAL_PERCENT = 35;
+        const REBUILD_COST = 12000;
+        const MAX_ATTACK_FIGHTERS = 12;
+        const FIGHTER_REPAIR = 600;
+        const EXTEND_COST_PER_DAY = 1600;
+        const EXTEND_MIN_DAYS = 14;
+        const EXTEND_SELL_PERCENT = 75;
+        const MINE_MAX = 6000;
+        const MINE_GOLD_PER_SEC = 2;
+        const MINE_METAL_PER_SEC = 2;
+        const MINE_OIL_PER_SEC = 1;
+        const SYNC_INTERVAL = 5000;          // هر ۵ ثانیه همگام‌سازی با کانال
+        const SAVE_THROTTLE = 1500;          // حداقل فاصله بین ذخیره‌ها
 
         // ============================================================
-        //  GLOBAL STATE
+        //  DATABASES
+        // ============================================================
+        const F_DB = {
+            "F-22": { n: "F-22 Raptor", i: "🇺🇸", p: 500, c: { g: 38000, o: 11000, m: 8500 }, r: 8, g: 3, pl: ["تام کروز", "جک میچل", "برایان"] },
+            "Su-57": { n: "Su-57 Felon", i: "🇷🇺", p: 400, c: { g: 22000, o: 6000, m: 4500 }, r: 6, g: 8, pl: ["الکسی", "دیمیتری", "ولادیمیر"] },
+            "J-20": { n: "J-20 Dragon", i: "🇨🇳", p: 410, c: { g: 26000, o: 7500, m: 5800 }, r: 7, g: 10, pl: ["لی وی", "چانگ", "مینگ"] },
+            "F-35": { n: "F-35 Lightning", i: "🇺🇸", p: 300, c: { g: 16000, o: 4500, m: 2800 }, r: 5, g: 12, pl: ["مایکل", "جیمز", "دیوید"] },
+            "F-35I": { n: "F-35I Adir", i: "🇮🇱", p: 420, c: { g: 28000, o: 8000, m: 5500 }, r: 7, g: 10, pl: ["רון", "גל", "עמית"] },
+            "Lavi": { n: "IAI Lavi", i: "🇮🇱", p: 350, c: { g: 21000, o: 6500, m: 4300 }, r: 6, g: 10, pl: ["דני", "אורי", "יובל"] },
+            "Rafale": { n: "Rafale", i: "🇫🇷", p: 320, c: { g: 20000, o: 5500, m: 3800 }, r: 6, g: 12, pl: ["ژان", "پیر", "مارک"] },
+            "Typhoon": { n: "Typhoon", i: "🇪🇺", p: 310, c: { g: 19000, o: 5200, m: 3600 }, r: 6, g: 12, pl: ["هانس", "مارک", "کارل"] },
+            "F-15Baz": { n: "F-15 Baz", i: "🇮🇱", p: 320, c: { g: 19000, o: 4800, m: 3000 }, r: 6, g: 12, pl: ["آمیر", "גדי", "רון"] },
+            "F-16I": { n: "F-16I Sufa", i: "🇮🇱", p: 270, c: { g: 15000, o: 3800, m: 2400 }, r: 5, g: 15, pl: ["ایال", "یوسی", "آمیر"] },
+            "Su-35": { n: "Su-35S", i: "🇷🇺", p: 240, c: { g: 11000, o: 3200, m: 1900 }, r: 4, g: 15, pl: ["ایوان", "دیمیتری", "الکسی"] },
+            "MiG-29": { n: "MiG-29", i: "🇷🇺", p: 180, c: { g: 8000, o: 2200, m: 1300 }, r: 4, g: 15, pl: ["ولادیمیر", "سرگئی", "میخائیل"] },
+            "F-16": { n: "F-16", i: "🇺🇸", p: 130, c: { g: 5500, o: 1600, m: 900 }, r: 3, g: 15, pl: ["جک", "تام", "مایک"] },
+            "F-15": { n: "F-15 Eagle", i: "🇺🇸", p: 190, c: { g: 8500, o: 2200, m: 1300 }, r: 4, g: 15, pl: ["برایان", "رایان", "کریس"] },
+            "F-14": { n: "F-14 Tomcat", i: "🇮🇷", p: 250, c: { g: 12000, o: 3200, m: 2100 }, r: 5, g: 15, pl: ["رضا", "علی", "محمود"] },
+            "Gripen": { n: "JAS 39 Gripen", i: "🇸🇪", p: 210, c: { g: 9500, o: 2600, m: 1600 }, r: 5, g: 15, pl: ["اریک", "لارس", "گوستاو"] },
+            "Mirage": { n: "Mirage 2000", i: "🇫🇷", p: 240, c: { g: 11500, o: 2900, m: 1700 }, r: 5, g: 15, pl: ["فیلیپ", "آلن", "برنارد"] },
+            "B-2": { n: "B-2 Spirit", i: "🇺🇸", p: 460, c: { g: 26000, o: 7500, m: 5200 }, r: 6, g: 6, pl: ["جورج", "توماس", "آرتور"] },
+            "B-52": { n: "B-52", i: "🇺🇸", p: 360, c: { g: 13000, o: 5200, m: 3200 }, r: 5, g: 10, pl: ["چارلز", "دانیل", "ادوارد"] },
+            "F-4": { n: "F-4 Phantom", i: "🇺🇸", p: 150, c: { g: 6500, o: 1700, m: 1100 }, r: 3, g: 18, pl: ["رابرت", "جان", "ویلیام"] },
+            "F-5": { n: "F-5 Tiger", i: "🇺🇸", p: 100, c: { g: 3800, o: 1000, m: 600 }, r: 2, g: 20, pl: ["فرانک", "هنری", "جوزف"] },
+            "Eurofighter": { n: "Eurofighter 2000", i: "🇩🇪", p: 305, c: { g: 18000, o: 5000, m: 3500 }, r: 6, g: 12, pl: ["مارکوس", "کلاوس", "توماس"] },
+            "Tornado": { n: "Panavia Tornado", i: "🇩🇪", p: 260, c: { g: 13000, o: 3700, m: 2600 }, r: 5, g: 12, pl: ["هانس", "دیتر", "فریدریش"] },
+            "MiG-31": { n: "MiG-31 Foxhound", i: "🇷🇺", p: 320, c: { g: 17000, o: 4800, m: 3400 }, r: 6, g: 10, pl: ["ایگور", "نیکولای", "سرگئی"] },
+            "J-10": { n: "J-10 Vigorous Dragon", i: "🇨🇳", p: 220, c: { g: 9500, o: 3000, m: 1900 }, r: 5, g: 15, pl: ["وِی", "چینگ", "هُآ"] },
+            "F-18": { n: "F-18 Super Hornet", i: "🇺🇸", p: 260, c: { g: 13500, o: 3400, m: 2300 }, r: 5, g: 15, pl: ["رابرت", "دانیل", "توماس"] },
+            "F-21I": { n: "F-21I Kfir", i: "🇮🇱", p: 330, c: { g: 23000, o: 6500, m: 4700 }, r: 6, g: 10, pl: ["אלון", "גיל", "נועם"] }
+        };
+
+        const N_DB = {
+            "F-86": { n: "F-86 Sabre", i: "🇺🇸", p: 50, c: { g: 500, o: 200, m: 100 } },
+            "MiG-15": { n: "MiG-15", i: "🇷🇺", p: 45, c: { g: 400, o: 150, m: 80 } },
+            "F-100": { n: "F-100 Super Sabre", i: "🇺🇸", p: 60, c: { g: 600, o: 250, m: 120 } },
+            "MiG-21": { n: "MiG-21", i: "🇷🇺", p: 55, c: { g: 500, o: 200, m: 100 } },
+            "F-104": { n: "F-104 Starfighter", i: "🇺🇸", p: 65, c: { g: 700, o: 300, m: 150 } },
+            "F-5E": { n: "F-5E Tiger II", i: "🇺🇸", p: 70, c: { g: 800, o: 350, m: 180 } },
+            "MiG-23": { n: "MiG-23 Flogger", i: "🇷🇺", p: 75, c: { g: 900, o: 400, m: 200 } },
+            "F-4E": { n: "F-4E Phantom II", i: "🇺🇸", p: 80, c: { g: 1000, o: 450, m: 220 } },
+            "MiG-25": { n: "MiG-25 Foxbat", i: "🇷🇺", p: 85, c: { g: 1100, o: 500, m: 250 } },
+            "F-8": { n: "F-8 Crusader", i: "🇺🇸", p: 70, c: { g: 850, o: 380, m: 190 } }
+        };
+
+        const C_DB = {
+            "Nimitz": { n: "USS Nimitz", i: "🇺🇸", p: 320, c: { g: 70000, o: 15000, m: 12000 }, g: 2, sl: 6 },
+            "Kuznetsov": { n: "Kuznetsov", i: "🇷🇺", p: 290, c: { g: 65000, o: 14000, m: 11000 }, g: 2, sl: 6 },
+            "Shandong": { n: "Shandong", i: "🇨🇳", p: 280, c: { g: 60000, o: 12000, m: 10000 }, g: 2, sl: 6 },
+            "Queen": { n: "Queen Elizabeth", i: "🇬🇧", p: 270, c: { g: 55000, o: 11000, m: 9000 }, g: 2, sl: 6 },
+            "DeGaulle": { n: "Charles de Gaulle", i: "🇫🇷", p: 275, c: { g: 58000, o: 11500, m: 9500 }, g: 2, sl: 6 },
+            "Ford": { n: "Gerald R. Ford", i: "🇺🇸", p: 350, c: { g: 80000, o: 18000, m: 15000 }, g: 1, sl: 6 },
+            "Liaoning": { n: "Liaoning", i: "🇨🇳", p: 260, c: { g: 52000, o: 10000, m: 8000 }, g: 2, sl: 6 },
+            "Vikram": { n: "Vikramaditya", i: "🇮🇳", p: 250, c: { g: 50000, o: 9500, m: 7500 }, g: 2, sl: 6 },
+            "Cavour": { n: "Cavour", i: "🇮🇹", p: 240, c: { g: 48000, o: 9000, m: 7000 }, g: 2, sl: 6 },
+            "JuanCarlos": { n: "Juan Carlos I", i: "🇪🇸", p: 230, c: { g: 45000, o: 8500, m: 6500 }, g: 2, sl: 6 }
+        };
+
+        const D_DB = {
+            "S-400": { n: "S-400", i: "🇷🇺", c: { g: 25000, o: 8000, m: 6000 }, def: 150, max: 3, hp: 200, md: 60 },
+            "Patriot": { n: "Patriot", i: "🇺🇸", c: { g: 20000, o: 6000, m: 4000 }, def: 120, max: 3, hp: 180, md: 55 },
+            "THAAD": { n: "THAAD", i: "🇺🇸", c: { g: 22000, o: 6500, m: 4500 }, def: 130, max: 3, hp: 170, md: 60 },
+            "IronDome": { n: "Iron Dome", i: "🇮🇱", c: { g: 10000, o: 2500, m: 1500 }, def: 70, max: 3, hp: 110, md: 70 },
+            "HQ-9": { n: "HQ-9", i: "🇨🇳", c: { g: 18000, o: 4500, m: 3000 }, def: 110, max: 3, hp: 160, md: 50 },
+            "NASAMS": { n: "NASAMS", i: "🇺🇸", c: { g: 15000, o: 4000, m: 2500 }, def: 100, max: 3, hp: 140, md: 55 },
+            "SkySabre": { n: "Sky Sabre", i: "🇬🇧", c: { g: 16000, o: 4200, m: 2800 }, def: 105, max: 3, hp: 150, md: 50 },
+            "SAMP/T": { n: "SAMP/T", i: "🇪🇺", c: { g: 19000, o: 5000, m: 3500 }, def: 115, max: 3, hp: 170, md: 55 }
+        };
+
+        const M_DB = {
+            "Jericho": { n: "Jericho", i: "🇮🇱", p: 120, c: { g: 13000, o: 3200, m: 2200 }, r: 5, g: 8 },
+            "Popeye": { n: "Popeye", i: "🇮🇱", p: 75, c: { g: 6500, o: 1600, m: 1100 }, r: 3, g: 12 },
+            "Kalibr": { n: "Kalibr", i: "🇷🇺", p: 120, c: { g: 13000, o: 3200, m: 2200 }, r: 5, g: 8 },
+            "Storm": { n: "Storm Shadow", i: "🇬🇧", p: 110, c: { g: 12000, o: 3000, m: 2000 }, r: 5, g: 8 },
+            "DF-21D": { n: "DF-21D", i: "🇨🇳", p: 170, c: { g: 22000, o: 6000, m: 4500 }, r: 6, g: 5 },
+            "Tomahawk": { n: "Tomahawk", i: "🇺🇸", p: 130, c: { g: 14000, o: 3500, m: 2400 }, r: 5, g: 8 },
+            "RBS70": { n: "RBS 70", i: "🇸🇪", p: 55, c: { g: 3200, o: 900, m: 600 }, r: 2, g: 15 },
+            "Exocet": { n: "Exocet", i: "🇫🇷", p: 95, c: { g: 10500, o: 2600, m: 1900 }, r: 4, g: 10 },
+            "BlueSpear": { n: "Blue Spear", i: "🇮🇱", p: 105, c: { g: 11500, o: 2800, m: 2000 }, r: 5, g: 8 }
+        };
+
+        // ============================================================
+        //  STATE
         // ============================================================
         let player = null;
         let allPlayers = [];
         let isConnected = false;
-        let telegramConnected = false;
+        let msgId = null;
+        let saveQueue = [];
+        let saving = false;
+        let lastSaveAt = 0;
+        let globalWeaponSales = [];
+        let marketOffers = [];
+        let diplomacyMessages = [];
+        let unPeaceMessages = [];
+        let militaryMarket = [];
+        let battleLogs = [];
+        let channelInfo = null;
+        let lastChannelSync = 0;
 
-        // Game Constants
-        const DAILY_XP = 2;
-        const RESOURCES = ['gold', 'steel', 'food', 'diamond', 'energy'];
-        const BUILDINGS = {
-            townHall: { name: 'شهرداری', icon: '🏢', cost: 500 },
-            farm: { name: 'مزرعه', icon: '🌾', cost: 300 },
-            barracks: { name: 'پادگان', icon: '🎖️', cost: 800 },
-            library: { name: 'کتابخانه', icon: '📚', cost: 600 }
+        // ============================================================
+        //  UTILITY
+        // ============================================================
+        function toast(m, e = false, type = "") {
+            const t = document.createElement("div");
+            t.className = "toast" + (e ? " error" : "") +
+                (type === "war" ? " war" : "") +
+                (type === "peace" ? " peace" : "") +
+                (type === "missile" ? " missile" : "") +
+                (type === "naval" ? " naval" : "") +
+                (type === "warning" ? " warning" : "");
+            t.innerHTML = m;
+            document.body.appendChild(t);
+            setTimeout(() => { if (t && t.parentNode) t.remove(); }, 4500);
+        }
+
+        function ts() { return Date.now(); }
+
+        function rnd(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+
+        function escapeHtml(str) {
+            if (str == null) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function safeStr(obj) {
+            try { return JSON.stringify(obj); } catch (e) { return "{}"; }
+        }
+
+        async function api(m, p = {}) {
+            try {
+                const r = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/${m}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(p)
+                });
+                return await r.json();
+            } catch (e) {
+                return { ok: false, error: e.message };
+            }
+        }
+
+        async function getUserIP() {
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                return data.ip || ('unknown-' + Date.now().toString(36));
+            } catch (e) {
+                return 'unknown-' + Date.now().toString(36);
+            }
+        }
+
+        // ============================================================
+        //  TELEGRAM STORAGE - بارگذاری اطلاعات کانال و ربات
+        // ============================================================
+        async function initTelegram() {
+            try {
+                // گرفتن اطلاعات ربات
+                const b = await api("getMe");
+                if (!b.ok) {
+                    document.getElementById("syncStatus").innerHTML = "❌ توکن نامعتبر";
+                    return false;
+                }
+                if (b.result) {
+                    channelInfo = channelInfo || {};
+                    channelInfo.botId = b.result.id;
+                    channelInfo.botName = b.result.first_name || "EmpireBot";
+                    channelInfo.botUsername = b.result.username || "bot";
+                    const bn = document.getElementById("botName");
+                    if (bn) bn.innerText = "@" + channelInfo.botUsername;
+                }
+
+                // گرفتن اطلاعات کانال
+                const c = await api("getChat", { chat_id: CHANNEL_ID });
+                if (!c.ok) {
+                    document.getElementById("syncStatus").innerHTML = "❌ ربات ادمین کانال نیست";
+                    return false;
+                }
+                if (c.result) {
+                    channelInfo = channelInfo || {};
+                    channelInfo.chatId = c.result.id;
+                    channelInfo.title = c.result.title || CHANNEL_ID;
+                    channelInfo.username = c.result.username || CHANNEL_ID.replace("@", "");
+                    channelInfo.description = c.result.description || "";
+                    channelInfo.memberCount = c.result.members_count || 0;
+                    const cn = document.getElementById("chName");
+                    if (cn) cn.innerText = "@" + channelInfo.username;
+                }
+
+                // پیدا کردن یا ساختن پیام پین شده برای ذخیره داده
+                if (c.result?.pinned_message?.text?.includes(DATA_KEY)) {
+                    msgId = c.result.pinned_message.message_id;
+                } else {
+                    const init = {
+                        key: DATA_KEY,
+                        players: [],
+                        weaponSales: [],
+                        marketOffers: [],
+                        diplomacy: [],
+                        unPeace: [],
+                        militaryMarket: [],
+                        battleLogs: [],
+                        ts: ts()
+                    };
+                    const s = await api("sendMessage", {
+                        chat_id: CHANNEL_ID,
+                        text: `🌍 ${DATA_KEY}\n${JSON.stringify(init)}`
+                    });
+                    if (s.ok) {
+                        msgId = s.result.message_id;
+                        await api("pinChatMessage", {
+                            chat_id: CHANNEL_ID,
+                            message_id: msgId,
+                            disable_notification: true
+                        });
+                    }
+                }
+
+                document.getElementById("syncStatus").innerHTML = "✅ آنلاین | متصل به @" + channelInfo.username;
+                return true;
+            } catch (e) {
+                document.getElementById("syncStatus").innerHTML = "❌ خطا: " + e.message;
+                return false;
+            }
+        }
+
+        function packData(data) {
+            // فشرده‌سازی داده‌ها برای جلوگیری از خطای 4000 کاراکتر تلگرام
+            let raw = JSON.stringify(data);
+            if (raw.length > 3800) {
+                const copy = { ...data };
+                copy.players = copy.players.slice(0, 50);
+                copy.battleLogs = copy.battleLogs.slice(-20);
+                copy.militaryMarket = copy.militaryMarket.slice(-15);
+                raw = JSON.stringify(copy);
+                if (raw.length > 3800) {
+                    copy.players = copy.players.slice(0, 30);
+                    copy.battleLogs = copy.battleLogs.slice(-10);
+                    raw = JSON.stringify(copy);
+                }
+            }
+            return raw;
+        }
+
+        async function saveAll(force = false) {
+            if (!isConnected || !msgId) return false;
+            if (!force && (ts() - lastSaveAt) < SAVE_THROTTLE) return false;
+            try {
+                const data = {
+                    key: DATA_KEY,
+                    players: allPlayers.map(p => ({
+                        ...p,
+                        lastActive: p.lastActive || ts()
+                    })),
+                    weaponSales: globalWeaponSales,
+                    marketOffers: marketOffers,
+                    diplomacy: diplomacyMessages,
+                    unPeace: unPeaceMessages,
+                    militaryMarket: militaryMarket.slice(-30),
+                    battleLogs: battleLogs.slice(-30),
+                    ts: ts()
+                };
+                const text = `🌍 ${DATA_KEY}\n${packData(data)}`;
+                const result = await api("editMessageText", {
+                    chat_id: CHANNEL_ID,
+                    message_id: msgId,
+                    text: text
+                });
+                if (result && result.ok) {
+                    lastSaveAt = ts();
+                    document.getElementById("syncStatus").innerHTML = `✅ ذخیره شد | ${allPlayers.length} کشور`;
+                    const ls = document.getElementById("lastSave");
+                    if (ls) ls.innerText = new Date().toLocaleTimeString('fa-IR');
+                    return true;
+                } else {
+                    document.getElementById("syncStatus").innerHTML = "❌ خطا در ذخیره";
+                    return false;
+                }
+            } catch (e) {
+                document.getElementById("syncStatus").innerHTML = "❌ خطا: " + e.message;
+                return false;
+            }
+        }
+
+        async function queueSave(force = false) {
+            if (force) {
+                saveQueue.push(Date.now());
+            } else {
+                saveQueue.push(Date.now());
+            }
+            if (saving) return;
+            saving = true;
+            while (saveQueue.length > 0) {
+                saveQueue.shift();
+                await saveAll(force);
+                if (saveQueue.length > 0) await new Promise(r => setTimeout(r, SAVE_THROTTLE));
+            }
+            saving = false;
+        }
+
+        async function loadAll() {
+            if (!isConnected) {
+                isConnected = await initTelegram();
+                if (!isConnected) return false;
+            }
+            try {
+                const c = await api("getChat", { chat_id: CHANNEL_ID });
+                if (c.ok && c.result?.pinned_message?.text) {
+                    let t = c.result.pinned_message.text;
+                    t = t.replace(`🌍 ${DATA_KEY}\n`, "");
+                    try {
+                        const j = JSON.parse(t);
+                        if (j.key === DATA_KEY) {
+                            if (Array.isArray(j.players)) allPlayers = j.players;
+                            if (Array.isArray(j.weaponSales)) globalWeaponSales = j.weaponSales;
+                            if (Array.isArray(j.marketOffers)) marketOffers = j.marketOffers;
+                            if (Array.isArray(j.diplomacy)) diplomacyMessages = j.diplomacy;
+                            if (Array.isArray(j.unPeace)) unPeaceMessages = j.unPeace;
+                            if (Array.isArray(j.militaryMarket)) militaryMarket = j.militaryMarket;
+                            if (Array.isArray(j.battleLogs)) battleLogs = j.battleLogs;
+                            document.getElementById("syncStatus").innerHTML = `✅ بارگذاری شد | ${allPlayers.length} کشور`;
+                            updateChannelInfo();
+                            return true;
+                        }
+                    } catch (e) {
+                        console.warn("parse error", e);
+                    }
+                }
+            } catch (e) {
+                console.warn("load error", e);
+            }
+            allPlayers = [];
+            document.getElementById("syncStatus").innerHTML = "🔄 داده‌ای موجود نیست";
+            return false;
+        }
+
+        // آپدیت اطلاعات کانال در نوار بالا
+        function updateChannelInfo() {
+            const pc = document.getElementById("playerCount");
+            if (pc) pc.innerText = allPlayers.length;
+            const ob = document.getElementById("onlineBar");
+            const ot = document.getElementById("onlineText");
+            if (ob && ot) {
+                ob.classList.remove("offline");
+                ot.innerHTML = `🟢 آنلاین در کانال @${channelInfo?.username || "pudgyparty7"} | ${allPlayers.length} بازیکن فعال | آخرین بروزرسانی: ${new Date().toLocaleTimeString('fa-IR')}`;
+            }
+        }
+
+        // همگام‌سازی دوره‌ای با کانال (برای دیدن آنلاین‌ها)
+        async function syncWithChannel() {
+            const ok = await loadAll();
+            if (ok) {
+                updateChannelInfo();
+                lastChannelSync = ts();
+            }
+        }
+
+        // ============================================================
+        //  PLAYER FACTORY
+        // ============================================================
+        function createPlayer(name, pass, ip) {
+            return {
+                id: (ip || 'unknown') + "_" + ts().toString(36) + "_" + Math.random().toString(36).substr(2, 6),
+                name: name,
+                password: pass,
+                ip: ip || 'unknown',
+                gold: 5000,
+                oil: 2000,
+                metal: 1500,
+                buildings: { oilWell: 1, mine: 1, barracks: 1, wall: 1, warehouse: 1 },
+                lastCollect: ts(),
+                lastMineCollect: ts(),
+                createdAt: ts(),
+                lastActive: ts(),
+                units: { infantry: 0, cavalry: 0, artillery: 0 },
+                research: { military: 0, economy: 0, aviation: 0, missile: 0 },
+                attackedRecently: {},
+                xp: 0,
+                militaryLevel: 1,
+                lastDailyXP: 0,
+                fighters: {},
+                normalFighters: {},
+                missiles: {},
+                carriers: [],
+                base: { level: 1, storage: 0, maxStorage: 10000, defense: 10, fighters: [], defenses: [], readyFighters: [] },
+                lastAttackTime: 0,
+                lastExtensionCheck: 0,
+                lastSellTime: 0,
+                mineLevel: 1,
+                notifications: []
+            };
+        }
+
+        // ============================================================
+        //  CALCULATIONS
+        // ============================================================
+        function calcProduction(p) {
+            const h = Math.min((ts() - (p.lastCollect || ts())) / 3600000, 24);
+            const bo = (p.buildings.oilWell || 1) * 25,
+                bm = (p.buildings.mine || 1) * 20,
+                eco = 1 + ((p.research?.economy || 0) * 0.1);
+            return {
+                oil: Math.floor(bo * h * eco),
+                metal: Math.floor(bm * h * eco),
+                gold: Math.floor(((p.buildings.mine || 1) * 15) * h * eco)
+            };
+        }
+
+        function calcMine(p) {
+            const seconds = Math.min((ts() - (p.lastMineCollect || ts())) / 1000, 3600);
+            const level = p.mineLevel || 1;
+            const gold = Math.floor(level * MINE_GOLD_PER_SEC * seconds);
+            const metal = Math.floor(level * MINE_METAL_PER_SEC * seconds);
+            const oil = Math.floor(level * MINE_OIL_PER_SEC * seconds);
+            return { gold, metal, oil, canCollect: seconds >= 1 };
+        }
+
+        function storageCap(p) { return (p.buildings.warehouse || 1) * 5000; }
+
+        function getDefense(p) {
+            let d = 0;
+            if (p.base?.defenses) {
+                p.base.defenses.forEach(def => { if (def.hp > 0) d += def.defense || 0; });
+            }
+            return d;
+        }
+
+        function getMissileDef(p) {
+            let d = 0;
+            if (p.base?.defenses) {
+                p.base.defenses.forEach(def => { if (def.hp > 0 && def.md) d += def.md || 0; });
+            }
+            return Math.min(d, 70);
+        }
+
+        function militaryPower(p) {
+            if (!p) return 0;
+            let power = (p.units?.infantry || 0) * 10 + (p.units?.cavalry || 0) * 25 + (p.units?.artillery || 0) * 50 +
+                ((p.research?.military || 0) * 15);
+            if (p.fighters) {
+                for (const [n, d] of Object.entries(p.fighters)) {
+                    if (F_DB[n] && d.count > 0) {
+                        const hf = (d.health || 100) / 100;
+                        power += F_DB[n].p * d.count * hf;
+                    }
+                }
+            }
+            if (p.normalFighters) {
+                for (const [n, d] of Object.entries(p.normalFighters)) {
+                    if (N_DB[n] && d.count > 0) {
+                        const hf = (d.health || 100) / 100;
+                        power += N_DB[n].p * d.count * hf;
+                    }
+                }
+            }
+            power += (p.base?.defense || 0) * 5;
+            power += getDefense(p) * 1.2;
+            if (p.missiles) {
+                for (const [n, q] of Object.entries(p.missiles)) {
+                    if (M_DB[n] && q > 0) power += M_DB[n].p * q * 0.5;
+                }
+            }
+            if (p.carriers) {
+                p.carriers.forEach(c => {
+                    const cd = C_DB[c.type];
+                    if (cd) power += cd.p * 0.6 + (c.fighters?.length || 0) * 15;
+                });
+            }
+            return Math.floor(power);
+        }
+
+        function getTotalFighters(p) {
+            let t = 0;
+            if (!p) return 0;
+            if (p.fighters) for (const [, d] of Object.entries(p.fighters)) t += d.count || 0;
+            if (p.normalFighters) for (const [, d] of Object.entries(p.normalFighters)) t += d.count || 0;
+            return t;
+        }
+
+        function getFighterGlobal(n) {
+            let c = 0;
+            allPlayers.forEach(p => {
+                if (p.fighters && p.fighters[n]) c += p.fighters[n].count || 0;
+            });
+            return c;
+        }
+
+        function getCarrierGlobal(n) {
+            let c = 0;
+            allPlayers.forEach(p => {
+                if (p.carriers) p.carriers.forEach(ca => { if (ca.type === n) c++; });
+            });
+            return c;
+        }
+
+        function getMissileGlobal(n) {
+            let c = 0;
+            allPlayers.forEach(p => {
+                if (p.missiles && p.missiles[n]) c += p.missiles[n] || 0;
+            });
+            return c;
+        }
+
+        function isProtected(p) { return false; }
+
+        function canAttack(p, tId) {
+            const last = p.attackedRecently?.[tId] || 0;
+            return (ts() - last) > ATTACK_COOLDOWN * 1000;
+        }
+
+        function canBuildFighter(p, n) {
+            const f = F_DB[n];
+            if (!f) return false;
+            if (getFighterGlobal(n) >= f.g) return false;
+            if ((p.research?.aviation || 0) < f.r) return false;
+            if ((p.gold || 0) < f.c.g || (p.oil || 0) < f.c.o || (p.metal || 0) < f.c.m) return false;
+            return true;
+        }
+
+        function canBuildNormal(p, n) {
+            const f = N_DB[n];
+            if (!f) return false;
+            if ((p.gold || 0) < f.c.g || (p.oil || 0) < f.c.o || (p.metal || 0) < f.c.m) return false;
+            return true;
+        }
+
+        function canBuildMissile(p, n) {
+            const m = M_DB[n];
+            if (!m) return false;
+            if (getMissileGlobal(n) >= m.g) return false;
+            if ((p.research?.missile || 0) < m.r) return false;
+            if ((p.gold || 0) < m.c.g || (p.oil || 0) < m.c.o || (p.metal || 0) < m.c.m) return false;
+            return true;
+        }
+
+        function canBuildCarrier(p, n) {
+            const c = C_DB[n];
+            if (!c) return false;
+            if (getCarrierGlobal(n) >= c.g) return false;
+            if ((p.gold || 0) < c.c.g || (p.oil || 0) < c.c.o || (p.metal || 0) < c.c.m) return false;
+            if (p.carriers && p.carriers.length >= MAX_NAVAL) return false;
+            return true;
+        }
+
+        function canClaimDaily(p) {
+            const d = new Date();
+            const today = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+            return (p.lastDailyXP || 0) < new Date(today).getTime();
+        }
+
+        function getPilotLevel(xp) {
+            if (xp >= 1200) return { l: 6, t: "افسانه", s: "👑", b: .30 };
+            if (xp >= 700) return { l: 5, t: "کهنه‌کار", s: "⭐⭐⭐⭐⭐", b: .20 };
+            if (xp >= 350) return { l: 4, t: "حرفه‌ای", s: "⭐⭐⭐⭐", b: .15 };
+            if (xp >= 150) return { l: 3, t: "آشنا", s: "⭐⭐⭐", b: .10 };
+            if (xp >= 50) return { l: 2, t: "مبتدی", s: "⭐⭐", b: .05 };
+            return { l: 1, t: "تازه‌کار", s: "⭐", b: 0 };
+        }
+
+        function getFighterExpiry(fighterData) {
+            if (!fighterData) return { expired: false, daysLeft: 14, status: "safe", message: "✅ سالم" };
+            const created = fighterData.createdAt || ts();
+            const daysPassed = (ts() - created) / (24 * 3600000);
+            const daysLeft = Math.max(0, 14 - daysPassed);
+            if (daysLeft <= 1) return { expired: false, daysLeft, status: "urgent", message: "🔴 ۱ روز مانده" };
+            if (daysLeft <= 3) return { expired: false, daysLeft, status: "warning", message: "🟡 ۳ روز مانده" };
+            return { expired: false, daysLeft, status: "safe", message: "✅ " + Math.floor(daysLeft) + " روز مانده" };
+        }
+
+        // ============================================================
+        //  GAME FUNCTIONS
+        // ============================================================
+
+        // -- Mine --
+        window.collectMine = async function() {
+            if (!player) return;
+            const mine = calcMine(player);
+            if (!mine.canCollect) { toast("⏳ هنوز ۱ ثانیه نگذشته!", true); return; }
+            const cap = MINE_MAX;
+            if ((player.gold || 0) >= cap && (player.metal || 0) >= cap && (player.oil || 0) >= cap) {
+                toast("📦 انبار پر است!", true); return;
+            }
+            player.gold = Math.min(cap, (player.gold || 0) + mine.gold);
+            player.metal = Math.min(cap, (player.metal || 0) + mine.metal);
+            player.oil = Math.min(cap, (player.oil || 0) + mine.oil);
+            player.lastMineCollect = ts();
+            toast(`🪙 معدن: +${mine.gold} طلا، +${mine.metal} فلز، +${mine.oil} نفت`, false, "peace");
+            await saveCurrent();
+            renderMine();
+            updateUI();
+        };
+
+        window.upgradeMine = async function() {
+            if (!player) return;
+            const cost = (player.mineLevel || 1) * 2200;
+            if ((player.gold || 0) < cost) { toast(`💰 ${cost.toLocaleString()} طلا نیاز است`, true); return; }
+            player.gold -= cost;
+            player.mineLevel = (player.mineLevel || 1) + 1;
+            toast(`⬆️ معدن به سطح ${player.mineLevel} ارتقا یافت`, false, "peace");
+            await saveCurrent();
+            renderMine();
+            updateUI();
+        };
+
+        // -- Building --
+        window.upgradeBuilding = async function(b) {
+            if (!player) return;
+            const costs = { oilWell: 250, mine: 300, barracks: 350, wall: 150, warehouse: 220 };
+            const base = costs[b] || 300;
+            const lv = player.buildings[b] || 1;
+            const cost = lv * base;
+            if ((player.gold || 0) >= cost) {
+                player.gold -= cost;
+                player.buildings[b] = (player.buildings[b] || 0) + 1;
+                await saveCurrent();
+                updateUI();
+                toast(`✅ ${b} به سطح ${player.buildings[b]} ارتقا یافت`);
+            } else toast("💰 طلا کافی نیست!", true);
+        };
+
+        // -- Daily XP --
+        window.claimDailyXP = async function() {
+            if (!canClaimDaily(player)) { toast("✅ امروز XP دریافت کردید", true); return; }
+            player.xp = (player.xp || 0) + DAILY_XP;
+            player.lastDailyXP = ts();
+            const nl = Math.floor((player.xp || 0) / XP_PER_LEVEL) + 1;
+            if (nl > (player.militaryLevel || 1)) {
+                player.militaryLevel = nl;
+                toast(`🎖️ سطح نظامی به ${nl} ارتقا یافت!`);
+            }
+            await saveCurrent();
+            updateUI();
+            toast("⭐ +۲ XP دریافت شد!");
+        };
+
+        // -- Research --
+        window.research = async function(f) {
+            if (!player) return;
+            const costs = { military: 800, economy: 700, aviation: 1500, missile: 2000 };
+            const cost = ((player.research[f] || 0) + 1) * costs[f];
+            if ((player.gold || 0) >= cost) {
+                player.gold -= cost;
+                player.research[f] = (player.research[f] || 0) + 1;
+                await saveCurrent();
+                updateUI();
+                toast(`🔬 ${f} سطح ${player.research[f]}`);
+            } else toast("💰 طلا کافی نیست", true);
+        };
+
+        // -- Base --
+        window.upgradeBase = async function() {
+            if (!player.base) player.base = { level: 1, storage: 0, maxStorage: 10000, defense: 10, fighters: [], defenses: [], readyFighters: [] };
+            const cost = player.base.level * 1500;
+            if ((player.gold || 0) < cost) { toast("💰 طلا کافی نیست", true); return; }
+            player.gold -= cost;
+            player.base.level++;
+            player.base.maxStorage += 5000;
+            player.base.defense += 5;
+            await saveCurrent();
+            updateUI();
+            toast(`🏰 پایگاه به سطح ${player.base.level} ارتقا یافت`);
+        };
+
+        window.depositToBase = async function() {
+            if (!player.base) player.base = { level: 1, storage: 0, maxStorage: 10000, defense: 10, fighters: [], defenses: [], readyFighters: [] };
+            const d = Math.floor((player.gold || 0) * 0.3);
+            if (d < 10) { toast("مقدار کم است", true); return; }
+            if (player.base.storage + d > player.base.maxStorage) { toast("انبار پایگاه پر است", true); return; }
+            player.gold -= d;
+            player.base.storage += d;
+            await saveCurrent();
+            updateUI();
+            toast(`📥 ${d.toLocaleString()} طلا به پایگاه واریز شد`);
+        };
+
+        window.withdrawFromBase = async function() {
+            if (!player.base || player.base.storage < 50) { toast("موجودی پایگاه کافی نیست", true); return; }
+            const w = Math.min(500, player.base.storage);
+            player.base.storage -= w;
+            player.gold = (player.gold || 0) + w;
+            await saveCurrent();
+            updateUI();
+            toast(`📤 ${w.toLocaleString()} طلا از پایگاه برداشت شد`);
+        };
+
+        // -- Extend --
+        window.extendFighter = async function(name) {
+            if (!player || !player.fighters || !player.fighters[name]) { toast("جنگنده یافت نشد", true); return; }
+            const data = player.fighters[name];
+            if (data.count <= 0) { toast("این جنگنده موجود نیست", true); return; }
+            const cost = EXTEND_COST_PER_DAY * EXTEND_MIN_DAYS;
+            if ((player.gold || 0) < cost) { toast(`💰 ${cost.toLocaleString()} طلا برای تمدید ۱۴ روز نیاز است`, true); return; }
+            player.gold -= cost;
+            data.createdAt = ts();
+            toast(`✅ ${name} به مدت ۱۴ روز تمدید شد`, false, "peace");
+            await saveCurrent();
+            renderStorage();
+            updateUI();
+        };
+
+        // -- Sell Fighter --
+        window.sellFighterToMarket = async function(name) {
+            if (!player || !player.fighters || !player.fighters[name]) { toast("جنگنده یافت نشد", true); return; }
+            const data = player.fighters[name];
+            if (data.count <= 0) { toast("این جنگنده موجود نیست", true); return; }
+            if ((ts() - (player.lastSellTime || 0)) < 900000) {
+                const wait = Math.ceil((900000 - (ts() - (player.lastSellTime || 0))) / 60000);
+                toast(`⏳ ${wait} دقیقه تا فروش بعدی!`, true); return;
+            }
+            const fData = F_DB[name];
+            if (!fData) { toast("داده‌های جنگنده یافت نشد", true); return; }
+
+            const qty = parseInt(prompt(`چند تا ${name} می‌خواهید بفروشید؟ (حداکثر ${data.count})`, "1"));
+            if (isNaN(qty) || qty < 1) { toast("تعداد نامعتبر", true); return; }
+            if (qty > data.count) { toast(`شما فقط ${data.count} عدد دارید`, true); return; }
+
+            const maxPrice = Math.floor(fData.c.g * EXTEND_SELL_PERCENT / 100);
+            const priceInput = prompt(`قیمت هر عدد را وارد کنید (حداکثر ${maxPrice.toLocaleString()} طلا):`, maxPrice.toString());
+            let price = parseInt(priceInput);
+            if (isNaN(price) || price < 100) { toast("قیمت نامعتبر (حداقل ۱۰۰ طلا)", true); return; }
+            if (price > maxPrice) { toast(`حداکثر قیمت ${maxPrice.toLocaleString()} طلا است!`, true); return; }
+
+            const totalPrice = price * qty;
+            militaryMarket.push({
+                fighterName: name,
+                sellerId: player.id,
+                sellerName: player.name,
+                price: totalPrice,
+                unitPrice: price,
+                quantity: qty,
+                addedAt: ts(),
+                status: "pending"
+            });
+            data.count -= qty;
+            if (data.count <= 0) delete player.fighters[name];
+            player.lastSellTime = ts();
+            toast(`📢 ${qty} عدد ${name} با قیمت ${totalPrice.toLocaleString()} طلا در بازار قرار گرفت`, false, "naval");
+            await saveCurrent();
+            await queueSave(true);
+            renderMarket();
+            updateUI();
+        };
+
+        window.buyFromMarket = async function(index) {
+            if (!player) return;
+            const item = militaryMarket[index];
+            if (!item) { toast("آگهی حذف شده", true); return; }
+            if (item.sellerId === player.id) { toast("آگهی خودتان است", true); return; }
+            if ((player.gold || 0) < item.price) { toast(`💰 ${item.price.toLocaleString()} طلا کافی نیست`, true); return; }
+
+            const seller = allPlayers.find(p => p.id === item.sellerId);
+            if (!seller) { toast("فروشنده یافت نشد", true); return; }
+            const fData = F_DB[item.fighterName];
+            if (!fData) { toast("جنگنده نامعتبر", true); return; }
+
+            player.gold -= item.price;
+            seller.gold = (seller.gold || 0) + item.price;
+            if (!player.fighters) player.fighters = {};
+            if (!player.fighters[item.fighterName]) {
+                player.fighters[item.fighterName] = {
+                    count: 0, health: 100, score: 0, pilotXP: 0, pilotName: "خریداری شده", createdAt: ts()
+                };
+            }
+            player.fighters[item.fighterName].count += item.quantity || 1;
+            militaryMarket.splice(index, 1);
+            const si = allPlayers.findIndex(p => p.id === seller.id);
+            if (si !== -1) allPlayers[si] = seller;
+            toast(`🛒 ${item.quantity || 1} عدد ${item.fighterName} خریداری شد!`, false, "naval");
+            await saveCurrent();
+            await queueSave(true);
+            renderMarket();
+            updateUI();
+        };
+
+        // -- Build Fighters --
+        window.buildFighter = async function(n) {
+            const f = F_DB[n];
+            if (!f) { toast("جنگنده نامعتبر", true); return; }
+            if (!canBuildFighter(player, n)) { toast(`❌ شرایط ساخت فراهم نیست (هوانوردی ${f.r} یا منابع)`, true); return; }
+            const opts = [{ type: "main", label: "پایگاه اصلی", fighters: player.base?.fighters?.length || 0 }];
+            if (player.carriers) {
+                player.carriers.forEach((c, i) => {
+                    if (c.fighters && c.fighters.length < CARRIER_SLOTS) {
+                        opts.push({ type: "carrier", index: i, label: `ناو ${c.type}`, fighters: c.fighters?.length || 0 });
+                    }
+                });
+            }
+            let sel = null;
+            for (const o of opts) {
+                if (o.fighters < MAX_FIGHTERS_PER_BASE) { sel = o; break; }
+            }
+            if (!sel) { toast("❌ همه پایگاه‌ها پر هستند!", true); return; }
+
+            player.gold -= f.c.g;
+            player.oil -= f.c.o;
+            player.metal -= f.c.m;
+            if (!player.fighters) player.fighters = {};
+            if (!player.fighters[n]) {
+                const pn = f.pl ? f.pl[rnd(0, f.pl.length - 1)] : "خلبان";
+                player.fighters[n] = { count: 0, health: 100, score: 0, pilotXP: 0, pilotName: pn, createdAt: ts() };
+            }
+            player.fighters[n].count++;
+            if (!player.fighters[n].createdAt) player.fighters[n].createdAt = ts();
+            if (!player.fighters[n].pilotName) {
+                const pn = f.pl ? f.pl[rnd(0, f.pl.length - 1)] : "خلبان";
+                player.fighters[n].pilotName = pn;
+            }
+            const fighter = { name: n, health: 100, createdAt: ts(), kills: 0 };
+            if (sel.type === "main") {
+                if (!player.base.fighters) player.base.fighters = [];
+                player.base.fighters.push(fighter);
+            } else if (sel.type === "carrier") {
+                const cr = player.carriers[sel.index];
+                if (!cr.fighters) cr.fighters = [];
+                cr.fighters.push(fighter);
+            }
+            player.xp = (player.xp || 0) + 3;
+            await saveCurrent();
+            await queueSave(true);
+            updateUI();
+            toast(`✈️ ${n} ساخته شد! +۳ XP`, false, "war");
+        };
+
+        window.buildNormalFighter = async function(n) {
+            const f = N_DB[n];
+            if (!f) { toast("جنگنده نامعتبر", true); return; }
+            if (!canBuildNormal(player, n)) { toast("❌ شرایط ساخت فراهم نیست", true); return; }
+            if (!player.normalFighters) player.normalFighters = {};
+            if (!player.normalFighters[n]) { player.normalFighters[n] = { count: 0, health: 100 }; }
+            player.gold -= f.c.g;
+            player.oil -= f.c.o;
+            player.metal -= f.c.m;
+            player.normalFighters[n].count++;
+            player.xp = (player.xp || 0) + 1;
+            await saveCurrent();
+            updateUI();
+            toast(`🛩️ ${n} ساخته شد! +۱ XP`, false, "war");
+        };
+
+        window.rebuildFighter = async function(n) {
+            if (!player || !player.fighters || !player.fighters[n]) { toast("جنگنده یافت نشد", true); return; }
+            if (player.fighters[n].count > 0) { toast("❌ این جنگنده هنوز موجود است!", true); return; }
+            if ((player.metal || 0) < REBUILD_COST) { toast(`⛏️ ${REBUILD_COST.toLocaleString()} فلز برای بازسازی نیاز است!`, true); return; }
+            player.metal -= REBUILD_COST;
+            player.fighters[n].count = 1;
+            player.fighters[n].health = 80;
+            player.fighters[n].createdAt = ts();
+            const fData = F_DB[n];
+            const pn = fData.pl ? fData.pl[rnd(0, fData.pl.length - 1)] : "خلبان";
+            player.fighters[n].pilotName = pn;
+            if (!player.base.fighters) player.base.fighters = [];
+            player.base.fighters.push({ name: n, health: 80, createdAt: ts(), kills: 0 });
+            toast(`🔧 ${n} بازسازی شد!`, false, "peace");
+            await saveCurrent();
+            updateUI();
+        };
+
+        window.repairFighter = async function(n, idx) {
+            if (!player || !player.fighters || !player.fighters[n]) { toast("جنگنده یافت نشد", true); return; }
+            const d = player.fighters[n];
+            if (d.health >= 100) { toast("جنگنده سالم است", true); return; }
+            const repairCost = Math.floor(FIGHTER_REPAIR * (1 + (100 - d.health) / 100));
+            if ((player.gold || 0) < repairCost) { toast(`💰 ${repairCost.toLocaleString()} طلا لازم است`, true); return; }
+            player.gold -= repairCost;
+            const healAmount = 30 + Math.floor((100 - d.health) / 10);
+            d.health = Math.min(100, d.health + healAmount);
+            toast(`🔧 ${n} تعمیر شد! (+${healAmount}٪ سلامت)`, false, "peace");
+            await saveCurrent();
+            updateUI();
+        };
+
+        window.repairNormalFighter = async function(n, idx) {
+            if (!player || !player.normalFighters || !player.normalFighters[n]) { toast("جنگنده یافت نشد", true); return; }
+            const d = player.normalFighters[n];
+            if (d.health >= 100) { toast("جنگنده سالم است", true); return; }
+            const cost = Math.floor(200 * (1 + (100 - d.health) / 100));
+            if ((player.gold || 0) < cost) { toast(`💰 ${cost.toLocaleString()} طلا لازم است`, true); return; }
+            player.gold -= cost;
+            d.health = Math.min(100, d.health + 30);
+            toast(`🔧 ${n} تعمیر شد!`, false, "peace");
+            await saveCurrent();
+            updateUI();
+        };
+
+        // -- Carriers --
+        window.buildCarrier = async function(n) {
+            if (!player) return;
+            const c = C_DB[n];
+            if (!c) { toast("ناو نامعتبر", true); return; }
+            if (!canBuildCarrier(player, n)) { toast("❌ شرایط ساخت فراهم نیست", true); return; }
+            player.gold -= c.c.g;
+            player.oil -= c.c.o;
+            player.metal -= c.c.m;
+            if (!player.carriers) player.carriers = [];
+            player.carriers.push({ type: n, name: c.n, health: 100, status: "active", fighters: [], defenses: [] });
+            player.xp = (player.xp || 0) + 10;
+            toast(`⚓ ${c.n} ساخته شد! +۱۰ XP`, false, "naval");
+            renderWeapons();
+            await saveCurrent();
+            await queueSave(true);
+            updateUI();
+        };
+
+        window.deployToCarrier = async function(ci, n) {
+            if (!player || !player.carriers || ci >= player.carriers.length) return;
+            const cr = player.carriers[ci];
+            if (!cr.fighters) cr.fighters = [];
+            if (cr.fighters.length >= CARRIER_SLOTS) { toast(`❌ ظرفیت ناو پر است (حداکثر ${CARRIER_SLOTS})`, true); return; }
+            if (!player.fighters || !player.fighters[n] || player.fighters[n].count <= 0) { toast("❌ این جنگنده را ندارید", true); return; }
+            if ((player.fighters[n].health || 100) < 30) { toast("❌ سلامت جنگنده کم است!", true); return; }
+            player.fighters[n].count--;
+            if (player.fighters[n].count <= 0) delete player.fighters[n];
+            const fData = F_DB[n];
+            const pn = fData.pl ? fData.pl[rnd(0, fData.pl.length - 1)] : "خلبان";
+            cr.fighters.push({ name: n, health: 100, pilotName: pn, pilotXP: 0, createdAt: ts(), kills: 0 });
+            toast(`🛩️ ${n} به ${cr.name} منتقل شد!`, false, "naval");
+            renderWeapons();
+            await saveCurrent();
+            updateUI();
+        };
+
+        window.removeFromCarrier = async function(ci, fi) {
+            if (!player || !player.carriers || ci >= player.carriers.length) return;
+            const cr = player.carriers[ci];
+            if (!cr.fighters || fi >= cr.fighters.length) return;
+            const f = cr.fighters[fi];
+            cr.fighters.splice(fi, 1);
+            if (!player.fighters) player.fighters = {};
+            if (!player.fighters[f.name]) {
+                player.fighters[f.name] = { count: 0, health: 100, score: 0, pilotXP: 0, pilotName: f.pilotName || "خلبان", createdAt: f.createdAt || ts() };
+            }
+            player.fighters[f.name].count++;
+            if (!player.fighters[f.name].pilotName) {
+                player.fighters[f.name].pilotName = f.pilotName || "خلبان";
+            }
+            toast(`🛩️ ${f.name} از ناو خارج شد`, false, "naval");
+            renderWeapons();
+            await saveCurrent();
+            updateUI();
+        };
+
+        // -- Missiles --
+        window.buildMissile = async function(n) {
+            const m = M_DB[n];
+            if (!m) { toast("موشک نامعتبر", true); return; }
+            if (!canBuildMissile(player, n)) { toast("❌ شرایط ساخت فراهم نیست", true); return; }
+            player.gold -= m.c.g;
+            player.oil -= m.c.o;
+            player.metal -= m.c.m;
+            if (!player.missiles) player.missiles = {};
+            player.missiles[n] = (player.missiles[n] || 0) + 1;
+            player.xp = (player.xp || 0) + 1;
+            await saveCurrent();
+            updateUI();
+            toast(`🚀 ${n} ساخته شد! +۱ XP`, false, "missile");
         };
 
         // ============================================================
-        //  CANVAS BACKGROUND ANIMATION
+        //  FIXED: launchMissile - اصلاح شده - نوتیف به هدف میره نه مهاجم
         // ============================================================
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        window.launchMissile = async function(tid) {
+            if (!player) return;
+            const target = allPlayers.find(p => p.id === tid);
+            if (!target) { toast("کشور یافت نشد", true); return; }
+            const total = getTotalMissiles();
+            if (total === 0) { toast("❌ هیچ موشکی ندارید!", true); return; }
+            if ((player.gold || 0) < 500) { toast("💰 ۵۰۰ طلا برای پرتاب لازم است", true); return; }
+            const names = Object.keys(player.missiles || {}).filter(n => player.missiles[n] > 0);
+            if (names.length === 0) { toast("موشکی موجود نیست", true); return; }
+            const mn = names[rnd(0, names.length - 1)];
+            const md = M_DB[mn];
+            player.gold -= 500;
+            player.missiles[mn]--;
+            if (player.missiles[mn] <= 0) delete player.missiles[mn];
 
+            const mdDef = getMissileDef(target);
+            const ic = Math.min(mdDef, 60);
+            const isInt = Math.random() * 100 < ic;
+            if (isInt) {
+                toast(`🛡️ موشک ${mn} توسط پدافند ${target.name} رهگیری شد!`, false, "missile");
+                // نوتیف به هدف که موشک زدن بهش
+                if (!target.notifications) target.notifications = [];
+                target.notifications.push({
+                    from: player.name,
+                    msg: `🛡️ موشک ${mn} از ${player.name} توسط پدافند شما رهگیری شد!`,
+                    time: ts()
+                });
+                const tIdx = allPlayers.findIndex(p => p.id === tid);
+                if (tIdx !== -1) allPlayers[tIdx] = target;
+                await saveCurrent();
+                await queueSave(true);
+                updateUI();
+                return;
+            }
+
+            const sg = Math.floor((target.gold || 0) * STEAL_PERCENT / 100);
+            const so = Math.floor((target.oil || 0) * STEAL_PERCENT / 100);
+            const sm = Math.floor((target.metal || 0) * STEAL_PERCENT / 100);
+            player.gold += sg;
+            player.oil += so;
+            player.metal += sm;
+            target.gold = Math.max(0, (target.gold || 0) - sg);
+            target.oil = Math.max(0, (target.oil || 0) - so);
+            target.metal = Math.max(0, (target.metal || 0) - sm);
+
+            // آسیب به پدافندهای هدف
+            let defD = 0;
+            if (target.base?.defenses) {
+                target.base.defenses.forEach(d => { d.hp = Math.max(0, d.hp - 30); if (d.hp <= 0) defD++; });
+                target.base.defenses = target.base.defenses.filter(d => d.hp > 0);
+            }
+
+            player.xp = (player.xp || 0) + 5;
+
+            // نوتیف به هدف (FIXED - قبلاً به خود بازیکن میرفت)
+            if (!target.notifications) target.notifications = [];
+            target.notifications.push({
+                from: player.name,
+                msg: `🚀 شما توسط موشک ${mn} از ${player.name} مورد اصابت قرار گرفتید! ${sg.toLocaleString()} طلا، ${so.toLocaleString()} نفت، ${sm.toLocaleString()} فلز غارت شد.`,
+                time: ts()
+            });
+
+            const idx = allPlayers.findIndex(p => p.id === tid);
+            if (idx !== -1) allPlayers[idx] = target;
+
+            toast(`🚀 موشک ${mn} به ${target.name} اصابت کرد! 💰 ${sg.toLocaleString()} طلا غارت شد`, false, "missile");
+            await saveCurrent();
+            await queueSave(true);
+            updateUI();
+        };
+
+        function getTotalMissiles() {
+            let t = 0;
+            if (player?.missiles) {
+                for (const [, d] of Object.entries(player.missiles)) t += d || 0;
+            }
+            return t;
+        }
+
+        // -- Defenses --
+        window.buildDefense = async function(n) {
+            if (!player) return;
+            const d = D_DB[n];
+            if (!d) { toast("پدافند نامعتبر", true); return; }
+            if ((player.gold || 0) < d.c.g || (player.oil || 0) < d.c.o || (player.metal || 0) < d.c.m) {
+                toast("💰 منابع کافی نیست", true); return;
+            }
+            if (!player.base.defenses) player.base.defenses = [];
+            if (player.base.defenses.filter(dd => dd.name === n).length >= d.max) {
+                toast(`❌ سقف ${d.max} عدد برای این پدافند`, true); return;
+            }
+            player.gold -= d.c.g;
+            player.oil -= d.c.o;
+            player.metal -= d.c.m;
+            player.base.defenses.push({ name: n, defense: d.def, hp: d.hp, maxHp: d.hp, md: d.md || 0 });
+            toast(`🛡️ ${n} نصب شد!`, false, "defense");
+            await saveCurrent();
+            updateUI();
+        };
+
+        window.repairDefense = async function(idx) {
+            if (!player.base?.defenses || idx >= player.base.defenses.length) { toast("پدافند یافت نشد", true); return; }
+            const d = player.base.defenses[idx];
+            const dd = D_DB[d.name];
+            if (!dd) { toast("داده‌های پدافند نامعتبر", true); return; }
+            if (d.hp >= dd.hp) { toast("پدافند سالم است", true); return; }
+            const cost = FIGHTER_REPAIR;
+            if ((player.gold || 0) < cost) { toast("💰 طلا کافی نیست", true); return; }
+            player.gold -= cost;
+            d.hp = Math.min(dd.hp, d.hp + 50);
+            toast(`🔧 ${d.name} تعمیر شد (HP: ${d.hp}/${dd.hp})`, false, "peace");
+            await saveCurrent();
+            updateUI();
+        };
+
+        window.removeDefense = async function(idx) {
+            if (!player.base?.defenses || idx >= player.base.defenses.length) { toast("پدافند یافت نشد", true); return; }
+            const d = player.base.defenses[idx];
+            player.base.defenses.splice(idx, 1);
+            toast(`🗑️ ${d.name} حذف شد`, false, "naval");
+            await saveCurrent();
+            updateUI();
+        };
+
+        // -- Prepare Fighter for Defense --
+        window.prepareFighterForDefense = async function(name) {
+            if (!player) return;
+            if (!player.base) player.base = { level: 1, storage: 0, maxStorage: 10000, defense: 10, fighters: [], defenses: [], readyFighters: [] };
+            const fData = F_DB[name];
+            if (!fData) { toast("جنگنده نامعتبر", true); return; }
+            if (!player.fighters || !player.fighters[name] || player.fighters[name].count <= 0) { toast("❌ این جنگنده را ندارید", true); return; }
+            if ((player.fighters[name].health || 100) < 50) { toast("❌ سلامت جنگنده کم است (حداقل ۵۰%)", true); return; }
+            if (player.base.readyFighters.length >= 6) { toast("❌ حداکثر ۶ جنگنده می‌توانید آماده کنید", true); return; }
+            if (player.base.readyFighters.some(f => f.name === name)) { toast("❌ این جنگنده قبلاً آماده شده", true); return; }
+            const fighter = {
+                name: name,
+                health: player.fighters[name].health,
+                pilotXP: player.fighters[name].pilotXP || 0,
+                pilotName: player.fighters[name].pilotName || "خلبان",
+                count: 1,
+                kills: 0
+            };
+            player.base.readyFighters.push(fighter);
+            player.fighters[name].count--;
+            if (player.fighters[name].count <= 0) delete player.fighters[name];
+            toast(`🛡️ ${name} برای دفاع آماده شد`, false, "peace");
+            await saveCurrent();
+            renderBases();
+            updateUI();
+        };
+
+        window.unprepareFighter = async function(idx) {
+            if (!player || !player.base || !player.base.readyFighters) return;
+            if (idx >= player.base.readyFighters.length) return;
+            const f = player.base.readyFighters[idx];
+            if (!f) return;
+            if (!player.fighters) player.fighters = {};
+            if (!player.fighters[f.name]) {
+                player.fighters[f.name] = { count: 0, health: 100, score: 0, pilotXP: f.pilotXP || 0, pilotName: f.pilotName || "خلبان", createdAt: ts() };
+            }
+            player.fighters[f.name].count++;
+            player.fighters[f.name].health = f.health;
+            player.base.readyFighters.splice(idx, 1);
+            toast(`🔁 ${f.name} از حالت دفاع خارج شد`, false, "naval");
+            await saveCurrent();
+            renderBases();
+            updateUI();
+        };
+
+        // ============================================================
+        //  Attack System - اصلاح شده
+        // ============================================================
+        window.attackPlayer = async function(tid) {
+            if (!player) return;
+            const target = allPlayers.find(p => p.id === tid);
+            if (!target) { toast("کشور یافت نشد", true); return; }
+            if (!canAttack(player, tid)) {
+                const rem = Math.ceil((ATTACK_COOLDOWN * 1000 - (ts() - (player.attackedRecently?.[tid] || 0))) / 1000);
+                toast(`⏳ ${rem} ثانیه تا حمله بعدی به ${target.name}!`, true); return;
+            }
+            const fNames = Object.keys(player.fighters || {}).filter(n => player.fighters[n].count > 0 && player.fighters[n].health > 20);
+            const nNames = Object.keys(player.normalFighters || {}).filter(n => player.normalFighters[n].count > 0 && player.normalFighters[n].health > 20);
+            if (fNames.length === 0 && nNames.length === 0) { toast("❌ جنگنده قابل استفاده ندارید!", true); return; }
+
+            let avail = [];
+            for (const n of fNames) {
+                const d = player.fighters[n];
+                const pl = getPilotLevel(d.pilotXP || 0);
+                const c = Math.min(d.count, MAX_ATTACK_FIGHTERS);
+                for (let i = 0; i < c; i++) {
+                    avail.push({ name: n, type: "special", health: d.health || 100, pilotXP: d.pilotXP || 0, pilotLevel: pl, power: F_DB[n].p, index: i });
+                }
+            }
+            for (const n of nNames) {
+                const d = player.normalFighters[n];
+                const c = Math.min(d.count, MAX_ATTACK_FIGHTERS);
+                for (let i = 0; i < c; i++) {
+                    avail.push({ name: n, type: "normal", health: d.health || 100, power: N_DB[n].p, index: i });
+                }
+            }
+            if (avail.length === 0) { toast("❌ جنگنده قابل استفاده ندارید!", true); return; }
+            avail = avail.slice(0, MAX_ATTACK_FIGHTERS);
+
+            let selectedHTML = `<div class="war-declaration"><div style="color:#fbbf24;font-weight:bold;font-size:0.9rem">⚔️ حمله به ${escapeHtml(target.name)}</div></div>`;
+            selectedHTML += `<div class="section-title">🎯 انتخاب جنگنده (حداکثر ${MAX_ATTACK_FIGHTERS})</div><div class="fighter-select-grid">`;
+            avail.forEach((f, i) => {
+                const fData = f.type === "special" ? F_DB[f.name] : N_DB[f.name];
+                selectedHTML += `<div class="fighter-select-card" onclick="toggleFighterSelect(${i})"><div class="icon">${fData?.i || "🛩️"}</div><div class="name">${f.name}</div><div class="stats">❤️${f.health}%</div><div class="stats">${f.type === "special" ? getPilotLevel(f.pilotXP || 0).s : "⭐"}</div></div>`;
+            });
+            selectedHTML += `</div><div class="info-bar">انتخاب شده: <span id="selCount">0</span></div><button class="btn-attack" onclick="confirmAttack('${tid}')">⚔️ حمله</button> <button class="btn-red" onclick="clearFighterSelect()">🗑️ پاک کردن</button> <button class="btn-blue" onclick="renderMilitary()">↩️ انصراف</button>`;
+            window._attackData = { avail, selected: [], targetId: tid };
+            document.getElementById("militaryContent").innerHTML = selectedHTML;
+            updateSelectUI();
+        };
+
+        window.toggleFighterSelect = function(i) {
+            const d = window._attackData;
+            if (!d) return;
+            const f = d.avail[i];
+            if (!f) return;
+            const idx = d.selected.findIndex(s => s.name === f.name && s.index === f.index);
+            if (idx !== -1) {
+                d.selected.splice(idx, 1);
+            } else {
+                if (d.selected.length >= MAX_ATTACK_FIGHTERS) { toast(`❌ حداکثر ${MAX_ATTACK_FIGHTERS} جنگنده`, true); return; }
+                d.selected.push({ ...f });
+            }
+            const sc = document.getElementById("selCount");
+            if (sc) sc.innerText = d.selected.length;
+            updateSelectUI();
+        };
+
+        window.clearFighterSelect = function() {
+            const d = window._attackData;
+            if (d) {
+                d.selected = [];
+                const sc = document.getElementById("selCount");
+                if (sc) sc.innerText = "0";
+                updateSelectUI();
+            }
+        };
+
+        function updateSelectUI() {
+            const d = window._attackData;
+            if (!d) return;
+            const cards = document.querySelectorAll(".fighter-select-card");
+            cards.forEach((card, i) => {
+                if (i < d.avail.length) {
+                    const isSel = d.selected.some(s => s.name === d.avail[i].name && s.index === d.avail[i].index);
+                    card.className = "fighter-select-card" + (isSel ? " selected" : "");
+                }
+            });
+        }
+
+        // ============================================================
+        //  FIXED: confirmAttack - اصلاح نوتیفیکیشن به هدف
+        // ============================================================
+        window.confirmAttack = async function(tid) {
+            const d = window._attackData;
+            if (!d || d.selected.length === 0) { toast("❌ حداقل یک جنگنده انتخاب کنید!", true); return; }
+            const target = allPlayers.find(p => p.id === tid);
+            if (!target) { toast("کشور یافت نشد", true); return; }
+
+            const defFighters = (target.base?.readyFighters || []).map(f => ({ ...f }));
+            let attackLog = [];
+            let stolenG = 0, stolenO = 0, stolenM = 0;
+            let attackerLost = 0, defenderLost = 0;
+            let attackerKills = 0, defenderKills = 0;
+            const totalAttackerFighters = d.selected.length;
+            let isVictory = false;
+
+            let defCopy = defFighters.map(f => ({ ...f }));
+
+            for (const sel of d.selected) {
+                const fData = sel.type === "special" ? F_DB[sel.name] : N_DB[sel.name];
+                if (!fData) continue;
+                const pData = sel.type === "special" ? player.fighters[sel.name] : player.normalFighters[sel.name];
+                if (!pData || pData.count <= 0) continue;
+
+                const pilotBonus = sel.type === "special" ? (getPilotLevel(sel.pilotXP || 0).b || 0) : 0;
+                const healthFactor = (sel.health || 100) / 100;
+                const attackerPower = fData.p * (1 + pilotBonus) * healthFactor;
+
+                let defFighter = null;
+                let defIdx = -1;
+                if (defCopy.length > 0) {
+                    defIdx = rnd(0, defCopy.length - 1);
+                    defFighter = defCopy[defIdx];
+                }
+
+                if (defFighter) {
+                    const defFData = F_DB[defFighter.name];
+                    if (defFData) {
+                        const defPilotBonus = getPilotLevel(defFighter.pilotXP || 0).b || 0;
+                        const defHealthFactor = (defFighter.health || 100) / 100;
+                        const defenderPower = defFData.p * (1 + defPilotBonus) * defHealthFactor;
+
+                        const atkRoll = attackerPower * (0.7 + Math.random() * 0.6);
+                        const defRoll = defenderPower * (0.7 + Math.random() * 0.6);
+
+                        if (atkRoll > defRoll) {
+                            const dmg = rnd(20, 50);
+                            defFighter.health -= dmg;
+                            if (defFighter.health <= 0) {
+                                defCopy.splice(defIdx, 1);
+                                defenderLost++;
+                                attackerKills++;
+                                attackLog.push(`💀 ${defFighter.name} (دفاعی) نابود شد! (ضربه: ${dmg}%) ✅ ${sel.name} ۱ کشته`);
+                                const sg = Math.floor((target.gold || 0) * 0.03);
+                                const so = Math.floor((target.oil || 0) * 0.03);
+                                const sm = Math.floor((target.metal || 0) * 0.03);
+                                player.gold += sg;
+                                player.oil += so;
+                                player.metal += sm;
+                                target.gold = Math.max(0, (target.gold || 0) - sg);
+                                target.oil = Math.max(0, (target.oil || 0) - so);
+                                target.metal = Math.max(0, (target.metal || 0) - sm);
+                                stolenG += sg; stolenO += so; stolenM += sm;
+                            } else {
+                                attackLog.push(`🛡️ ${defFighter.name} (دفاعی) آسیب دید (${dmg}%) - باقی: ${defFighter.health}%`);
+                            }
+                            const atkDmg = rnd(3, 10);
+                            if (sel.type === "special") {
+                                pData.health = Math.max(0, (pData.health || 100) - atkDmg);
+                                if (pData.health <= 0) {
+                                    pData.count--;
+                                    attackLog.push(`💀 ${sel.name} نابود شد! (ضربه: ${atkDmg}%)`);
+                                    if (pData.count <= 0) delete player.fighters[sel.name];
+                                    attackerLost++;
+                                } else {
+                                    pData.pilotXP = (pData.pilotXP || 0) + 2;
+                                    attackLog.push(`💥 ${sel.name} آسیب دید (${atkDmg}%) - باقی: ${pData.health}%`);
+                                }
+                            } else {
+                                pData.health = Math.max(0, (pData.health || 100) - atkDmg);
+                                if (pData.health <= 0) {
+                                    pData.count--;
+                                    attackLog.push(`💀 ${sel.name} (معمولی) نابود شد! (ضربه: ${atkDmg}%)`);
+                                    if (pData.count <= 0) delete player.normalFighters[sel.name];
+                                    attackerLost++;
+                                } else {
+                                    attackLog.push(`💥 ${sel.name} (معمولی) آسیب دید (${atkDmg}%)`);
+                                }
+                            }
+                        } else {
+                            const dmg = rnd(15, 35);
+                            if (sel.type === "special") {
+                                pData.health = Math.max(0, (pData.health || 100) - dmg);
+                                if (pData.health <= 0) {
+                                    pData.count--;
+                                    attackLog.push(`💀 ${sel.name} نابود شد! (ضربه: ${dmg}%)`);
+                                    if (pData.count <= 0) delete player.fighters[sel.name];
+                                    attackerLost++;
+                                } else {
+                                    pData.pilotXP = (pData.pilotXP || 0) + 1;
+                                    attackLog.push(`💥 ${sel.name} آسیب دید (${dmg}%) - باقی: ${pData.health}%`);
+                                }
+                            } else {
+                                pData.health = Math.max(0, (pData.health || 100) - dmg);
+                                if (pData.health <= 0) {
+                                    pData.count--;
+                                    attackLog.push(`💀 ${sel.name} (معمولی) نابود شد! (ضربه: ${dmg}%)`);
+                                    if (pData.count <= 0) delete player.normalFighters[sel.name];
+                                    attackerLost++;
+                                } else {
+                                    attackLog.push(`💥 ${sel.name} (معمولی) آسیب دید (${dmg}%)`);
+                                }
+                            }
+                            const defDmg = rnd(5, 15);
+                            defFighter.health -= defDmg;
+                            if (defFighter.health <= 0) {
+                                defCopy.splice(defIdx, 1);
+                                defenderLost++;
+                                attackLog.push(`💀 ${defFighter.name} (دفاعی) نابود شد! (ضربه: ${defDmg}%)`);
+                            } else {
+                                attackLog.push(`🛡️ ${defFighter.name} (دفاعی) آسیب دید (${defDmg}%) - باقی: ${defFighter.health}%`);
+                            }
+                            const sg = Math.floor((player.gold || 0) * 0.01);
+                            const so = Math.floor((player.oil || 0) * 0.01);
+                            const sm = Math.floor((player.metal || 0) * 0.01);
+                            target.gold = (target.gold || 0) + sg;
+                            target.oil = (target.oil || 0) + so;
+                            target.metal = (target.metal || 0) + sm;
+                            player.gold = Math.max(0, (player.gold || 0) - sg);
+                            player.oil = Math.max(0, (player.oil || 0) - so);
+                            player.metal = Math.max(0, (player.metal || 0) - sm);
+                        }
+                    }
+                } else {
+                    const sg = Math.floor((target.gold || 0) * STEAL_PERCENT / 100 / totalAttackerFighters);
+                    const so = Math.floor((target.oil || 0) * STEAL_PERCENT / 100 / totalAttackerFighters);
+                    const sm = Math.floor((target.metal || 0) * STEAL_PERCENT / 100 / totalAttackerFighters);
+                    player.gold += sg;
+                    player.oil += so;
+                    player.metal += sm;
+                    target.gold = Math.max(0, (target.gold || 0) - sg);
+                    target.oil = Math.max(0, (target.oil || 0) - so);
+                    target.metal = Math.max(0, (target.metal || 0) - sm);
+                    stolenG += sg; stolenO += so; stolenM += sm;
+                    attackLog.push(`🏹 ${sel.name} حمله مستقیم به پایگاه!`);
+                }
+            }
+
+            if (target.base) {
+                target.base.readyFighters = defCopy;
+            }
+
+            isVictory = (defenderLost > attackerLost + 1);
+
+            const xp = Math.floor(attackerLost * 2) + (defenderLost * 3) + Math.floor(stolenG / 1000);
+            player.xp = (player.xp || 0) + xp;
+            player.attackedRecently[tid] = ts();
+            player.lastAttackTime = ts();
+
+            // FIXED: نوتیف به هدف (نه به خود بازیکن)
+            if (!target.notifications) target.notifications = [];
+            target.notifications.push({
+                from: player.name,
+                msg: `⚔️ شما توسط ${player.name} مورد حمله قرار گرفتید! ${attackerLost} جنگنده مهاجم نابود شد، ${defenderLost} جنگنده دفاعی شما نابود شد. ${stolenG.toLocaleString()} طلا، ${stolenO.toLocaleString()} نفت، ${stolenM.toLocaleString()} فلز غارت شد.`,
+                time: ts()
+            });
+
+            const idx = allPlayers.findIndex(p => p.id === tid);
+            if (idx !== -1) allPlayers[idx] = target;
+
+            const battleEntry = {
+                attacker: player.name,
+                defender: target.name,
+                attackerLost, defenderLost,
+                stolenG, stolenO, stolenM,
+                defDestroyed: defenderLost,
+                xp,
+                logs: attackLog,
+                isVictory,
+                time: ts(),
+                attackerKills,
+                defenderKills
+            };
+            battleLogs.push(battleEntry);
+            if (battleLogs.length > 30) battleLogs.shift();
+
+            let logHTML = `<div class="war-declaration"><div style="color:${isVictory ? '#4ade80' : '#ef4444'};font-weight:bold;font-size:1.1rem">${isVictory ? '✅ پیروزی' : '❌ شکست'}</div><div style="color:#fbbf24;font-weight:bold;font-size:0.9rem">⚔️ گزارش نبرد</div><div style="font-size:0.7rem;color:#94a3b8">🎯 هدف: ${escapeHtml(target.name)}</div><div style="font-size:0.7rem;color:#94a3b8">🛩️ تعداد مهاجم: ${totalAttackerFighters}</div><div style="font-size:0.7rem;color:#94a3b8">🛡️ تعداد مدافع: ${defFighters.length}</div><div style="font-size:0.7rem;color:#fca5a5">💀 مهاجم نابود: ${attackerLost} | مدافع نابود: ${defenderLost}</div><div style="font-size:0.7rem;color:#fca5a5">🗡️ کشته‌های مهاجم: ${attackerKills} | کشته‌های مدافع: ${defenderKills}</div><hr><div style="font-size:0.7rem;color:#4ade80">💰 غنائم: ${stolenG.toLocaleString()} طلا | ${stolenO.toLocaleString()} نفت | ${stolenM.toLocaleString()} فلز</div><div style="font-size:0.7rem;color:#fbbf24">⭐ XP: ${xp}</div><hr><div class="battle-log" style="max-height:250px;font-size:0.6rem">${attackLog.map(l => `<div class="log-entry">${l}</div>`).join("")}</div><button class="btn-gold" onclick="renderMilitary()" style="margin-top:6px">🔄 بازگشت</button></div>`;
+            document.getElementById("militaryContent").innerHTML = logHTML;
+            await saveCurrent();
+            await queueSave(true);
+            updateUI();
+        };
+
+        // ============================================================
+        //  ADMIN - اصلاح شده
+        // ============================================================
+        function isAdmin(p) { return p && p.name === "Admin" && p.password === ADMIN_PASSWORD; }
+
+        window.adminLogin = async function() {
+            const p = prompt("رمز ادمین را وارد کنید:");
+            if (p === ADMIN_PASSWORD) {
+                if (!allPlayers.some(pl => pl.name === "Admin")) {
+                    const a = createPlayer("Admin", ADMIN_PASSWORD, "admin_" + ts());
+                    a.gold = 999999;
+                    a.password = ADMIN_PASSWORD;
+                    a.research = { military: 99, economy: 99, aviation: 99, missile: 99 };
+                    allPlayers.push(a);
+                    await saveAll(true);
+                }
+                const ap = allPlayers.find(pl => pl.name === "Admin");
+                if (ap) {
+                    player = { ...ap };
+                    document.getElementById("loginBox").style.display = "none";
+                    document.getElementById("gameUI").style.display = "block";
+                    await saveCurrent();
+                    updateUI();
+                }
+                toast("✅ وارد پنل ادمین شدید", false);
+                renderAdmin();
+                updateUI();
+            } else {
+                toast("❌ رمز اشتباه", true);
+            }
+        };
+
+        window.adminAddGold = function() {
+            if (!isAdmin(player)) return;
+            const t = document.getElementById("adminTargetPlayer")?.value;
+            const a = parseInt(document.getElementById("adminGoldAmount")?.value) || 0;
+            if (a <= 0 || !t) { toast("مقدار یا بازیکن معتبر نیست", true); return; }
+            const tg = allPlayers.find(p => p.id === t);
+            if (!tg) { toast("بازیکن یافت نشد", true); return; }
+            tg.gold = (tg.gold || 0) + a;
+            toast(`✅ ${a.toLocaleString()} طلا به ${tg.name} اضافه شد`);
+            saveCurrent();
+            renderAdmin();
+            updateUI();
+        };
+
+        window.adminRemoveGold = function() {
+            if (!isAdmin(player)) return;
+            const t = document.getElementById("adminTargetPlayer")?.value;
+            const a = parseInt(document.getElementById("adminGoldAmount")?.value) || 0;
+            if (a <= 0 || !t) { toast("مقدار یا بازیکن معتبر نیست", true); return; }
+            const tg = allPlayers.find(p => p.id === t);
+            if (!tg) { toast("بازیکن یافت نشد", true); return; }
+            tg.gold = Math.max(0, (tg.gold || 0) - a);
+            toast(`✅ ${a.toLocaleString()} طلا از ${tg.name} کم شد`);
+            saveCurrent();
+            renderAdmin();
+            updateUI();
+        };
+
+        window.adminAddResource = function() {
+            if (!isAdmin(player)) return;
+            const t = document.getElementById("adminTargetPlayer")?.value;
+            const r = document.getElementById("adminResType")?.value;
+            const a = parseInt(document.getElementById("adminResAmount")?.value) || 0;
+            if (a <= 0 || !t) { toast("مقدار یا بازیکن معتبر نیست", true); return; }
+            const tg = allPlayers.find(p => p.id === t);
+            if (!tg) { toast("بازیکن یافت نشد", true); return; }
+            if (r === "oil") tg.oil = (tg.oil || 0) + a;
+            else if (r === "metal") tg.metal = (tg.metal || 0) + a;
+            toast(`✅ ${a.toLocaleString()} ${r} به ${tg.name} اضافه شد`);
+            saveCurrent();
+            renderAdmin();
+            updateUI();
+        };
+
+        window.adminRemoveResource = function() {
+            if (!isAdmin(player)) return;
+            const t = document.getElementById("adminTargetPlayer")?.value;
+            const r = document.getElementById("adminResType")?.value;
+            const a = parseInt(document.getElementById("adminResAmount")?.value) || 0;
+            if (a <= 0 || !t) { toast("مقدار یا بازیکن معتبر نیست", true); return; }
+            const tg = allPlayers.find(p => p.id === t);
+            if (!tg) { toast("بازیکن یافت نشد", true); return; }
+            if (r === "oil") tg.oil = Math.max(0, (tg.oil || 0) - a);
+            else if (r === "metal") tg.metal = Math.max(0, (tg.metal || 0) - a);
+            toast(`✅ ${a.toLocaleString()} ${r} از ${tg.name} کم شد`);
+            saveCurrent();
+            renderAdmin();
+            updateUI();
+        };
+
+        window.adminDeletePlayer = function() {
+            if (!isAdmin(player)) return;
+            const t = document.getElementById("adminDeleteTarget")?.value;
+            if (t === player.id) { toast("نمی‌توانید خودتان را حذف کنید", true); return; }
+            if (!confirm("آیا از حذف این بازیکن مطمئن هستید؟")) return;
+            const idx = allPlayers.findIndex(p => p.id === t);
+            if (idx === -1) { toast("بازیکن یافت نشد", true); return; }
+            allPlayers.splice(idx, 1);
+            toast("🗑️ بازیکن حذف شد");
+            saveCurrent();
+            await queueSave(true);
+            renderAdmin();
+            updateUI();
+        };
+
+        window.adminBroadcast = function() {
+            if (!isAdmin(player)) return;
+            const msg = document.getElementById("adminBroadcastMsg")?.value.trim();
+            if (!msg) { toast("پیام را وارد کنید", true); return; }
+            allPlayers.forEach(p => {
+                if (p.id !== player.id) {
+                    if (!p.diplomacyChat) p.diplomacyChat = [];
+                    p.diplomacyChat.push({ to: p.id, msg: `📢 پیام سراسری: ${msg}`, from: "Admin", time: ts() });
+                }
+            });
+            toast("📢 پیام سراسری ارسال شد");
+            saveCurrent();
+            await queueSave(true);
+            renderAdmin();
+            updateUI();
+        };
+
+        window.adminViewPass = function() {
+            if (!isAdmin(player)) { toast("❌ فقط ادمین", true); return; }
+            const t = document.getElementById("adminPassSearch").value.trim();
+            if (!t) { toast("نام را وارد کنید", true); return; }
+            const target = allPlayers.find(p => p.name === t);
+            if (!target) { toast(`بازیکن "${t}" یافت نشد`, true); return; }
+            toast(`🔑 "${target.name}": ${target.password} | 🌐 ${target.ip || 'نامشخص'}`, false, "peace");
+        };
+
+        window.adminSearchPlayer = function() {
+            if (!isAdmin(player)) { toast("❌ فقط ادمین", true); return; }
+            const q = document.getElementById("adminSearchInput").value.trim().toLowerCase();
+            if (!q) { toast("نام یا ID را وارد کنید", true); return; }
+            const results = allPlayers.filter(p => p.name.toLowerCase().includes(q) || (p.id || "").includes(q));
+            if (results.length === 0) { toast("هیچ بازیکنی پیدا نشد", true); return; }
+            let html = `<div class="section-title">🔍 نتایج جستجو برای "${escapeHtml(q)}"</div>`;
+            results.forEach(p => {
+                html += `<div class="admin-player-card"><strong>${escapeHtml(p.name)}</strong> <span style="font-size:0.5rem;color:#94a3b8">(${p.id})</span><div class="details">رمز: <span class="pass">${escapeHtml(p.password || '')}</span></div><div class="details ip">🌐 IP: ${escapeHtml(p.ip || 'نامشخص')}</div><div class="details">💰 طلا: ${(p.gold || 0).toLocaleString()} | ⚡ قدرت: ${militaryPower(p)} | 🛩️ جنگنده: ${getTotalFighters(p)}</div></div>`;
+            });
+            document.getElementById("adminContent").innerHTML = html;
+        };
+
+        // ============================================================
+        //  RENDER FUNCTIONS
+        // ============================================================
+        function updateUI() {
+            if (!player) return;
+            const p = calcProduction(player);
+            document.getElementById("rGold").innerText = Math.floor((player.gold || 0) + (p.gold || 0)).toLocaleString();
+            document.getElementById("rOil").innerText = Math.floor((player.oil || 0) + (p.oil || 0)).toLocaleString();
+            document.getElementById("rMetal").innerText = Math.floor((player.metal || 0) + (p.metal || 0)).toLocaleString();
+            document.getElementById("rXP").innerText = player.xp || 0;
+            updateChannelInfo();
+            checkFighterExtensions();
+            checkMilitaryMarket();
+            renderCity();
+            renderMine();
+            renderMilitary();
+            renderWeapons();
+            renderStorage();
+            renderMarket();
+            renderResearch();
+            renderBases();
+            renderAdmin();
+            renderBattleLog();
+            if (player.notifications && player.notifications.length > 0) {
+                const notif = player.notifications.pop();
+                toast(`📬 از ${notif.from}: ${notif.msg}`, false, "war");
+            }
+        }
+
+        function renderCity() {
+            const g = document.getElementById("cityGrid");
+            if (!player) { g.innerHTML = '<div class="loading">در حال بارگذاری...</div>'; return; }
+            g.innerHTML = `<div class="card" onclick="upgradeBuilding('oilWell')"><div class="icon">🛢️</div>چاه نفت ${player.buildings.oilWell}<div class="cost">ارتقا: ${(player.buildings.oilWell || 1) * 250 + 50} طلا</div></div><div class="card" onclick="upgradeBuilding('mine')"><div class="icon">⛏️</div>معدن ${player.buildings.mine}<div class="cost">ارتقا: ${(player.buildings.mine || 1) * 300 + 50} طلا</div></div><div class="card" onclick="upgradeBuilding('barracks')"><div class="icon">🏰</div>پادگان ${player.buildings.barracks}<div class="cost">ارتقا: ${(player.buildings.barracks || 1) * 350 + 50} طلا</div></div><div class="card" onclick="upgradeBuilding('wall')"><div class="icon">🧱</div>دیوار ${player.buildings.wall}<div class="cost">ارتقا: ${(player.buildings.wall || 1) * 150 + 30} طلا</div></div><div class="card" onclick="upgradeBuilding('warehouse')"><div class="icon">🏪</div>انبار ${player.buildings.warehouse}<div class="cost">ارتقا: ${(player.buildings.warehouse || 1) * 220 + 30} طلا</div></div>`;
+        }
+
+        function renderMine() {
+            const c = document.getElementById("mineContent");
+            if (!player) { c.innerHTML = '<div class="loading">در حال بارگذاری...</div>'; return; }
+            const mine = calcMine(player);
+            const cap = MINE_MAX;
+            const canCollect = mine.canCollect && (mine.gold > 0 || mine.metal > 0 || mine.oil > 0);
+            c.innerHTML = `<div class="section-title">🪙 معدن</div><div class="mine-card"><div style="font-size:1.2rem">⛏️</div><div style="font-size:0.8rem;color:#fbbf24">سطح: ${player.mineLevel || 1}</div><div style="font-size:0.7rem;color:#94a3b8">تولید: ${(player.mineLevel || 1) * MINE_GOLD_PER_SEC} طلا/ثانیه | ${(player.mineLevel || 1) * MINE_METAL_PER_SEC} فلز/ثانیه | ${(player.mineLevel || 1) * MINE_OIL_PER_SEC} نفت/ثانیه</div><div style="font-size:0.7rem;color:#4ade80">📦 موجودی آماده: +${mine.gold.toLocaleString()} طلا | +${mine.metal.toLocaleString()} فلز | +${mine.oil.toLocaleString()} نفت</div><div style="font-size:0.6rem;color:#94a3b8">⏳ ${mine.canCollect ? '✅ قابل جمع‌آوری' : '⏳ منتظر بمانید...'}</div><div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap"><button class="btn-gold" onclick="collectMine()" ${canCollect ? '' : 'disabled'}>🪙 جمع‌آوری</button><button class="btn-gold" onclick="upgradeMine()">⬆️ ارتقا (${((player.mineLevel || 1) * 2200).toLocaleString()} طلا)</button></div><div style="font-size:0.5rem;color:#94a3b8;margin-top:4px">سقف انبار: ${cap.toLocaleString()} برای هر منبع</div></div>`;
+        }
+
+        function renderMilitary() {
+            const c = document.getElementById("militaryContent");
+            if (!player) { c.innerHTML = '<div class="loading">در حال بارگذاری...</div>'; return; }
+            const others = allPlayers.filter(p => p.id !== player.id);
+            let html = `<div class="section-title">⚔️ سیستم نظامی</div><div class="xp-bar">🎖️ سطح: ${player.militaryLevel || 1} | XP: ${player.xp || 0}/${(player.militaryLevel || 1) * XP_PER_LEVEL}</div><div class="hp-bar"><div class="hp-fill" style="width:${((player.xp || 0) % XP_PER_LEVEL) / XP_PER_LEVEL * 100}%"></div></div><div style="font-size:0.55rem;color:#94a3b8">🛩️ کل جنگنده‌ها: ${getTotalFighters(player)} | ⚡ قدرت: ${militaryPower(player)}</div><div class="section-title">🎯 حمله به کشورها (از کانال @${channelInfo?.username || 'pudgyparty7'})</div><div class="info-bar">⏳ کول‌داون ${ATTACK_COOLDOWN} ثانیه</div>`;
+            if (others.length === 0) {
+                html += `<div class="empty">هیچ کشور دیگری برای حمله وجود ندارد</div>`;
+            } else {
+                others.forEach(p => {
+                    html += `<div class="player-row"><div><strong>${escapeHtml(p.name)}</strong><div style="font-size:0.5rem;color:#94a3b8">⚡ ${militaryPower(p)} | 🛩️ ${getTotalFighters(p)}</div></div><div><button class="btn-attack" onclick="attackPlayer('${p.id}')">⚔️ حمله</button></div></div>`;
+                });
+            }
+            c.innerHTML = html;
+        }
+
+        function renderWeapons() {
+            const c = document.getElementById("weaponsContent");
+            if (!player) { c.innerHTML = '<div class="loading">در حال بارگذاری...</div>'; return; }
+            let html = `<div class="section-title">🔫 سلاح‌های جنگی</div><div class="fighter-legend">⚠️ ساخت جنگنده ویژه نیاز به هوانوردی سطح مناسب | موشک نیاز به تحقیق موشک | ناو نیاز به منابع بالا</div>`;
+
+            html += `<div class="section-title">✈️ جنگنده‌های ویژه</div><div class="fighter-grid">`;
+            for (const [n, d] of Object.entries(F_DB)) {
+                const can = canBuildFighter(player, n);
+                const gc = getFighterGlobal(n);
+                const owned = player.fighters?.[n]?.count || 0;
+                const health = player.fighters?.[n]?.health || 100;
+                const expiry = player.fighters?.[n] ? getFighterExpiry(player.fighters[n]) : null;
+                const needAv = d.r;
+                const hasAv = player.research?.aviation || 0;
+                html += `<div class="fighter-card" style="border-color:${can ? '#10b981' : (hasAv < needAv ? '#f59e0b' : '#ef4444')}"><div class="icon">${d.i}</div><div style="font-weight:bold;font-size:0.6rem">${n}</div><div class="country">${d.n}</div><div style="font-size:0.45rem;color:#fbbf24">قدرت: ${d.p}</div><div style="font-size:0.4rem;color:#94a3b8">جهانی: ${gc}/${d.g}</div><div style="font-size:0.4rem;color:#fbbf24">💰${d.c.g.toLocaleString()} 🛢️${d.c.o.toLocaleString()} ⛏️${d.c.m.toLocaleString()}</div>${owned > 0 ? `<div style="font-size:0.5rem">تعداد: ${owned} ❤️${health}% ${expiry ? expiry.message : ""}</div>` : ""}${can ? `<button class="btn-green" onclick="buildFighter('${n}')">🔨 ساخت</button>` : `<span class="badge badge-red">${gc >= d.g ? 'سقف' : (hasAv < needAv ? `هوانوردی ${needAv}` : 'نیازها')}</span>`}</div>`;
+            }
+            html += `</div>`;
+
+            html += `<div class="section-title">🛩️ جنگنده‌های معمولی</div><div class="fighter-grid">`;
+            for (const [n, d] of Object.entries(N_DB)) {
+                const can = canBuildNormal(player, n);
+                const owned = player.normalFighters?.[n]?.count || 0;
+                const health = player.normalFighters?.[n]?.health || 100;
+                html += `<div class="fighter-card" style="border-color:${can ? '#10b981' : '#ef4444'}"><div class="icon">${d.i}</div><div style="font-weight:bold;font-size:0.6rem">${n}</div><div class="country">${d.n}</div><div style="font-size:0.45rem;color:#fbbf24">قدرت: ${d.p}</div><div style="font-size:0.4rem;color:#fbbf24">💰${d.c.g.toLocaleString()} 🛢️${d.c.o.toLocaleString()} ⛏️${d.c.m.toLocaleString()}</div>${owned > 0 ? `<div style="font-size:0.5rem">تعداد: ${owned} ❤️${health}%</div>` : ""}${can ? `<button class="btn-green" onclick="buildNormalFighter('${n}')">🔨 ساخت</button>` : `<span class="badge badge-red">نیازها</span>`}</div>`;
+            }
+            html += `</div>`;
+
+            html += `<div class="section-title">🚀 موشک‌ها</div><div class="fighter-grid">`;
+            for (const [n, d] of Object.entries(M_DB)) {
+                const can = canBuildMissile(player, n);
+                const gc = getMissileGlobal(n);
+                const owned = player.missiles?.[n] || 0;
+                html += `<div class="fighter-card" style="border-color:${can ? '#ef4444' : '#ef4444'}"><div class="icon">${d.i}</div><div style="font-weight:bold;font-size:0.6rem">${n}</div><div style="font-size:0.45rem;color:#fbbf24">قدرت: ${d.p}</div><div style="font-size:0.4rem;color:#94a3b8">جهانی: ${gc}/${d.g}</div><div style="font-size:0.4rem;color:#fbbf24">💰${d.c.g.toLocaleString()}</div>${owned > 0 ? `<div style="font-size:0.5rem">تعداد: ${owned}</div>` : ""}${can ? `<button class="btn-missile" onclick="buildMissile('${n}')">🔨 ساخت</button>` : `<span class="badge badge-red">${gc >= d.g ? 'سقف' : 'نیازها'}</span>`}</div>`;
+            }
+            html += `</div>`;
+
+            html += `<div class="section-title">⚓ ناو هواپیمابر</div><div class="fighter-grid">`;
+            for (const [n, d] of Object.entries(C_DB)) {
+                const can = canBuildCarrier(player, n);
+                const gc = getCarrierGlobal(n);
+                html += `<div class="fighter-card" style="border-color:${can ? '#0ea5e9' : '#ef4444'}"><div class="icon">${d.i}</div><div style="font-weight:bold;font-size:0.6rem">${n}</div><div style="font-size:0.4rem;color:#94a3b8">قدرت: ${d.p} | 🛩️ ${d.sl}</div><div style="font-size:0.4rem;color:#94a3b8">جهانی: ${gc}/${d.g}</div><div style="font-size:0.4rem;color:#fbbf24">💰${d.c.g.toLocaleString()}</div>${can ? `<button class="btn-naval" onclick="buildCarrier('${n}')">🔨 ساخت</button>` : `<span class="badge badge-red">${gc >= d.g ? 'سقف' : 'نیازها'}</span>`}</div>`;
+            }
+            html += `</div>`;
+
+            html += `<div class="section-title">🎯 پرتاب موشک</div><div class="info-bar">💰 هزینه: ۵۰۰ طلا | 🛡️ پدافند رهگیری</div>`;
+            const others = allPlayers.filter(p => p.id !== player.id);
+            if (others.length === 0) {
+                html += `<div class="empty">کشور دیگری وجود ندارد</div>`;
+            } else {
+                others.forEach(p => {
+                    html += `<div class="player-row"><div><strong>${escapeHtml(p.name)}</strong></div><div><button class="btn-missile" onclick="launchMissile('${p.id}')">🚀 پرتاب</button></div></div>`;
+                });
+            }
+
+            html += `<div class="section-title">🚢 ناوگان شما</div>`;
+            if (!player.carriers || player.carriers.length === 0) {
+                html += `<div class="empty">هیچ ناوی ندارید</div>`;
+            } else {
+                player.carriers.forEach((cr, ci) => {
+                    html += `<div class="carrier-card"><div><strong>${escapeHtml(cr.name)}</strong> <span class="badge badge-naval">${cr.status}</span></div><div style="font-size:0.5rem;color:#94a3b8">❤️ ${cr.health}%</div><div style="font-size:0.5rem;color:#7dd3fc">🛩️ ${cr.fighters?.length || 0}/${CARRIER_SLOTS}</div><div class="carrier-fighter-list">${cr.fighters?.map((f, fi) => `<span class="carrier-fighter-tag">${F_DB[f.name]?.i || "🛩️"} ${f.name}</span>`).join("") || "<span style='font-size:0.4rem;color:#94a3b8'>خالی</span>"}</div><div><button class="btn-blue" onclick="document.getElementById('carrierMenu_${ci}').style.display='block'">🛩️ مدیریت</button><div id="carrierMenu_${ci}" style="display:none;background:#0f172a;padding:6px;border-radius:8px;margin-top:4px"><div style="font-size:0.5rem;color:#7dd3fc">اضافه کردن:</div><div class="inline-form"><select id="cfSel_${ci}">${Object.keys(player.fighters || {}).filter(f => player.fighters[f].count > 0 && player.fighters[f].health > 30).map(f => `<option value="${f}">${f} (${player.fighters[f].count})</option>`).join("")}</select><button class="btn-green" onclick="deployToCarrier(${ci},document.getElementById('cfSel_${ci}').value)">➕</button></div><div style="font-size:0.5rem;color:#ef4444">حذف:</div>${cr.fighters?.map((f, fi) => `<div class="player-row" style="padding:3px"><span>${F_DB[f.name]?.i || "🛩️"} ${f.name}</span><button class="btn-red" onclick="removeFromCarrier(${ci},${fi})">🗑️</button></div>`).join("") || "<div style='font-size:0.4rem;color:#94a3b8'>خالی</div>"}<button class="btn-red" onclick="document.getElementById('carrierMenu_${ci}').style.display='none'">❌ بستن</button></div></div></div>`;
+                });
+            }
+            c.innerHTML = html;
+        }
+
+        function renderStorage() {
+            const c = document.getElementById("storageContent");
+            if (!player) { c.innerHTML = '<div class="loading">در حال بارگذاری...</div>'; return; }
+            let html = `<div class="section-title">🛡️ انبار جنگنده‌های ویژه</div><div class="info-bar">💰 هزینه تمدید: ${EXTEND_COST_PER_DAY.toLocaleString()} طلا/روز (حداقل ${EXTEND_MIN_DAYS} روز = ${(EXTEND_COST_PER_DAY * EXTEND_MIN_DAYS).toLocaleString()} طلا)</div><div class="info-bar">⚠️ هر ۱۵ دقیقه یک بار می‌توانید بفروشید | مدت ۱ ساعت در بازار</div>`;
+            if (!player.fighters || Object.keys(player.fighters).length === 0) {
+                html += `<div class="empty">هیچ جنگنده ویژه‌ای در انبار ندارید</div>`;
+            } else {
+                const entries = Object.entries(player.fighters).filter(([, d]) => d.count > 0);
+                if (entries.length === 0) {
+                    html += `<div class="empty">هیچ جنگنده ویژه‌ای در انبار ندارید</div>`;
+                } else {
+                    entries.forEach(([n, d]) => {
+                        const fData = F_DB[n];
+                        if (!fData) return;
+                        const expiry = getFighterExpiry(d);
+                        const cost = EXTEND_COST_PER_DAY * EXTEND_MIN_DAYS;
+                        const cls = expiry.status === "urgent" ? "urgent" : expiry.status === "warning" ? "warning" : "safe";
+                        const canSell = (ts() - (player.lastSellTime || 0)) >= 900000;
+                        html += `<div class="expire-card ${cls}"><div><strong>${fData.i} ${n}</strong> x${d.count}</div><div style="font-size:0.55rem">${expiry.message}</div><div style="font-size:0.5rem;color:#94a3b8">💰 تمدید ${EXTEND_MIN_DAYS} روز: ${cost.toLocaleString()} طلا</div><div><button class="btn-extend" onclick="extendFighter('${n}')">🔄 تمدید</button> <button class="btn-gold" onclick="sellFighterToMarket('${n}')" ${canSell ? '' : 'disabled'}>📤 فروش</button></div></div>`;
+                    });
+                }
+            }
+            c.innerHTML = html;
+        }
+
+        function renderMarket() {
+            const c = document.getElementById("marketContent");
+            if (!player) { c.innerHTML = '<div class="loading">در حال بارگذاری...</div>'; return; }
+            let html = `<div class="section-title">🛒 بازار نظامی (از کانال @${channelInfo?.username || 'pudgyparty7'})</div><div class="info-bar">جنگنده‌ها به مدت ۱ ساعت در بازار هستند</div>`;
+            checkMilitaryMarket();
+            const now = ts();
+            militaryMarket = militaryMarket.filter(item => (now - item.addedAt) < 3600000 && item.status === "pending");
+            if (militaryMarket.length === 0) {
+                html += `<div class="empty">هیچ جنگنده‌ای در بازار نیست</div>`;
+            } else {
+                militaryMarket.forEach((item, i) => {
+                    const fData = F_DB[item.fighterName];
+                    const timeLeft = Math.max(0, 60 - Math.floor((now - item.addedAt) / 60000));
+                    html += `<div class="weapon-card"><div><strong>${fData?.i || "✈️"} ${escapeHtml(item.fighterName)}</strong> x${item.quantity || 1}</div><div style="font-size:0.55rem">💰 قیمت کل: ${item.price.toLocaleString()} طلا (${(item.unitPrice || 0).toLocaleString()} طلا/عدد)</div><div style="font-size:0.5rem;color:#94a3b8">⏳ ${timeLeft} دقیقه باقی | فروشنده: ${escapeHtml(item.sellerName)}</div>${item.sellerId !== player.id ? `<button class="btn-green" onclick="buyFromMarket(${i})">🛒 خرید</button>` : '<span class="badge badge-gray">آگهی شما</span>'}</div>`;
+                });
+            }
+            c.innerHTML = html;
+        }
+
+        function renderResearch() {
+            const c = document.getElementById("researchContent");
+            if (!player) { c.innerHTML = '<div class="loading">در حال بارگذاری...</div>'; return; }
+            c.innerHTML = `<div class="section-title">🔬 تحقیقات</div><div class="player-row"><div>⚔️ نظامی ${player.research.military}</div><button class="btn-gold" onclick="research('military')">🔬 (${(player.research.military + 1) * 800} طلا)</button></div><div class="player-row"><div>🏭 اقتصاد ${player.research.economy}</div><button class="btn-gold" onclick="research('economy')">🔬 (${(player.research.economy + 1) * 700} طلا)</button></div><div class="player-row"><div>✈️ هوانوردی ${player.research.aviation}</div><button class="btn-gold" onclick="research('aviation')">🔬 (${(player.research.aviation + 1) * 1500} طلا)</button></div><div class="player-row"><div>🚀 موشک ${player.research.missile || 0}</div><button class="btn-gold" onclick="research('missile')">🔬 (${((player.research.missile || 0) + 1) * 2000} طلا)</button></div><div class="info-bar">⚠️ برای ساخت جنگنده ویژه به هوانوردی سطح مناسب نیاز دارید</div>`;
+        }
+
+        function renderBases() {
+            const c = document.getElementById("basesContent");
+            if (!player) { c.innerHTML = '<div class="loading">در حال بارگذاری...</div>'; return; }
+            const base = player.base || { level: 1, storage: 0, maxStorage: 10000, defense: 10, fighters: [], defenses: [], readyFighters: [] };
+            let html = `<div class="section-title">🏰 پایگاه اصلی</div><div class="base-card"><div>سطح: ${base.level} | دفاع: ${base.defense}</div><div>ذخیره: ${base.storage.toLocaleString()}/${base.maxStorage.toLocaleString()}</div><div>🛩️ جنگنده: ${base.fighters?.length || 0}/${MAX_FIGHTERS_PER_BASE}</div><div><button class="btn-gold" onclick="upgradeBase()">⬆️ ارتقا (${(base.level * 1500).toLocaleString()} طلا)</button> <button class="btn-blue" onclick="depositToBase()">📥 واریز</button> <button class="btn-purple" onclick="withdrawFromBase()">📤 برداشت</button></div></div><div class="section-title">🛡️ پدافندها (${base.defenses?.length || 0})</div>`;
+            if (base.defenses && base.defenses.length > 0) {
+                base.defenses.forEach((d, i) => {
+                    const dd = D_DB[d.name];
+                    html += `<div class="defense-card"><div>${dd?.i || "🛡️"} ${d.name} | دفاع: ${d.defense} | HP: ${d.hp}/${dd?.hp || 100} | رهگیری: ${d.md || 0}%</div><div><button class="btn-green" onclick="repairDefense(${i})">🔧 تعمیر</button> <button class="btn-red" onclick="removeDefense(${i})">🗑️</button></div></div>`;
+                });
+            }
+            html += `<div class="section-title">🛡️ ساخت پدافند</div><div class="fighter-grid">`;
+            for (const [n, d] of Object.entries(D_DB)) {
+                const can = (player.gold || 0) >= d.c.g && (player.oil || 0) >= d.c.o && (player.metal || 0) >= d.c.m;
+                const cnt = base.defenses?.filter(dd => dd.name === n).length || 0;
+                html += `<div class="fighter-card" style="border-color:${can ? '#10b981' : '#ef4444'}"><div class="icon">${d.i}</div><div style="font-weight:bold;font-size:0.55rem">${n}</div><div style="font-size:0.4rem;color:#fbbf24">دفاع: ${d.def}</div><div style="font-size:0.4rem;color:#94a3b8">${cnt}/${d.max}</div><div style="font-size:0.4rem;color:#fbbf24">💰${d.c.g.toLocaleString()}</div>${can && cnt < d.max ? `<button class="btn-defense" onclick="buildDefense('${n}')">🔨 نصب</button>` : `<span class="badge badge-red">${cnt >= d.max ? 'سقف' : 'نیازها'}</span>`}</div>`;
+            }
+            html += `</div>`;
+            html += `<div class="section-title">🛡️ جنگنده‌های آماده دفاع (${base.readyFighters?.length || 0}/6)</div><div class="info-bar">جنگنده‌های آماده شده به طور خودکار در دفاع شرکت می‌کنند</div>`;
+            if (base.readyFighters && base.readyFighters.length > 0) {
+                base.readyFighters.forEach((f, idx) => {
+                    const fData = F_DB[f.name];
+                    html += `<div class="player-row"><div><strong>${fData?.i || "🛩️"} ${f.name}</strong> ❤️${f.health}% ${getPilotLevel(f.pilotXP || 0).s} 🗡️${f.kills || 0} کشته</div><div><button class="btn-red" onclick="unprepareFighter(${idx})">🗑️</button></div></div>`;
+                });
+            } else {
+                html += `<div class="empty">هیچ جنگنده‌ای برای دفاع آماده نشده</div>`;
+            }
+            html += `<div class="section-title">🛡️ آماده‌سازی جنگنده برای دفاع</div><div class="info-bar">حداقل سلامت ۵۰٪ | حداکثر ۶ جنگنده</div><div class="fighter-grid">`;
+            if (player.fighters) {
+                for (const [n, d] of Object.entries(player.fighters)) {
+                    if (d.count > 0 && d.health >= 50) {
+                        const fData = F_DB[n];
+                        if (fData) {
+                            const already = base.readyFighters?.some(f => f.name === n) || false;
+                            html += `<div class="fighter-card" style="border-color:${already ? '#ef4444' : '#10b981'}"><div class="icon">${fData.i}</div><div style="font-weight:bold;font-size:0.55rem">${n}</div><div style="font-size:0.4rem;color:#fbbf24">❤️${d.health}%</div>${already ? '<span class="badge badge-gray">آماده</span>' : `<button class="btn-blue" onclick="prepareFighterForDefense('${n}')">🛡️ آماده</button>`}</div>`;
+                        }
+                    }
+                }
+            }
+            html += `</div>`;
+            c.innerHTML = html;
+        }
+
+        function renderAdmin() {
+            const c = document.getElementById("adminContent");
+            if (!player) { c.innerHTML = '<div class="loading">در حال بارگذاری...</div>'; return; }
+            if (!isAdmin(player)) {
+                c.innerHTML = `<div class="section-title">👑 پنل ادمین</div><div class="info-bar">ادمین اصلی بازی - ورود با رمز</div><button class="btn-admin" onclick="adminLogin()">🔐 ورود ادمین</button>`;
+                return;
+            }
+            let html = `<div class="section-title">👑 پنل مدیریت</div><div class="info-bar">ادمین: ${escapeHtml(player.name)} | تعداد بازیکنان: ${allPlayers.length}</div><div class="section-title">📊 آمار کانال @${channelInfo?.username || 'pudgyparty7'}</div><div>👥 کل بازیکنان: ${allPlayers.length}</div><div>📦 پایگاه‌ها: ${allPlayers.filter(p => p.base?.level > 1).length}</div><div>⚓ ناوها: ${allPlayers.reduce((s, p) => s + (p.carriers?.length || 0), 0)}</div><div class="section-title">🔍 جستجوی بازیکن و مشاهده رمز + IP</div><div class="inline-form"><input type="text" id="adminSearchInput" placeholder="نام یا ID..."><button class="btn-blue" onclick="adminSearchPlayer()">🔍 جستجو</button></div><div class="inline-form"><input type="text" id="adminPassSearch" placeholder="نام بازیکن برای رمز..."><button class="btn-purple" onclick="adminViewPass()">🔑 مشاهده رمز + IP</button></div><div class="section-title">💰 مدیریت طلا</div><div class="inline-form"><select id="adminTargetPlayer">${allPlayers.map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join("")}</select><input type="number" id="adminGoldAmount" placeholder="مقدار" value="1000"><button class="btn-gold" onclick="adminAddGold()">➕</button><button class="btn-red" onclick="adminRemoveGold()">➖</button></div><div class="section-title">📦 مدیریت منابع</div><div class="inline-form"><select id="adminResType"><option value="oil">نفت</option><option value="metal">فلز</option></select><input type="number" id="adminResAmount" placeholder="مقدار" value="500"><button class="btn-blue" onclick="adminAddResource()">➕</button><button class="btn-red" onclick="adminRemoveResource()">➖</button></div><div class="section-title">🗑️ حذف بازیکن</div><div class="inline-form"><select id="adminDeleteTarget">${allPlayers.filter(p => p.id !== player.id).map(p => `<option value="${p.id}">${escapeHtml(p.name)}</option>`).join("")}</select><button class="btn-red" onclick="adminDeletePlayer()">🗑️</button></div><div class="section-title">📢 پیام سراسری</div><div class="inline-form"><input type="text" id="adminBroadcastMsg" placeholder="پیام..."><button class="btn-purple" onclick="adminBroadcast()">📢 ارسال</button></div>`;
+            c.innerHTML = html;
+        }
+
+        function renderBattleLog() {
+            const c = document.getElementById("battlelogContent");
+            if (!player) { c.innerHTML = '<div class="loading">در حال بارگذاری...</div>'; return; }
+            if (!battleLogs || battleLogs.length === 0) {
+                c.innerHTML = `<div class="empty">هیچ گزارش جنگی ثبت نشده است</div>`;
+                return;
+            }
+            let html = `<div class="section-title">📜 گزارش جنگ‌ها</div>`;
+            const logs = [...battleLogs].reverse();
+            logs.forEach(log => {
+                const time = new Date(log.time).toLocaleString('fa-IR');
+                html += `<div class="war-declaration" style="border-color:${log.isVictory ? '#4ade80' : '#ef4444'}"><div style="display:flex;justify-content:space-between"><div><span class="attacker">${escapeHtml(log.attacker)}</span> ⚔️ <span class="defender">${escapeHtml(log.defender)}</span></div><div style="color:${log.isVictory ? '#4ade80' : '#ef4444'}">${log.isVictory ? '✅ پیروزی' : '❌ شکست'}</div></div><div style="font-size:0.55rem;color:#94a3b8">⏰ ${time}</div><div style="font-size:0.55rem;color:#fbbf24">💀 مهاجم: ${log.attackerLost} | مدافع: ${log.defenderLost}</div><div style="font-size:0.55rem;color:#fca5a5">🗡️ کشته‌های مهاجم: ${log.attackerKills || 0} | کشته‌های مدافع: ${log.defenderKills || 0}</div><div style="font-size:0.55rem;color:#4ade80">💰 غنائم: ${log.stolenG} طلا | ${log.stolenO} نفت | ${log.stolenM} فلز</div><div style="font-size:0.55rem;color:#fbbf24">⭐ XP: ${log.xp}</div><div class="battle-log" style="max-height:150px;margin-top:4px">${(log.logs || []).map(l => `<div class="log-entry" style="font-size:0.5rem">${l}</div>`).join("")}</div></div>`;
+            });
+            c.innerHTML = html;
+        }
+
+        window.renderRanking = async function() {
+            await loadAll();
+            const s = [...allPlayers].sort((a, b) => militaryPower(b) - militaryPower(a));
+            document.getElementById("rankContent").innerHTML = s.length === 0 ? '<div class="empty">کشوری ثبت نشده</div>' : `<div class="info-bar">🏆 رتبه‌بندی از کانال @${channelInfo?.username || 'pudgyparty7'}</div>` + s.map((p, i) => `<div class="player-row"><div>${i + 1}. <strong>${escapeHtml(p.name)}</strong> ${p.id === player?.id ? "(شما)" : ""}</div><div>⚡${militaryPower(p)} 🎖️${p.militaryLevel || 1}</div></div>`).join("");
+        };
+
+        // ============================================================
+        //  BACKGROUND
+        // ============================================================
+        const canvas = document.getElementById("bgCanvas");
+        const ctx = canvas.getContext("2d");
         let stars = [];
         let shootingStars = [];
 
-        for (let i = 0; i < 100; i++) {
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        for (let i = 0; i < 200; i++) {
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
@@ -704,457 +2778,75 @@
         }
         drawBg();
 
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
         // ============================================================
-        //  TELEGRAM INTEGRATION
+        //  HELPER CHECKS
         // ============================================================
-        async function initTelegram() {
-            try {
-                document.getElementById('channelName').textContent = CHANNEL_NAME;
-                
-                if (BOT_TOKEN === 'YOUR_BOT_TOKEN_HERE') {
-                    showTelegramStatus(false, 'توکن پیکربندی نشده');
-                    return false;
-                }
-
-                // تست اتصال
-                const response = await fetch(`${TELEGRAM_API}${BOT_TOKEN}/getMe`);
-                if (response.ok) {
-                    showTelegramStatus(true, 'تلگرام: آنلاین');
-                    telegramConnected = true;
-                    return true;
-                } else {
-                    showTelegramStatus(false, 'خطا در اتصال');
-                    return false;
-                }
-            } catch (error) {
-                console.log('Telegram Error:', error);
-                showTelegramStatus(false, 'آفلاین');
-                return false;
-            }
-        }
-
-        function showTelegramStatus(connected, text) {
-            const statusEl = document.getElementById('telegramStatus');
-            const statusText = document.getElementById('statusText');
-            
-            if (connected) {
-                statusEl.classList.remove('disconnected');
-                statusEl.classList.add('connected');
-            } else {
-                statusEl.classList.remove('connected');
-                statusEl.classList.add('disconnected');
-            }
-            statusText.textContent = text;
-        }
-
-        async function sendTelegramMessage(message) {
-            if (!telegramConnected) return;
-            try {
-                const text = encodeURIComponent(message);
-                await fetch(`${TELEGRAM_API}${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${text}&parse_mode=HTML`);
-            } catch (error) {
-                console.log('Send message error:', error);
-            }
-        }
-
-        // ============================================================
-        //  UTILITY FUNCTIONS
-        // ============================================================
-        function ts() { return Date.now(); }
-
-        function toast(msg, isError = false, type = 'info') {
-            const div = document.createElement('div');
-            div.className = 'toast';
-            div.textContent = msg;
-            if (isError) div.style.borderColor = '#ef4444';
-            if (type === 'warning') div.style.borderColor = '#f59e0b';
-            document.body.appendChild(div);
-            setTimeout(() => div.remove(), 3000);
-        }
-
-        function formatNumber(n) {
-            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-            if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
-            return Math.floor(n).toString();
-        }
-
-        // ============================================================
-        //  PLAYER CREATION
-        // ============================================================
-        function createPlayer(name, password, ip) {
-            const newPlayer = {
-                id: Date.now().toString(),
-                name: name,
-                password: password,
-                ip: ip,
-                level: 1,
-                xp: 2,
-                gold: 1000,
-                steel: 500,
-                food: 800,
-                diamond: 50,
-                energy: 100,
-                buildings: {},
-                units: {},
-                weapons: {},
-                bases: [],
-                research: [],
-                battles: [],
-                lastActive: ts(),
-                createdAt: ts()
-            };
-            return newPlayer;
-        }
-
-        // ============================================================
-        //  BUILDING SYSTEM
-        // ============================================================
-        function buildBuilding(type) {
+        function checkFighterExtensions() {
             if (!player) return;
-            
-            const building = BUILDINGS[type];
-            if (!building) return;
-
-            if (player.gold < building.cost) {
-                toast('💰 سکه‌های کافی نیست!', true);
-                return;
+            const now = ts();
+            if ((now - (player.lastExtensionCheck || 0)) < 3600000) return;
+            player.lastExtensionCheck = now;
+            if (!player.fighters) return;
+            for (const [name, data] of Object.entries(player.fighters)) {
+                if (data.count <= 0) continue;
+                const expiry = getFighterExpiry(data);
+                if (expiry.status === "urgent") toast(`⚠️ ${name} فردا منقضی میشود!`, false, "warning");
+                if (expiry.status === "warning") toast(`⚠️ ${name} ۳ روز دیگر منقضی میشود`, false, "warning");
             }
-
-            player.gold -= building.cost;
-            player.buildings[type] = (player.buildings[type] || 0) + 1;
-            toast(`✅ ${building.name} ساخته شد! +1`);
-            sendTelegramMessage(`🏗️ <b>${player.name}</b> ساخت <b>${building.name}</b>`);
-            saveCurrent();
-            updateUI();
         }
 
-        // ============================================================
-        //  MINING SYSTEM
-        // ============================================================
-        function minResource(type) {
+        function checkMilitaryMarket() {
             if (!player) return;
-
-            const amounts = {
-                gold: 50,
-                steel: 40,
-                food: 60,
-                diamond: 5
-            };
-
-            if (!amounts[type]) return;
-
-            player[type] += amounts[type];
-            player.energy -= 10;
-            if (player.energy < 0) player.energy = 0;
-
-            toast(`⛏️ +${amounts[type]} ${type}`);
-            saveCurrent();
-            updateUI();
+            const now = ts();
+            militaryMarket = militaryMarket.filter(item => (now - item.addedAt) < 3600000);
         }
 
         // ============================================================
-        //  TRAINING UNITS
-        // ============================================================
-        function trainUnit(type) {
-            if (!player) return;
-
-            const units = {
-                soldier: { cost: 100, name: '🪖 سرباز', power: 10 },
-                knight: { cost: 300, name: '🗡️ شوالیه', power: 30 },
-                archer: { cost: 200, name: '🏹 تیرانداز', power: 20 },
-                mage: { cost: 500, name: '🧙 جادوگر', power: 50 }
-            };
-
-            const unit = units[type];
-            if (!unit) return;
-
-            if (player.gold < unit.cost) {
-                toast('💰 سکه‌های کافی نیست!', true);
-                return;
-            }
-
-            player.gold -= unit.cost;
-            player.units[type] = (player.units[type] || 0) + 1;
-            toast(`✅ ${unit.name} آموزش دیده شد!`);
-            sendTelegramMessage(`🎖️ <b>${player.name}</b> ${unit.name} تربیت کرد`);
-            saveCurrent();
-            updateUI();
-        }
-
-        // ============================================================
-        //  CRAFTING WEAPONS
-        // ============================================================
-        function craftWeapon(type) {
-            if (!player) return;
-
-            const weapons = {
-                sword: { steel: 50, name: '⚔️ شمشیر', power: 15 },
-                shield: { steel: 40, name: '🛡️ سپر', power: 10 },
-                bow: { steel: 60, name: '🏹 کمان', power: 20 },
-                staff: { diamond: 30, name: '✨ عصا جادویی', power: 40 }
-            };
-
-            const weapon = weapons[type];
-            if (!weapon) return;
-
-            if (weapon.steel && player.steel < weapon.steel) {
-                toast('⚙️ فولاد کافی نیست!', true);
-                return;
-            }
-            if (weapon.diamond && player.diamond < weapon.diamond) {
-                toast('💎 الماس کافی نیست!', true);
-                return;
-            }
-
-            if (weapon.steel) player.steel -= weapon.steel;
-            if (weapon.diamond) player.diamond -= weapon.diamond;
-
-            player.weapons[type] = (player.weapons[type] || 0) + 1;
-            toast(`✅ ${weapon.name} ساخت شد!`);
-            sendTelegramMessage(`🔫 <b>${player.name}</b> ${weapon.name} ساخت`);
-            saveCurrent();
-            updateUI();
-        }
-
-        // ============================================================
-        //  EXCHANGE SYSTEM
-        // ============================================================
-        function exchange(type) {
-            if (!player) return;
-
-            const exchanges = {
-                goldToSteel: () => {
-                    if (player.gold < 100) { toast('💰 سکه کافی نیست!', true); return; }
-                    player.gold -= 100;
-                    player.steel += 100;
-                    toast('💱 100 سکه ↔️ 100 فولاد');
-                },
-                foodToDiamond: () => {
-                    if (player.food < 1000) { toast('🌾 غذا کافی نیست!', true); return; }
-                    player.food -= 1000;
-                    player.diamond += 100;
-                    toast('💱 1000 غذا ↔️ 100 الماس');
-                },
-                steelToFood: () => {
-                    if (player.steel < 100) { toast('⚙️ فولاد کافی نیست!', true); return; }
-                    player.steel -= 100;
-                    player.food += 200;
-                    toast('💱 100 فولاد ↔️ 200 غذا');
-                },
-                diamondToAll: () => {
-                    if (player.diamond < 1) { toast('💎 الماس کافی نیست!', true); return; }
-                    player.diamond -= 1;
-                    player.gold += 1000;
-                    player.steel += 1000;
-                    player.food += 1000;
-                    toast('💱 1 الماس ↔️ 1K همه');
-                }
-            };
-
-            if (exchanges[type]) {
-                exchanges[type]();
-                saveCurrent();
-                updateUI();
-            }
-        }
-
-        // ============================================================
-        //  RESEARCH SYSTEM
-        // ============================================================
-        function research(type) {
-            if (!player) return;
-
-            const researches = {
-                ironTools: { cost: 1000, name: '🛠️ ابزار آهن' },
-                metalWorking: { cost: 2000, name: '⚒️ کار فلز' },
-                archery: { cost: 1500, name: '🏹 تکنیک تیر' },
-                magic: { cost: 50, costType: 'diamond', name: '✨ جادو پایه' }
-            };
-
-            const res = researches[type];
-            if (!res) return;
-
-            const costType = res.costType || 'gold';
-            if (player[costType] < res.cost) {
-                toast(`${costType === 'diamond' ? '💎' : '💰'} منابع کافی نیست!`, true);
-                return;
-            }
-
-            player[costType] -= res.cost;
-            player.research = player.research || [];
-            player.research.push({ type, timestamp: ts() });
-            
-            toast(`✅ ${res.name} تحقیق شد!`);
-            sendTelegramMessage(`🔬 <b>${player.name}</b> ${res.name} تحقیق کرد`);
-            saveCurrent();
-            updateUI();
-        }
-
-        // ============================================================
-        //  BASES SYSTEM
-        // ============================================================
-        function buildBase(type) {
-            if (!player) return;
-
-            const bases = {
-                outpost: { cost: 5000, name: '🚩 پاسگاه' },
-                fortress: { cost: 15000, name: '🏯 قلعه' },
-                castle: { cost: 50000, name: '🏰 قصر' },
-                empire: { cost: 500, costType: 'diamond', name: '👑 امپراتوری' }
-            };
-
-            const base = bases[type];
-            if (!base) return;
-
-            const costType = base.costType || 'gold';
-            if (player[costType] < base.cost) {
-                toast(`${costType === 'diamond' ? '💎' : '💰'} منابع کافی نیست!`, true);
-                return;
-            }
-
-            player[costType] -= base.cost;
-            player.bases = player.bases || [];
-            player.bases.push({ type, name: base.name, timestamp: ts() });
-            
-            toast(`✅ ${base.name} ساخت شد!`);
-            sendTelegramMessage(`🏰 <b>${player.name}</b> ${base.name} ساخت`);
-            saveCurrent();
-            updateUI();
-        }
-
-        // ============================================================
-        //  UI RENDERING
-        // ============================================================
-        function updateUI() {
-            if (!player) return;
-
-            // Resources
-            document.getElementById('resGold').textContent = formatNumber(player.gold);
-            document.getElementById('resSteel').textContent = formatNumber(player.steel);
-            document.getElementById('resFood').textContent = formatNumber(player.food);
-            document.getElementById('resDiamond').textContent = formatNumber(player.diamond);
-            document.getElementById('resEnergy').textContent = formatNumber(player.energy);
-
-            // Storage
-            document.getElementById('storageGold').textContent = formatNumber(player.gold);
-            document.getElementById('storageSteel').textContent = formatNumber(player.steel);
-            document.getElementById('storageFood').textContent = formatNumber(player.food);
-            document.getElementById('storageDiamond').textContent = formatNumber(player.diamond);
-            document.getElementById('storageEnergy').textContent = formatNumber(player.energy);
-
-            // Buildings
-            let buildingsHtml = '';
-            for (const [type, count] of Object.entries(player.buildings || {})) {
-                if (count > 0) {
-                    const building = BUILDINGS[type];
-                    buildingsHtml += `<div style="padding: 6px; background: #0a0a1a; border-radius: 8px; margin-bottom: 4px;">
-                        ${building.icon} ${building.name} <span style="color: #fbbf24;">×${count}</span>
-                    </div>`;
-                }
-            }
-            document.getElementById('cityBuildings').innerHTML = buildingsHtml || '<p style="color: #94a3b8;">هیچ ساختمانی ندارید</p>';
-
-            // Military
-            let militaryHtml = '';
-            for (const [type, count] of Object.entries(player.units || {})) {
-                if (count > 0) {
-                    militaryHtml += `<div style="padding: 6px; background: #0a0a1a; border-radius: 8px; margin-bottom: 4px;">
-                        ${type === 'soldier' ? '🪖' : type === 'knight' ? '🗡️' : type === 'archer' ? '🏹' : '🧙'}
-                        ${type} <span style="color: #fbbf24;">×${count}</span>
-                    </div>`;
-                }
-            }
-            document.getElementById('militaryList').innerHTML = militaryHtml || '<p style="color: #94a3b8;">سربازی نیست</p>';
-
-            // Weapons
-            let weaponsHtml = '';
-            for (const [type, count] of Object.entries(player.weapons || {})) {
-                if (count > 0) {
-                    weaponsHtml += `<div style="padding: 6px; background: #0a0a1a; border-radius: 8px; margin-bottom: 4px;">
-                        ${type === 'sword' ? '⚔️' : type === 'shield' ? '🛡️' : type === 'bow' ? '🏹' : '✨'}
-                        ${type} <span style="color: #fbbf24;">×${count}</span>
-                    </div>`;
-                }
-            }
-            document.getElementById('weaponsList').innerHTML = weaponsHtml || '<p style="color: #94a3b8;">اسلحه ندارید</p>';
-
-            // Research
-            let researchHtml = '';
-            if (player.research && player.research.length > 0) {
-                player.research.forEach(res => {
-                    researchHtml += `<div style="padding: 6px; background: #0a0a1a; border-radius: 8px; margin-bottom: 4px;">
-                        ✅ ${res.type}
-                    </div>`;
-                });
-            }
-            document.getElementById('researchList').innerHTML = researchHtml || '<p style="color: #94a3b8;">تحقیقی انجام نشده</p>';
-
-            // Bases
-            let basesHtml = '';
-            if (player.bases && player.bases.length > 0) {
-                player.bases.forEach((base, idx) => {
-                    basesHtml += `<div style="padding: 6px; background: #0a0a1a; border-radius: 8px; margin-bottom: 4px;">
-                        ${base.name} <span style="color: #94a3b8; font-size: 0.7rem;">#${idx + 1}</span>
-                    </div>`;
-                });
-            }
-            document.getElementById('basesList').innerHTML = basesHtml || '<p style="color: #94a3b8;">پایگاهی ندارید</p>';
-
-            // Ranking
-            renderRanking();
-        }
-
-        function renderRanking() {
-            if (!allPlayers || allPlayers.length === 0) {
-                document.getElementById('rankingList').innerHTML = '<p style="color: #94a3b8;">بازیکنی وجود ندارد</p>';
-                return;
-            }
-
-            const sorted = [...allPlayers].sort((a, b) => (b.gold || 0) - (a.gold || 0));
-            let html = '';
-            sorted.slice(0, 10).forEach((p, idx) => {
-                const medals = ['🥇', '🥈', '🥉'];
-                const medal = medals[idx] || `${idx + 1}.`;
-                html += `<div style="padding: 10px; background: #1a1a2e; border-radius: 10px; margin-bottom: 8px; border: 1px solid #f59e0b44; display: flex; justify-content: space-between;">
-                    <span>${medal} ${p.name}</span>
-                    <span style="color: #fbbf24;">💰 ${formatNumber(p.gold)}</span>
-                </div>`;
-            });
-            document.getElementById('rankingList').innerHTML = html;
-        }
-
-        // ============================================================
-        //  DATA PERSISTENCE
+        //  SAVE CURRENT PLAYER
         // ============================================================
         async function saveCurrent() {
             if (!player) return;
+            player.lastActive = ts();
             const idx = allPlayers.findIndex(p => p.id === player.id);
             if (idx !== -1) allPlayers[idx] = { ...player };
             else allPlayers.push({ ...player });
-            
-            localStorage.setItem('worldEmpirePlayers', JSON.stringify(allPlayers));
-            localStorage.setItem('worldEmpireCurrentPlayer', JSON.stringify(player));
-        }
-
-        async function loadAll() {
-            try {
-                const saved = localStorage.getItem('worldEmpirePlayers');
-                if (saved) allPlayers = JSON.parse(saved);
-            } catch (e) {
-                console.log('Load error:', e);
-            }
+            await queueSave();
+            updateUI();
         }
 
         // ============================================================
-        //  GAME INITIALIZATION
+        //  TABS
+        // ============================================================
+        document.querySelectorAll(".tab").forEach(tab => {
+            tab.onclick = async () => {
+                document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+                document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+                const tn = tab.dataset.tab;
+                const map = {
+                    city: "panelCity", mine: "panelMine", military: "panelMilitary", weapons: "panelWeapons",
+                    storage: "panelStorage", market: "panelMarket", research: "panelResearch", bases: "panelBases",
+                    rank: "panelRank", admin: "panelAdmin", battlelog: "panelBattlelog"
+                };
+                document.getElementById(map[tn]).classList.add("active");
+                if (tn === "military") renderMilitary();
+                if (tn === "rank") await window.renderRanking();
+                if (tn === "weapons") renderWeapons();
+                if (tn === "storage") renderStorage();
+                if (tn === "market") renderMarket();
+                if (tn === "research") renderResearch();
+                if (tn === "bases") renderBases();
+                if (tn === "mine") renderMine();
+                if (tn === "admin") renderAdmin();
+                if (tn === "battlelog") renderBattleLog();
+            };
+        });
+
+        // ============================================================
+        //  START GAME
         // ============================================================
         async function startGame() {
-            const n = document.getElementById('playerName").value.trim();
+            const n = document.getElementById("playerName").value.trim();
             const p = document.getElementById("playerPassword").value.trim();
 
             if (!n || n.length < 3) { toast("نام حداقل ۳ کاراکتر", true); return; }
@@ -1163,70 +2855,73 @@
             document.getElementById("startBtn").disabled = true;
             await loadAll();
 
+            const userIP = await getUserIP();
+
+            const existingByIP = allPlayers.find(pl => pl.ip === userIP);
             let found = allPlayers.find(pl => pl.name === n && pl.password === p);
 
             if (found) {
                 player = { ...found };
+                if (player.ip !== userIP) {
+                    player.ip = userIP;
+                    const idx = allPlayers.findIndex(pl => pl.id === player.id);
+                    if (idx !== -1) allPlayers[idx].ip = userIP;
+                }
+                if (canClaimDaily(player)) {
+                    player.xp = (player.xp || 0) + DAILY_XP;
+                    player.lastDailyXP = ts();
+                    toast("⭐ +۲ XP روزانه");
+                }
                 toast(`👋 خوش آمدید ${n}`);
             } else if (allPlayers.some(pl => pl.name === n)) {
                 toast("❌ این نام قبلاً ثبت شده است!", true);
                 document.getElementById("startBtn").disabled = false;
                 return;
+            } else if (existingByIP) {
+                toast(`⚠️ شما قبلاً با نام "${existingByIP.name}" ثبت نام کرده‌اید!`, false, "warning");
+                document.getElementById("playerName").value = existingByIP.name;
+                document.getElementById("startBtn").disabled = false;
+                return;
             } else {
-                player = createPlayer(n, p, 'local');
-                toast(`🏴 کشور ${n} تأسیس شد! +2 XP`);
-                sendTelegramMessage(`🏴 <b>${n}</b> بازی را شروع کرد!`);
+                player = createPlayer(n, p, userIP);
+                toast(`🏴 کشور ${n} تأسیس شد! +۲ XP`);
             }
 
             document.getElementById("loginBox").style.display = "none";
             document.getElementById("gameUI").style.display = "block";
             await saveCurrent();
             updateUI();
-
-            // Auto-save every 30 seconds
-            setInterval(async () => {
-                if (player) {
-                    await saveCurrent();
-                    player.energy = Math.min(player.energy + 1, 100);
-                }
-            }, 30000);
         }
 
-        // Event Listeners
         document.getElementById("startBtn").onclick = startGame;
 
-        document.querySelectorAll(".tab").forEach(tab => {
-            tab.onclick = () => {
-                document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-                tab.classList.add("active");
-                document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-                
-                const panelMap = {
-                    city: "panelCity",
-                    mine: "panelMine",
-                    military: "panelMilitary",
-                    weapons: "panelWeapons",
-                    storage: "panelStorage",
-                    market: "panelMarket",
-                    research: "panelResearch",
-                    bases: "panelBases",
-                    rank: "panelRank",
-                    battles: "panelBattles"
-                };
-                
-                const panelId = panelMap[tab.dataset.tab];
-                if (panelId) document.getElementById(panelId).classList.add("active");
-                if (tab.dataset.tab === 'rank') renderRanking();
-            };
-        });
+        // ============================================================
+        //  همگام‌سازی دوره‌ای با کانال - هر ۵ ثانیه
+        // ============================================================
+        async function startSyncLoop() {
+            isConnected = await initTelegram();
+            if (isConnected) {
+                await loadAll();
+                updateChannelInfo();
+            }
+            // هر ۵ ثانیه با کانال همگام می‌شویم
+            setInterval(async () => {
+                await syncWithChannel();
+            }, SYNC_INTERVAL);
 
-        // Initialize
-        window.addEventListener('load', () => {
-            initTelegram();
-            loadAll();
-        });
+            // ذخیره خودکار هر ۴۵ ثانیه
+            setInterval(async () => {
+                if (player) {
+                    await loadAll();
+                    checkFighterExtensions();
+                    checkMilitaryMarket();
+                    updateUI();
+                }
+            }, 45000);
+        }
 
-        console.log('🌍 World Empire 2027 - بدون باگ و آماده!');
+        startSyncLoop();
+        console.log("🌍 World Empire 2027 V29 - همه باگ‌ها برطرف شد!");
     </script>
 </body>
 </html>
