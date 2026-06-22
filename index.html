@@ -136,11 +136,11 @@
 
         const DATA_KEY = "EMPIRE_DATA_V40_TOP_FAC";
         const SYNC_INTERVAL = 3000;
-        const SHIELD_DURATION = 12 * 60 * 60 * 1000; // 12 ساعت
+        const SHIELD_DURATION = 12 * 60 * 60 * 1000;
         
         let player = null, allPlayers = [], marketOffers = [], battleLogs = [];
         let isConnected = false, saving = false;
-        let isAttacking = false; // قفل قطعی ضد چند کلیکی
+        let isAttacking = false;
 
         const F_DB = {
             "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
@@ -179,8 +179,25 @@
         function escapeHtml(str) { return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
         function getFormattedName(p) {
-            const facTag = p.faction ? `<span style="color: #ef4444; font-size: 0.8em; margin-right: 4px;">[${FACTIONS_DB[p.faction].n}]</span>` : '';
+            const facTag = p.faction ? `<span style="color: #ef4444; font-size: 0.8em; margin-right: 4px;">[${FACTIONS_DB[p.faction]?.n || p.faction}]</span>` : '';
             return `${escapeHtml(p.name)} ${facTag}`;
+        }
+
+        /*
+         * ===== تابع کلیدی: همگام‌سازی player با allPlayers =====
+         * مشکل اصلی باگ سپر این بود که player و allPlayers
+         * پس از هر syncLoop به دو شیء مجزا تبدیل می‌شدند.
+         * تغییر روی player لزوماً روی allPlayers اثر نمی‌گذاشت.
+         * این تابع قبل از هر ذخیره‌سازی، داده‌های player را
+         * روی آیتم متناظر در allPlayers کپی می‌کند.
+         */
+        function syncPlayerToAllPlayers() {
+            if (!player) return;
+            const idx = allPlayers.findIndex(p => p.id === player.id);
+            if (idx >= 0) {
+                // شیء player را مستقیماً جایگزین کنید، نه کپی سطحی
+                allPlayers[idx] = player;
+            }
         }
 
         async function initSupabase() {
@@ -189,7 +206,7 @@
                 const { data, error } = await db.from('game_state').select('id').eq('id', 'main_game').maybeSingle();
                 if (error) throw error;
                 isConnected = true; 
-                updateSyncUI("✅ متصل به سرور ", "online"); 
+                updateSyncUI("✅ متصل به سرور", "online"); 
                 return true;
             } catch (e) {
                 console.error(e);
@@ -218,8 +235,11 @@
 
         async function saveAll(force = false) {
             if (!isConnected) return false;
+            if (saving && !force) return false;
             if (saving) return false;
             saving = true;
+            // قبل از بسته‌بندی، مطمئن شویم player با allPlayers همگام است
+            syncPlayerToAllPlayers();
             const dataToSave = packData();
             try {
                 const { error } = await db.from('game_state').upsert({ id: 'main_game', data: dataToSave }, { onConflict: 'id' });
@@ -246,6 +266,11 @@
                         allPlayers = (j.p||[]).map(decompressPlayer);
                         marketOffers = j.m || []; 
                         battleLogs = j.l || [];
+                        // بعد از لود، player را به شیء جدید در allPlayers متصل کن
+                        if (player) {
+                            const me = allPlayers.find(p => p.id === player.id);
+                            if (me) player = me;
+                        }
                         return true;
                     }
                 }
@@ -319,117 +344,121 @@
         window.joinFaction = async function(facId) { player.faction = facId; await saveAll(true); updateUI(); renderFactions(); renderRank(); toast(`به ${FACTIONS_DB[facId].n} پیوستید!`, false, "peace"); };
 
         window.launchAttack = async function(targetId) {
-            // 1. قفل قطعی برای جلوگیری از هرگونه اسپم کلیک
+            // 1. قفل قطعی ضد اسپم
             if (isAttacking) return;
             isAttacking = true;
 
-            const target = allPlayers.find(p => p.id === targetId);
-            if (!target) { isAttacking = false; return toast("هدف یافت نشد", true); }
-            
-            const myAtt = calcAttackPower(player);
-            if (myAtt <= 0) { isAttacking = false; return toast("برای حمله باید حداقل یک جنگنده بسازید!", true, "war"); }
-            
-            // 2. بررسی سپر هدف
-            if (target.shieldExpiry && ts() < target.shieldExpiry) {
-                isAttacking = false;
-                const remainingMs = target.shieldExpiry - ts();
-                const h = Math.floor(remainingMs / 3600000);
-                const m = Math.floor((remainingMs % 3600000) / 60000);
-                return toast(`🛡️ این کشور تحت حمایت سپر است (${h} ساعت و ${m} دقیقه باقیمانده)`, true);
-            }
+            try {
+                const target = allPlayers.find(p => p.id === targetId);
+                if (!target) return toast("هدف یافت نشد", true);
+                
+                const myAtt = calcAttackPower(player);
+                if (myAtt <= 0) return toast("برای حمله باید حداقل یک جنگنده بسازید!", true, "war");
+                
+                // 2. بررسی سپر هدف
+                if (target.shieldExpiry && ts() < target.shieldExpiry) {
+                    const remainingMs = target.shieldExpiry - ts();
+                    const h = Math.floor(remainingMs / 3600000);
+                    const m = Math.floor((remainingMs % 3600000) / 60000);
+                    return toast(`🛡️ این کشور تحت حمایت سپر است (${h} ساعت و ${m} دقیقه باقیمانده)`, true);
+                }
 
-            // 3. اگر مهاجم سپر داشت، در همین لحظه سپر از بین برود و سیو شود
-            if (player.shieldExpiry && ts() < player.shieldExpiry) {
+                // 3. حذف سپر مهاجم - هم روی player و هم مستقیماً روی allPlayers
+                let hadShield = false;
+                if (player.shieldExpiry && ts() < player.shieldExpiry) {
+                    hadShield = true;
+                    player.shieldExpiry = 0;
+                    // اطمینان از حذف سپر در allPlayers حتی اگر اشاره‌گر فرق کند
+                    const apIdx = allPlayers.findIndex(p => p.id === player.id);
+                    if (apIdx >= 0) allPlayers[apIdx].shieldExpiry = 0;
+                    updateUI();
+                    // ذخیره فوری: سپر صفر شده برود دیتابیس
+                    await saveAll(true);
+                    toast("🛡️ سپر شما به دلیل آغاز حمله از بین رفت!", false, "war");
+                }
+
+                const enemyDef = calcDefensePower(target);
+                let resultMsg = "", resultStr = "", isWin = false;
+                
+                // 4. محاسبه جنگ
+                if (myAtt > enemyDef) {
+                    isWin = true;
+                    const ratio = enemyDef / myAtt;
+                    const loot = { g: Math.floor(target.gold*0.3), o: Math.floor(target.oil*0.3), m: Math.floor(target.metal*0.3) };
+                    target.gold-=loot.g; target.oil-=loot.o; target.metal-=loot.m;
+                    player.gold+=loot.g; player.oil+=loot.o; player.metal+=loot.m;
+                    player.xp+=15; target.xp+=3;
+                    
+                    // اعطای سپر به مدافع
+                    target.shieldExpiry = ts() + SHIELD_DURATION;
+
+                    let attackerLost = 0;
+                    for (const [k, f] of Object.entries(player.fighters)) { const lost = Math.ceil(f.count * ratio * 0.5); f.count = Math.max(0, f.count - lost); attackerLost += lost; }
+                    for (const [k, f] of Object.entries(target.fighters)) { const lost = Math.ceil(f.count * 0.8); f.count = Math.max(0, f.count - lost); }
+                    if(target.defenses) target.defenses.forEach(def => { def.hp = 0; });
+                    target.defenses = target.defenses ? target.defenses.filter(def => def.hp > 0) : [];
+                    
+                    resultMsg = `🔥 <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد. 🛡️ سپر ۱۲ ساعته برای مدافع فعال شد.`;
+                    resultStr = `🏆 پیروزی!<br>غارت: ${loot.g}طلا | ${loot.o}نفت<br>تلفات شما: ${attackerLost} نیرو<br>سپر حفاظتی به دشمن داده شد`;
+                } else {
+                    isWin = false;
+                    const ratio = myAtt / enemyDef;
+                    player.xp+=2; target.xp+=15;
+                    let attackerLost = 0;
+                    for (const [k, f] of Object.entries(player.fighters)) { const lost = Math.ceil(f.count * 0.9); f.count = Math.max(0, f.count - lost); attackerLost += lost; }
+                    for (const [k, f] of Object.entries(target.fighters)) { const lost = Math.ceil(f.count * ratio * 0.4); f.count = Math.max(0, f.count - lost); }
+                    if(target.defenses) { target.defenses.forEach(def => { def.hp -= 40; if(def.hp < 0) def.hp = 0; }); target.defenses = target.defenses.filter(def => def.hp > 0); }
+                    
+                    resultMsg = `🛡️ <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد اما دفاع شد! نیروهای مهاجم نابود شدند.`;
+                    resultStr = `💥 شکست سنگین!<br>نیروهای شما نابود شدند`;
+                }
+                
+                // 5. قبل از ذخیره نهایی، دوباره مطمئن شویم سپر مهاجم صفر است
+                // (در صورت رخداد race condition با syncLoop)
                 player.shieldExpiry = 0;
-                updateUI(); 
-                await saveAll(true); 
-                toast("🛡️ سپر شما به دلیل آغاز حمله از بین رفت!", false, "war");
+                const preSaveIdx = allPlayers.findIndex(p => p.id === player.id);
+                if (preSaveIdx >= 0) allPlayers[preSaveIdx].shieldExpiry = 0;
+
+                // 6. ذخیره نتایج جنگ
+                battleLogs.push({ ts: ts(), text: resultMsg });
+                await saveAll(true);
+
+                // 7. پخش انیمیشن
+                document.getElementById('app').classList.add('screen-shake');
+                const overlay = document.getElementById('battleOverlay');
+                const statusText = document.getElementById('battleStatusText');
+                const resultText = document.getElementById('battleResultText');
+                const expIcon = document.getElementById('explosionIcon');
+                
+                overlay.classList.add('active');
+                statusText.innerText = `هدف قفل شد: ${target.name}`;
+                statusText.style.color = "#fbbf24";
+                resultText.innerText = "";
+                expIcon.innerText = "🚀";
+                
+                await new Promise(r => setTimeout(r, 1000));
+                document.getElementById('app').classList.remove('screen-shake');
+                statusText.innerText = "برخورد!";
+                expIcon.innerText = "💥";
+                document.getElementById('app').classList.add('screen-shake');
+                
+                await new Promise(r => setTimeout(r, 1500));
+                document.getElementById('app').classList.remove('screen-shake');
+                
+                statusText.innerText = isWin ? "پیروزی!" : "شکست!";
+                statusText.style.color = isWin ? "#4ade80" : "#fca5a5";
+                resultText.innerHTML = resultStr;
+                
+                await new Promise(r => setTimeout(r, 2500));
+                overlay.classList.remove('active');
+                
+                updateUI(); renderWar(); renderBattlelog();
+                if (document.querySelector('.tab.active').dataset.tab === 'military') renderMilitary();
+
+            } finally {
+                // 8. باز کردن قفل حمله - تحت هر شرایطی
+                isAttacking = false;
             }
-
-            const enemyDef = calcDefensePower(target);
-            let resultMsg = "", resultStr = "", isWin = false;
-            
-            // ==========================================
-            // 4. محاسبه سریع جنگ (قبل از انیمیشن)
-            // ==========================================
-            if (myAtt > enemyDef) {
-                isWin = true;
-                const ratio = enemyDef / myAtt;
-                const loot = { g: Math.floor(target.gold*0.3), o: Math.floor(target.oil*0.3), m: Math.floor(target.metal*0.3) };
-                target.gold-=loot.g; target.oil-=loot.o; target.metal-=loot.m;
-                player.gold+=loot.g; player.oil+=loot.o; player.metal+=loot.m;
-                player.xp+=15; target.xp+=3;
-                
-                // اعطای فوری سپر به مدافع شکست خورده در حافظه محلی
-                target.shieldExpiry = ts() + SHIELD_DURATION;
-
-                let attackerLost = 0;
-                for (const [k, f] of Object.entries(player.fighters)) { const lost = Math.ceil(f.count * ratio * 0.5); f.count = Math.max(0, f.count - lost); attackerLost += lost; }
-                let defenderFighterLost = 0;
-                for (const [k, f] of Object.entries(target.fighters)) { const lost = Math.ceil(f.count * 0.8); f.count = Math.max(0, f.count - lost); defenderFighterLost += lost; }
-                if(target.defenses) target.defenses.forEach(def => { def.hp = 0; });
-                target.defenses = target.defenses ? target.defenses.filter(def => def.hp > 0) : [];
-                
-                resultMsg = `🔥 <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد. 🛡️ سپر ۱۲ ساعته برای مدافع فعال شد.`;
-                resultStr = `🏆 پیروزی!<br>غارت: ${loot.g}طلا | ${loot.o}نفت<br>تلفات شما: ${attackerLost} نیرو<br>سپر حفاظتی به دشمن داده شد`;
-            } else {
-                isWin = false;
-                const ratio = myAtt / enemyDef;
-                player.xp+=2; target.xp+=15;
-                let attackerLost = 0;
-                for (const [k, f] of Object.entries(player.fighters)) { const lost = Math.ceil(f.count * 0.9); f.count = Math.max(0, f.count - lost); attackerLost += lost; }
-                let defenderFighterLost = 0;
-                for (const [k, f] of Object.entries(target.fighters)) { const lost = Math.ceil(f.count * ratio * 0.4); f.count = Math.max(0, f.count - lost); defenderFighterLost += lost; }
-                if(target.defenses) { target.defenses.forEach(def => { def.hp -= 40; if(def.hp < 0) def.hp = 0; }); target.defenses = target.defenses.filter(def => def.hp > 0); }
-                
-                resultMsg = `🛡️ <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد اما دفاع شد! نیروهای مهاجم نابود شدند.`;
-                resultStr = `💥 شکست سنگین!<br>نیروهای شما نابود شدند`;
-            }
-            
-            // ==========================================
-            // 5. ذخیره فوری سپر و نتایج جنگ در سوپابیس (قبل از شروع انیمیشن)
-            // با این کار حتی اگر کاربر تب جدید باز کنه، دیگه نمی‌تونه حمله کنه
-            // ==========================================
-            await saveAll(true); 
-
-            // ==========================================
-            // 6. پخش انیمیشن فقط برای زیبایی کار
-            // ==========================================
-            document.getElementById('app').classList.add('screen-shake');
-            const overlay = document.getElementById('battleOverlay');
-            const statusText = document.getElementById('battleStatusText');
-            const resultText = document.getElementById('battleResultText');
-            const expIcon = document.getElementById('explosionIcon');
-            
-            overlay.classList.add('active');
-            statusText.innerText = `هدف قفل شد: ${target.name}`;
-            resultText.innerText = "";
-            expIcon.innerText = "🚀";
-            
-            await new Promise(r => setTimeout(r, 1000));
-            document.getElementById('app').classList.remove('screen-shake');
-            statusText.innerText = "برخورد!";
-            expIcon.innerText = "💥";
-            document.getElementById('app').classList.add('screen-shake');
-            
-            await new Promise(r => setTimeout(r, 1500));
-            document.getElementById('app').classList.remove('screen-shake');
-            
-            statusText.innerText = isWin ? "پیروزی!" : "شکست!";
-            statusText.style.color = isWin ? "#4ade80" : "#fca5a5";
-            resultText.innerHTML = resultStr;
-            
-            battleLogs.push({ ts: ts(), text: resultMsg });
-            await saveAll(true); // ذخیره لاگ نهایی
-            
-            await new Promise(r => setTimeout(r, 2500));
-            overlay.classList.remove('active');
-            
-            updateUI(); renderWar(); renderBattlelog();
-            if (document.querySelector('.tab.active').dataset.tab === 'military') renderMilitary();
-            
-            // 7. باز کردن قفل حمله
-            isAttacking = false;
         };
 
         window.createMarketOffer = async function() {
@@ -510,11 +539,11 @@
                 
                 if (t.shieldExpiry && ts() < t.shieldExpiry) {
                     const remainingMs = t.shieldExpiry - ts();
-                    const h = Math.floor(remainingMs / 3600000);
-                    const m = Math.floor((remainingMs % 3600000) / 60000);
-                    btnHtml = `<button class="btn btn-sm" style="background:#3b82f6;color:#fff;" disabled>🛡️ ${h}س ${m}د</button>`;
+                    const hh = Math.floor(remainingMs / 3600000);
+                    const mm = Math.floor((remainingMs % 3600000) / 60000);
+                    btnHtml = `<button class="btn btn-sm" style="background:#3b82f6;color:#fff;" disabled>🛡️ ${hh}س ${mm}د</button>`;
                 } else {
-                    btnHtml = `<button class="btn btn-attack btn-sm" ${myAtt<=0?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله</button>`;
+                    btnHtml = `<button class="btn btn-attack btn-sm" ${myAtt<=0||isAttacking?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله</button>`;
                 }
                 
                 h+=`<div class="player-row"><span>${getFormattedName(t)} </span>${btnHtml}</div>`;
@@ -579,12 +608,17 @@
             if (tn === 'mine') renderMine(); else if (tn === 'military') renderMilitary(); else if (tn === 'war') renderWar(); else if (tn === 'factions') renderFactions(); else if (tn === 'market') renderMarket(); else if (tn === 'research') renderResearch(); else if (tn === 'rank') renderRank(); else if (tn === 'battlelog') renderBattlelog();
         }));
 
+        /*
+         * ===== اصلاح اصلی syncLoop =====
+         * شرط !isAttacking اضافه شد تا در طول حمله،
+         * syncLoop داده‌های قدیمی را از دیتابیس نخواند
+         * و player/allPlayers را بازنویسی نکند.
+         */
         async function syncLoop() { 
-            if (isConnected) { 
+            if (isConnected && !isAttacking) { 
                 await loadAll(); 
                 if (player) { 
-                    const me = allPlayers.find(p => p.id === player.id); 
-                    if (me) { player = me; updateUI(); } 
+                    updateUI(); 
                 } 
             } 
         }
