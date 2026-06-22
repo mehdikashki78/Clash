@@ -484,7 +484,7 @@
                     btnHtml = `<button class="btn btn-attack btn-sm" ${myAtt<=0?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله</button>`;
                 }
                 
-                h+=`<div class="player-row"><span>${getFormattedName(t)} (دفاع: ${calcDefensePower(t)})</span>${btnHtml}</div>`;
+                h+=`<div class="player-row"><span>${getFormattedName(t)} </span>${btnHtml}</div>`;
             });
             document.getElementById('warContent').innerHTML = h; 
         }
