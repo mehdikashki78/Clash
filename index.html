@@ -24,6 +24,8 @@
         .online-bar { background: #0a1a0a; padding: 4px; text-align: center; font-size: 0.55rem; color: #4ade80; }
         .online-bar.offline { background: #1a0a0a; color: #fca5a5; }
         .online-bar.warn { background: #1a1a0a; color: #fbbf24; }
+        /* استایل نوار سپر محافظتی */
+        .shield-bar { background: #1a1a3a; padding: 6px; text-align: center; font-size: 0.6rem; color: #93c5fd; border-bottom: 1px solid #3b82f633; display: none; }
         .tabs { display: flex; background: #0a0a1a; border-bottom: 1px solid #f59e0b44; overflow-x: auto; scrollbar-width: none; }
         .tabs::-webkit-scrollbar { display: none; }
         .tab { padding: 10px 12px; cursor: pointer; font-weight: 600; color: #94a3b8; font-size: 0.6rem; white-space: nowrap; border-bottom: 2px solid transparent; text-align: center; }
@@ -85,6 +87,9 @@
         </div>
 
         <div class="online-bar warn" id="onlineBar">🟡 <span id="onlineText">در حال همگام‌سازی...</span></div>
+        
+        <!-- نوار نمایش سپر محافظتی بازیکن -->
+        <div class="shield-bar" id="shieldBar">🛡️ سپر محافظتی فعال است...</div>
 
         <div class="login-box" id="loginBox" style="display:none">
             <input type="text" id="playerName" placeholder="نام کشور (حداقل ۳ حرف)...">
@@ -133,6 +138,7 @@
 
         const DATA_KEY = "EMPIRE_DATA_V40_TOP_FAC";
         const SYNC_INTERVAL = 3000;
+        const SHIELD_DURATION = 12 * 60 * 60 * 1000; // 12 ساعت به میلی‌ثانیه
         
         let player = null, allPlayers = [], marketOffers = [], battleLogs = [];
         let isConnected = false, saving = false;
@@ -201,12 +207,11 @@
         }
 
         function compressPlayer(p) {
-            // اضافه شدن al برای ذخیره زمان حمله به افراد (Attack Logs)
-            return { i:p.id, n:p.name, p:p.password, g:p.gold, o:p.oil, m:p.metal, x:p.xp, fac:p.faction, t:p.lastMineCollect, l:p.mineLevel, r:[p.research.military, p.research.economy, p.research.aviation], f:p.fighters, d:p.defenses, al:p.attackLogs };
+            // ذخیره سپر به جای لاگ حمله (sh = shield expiry timestamp)
+            return { i:p.id, n:p.name, p:p.password, g:p.gold, o:p.oil, m:p.metal, x:p.xp, fac:p.faction, t:p.lastMineCollect, l:p.mineLevel, r:[p.research.military, p.research.economy, p.research.aviation], f:p.fighters, d:p.defenses, sh:p.shieldExpiry };
         }
         function decompressPlayer(c) {
-            // خواندن اطلاعات محدودیت حمله از دیتابیس
-            return { id:c.i, name:c.n, password:c.p, gold:c.g||0, oil:c.o||0, metal:c.m||0, xp:c.x||0, faction:c.fac||null, lastMineCollect:c.t||ts(), mineLevel:c.l||1, research:{military:c.r?.[0]||0, economy:c.r?.[1]||0, aviation:c.r?.[2]||0}, fighters:c.f||{}, defenses:c.d||[], attackLogs: c.al || {} };
+            return { id:c.i, name:c.n, password:c.p, gold:c.g||0, oil:c.o||0, metal:c.m||0, xp:c.x||0, faction:c.fac||null, lastMineCollect:c.t||ts(), mineLevel:c.l||1, research:{military:c.r?.[0]||0, economy:c.r?.[1]||0, aviation:c.r?.[2]||0}, fighters:c.f||{}, defenses:c.d||[], shieldExpiry: c.sh || 0 };
         }
         
         function packData() {
@@ -254,8 +259,7 @@
         }
 
         function createPlayer(name, pass) {
-            // اضافه شدن آبجکت خالی برای لاگ حمله‌ها هنگام ساخت کاربر جدید
-            return { id: name+"_"+ts().toString(36), name, password: pass, gold: 1000, oil: 300, metal: 300, xp: 0, faction: null, lastMineCollect: ts(), mineLevel: 1, research: {military:0,economy:0,aviation:0}, fighters: {}, defenses: [], attackLogs: {} };
+            return { id: name+"_"+ts().toString(36), name, password: pass, gold: 1000, oil: 300, metal: 300, xp: 0, faction: null, lastMineCollect: ts(), mineLevel: 1, research: {military:0,economy:0,aviation:0}, fighters: {}, defenses: [], shieldExpiry: 0 };
         }
         
         function calcMine(p) {
@@ -323,20 +327,26 @@
             const myAtt = calcAttackPower(player);
             if (myAtt <= 0) return toast("برای حمله باید حداقل یک جنگنده بسازید!", true, "war");
             
-            // --- سیستم محدودیت ۱۲ ساعته ---
-            const COOLDOWN_TIME = 12 * 60 * 60 * 1000; // 12 ساعت به میلی‌ثانیه
-            const lastAttackTime = player.attackLogs[targetId];
-            
-            if (lastAttackTime) {
-                const timePassed = ts() - lastAttackTime;
-                if (timePassed < COOLDOWN_TIME) {
-                    const remainingMs = COOLDOWN_TIME - timePassed;
-                    const remainingHours = Math.floor(remainingMs / 3600000);
-                    const remainingMins = Math.floor((remainingMs % 3600000) / 60000);
-                    return toast(`⏳ شما تا ${remainingHours} ساعت و ${remainingMins} دقیقه دیگر نمی‌توانید به این کشور حمله کنید.`, true);
-                }
+            // 1. بررسی سپر بودن هدف (مدافع)
+            if (target.shieldExpiry && ts() < target.shieldExpiry) {
+                const remainingMs = target.shieldExpiry - ts();
+                const h = Math.floor(remainingMs / 3600000);
+                const m = Math.floor((remainingMs % 3600000) / 60000);
+                return toast(`🛡️ این کشور تحت حمایت سپر است (${h} ساعت و ${m} دقیقه باقیمانده)`, true);
             }
-            // ----------------------------------
+
+            // 2. بررسی سپر بودن مهاجم و گرفتن تاییدیه
+            if (player.shieldExpiry && ts() < player.shieldExpiry) {
+                // استفاده از پنجره هشدار بومی مرورگر برای تایید یا لغو
+                const confirmAttack = confirm("⚠️ هشدار مهم!\n\nشما در حال حاضر سپر محافظتی دارید.\nاگر حمله کنید، سپر شما به طور کامل از بین می‌رود!\n\nآیا از حمله و از دست دادن سپر مطمئن هستید؟");
+                
+                if (!confirmAttack) {
+                    // کاربر لغو کرد -> سپر حفظ می‌شود
+                    return toast("❌ حمله لغو شد. سپر شما حفظ شد.", false, "peace");
+                }
+                // کاربر تایید کرد -> سپر از بین می‌رود
+                player.shieldExpiry = 0;
+            }
 
             const enemyDef = calcDefensePower(target);
             
@@ -363,11 +373,16 @@
             let resultMsg = "", resultStr = "";
             
             if (myAtt > enemyDef) {
+                // پیروزی مهاجم -> شکست مدافع -> فعال شدن سپر برای مدافع
                 const ratio = enemyDef / myAtt;
                 const loot = { g: Math.floor(target.gold*0.3), o: Math.floor(target.oil*0.3), m: Math.floor(target.metal*0.3) };
                 target.gold-=loot.g; target.oil-=loot.o; target.metal-=loot.m;
                 player.gold+=loot.g; player.oil+=loot.o; player.metal+=loot.m;
                 player.xp+=15; target.xp+=3;
+                
+                // اعطای سپر ۱۲ ساعته به مدافع شکست خورده
+                target.shieldExpiry = ts() + SHIELD_DURATION;
+
                 let attackerLost = 0;
                 for (const [k, f] of Object.entries(player.fighters)) { const lost = Math.ceil(f.count * ratio * 0.5); f.count = Math.max(0, f.count - lost); attackerLost += lost; }
                 let defenderFighterLost = 0;
@@ -376,10 +391,11 @@
                 if(target.defenses) target.defenses.forEach(def => { def.hp = 0; });
                 target.defenses = target.defenses ? target.defenses.filter(def => def.hp > 0) : [];
                 
-                resultMsg = `🔥 <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد.`;
-                resultStr = `🏆 پیروزی!<br>غارت: ${loot.g}طلا | ${loot.o}نفت<br>تلفات شما: ${attackerLost} نیرو`;
+                resultMsg = `🔥 <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد. 🛡️ سپر ۱۲ ساعته برای مدافع فعال شد.`;
+                resultStr = `🏆 پیروزی!<br>غارت: ${loot.g}طلا | ${loot.o}نفت<br>تلفات شما: ${attackerLost} نیرو<br>سپر به دشمن داده شد`;
                 statusText.style.color = "#4ade80";
             } else {
+                // پیروزی مدافع -> سپری به کسی داده نمی‌شود
                 const ratio = myAtt / enemyDef;
                 player.xp+=2; target.xp+=15;
                 let attackerLost = 0;
@@ -392,9 +408,6 @@
                 resultStr = `💥 شکست سنگین!<br>نیروهای شما نابود شدند`;
                 statusText.style.color = "#fca5a5";
             }
-            
-            // ثبت زمان حمله در لاگ‌های بازیکن پس از انجام عملیات
-            player.attackLogs[targetId] = ts();
             
             resultText.innerHTML = resultStr;
             battleLogs.push({ ts: ts(), text: resultMsg });
@@ -427,7 +440,25 @@
         window.upgradeResearch = async function(branch) { const c=(player.research[branch]+1)*15; if(player.xp<c) return toast("XP کم است", true); player.xp-=c; player.research[branch]++; await saveAll(); updateUI(); renderResearch(); };
 
         // --- UI RENDERING ---
-        function updateUI() { if(!player) return; document.getElementById('rGold').innerText = Math.floor(player.gold).toLocaleString('fa-IR'); document.getElementById('rOil').innerText = Math.floor(player.oil).toLocaleString('fa-IR'); document.getElementById('rMetal').innerText = Math.floor(player.metal).toLocaleString('fa-IR'); document.getElementById('rXP').innerText = player.xp; }
+        function updateUI() { 
+            if(!player) return; 
+            document.getElementById('rGold').innerText = Math.floor(player.gold).toLocaleString('fa-IR'); 
+            document.getElementById('rOil').innerText = Math.floor(player.oil).toLocaleString('fa-IR'); 
+            document.getElementById('rMetal').innerText = Math.floor(player.metal).toLocaleString('fa-IR'); 
+            document.getElementById('rXP').innerText = player.xp; 
+            
+            // بروزرسانی نوار سپر بازیکن
+            const shieldBar = document.getElementById('shieldBar');
+            if (player.shieldExpiry && ts() < player.shieldExpiry) {
+                const remainingMs = player.shieldExpiry - ts();
+                const h = Math.floor(remainingMs / 3600000);
+                const m = Math.floor((remainingMs % 3600000) / 60000);
+                shieldBar.innerHTML = `🛡️ سپر محافظتی فعال است: <b>${h} ساعت و ${m} دقیقه</b> باقیمانده (حمله کردن باعث از بین رفتن آن می‌شود)`;
+                shieldBar.style.display = 'block';
+            } else {
+                shieldBar.style.display = 'none';
+            }
+        }
         
         function renderMine() { 
             const m = calcMine(player); const gPct = Math.min(100, (m.gold / m.cap) * 100); const oPct = Math.min(100, (m.oil / m.cap) * 100); const mPct = Math.min(100, (m.metal / m.cap) * 100); const upCost = player.mineLevel * 10000;
@@ -462,25 +493,18 @@
             let h=`<div class="info-bar">قدرت حمله: ${myAtt} | قدرت دفاع: ${myDef}</div><div class="section-title">🎯 اهداف</div>`;
             if(myAtt <= 0) h+=`<div class="empty">ابتدا جنگنده بسازید!</div>`;
             
-            const COOLDOWN_TIME = 12 * 60 * 60 * 1000; // 12 ساعت
-            
             allPlayers.filter(p=>p.id!==player.id).sort((a,b)=>calcDefensePower(a)-calcDefensePower(b)).forEach(t=>{
-                // بررسی محدودیت ۱۲ ساعته برای نمایش دکمه
-                const lastAttackTime = player.attackLogs[t.id];
                 let btnHtml = '';
                 
-                if (lastAttackTime) {
-                    const timePassed = ts() - lastAttackTime;
-                    if (timePassed < COOLDOWN_TIME) {
-                        const remainingMs = COOLDOWN_TIME - timePassed;
-                        const remainingHours = Math.floor(remainingMs / 3600000);
-                        const remainingMins = Math.floor((remainingMs % 3600000) / 60000);
-                        // غیرفعال کردن دکمه و نشان دادن زمان باقیمانده
-                        btnHtml = `<button class="btn btn-sm" style="background:#555;color:#ccc;" disabled>⏳ ${remainingHours}س ${remainingMins}د</button>`;
-                    } else {
-                        btnHtml = `<button class="btn btn-attack btn-sm" onclick="launchAttack('${t.id}')">⚔️ حمله</button>`;
-                    }
+                // بررسی اینکه آیا هدف سپر دارد یا خیر
+                if (t.shieldExpiry && ts() < t.shieldExpiry) {
+                    const remainingMs = t.shieldExpiry - ts();
+                    const h = Math.floor(remainingMs / 3600000);
+                    const m = Math.floor((remainingMs % 3600000) / 60000);
+                    // نمایش دکمه غیرفعال به رنگ آبی برای نشان دادن سپر
+                    btnHtml = `<button class="btn btn-sm" style="background:#3b82f6;color:#fff;" disabled>🛡️ ${h}س ${m}د</button>`;
                 } else {
+                    // اگر سپر نداشت دکمه حمله معمولی نمایش داده شود
                     btnHtml = `<button class="btn btn-attack btn-sm" ${myAtt<=0?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله</button>`;
                 }
                 
