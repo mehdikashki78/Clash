@@ -192,7 +192,7 @@
                 const { data, error } = await db.from('game_state').select('id').eq('id', 'main_game').maybeSingle();
                 if (error) throw error;
                 isConnected = true; 
-                updateSyncUI("✅ متصل به سرور Supabase", "online"); 
+                updateSyncUI("✅ متصل به سرور ", "online"); 
                 return true;
             } catch (e) {
                 console.error(e);
