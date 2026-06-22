@@ -523,7 +523,7 @@
             h+=`<div class="section-title">🎯 اهداف نظامی</div>`;
             if(myAtt <= 0) h+=`<div class="empty">برای حمله به دشمنان ابتدا باید جنگنده بسازید!</div>`;
             allPlayers.filter(p=>p.id!==player.id).sort((a,b)=>calcDefensePower(a)-calcDefensePower(b)).forEach(t=>{
-                h+=`<div class="player-row"><span>${escapeHtml(t.name)} (دفاع: ${calcDefensePower(t)})</span><button class="btn btn-attack btn-sm" ${myAtt<=0?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله با تمام قوا</button></div>`;
+                h+=`<div class="player-row"><span>${escapeHtml(t.name)} </span><button class="btn btn-attack btn-sm" ${myAtt<=0?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله با تمام قوا</button></div>`;
             });
             document.getElementById('warContent').innerHTML = h; 
         }
