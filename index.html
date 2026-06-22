@@ -13,8 +13,6 @@
         .header .sub { font-size: 0.65rem; color: #f59e0b; letter-spacing: 4px; opacity: 0.8; }
         .sync-status { background: #0a0a1a; padding: 8px; text-align: center; font-size: 0.6rem; color: #fbbf24; border-bottom: 1px solid #f59e0b33; display: flex; justify-content: center; gap: 8px; align-items: center; }
         .sync-status button { background: #f59e0b; color: #0f172a; border: none; padding: 4px 12px; border-radius: 12px; font-weight: 700; cursor: pointer; }
-        .channel-info { background: linear-gradient(135deg, #1a1a2e, #0f172a); padding: 8px; border-bottom: 1px solid #f59e0b33; display: flex; justify-content: space-around; flex-wrap: wrap; font-size: 0.55rem; color: #94a3b8; }
-        .channel-info strong { color: #fbbf24; }
         .login-box { padding: 18px; background: #0a0a1a; display: flex; flex-direction: column; gap: 12px; }
         .login-box input { padding: 14px 18px; border-radius: 40px; border: 1px solid #f59e0b44; text-align: center; font-size: 1rem; background: #1a1a2e; color: white; outline: 2px solid transparent; }
         .login-box input:focus { outline-color: #f59e0b; }
@@ -73,6 +71,7 @@
         @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
         .storage-bar { height: 10px; background: #334155; border-radius: 10px; margin: 6px 0; overflow: hidden; }
         .storage-fill { height: 100%; background: linear-gradient(90deg, #f59e0b, #ef4444); transition: width 0.3s; }
+        .hp-fill { background: linear-gradient(90deg, #10b981, #ef4444); }
     </style>
 </head>
 <body>
@@ -85,11 +84,7 @@
                 <button id="reconnectBtn" style="display:none" onclick="forceReconnect()">🔄 اتصال مجدد</button>
             </div>
         </div>
-        <div class="channel-info">
-            <div>📢 کانال: <strong id="chName"></strong></div>
-            <div>🤖 ربات: <strong id="botName">@WARTHUNDBOT</strong></div>
-            <div>👥 بازیکنان: <strong id="playerCount">0</strong></div>
-        </div>
+
         <div class="online-bar warn" id="onlineBar">🟡 <span id="onlineText">در حال همگام‌سازی...</span></div>
 
         <div class="login-box" id="loginBox" style="display:none">
@@ -134,7 +129,7 @@
     <script>
         const BOT_TOKEN = "8835164570:AAEyxh9VWtBKDdTc-GkL4mR7Qo-9hFWXAEk";
         const CHANNEL_ID = "@inclaw";
-        const DATA_KEY = "EMPIRE_DATA_V34_HARD";
+        const DATA_KEY = "EMPIRE_DATA_V35_DEFENSE";
         const SYNC_INTERVAL = 5000;
         const SAVE_THROTTLE = 3000;
         
@@ -142,15 +137,18 @@
         let isConnected = false, msgId = null, saving = false;
 
         const F_DB = {
-            "F-22": { n: "F-22 Raptor", i: "🇺🇸", p: 500, c: { g: 38000, o: 11000, m: 8500 }, r: 8 },
-            "Su-57": { n: "Su-57 Felon", i: "🇷🇺", p: 400, c: { g: 22000, o: 6000, m: 4500 }, r: 6 },
-            "F-35": { n: "F-35 Lightning", i: "🇺🇸", p: 300, c: { g: 16000, o: 4500, m: 2800 }, r: 5 },
+            "A-4": { n: "A-4 Skyhawk", i: "🇺🇸", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
+            "F-5E": { n: "F-5E Tiger", i: "🇺🇸", p: 20, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
+            "MiG-21": { n: "MiG-21", i: "🇷🇺", p: 25, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
+            "F-16": { n: "F-16", i: "🇺🇸", p: 130, c: { g: 5500, o: 1600, m: 900 }, r: 3 },
             "MiG-29": { n: "MiG-29", i: "🇷🇺", p: 180, c: { g: 8000, o: 2200, m: 1300 }, r: 4 },
-            "F-16": { n: "F-16", i: "🇺🇸", p: 130, c: { g: 5500, o: 1600, m: 900 }, r: 3 }
+            "F-35": { n: "F-35 Lightning", i: "🇺🇸", p: 300, c: { g: 16000, o: 4500, m: 2800 }, r: 5 },
+            "Su-57": { n: "Su-57 Felon", i: "🇷🇺", p: 400, c: { g: 22000, o: 6000, m: 4500 }, r: 6 },
+            "F-22": { n: "F-22 Raptor", i: "🇺🇸", p: 500, c: { g: 38000, o: 11000, m: 8500 }, r: 8 }
         };
         const D_DB = {
-            "S-400": { n: "S-400", i: "🇷🇺", c: { g: 25000, o: 8000, m: 6000 }, def: 150, hp: 200 },
-            "Patriot": { n: "Patriot", i: "🇺🇸", c: { g: 20000, o: 6000, m: 4000 }, def: 120, hp: 180 }
+            "Patriot": { n: "Patriot", i: "🇺🇸", c: { g: 20000, o: 6000, m: 4000 }, def: 120, hp: 180 },
+            "S-400": { n: "S-400", i: "🇷🇺", c: { g: 25000, o: 8000, m: 6000 }, def: 150, hp: 200 }
         };
 
         function toast(m, e = false, type = "") {
@@ -175,10 +173,8 @@
             updateSyncUI("🔌 در حال اتصال...", "warn");
             const b = await api("getMe");
             if (!b.ok) { updateSyncUI("❌ خطا در ربات", "error", true); return false; }
-            document.getElementById("botName").innerText = "@" + b.result.username;
             const c = await api("getChat", { chat_id: CHANNEL_ID });
             if (c.ok && c.result) {
-                document.getElementById("chName").innerText = "@" + (c.result.username || CHANNEL_ID);
                 if (c.result.pinned_message?.text?.includes(DATA_KEY)) msgId = c.result.pinned_message.message_id;
                 else {
                     const s = await api("sendMessage", { chat_id: CHANNEL_ID, text: `🌍 ${DATA_KEY}\n{}` });
@@ -196,7 +192,6 @@
         }
         window.forceReconnect = async function() { if (await initTelegram()) { await loadAll(); updateUI(); } };
 
-        // فشرده‌سازی دیتا بدون نیاز به IP
         function compressPlayer(p) {
             return { i:p.id, n:p.name, p:p.password, g:p.gold, o:p.oil, m:p.metal, x:p.xp, t:p.lastMineCollect, l:p.mineLevel, r:[p.research.military, p.research.economy, p.research.aviation], f:p.fighters, d:p.defenses };
         }
@@ -227,7 +222,6 @@
                     if (j.k === DATA_KEY) {
                         allPlayers = (j.p||[]).map(decompressPlayer);
                         marketOffers = j.m || []; battleLogs = j.l || [];
-                        document.getElementById("playerCount").innerText = allPlayers.length;
                         return true;
                     }
                 } catch (e) {}
@@ -239,11 +233,10 @@
             return { id: name+"_"+ts().toString(36), name, password: pass, gold: 1000, oil: 300, metal: 300, xp: 0, lastMineCollect: ts(), mineLevel: 1, research: {military:0,economy:0,aviation:0}, fighters: {}, defenses: [] };
         }
         
-        // سیستم پلکانی و سخت采集
         function calcMine(p) {
-            const sec = Math.min((ts()-(p.lastMineCollect||ts()))/1000, 300); // حداکثر ۵ دقیقه ذخیره می‌شود
-            const cap = p.mineLevel * 300; // ظرفیت پلکانی (سطح ۱ = ۳۰۰، سطح ۲ = ۶۰۰)
-            const yieldRate = p.mineLevel * 0.5; // نرخ تولید کند و سخت
+            const sec = Math.min((ts()-(p.lastMineCollect||ts()))/1000, 300);
+            const cap = p.mineLevel * 300;
+            const yieldRate = p.mineLevel * 0.5;
             return { 
                 gold: Math.min(cap, Math.floor(yieldRate * 2 * sec)), 
                 oil: Math.min(cap, Math.floor(yieldRate * sec)), 
@@ -258,10 +251,16 @@
             for (const [n, d] of Object.entries(p.fighters)) if (F_DB[n] && d.count > 0) power += F_DB[n].p * d.count;
             return Math.floor(power);
         }
+        
+        // سیستم دفاعی: جنگنده‌ها ۵۰٪ قدرت دارند، پدافندها بسته به HPشان قدرت میدهند
         function calcDefensePower(p) {
             if (!p) return 0;
-            let power = calcAttackPower(p);
-            if (p.defenses) p.defenses.forEach(def => { if(D_DB[def.type] && def.hp > 0) power += D_DB[def.type].def * (def.hp/100); });
+            let power = calcAttackPower(p) * 0.5; // جنگنده‌ها در دفاع نصف قدرت دارند
+            if (p.defenses) p.defenses.forEach(def => {
+                if(D_DB[def.type] && def.hp > 0) {
+                    power += D_DB[def.type].def * (def.hp / def.maxHp); // اگر آسیب دیده باشد، دفاعش کمتر می‌شود
+                }
+            });
             return Math.floor(power);
         }
 
@@ -283,17 +282,46 @@
             toast(`💎 استخراج شد`, false, "peace"); 
         };
         window.upgradeMine = async function() { 
-            const c = player.mineLevel * 10000; // هزینه پلکانی و سخت
+            const c = player.mineLevel * 10000; 
             if (player.gold<c) return toast("طلا کم است", true); 
             player.gold-=c; player.mineLevel++; 
             await saveAll(); updateUI(); renderMine(); 
             toast("معدن ارتقا یافت!", false, "peace");
         };
         
-        window.buildFighter = async function(key) { const f=F_DB[key]; if (player.gold<f.c.g||player.oil<f.c.o||player.metal<f.c.m) return toast("منابع کم است", true); if ((player.research?.aviation||0)<f.r) return toast("تحقیقات کم است", true); player.gold-=f.c.g; player.oil-=f.c.o; player.metal-=f.c.m; if(!player.fighters[key]) player.fighters[key]={count:0}; player.fighters[key].count++; await saveAll(); updateUI(); renderMilitary(); };
-        window.buildDefense = async function(key) { const d=D_DB[key]; if (player.gold<d.c.g) return toast("طلا کم است", true); player.gold-=d.c.g; player.defenses.push({type:key, hp:d.hp}); await saveAll(); updateUI(); renderMilitary(); };
+        window.buildFighter = async function(key) { 
+            const f=F_DB[key]; 
+            if (player.gold<f.c.g||player.oil<f.c.o||player.metal<f.c.m) return toast("منابع کم است", true); 
+            if ((player.research?.aviation||0)<f.r) return toast("تحقیقات کم است", true); 
+            player.gold-=f.c.g; player.oil-=f.c.o; player.metal-=f.c.m; 
+            if(!player.fighters[key]) player.fighters[key]={count:0}; 
+            player.fighters[key].count++; 
+            await saveAll(); updateUI(); renderMilitary(); 
+        };
+        
+        window.buildDefense = async function(key) { 
+            const d=D_DB[key]; 
+            if (player.gold<d.c.g) return toast("طلا کم است", true); 
+            player.gold-=d.c.g; player.oil-=d.c.o; player.metal-=d.c.m; 
+            if(!player.defenses) player.defenses = [];
+            player.defenses.push({id: ts().toString(36), type:key, hp:d.hp, maxHp:d.hp}); 
+            await saveAll(); updateUI(); renderMilitary(); 
+        };
 
-        // سیستم حمله با افکت‌های دراماتیک
+        // تعمیر سیستم دفاعی آسیب دیده
+        window.repairDefense = async function(defId) {
+            const def = player.defenses.find(d => d.id === defId);
+            if(!def) return;
+            const dmg = def.maxHp - def.hp;
+            const cost = dmg * 10; // 10 طلا برای هر واحد HP
+            if(player.gold < cost) return toast("طلا برای تعمیر کافی نیست", true);
+            player.gold -= cost;
+            def.hp = def.maxHp;
+            await saveAll(); updateUI(); renderMilitary();
+            toast("سیستم دفاعی تعمیر شد", false, "peace");
+        };
+
+        // سیستم حمله پیشرفته با محاسبه تلفات جنگنده و آسیب به پدافند
         window.launchAttack = async function(targetId) {
             const target = allPlayers.find(p => p.id === targetId);
             if (!target) return toast("هدف یافت نشد", true);
@@ -303,7 +331,6 @@
             
             const enemyDef = calcDefensePower(target);
             
-            // فعال کردن افکت جنگ
             document.getElementById('app').classList.add('screen-shake');
             const overlay = document.getElementById('battleOverlay');
             const statusText = document.getElementById('battleStatusText');
@@ -327,37 +354,65 @@
             let resultMsg = "";
             let resultStr = "";
             
-            if (myAtt > enemyDef) { // پیروزی
+            if (myAtt > enemyDef) { // پیروزی مهاجم
                 const ratio = enemyDef / myAtt;
                 const loot = { g: Math.floor(target.gold*0.3), o: Math.floor(target.oil*0.3), m: Math.floor(target.metal*0.3) };
                 target.gold-=loot.g; target.oil-=loot.o; target.metal-=loot.m;
                 player.gold+=loot.g; player.oil+=loot.o; player.metal+=loot.m;
                 player.xp+=15; target.xp+=3;
                 
+                // تلفات مهاجم
                 let attackerLost = 0;
-                for (const [k, f] of Object.entries(player.fighters)) { const lost = Math.ceil(f.count * ratio * 0.5); f.count = Math.max(0, f.count - lost); attackerLost += lost; }
+                for (const [k, f] of Object.entries(player.fighters)) { 
+                    const lost = Math.ceil(f.count * ratio * 0.5); 
+                    f.count = Math.max(0, f.count - lost); 
+                    attackerLost += lost; 
+                }
                 
-                let defenderLost = 0;
-                for (const [k, f] of Object.entries(target.fighters)) { defenderLost += f.count; f.count = 0; }
-                let defDestroyed = target.defenses.length;
-                target.defenses = [];
+                // تلفات مدافع (جنگنده‌های او نابود می‌شوند، پدافندها نابود می‌شوند)
+                let defenderFighterLost = 0;
+                for (const [k, f] of Object.entries(target.fighters)) { 
+                    const lost = Math.ceil(f.count * 0.8); // ۸۰٪ جنگنده‌های مدافع نابود می‌شوند
+                    f.count = Math.max(0, f.count - lost); 
+                    defenderFighterLost += lost; 
+                }
                 
-                resultMsg = `🔥 <span class="attacker">${escapeHtml(player.name)}</span> (حمله: ${myAtt}) به <span class="defender">${escapeHtml(target.name)}</span> (دفاع: ${enemyDef}) حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد. مهاجم <span class="lost">${attackerLost} نیرو</span> از دست داد. مدافع <span class="lost">${defenderLost} نیرو و ${defDestroyed} سیستم دفاعی</span> نابود شد.`;
+                let defDestroyed = target.defenses ? target.defenses.length : 0;
+                if(target.defenses) target.defenses.forEach(def => { def.hp = 0; });
+                target.defenses = target.defenses ? target.defenses.filter(def => def.hp > 0) : [];
+                
+                resultMsg = `🔥 <span class="attacker">${escapeHtml(player.name)}</span> (حمله: ${myAtt}) به <span class="defender">${escapeHtml(target.name)}</span> (دفاع: ${enemyDef}) حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد. مهاجم <span class="lost">${attackerLost} نیرو</span> از دست داد. مدافع <span class="lost">${defenderFighterLost} جنگنده و ${defDestroyed} سیستم دفاعی</span> نابود شد.`;
                 resultStr = `🏆 پیروزی!<br>غارت: ${loot.g}طلا | ${loot.o}نفت<br>تلفات شما: ${attackerLost} نیرو`;
                 statusText.style.color = "#4ade80";
-            } else { // شکست
+            } else { // پیروزی مدافع
                 const ratio = myAtt / enemyDef;
                 player.xp+=2; target.xp+=15;
                 
+                // نابودی نیروهای مهاجم
                 let attackerLost = 0;
-                for (const [k, f] of Object.entries(player.fighters)) { attackerLost += f.count; f.count = 0; }
+                for (const [k, f] of Object.entries(player.fighters)) { 
+                    const lost = Math.ceil(f.count * 0.9);
+                    f.count = Math.max(0, f.count - lost); 
+                    attackerLost += lost; 
+                }
                 
-                let defenderLostFighters = 0;
-                for (const [k, f] of Object.entries(target.fighters)) { const lost = Math.ceil(f.count * ratio * 0.3); f.count = Math.max(0, f.count - lost); defenderLostFighters += lost; }
-                target.defenses.forEach(def => { def.hp -= 30; if(def.hp <= 0) def.hp = 1; });
+                // تلفات جزئی مدافع (جنگنده‌ها درصدی از دست می‌روند، پدافندها آسیب می‌بینند و نیاز به تعمیر پیدا می‌کنند)
+                let defenderFighterLost = 0;
+                for (const [k, f] of Object.entries(target.fighters)) { 
+                    const lost = Math.ceil(f.count * ratio * 0.4); 
+                    f.count = Math.max(0, f.count - lost); 
+                    defenderFighterLost += lost; 
+                }
+                if(target.defenses) {
+                    target.defenses.forEach(def => { 
+                        def.hp -= 40; // پدافندها آسیب می‌بینند
+                        if(def.hp < 0) def.hp = 0; 
+                    });
+                    target.defenses = target.defenses.filter(def => def.hp > 0); // اگر hp صفر شد حذف می‌شود
+                }
                 
-                resultMsg = `🛡️ <span class="attacker">${escapeHtml(player.name)}</span> (حمله: ${myAtt}) به <span class="defender">${escapeHtml(target.name)}</span> (دفاع: ${enemyDef}) حمله کرد اما دفاع شد! مهاجم <span class="lost">${attackerLost} نیرو</span> نابود شد. مدافع <span class="lost">${defenderLostFighters} نیرو</span> از دست داد.`;
-                resultStr = `💥 شکست سنگین!<br>نیروهای شما نابود شدند<br>تلفات دشمن: ${defenderLostFighters} نیرو`;
+                resultMsg = `🛡️ <span class="attacker">${escapeHtml(player.name)}</span> (حمله: ${myAtt}) به <span class="defender">${escapeHtml(target.name)}</span> (دفاع: ${enemyDef}) حمله کرد اما دفاع شد! مهاجم <span class="lost">${attackerLost} نیرو</span> نابود شد. مدافع <span class="lost">${defenderFighterLost} جنگنده</span> از دست داد و سیستم‌های دفاعی آسیب دیدند (نیاز به تعمیر).`;
+                resultStr = `💥 شکست سنگین!<br>نیروهای شما نابود شدند<br>تلفات دشمن: ${defenderFighterLost} نیرو`;
                 statusText.style.color = "#fca5a5";
             }
             
@@ -369,6 +424,7 @@
             overlay.classList.remove('active');
             
             updateUI(); renderWar(); renderBattlelog();
+            if (document.querySelector('.tab.active').dataset.tab === 'military') renderMilitary();
         };
 
         window.createMarketOffer = async function() {
@@ -421,13 +477,45 @@
                     <button class="btn btn-green" ${player.gold<upCost?'disabled':''} onclick="upgradeMine()">⬆️ ارتقای معدن</button>
                 </div>`;
         }
+        
         function renderMilitary() { 
-            let h=`<div class="section-title">✈️ جنگنده‌ها (برای حمله)</div><div class="grid2">`; 
-            for(const [k,f] of Object.entries(F_DB)) h+=`<div class="card"><div class="icon">${f.i}</div><div>${f.n}</div><div class="cost">قدرت:${f.p} | تحقیق:${f.r}</div><div class="cost">💰${f.c.g} | 🛢️${f.c.o} | ⛏️${f.c.m}</div><div class="badge badge-blue">دارید: ${player.fighters[k]?.count||0}</div><button class="btn btn-blue btn-sm" onclick="buildFighter('${k}')">ساخت</button></div>`; 
-            h+=`</div><div class="section-title">🛡️ سیستم‌های دفاعی (برای دفع حمله)</div><div class="grid2">`; 
-            for(const [k,d] of Object.entries(D_DB)) h+=`<div class="card"><div class="icon">${d.i}</div><div>${d.n}</div><div class="cost">دفاع:${d.def} | HP:${d.hp}</div><div class="cost">💰${d.c.g}</div><button class="btn btn-green btn-sm" onclick="buildDefense('${k}')">مستقر کن</button></div>`; 
-            document.getElementById('militaryContent').innerHTML = h+`</div>`; 
+            let h=`<div class="section-title">✈️ جنگنده‌ها (برای حمله و دفاع)</div><div class="grid2">`; 
+            for(const [k,f] of Object.entries(F_DB)) {
+                const reqMet = (player.research?.aviation||0) >= f.r;
+                const canAfford = player.gold>=f.c.g && player.oil>=f.c.o && player.metal>=f.c.m;
+                h+=`<div class="card" style="opacity:${reqMet?1:0.5}"><div class="icon">${f.i}</div><div>${f.n}</div><div class="cost">قدرت:${f.p} ${f.r>0?`| تحقیق:${f.r}`:''}</div><div class="cost">💰${f.c.g} | 🛢️${f.c.o} | ⛏️${f.c.m}</div><div class="badge badge-blue">دارید: ${player.fighters[k]?.count||0}</div><button class="btn btn-blue btn-sm" ${(!reqMet||!canAfford)?'disabled':''} onclick="buildFighter('${k}')">ساخت</button></div>`; 
+            }
+            h+=`</div><div class="section-title">🛡️ سیستم‌های دفاعی (پدافند هوایی)</div><div class="grid2">`; 
+            for(const [k,d] of Object.entries(D_DB)) {
+                const canAfford = player.gold>=d.c.g && player.oil>=d.c.o && player.metal>=d.c.m;
+                h+=`<div class="card"><div class="icon">${d.i}</div><div>${d.n}</div><div class="cost">دفاع:${d.def} | HP:${d.hp}</div><div class="cost">💰${d.c.g} | 🛢️${d.c.o} | ⛏️${d.c.m}</div><button class="btn btn-green btn-sm" ${!canAfford?'disabled':''} onclick="buildDefense('${k}')">ساخت و مستقر کن</button></div>`; 
+            }
+            h+=`</div>`;
+            
+            // نمایش پدافندهای ساخته شده و امکان تعمیر آن‌ها
+            if(player.defenses && player.defenses.length > 0) {
+                h+=`<div class="section-title">🔧 وضعیت پدافندهای مستقر شده</div>`;
+                player.defenses.forEach(def => {
+                    const dInfo = D_DB[def.type];
+                    const hpPct = (def.hp / def.maxHp) * 100;
+                    const dmg = def.maxHp - def.hp;
+                    const repairCost = dmg * 10;
+                    h+=`
+                        <div class="player-row" style="flex-direction:column;align-items:stretch;">
+                            <div style="display:flex;justify-content:space-between;width:100%;margin-bottom:5px;">
+                                <span>${dInfo.i} ${dInfo.n}</span>
+                                <span style="color:${hpPct>50?'#4ade80':'#ef4444'}">سلامت: ${def.hp}/${def.maxHp}</span>
+                            </div>
+                            <div class="storage-bar"><div class="storage-fill hp-fill" style="width:${hpPct}%"></div></div>
+                            ${dmg > 0 ? `<button class="btn btn-gold btn-sm" ${player.gold<repairCost?'disabled':''} onclick="repairDefense('${def.id}')">تعمیر (${repairCost} طلا)</button>` : `<span style="color:#4ade80;font-size:0.5rem;text-align:center;">آماده عملیات</span>`}
+                        </div>
+                    `;
+                });
+            }
+            
+            document.getElementById('militaryContent').innerHTML = h; 
         }
+        
         function renderWar() { 
             const myAtt = calcAttackPower(player);
             const myDef = calcDefensePower(player);
@@ -435,7 +523,7 @@
             h+=`<div class="section-title">🎯 اهداف نظامی</div>`;
             if(myAtt <= 0) h+=`<div class="empty">برای حمله به دشمنان ابتدا باید جنگنده بسازید!</div>`;
             allPlayers.filter(p=>p.id!==player.id).sort((a,b)=>calcDefensePower(a)-calcDefensePower(b)).forEach(t=>{
-                h+=`<div class="player-row"><span>${escapeHtml(t.name)} </span><button class="btn btn-attack btn-sm" ${myAtt<=0?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله با تمام قوا</button></div>`;
+                h+=`<div class="player-row"><span>${escapeHtml(t.name)} (دفاع: ${calcDefensePower(t)})</span><button class="btn btn-attack btn-sm" ${myAtt<=0?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله با تمام قوا</button></div>`;
             });
             document.getElementById('warContent').innerHTML = h; 
         }
