@@ -129,7 +129,7 @@
     <script>
         const BOT_TOKEN = "8835164570:AAEyxh9VWtBKDdTc-GkL4mR7Qo-9hFWXAEk";
         const CHANNEL_ID = "@inclaw";
-        const DATA_KEY = "EMPIRE_DATA_V35_DEFENSE";
+        const DATA_KEY = "EMPIRE_DATA_V36_LOGS_IRAN";
         const SYNC_INTERVAL = 5000;
         const SAVE_THROTTLE = 3000;
         
@@ -146,7 +146,11 @@
             "Su-57": { n: "Su-57 Felon", i: "🇷🇺", p: 400, c: { g: 22000, o: 6000, m: 4500 }, r: 6 },
             "F-22": { n: "F-22 Raptor", i: "🇺🇸", p: 500, c: { g: 38000, o: 11000, m: 8500 }, r: 8 }
         };
+        
+        // اضافه شدن پدافندهای ایرانی خرداد و باور
         const D_DB = {
+            "Khordad": { n: "خرداد-۱۵", i: "🇮🇷", c: { g: 8000, o: 2000, m: 1500 }, def: 60, hp: 100 },
+            "Bavar": { n: "باور-۳۷۳", i: "🇮🇷", c: { g: 15000, o: 4500, m: 3000 }, def: 100, hp: 150 },
             "Patriot": { n: "Patriot", i: "🇺🇸", c: { g: 20000, o: 6000, m: 4000 }, def: 120, hp: 180 },
             "S-400": { n: "S-400", i: "🇷🇺", c: { g: 25000, o: 8000, m: 6000 }, def: 150, hp: 200 }
         };
@@ -198,10 +202,12 @@
         function decompressPlayer(c) {
             return { id:c.i, name:c.n, password:c.p, gold:c.g||0, oil:c.o||0, metal:c.m||0, xp:c.x||0, lastMineCollect:c.t||ts(), mineLevel:c.l||1, research:{military:c.r?.[0]||0, economy:c.r?.[1]||0, aviation:c.r?.[2]||0}, fighters:c.f||{}, defenses:c.d||[] };
         }
+        
+        // ربات فقط ۵ لاگ آخر را در کانال ذخیره می‌کند تا دیتابیس پاکسازی شود
         function packData() {
-            const data = { k: DATA_KEY, p: allPlayers.map(compressPlayer), m: marketOffers, l: battleLogs.slice(-15) };
+            const data = { k: DATA_KEY, p: allPlayers.map(compressPlayer), m: marketOffers, l: battleLogs.slice(-5) };
             let raw = JSON.stringify(data);
-            if (raw.length > 3800) { data.l = data.l.slice(-5); raw = JSON.stringify(data); }
+            if (raw.length > 3800) { data.l = data.l.slice(-3); raw = JSON.stringify(data); }
             return raw;
         }
         async function saveAll(force = false) {
@@ -252,13 +258,12 @@
             return Math.floor(power);
         }
         
-        // سیستم دفاعی: جنگنده‌ها ۵۰٪ قدرت دارند، پدافندها بسته به HPشان قدرت میدهند
         function calcDefensePower(p) {
             if (!p) return 0;
-            let power = calcAttackPower(p) * 0.5; // جنگنده‌ها در دفاع نصف قدرت دارند
+            let power = calcAttackPower(p) * 0.5;
             if (p.defenses) p.defenses.forEach(def => {
                 if(D_DB[def.type] && def.hp > 0) {
-                    power += D_DB[def.type].def * (def.hp / def.maxHp); // اگر آسیب دیده باشد، دفاعش کمتر می‌شود
+                    power += D_DB[def.type].def * (def.hp / def.maxHp);
                 }
             });
             return Math.floor(power);
@@ -308,12 +313,11 @@
             await saveAll(); updateUI(); renderMilitary(); 
         };
 
-        // تعمیر سیستم دفاعی آسیب دیده
         window.repairDefense = async function(defId) {
             const def = player.defenses.find(d => d.id === defId);
             if(!def) return;
             const dmg = def.maxHp - def.hp;
-            const cost = dmg * 10; // 10 طلا برای هر واحد HP
+            const cost = dmg * 10;
             if(player.gold < cost) return toast("طلا برای تعمیر کافی نیست", true);
             player.gold -= cost;
             def.hp = def.maxHp;
@@ -359,9 +363,8 @@
                 const loot = { g: Math.floor(target.gold*0.3), o: Math.floor(target.oil*0.3), m: Math.floor(target.metal*0.3) };
                 target.gold-=loot.g; target.oil-=loot.o; target.metal-=loot.m;
                 player.gold+=loot.g; player.oil+=loot.o; player.metal+=loot.m;
-                player.xp+=15; target.xp+=3;
+                player.xp+=15; target.xp+=3; // مهاجم در پیروزی ۱۵ XP می‌گیرد
                 
-                // تلفات مهاجم
                 let attackerLost = 0;
                 for (const [k, f] of Object.entries(player.fighters)) { 
                     const lost = Math.ceil(f.count * ratio * 0.5); 
@@ -369,10 +372,9 @@
                     attackerLost += lost; 
                 }
                 
-                // تلفات مدافع (جنگنده‌های او نابود می‌شوند، پدافندها نابود می‌شوند)
                 let defenderFighterLost = 0;
                 for (const [k, f] of Object.entries(target.fighters)) { 
-                    const lost = Math.ceil(f.count * 0.8); // ۸۰٪ جنگنده‌های مدافع نابود می‌شوند
+                    const lost = Math.ceil(f.count * 0.8);
                     f.count = Math.max(0, f.count - lost); 
                     defenderFighterLost += lost; 
                 }
@@ -381,14 +383,13 @@
                 if(target.defenses) target.defenses.forEach(def => { def.hp = 0; });
                 target.defenses = target.defenses ? target.defenses.filter(def => def.hp > 0) : [];
                 
-                resultMsg = `🔥 <span class="attacker">${escapeHtml(player.name)}</span> (حمله: ${myAtt}) به <span class="defender">${escapeHtml(target.name)}</span> (دفاع: ${enemyDef}) حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد. مهاجم <span class="lost">${attackerLost} نیرو</span> از دست داد. مدافع <span class="lost">${defenderFighterLost} جنگنده و ${defDestroyed} سیستم دفاعی</span> نابود شد.`;
-                resultStr = `🏆 پیروزی!<br>غارت: ${loot.g}طلا | ${loot.o}نفت<br>تلفات شما: ${attackerLost} نیرو`;
+                resultMsg = `🔥 <span class="attacker">${escapeHtml(player.name)}</span> (حمله: ${myAtt}) به <span class="defender">${escapeHtml(target.name)}</span> (دفاع: ${enemyDef}) حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد. مهاجم <span class="lost">${attackerLost} نیرو</span> از دست داد. مدافع <span class="lost">${defenderFighterLost} جنگنده و ${defDestroyed} سیستم دفاعی</span> نابود شد. (مهاجم ۱۵ XP گرفت)`;
+                resultStr = `🏆 پیروزی!<br>غارت: ${loot.g}طلا | ${loot.o}نفت<br>تلفات شما: ${attackerLost} نیرو<br>XP دریافت شده: ۱۵`;
                 statusText.style.color = "#4ade80";
             } else { // پیروزی مدافع
                 const ratio = myAtt / enemyDef;
-                player.xp+=2; target.xp+=15;
+                player.xp+=2; target.xp+=15; // مدافع در دفاع موفق ۱۵ XP می‌گیرد
                 
-                // نابودی نیروهای مهاجم
                 let attackerLost = 0;
                 for (const [k, f] of Object.entries(player.fighters)) { 
                     const lost = Math.ceil(f.count * 0.9);
@@ -396,7 +397,6 @@
                     attackerLost += lost; 
                 }
                 
-                // تلفات جزئی مدافع (جنگنده‌ها درصدی از دست می‌روند، پدافندها آسیب می‌بینند و نیاز به تعمیر پیدا می‌کنند)
                 let defenderFighterLost = 0;
                 for (const [k, f] of Object.entries(target.fighters)) { 
                     const lost = Math.ceil(f.count * ratio * 0.4); 
@@ -405,19 +405,23 @@
                 }
                 if(target.defenses) {
                     target.defenses.forEach(def => { 
-                        def.hp -= 40; // پدافندها آسیب می‌بینند
+                        def.hp -= 40;
                         if(def.hp < 0) def.hp = 0; 
                     });
-                    target.defenses = target.defenses.filter(def => def.hp > 0); // اگر hp صفر شد حذف می‌شود
+                    target.defenses = target.defenses.filter(def => def.hp > 0);
                 }
                 
-                resultMsg = `🛡️ <span class="attacker">${escapeHtml(player.name)}</span> (حمله: ${myAtt}) به <span class="defender">${escapeHtml(target.name)}</span> (دفاع: ${enemyDef}) حمله کرد اما دفاع شد! مهاجم <span class="lost">${attackerLost} نیرو</span> نابود شد. مدافع <span class="lost">${defenderFighterLost} جنگنده</span> از دست داد و سیستم‌های دفاعی آسیب دیدند (نیاز به تعمیر).`;
+                resultMsg = `🛡️ <span class="attacker">${escapeHtml(player.name)}</span> (حمله: ${myAtt}) به <span class="defender">${escapeHtml(target.name)}</span> (دفاع: ${enemyDef}) حمله کرد اما دفاع شد! مهاجم <span class="lost">${attackerLost} نیرو</span> نابود شد. مدافع <span class="lost">${defenderFighterLost} جنگنده</span> از دست داد و سیستم‌های دفاعی آسیب دیدند. (مدافع ۱۵ XP گرفت)`;
                 resultStr = `💥 شکست سنگین!<br>نیروهای شما نابود شدند<br>تلفات دشمن: ${defenderFighterLost} نیرو`;
                 statusText.style.color = "#fca5a5";
             }
             
             resultText.innerHTML = resultStr;
             battleLogs.push({ ts: ts(), text: resultMsg });
+            
+            // نگه داشتن فقط ۵ لاگ آخر در حافظه بازی
+            if (battleLogs.length > 5) battleLogs = battleLogs.slice(-5);
+            
             await saveAll(true); 
             
             await new Promise(r => setTimeout(r, 2500));
@@ -492,7 +496,6 @@
             }
             h+=`</div>`;
             
-            // نمایش پدافندهای ساخته شده و امکان تعمیر آن‌ها
             if(player.defenses && player.defenses.length > 0) {
                 h+=`<div class="section-title">🔧 وضعیت پدافندهای مستقر شده</div>`;
                 player.defenses.forEach(def => {
@@ -530,7 +533,7 @@
         function renderMarket() { let h=`<div class="section-title">🛒 فروش منبع</div><div class="card"><select id="mktGive"><option value="gold">💰 طلا بدهم</option><option value="oil">🛢️ نفت بدهم</option><option value="metal">⛏️ فلز بدهم</option></select><input type="number" id="mktGiveAmt" placeholder="مقدار فروش"><select id="mktGet"><option value="gold">💰 طلا بگیرم</option><option value="oil">🛢️ نفت بگیرم</option><option value="metal">⛏️ فلز بگیرم</option></select><input type="number" id="mktGetAmt" placeholder="مقدار درخواست"><button class="btn btn-gold" onclick="createMarketOffer()">ثبت در بازار</button></div><div class="section-title">📜 بازار جهانی</div>`; if(marketOffers.length===0) h+=`<div class="empty">بازار خالی است</div>`; marketOffers.forEach(o=>{ const r={gold:"💰طلا",oil:"🛢️نفت",metal:"⛏️فلز"}; h+=`<div class="player-row"><span>${escapeHtml(o.seller)}: ${o.ga} ${r[o.give]} ➡️ ${o.gta} ${r[o.get]}</span>${o.sid===player.id?'<button class="btn btn-red btn-sm" disabled>شما</button>':`<button class="btn btn-green btn-sm" onclick="buyMarketOffer('${o.id}')">خرید</button>`}</div>`}); document.getElementById('marketContent').innerHTML = h; }
         function renderResearch() { const b={military:"⚔️ نظامی",economy:"💰 اقتصاد",aviation:"✈️ هوانوردی"}; let h=`<div class="section-title">🔬 تحقیقات (XP: ${player.xp})</div><div class="grid2">`; for(const [k,n] of Object.entries(b)) { const l=player.research[k],c=(l+1)*15; h+=`<div class="card"><div class="icon">${n}</div><div class="cost">سطح: ${l}</div><div class="cost">هزینه: ${c} XP</div><button class="btn btn-purple btn-sm" ${player.xp<c?'disabled':''} onclick="upgradeResearch('${k}')">ارتقا</button></div>`; } document.getElementById('researchContent').innerHTML = h+`</div>`; }
         function renderRank() { let h=`<div class="section-title">🏆 رتبه‌بندی</div>`; [...allPlayers].sort((a,b)=>(calcAttackPower(b)+calcDefensePower(b))-(calcAttackPower(a)+calcDefensePower(a))).forEach((p,i)=>h+=`<div class="player-row"><span>#${i+1} ${escapeHtml(p.name)} ${p.id===player.id?'(شما)':''}</span><span>⚔️ ${calcAttackPower(p)} | 🛡️ ${calcDefensePower(p)}</span></div>`); document.getElementById('rankContent').innerHTML = h; }
-        function renderBattlelog() { let h=`<div class="section-title">📜 گزارش جنگ‌ها</div><div class="battle-log">`; if(battleLogs.length===0) h+=`<div class="empty">جنگی ثبت نشده</div>`; battleLogs.slice().reverse().forEach(l=>h+=`<div class="log-entry">${l.text}<br><small>${new Date(l.ts).toLocaleTimeString('fa-IR')}</small></div>`); document.getElementById('battlelogContent').innerHTML = h+`</div>`; }
+        function renderBattlelog() { let h=`<div class="section-title">📜 آخرین ۵ گزارش جنگ (حمله و دفاع)</div><div class="battle-log">`; if(battleLogs.length===0) h+=`<div class="empty">جنگی ثبت نشده</div>`; battleLogs.slice().reverse().forEach(l=>h+=`<div class="log-entry">${l.text}<br><small>${new Date(l.ts).toLocaleTimeString('fa-IR')}</small></div>`); document.getElementById('battlelogContent').innerHTML = h+`</div>`; }
 
         document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
             document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
