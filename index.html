@@ -13,7 +13,6 @@
         .header h1 { color: #fbbf24; text-shadow: 0 0 40px rgba(245, 158, 11, 0.3); font-size: 1.6rem; }
         .header .sub { font-size: 0.65rem; color: #f59e0b; letter-spacing: 4px; opacity: 0.8; }
         .sync-status { background: #0a0a1a; padding: 8px; text-align: center; font-size: 0.6rem; color: #fbbf24; border-bottom: 1px solid #f59e0b33; display: flex; justify-content: center; gap: 8px; align-items: center; }
-        .sync-status button { background: #f59e0b; color: #0f172a; border: none; padding: 4px 12px; border-radius: 12px; font-weight: 700; cursor: pointer; }
         .login-box { padding: 18px; background: #0a0a1a; display: flex; flex-direction: column; gap: 12px; }
         .login-box input { padding: 14px 18px; border-radius: 40px; border: 1px solid #f59e0b44; text-align: center; font-size: 1rem; background: #1a1a2e; color: white; outline: 2px solid transparent; }
         .login-box input:focus { outline-color: #f59e0b; }
@@ -29,6 +28,8 @@
         .tabs::-webkit-scrollbar { display: none; }
         .tab { padding: 10px 12px; cursor: pointer; font-weight: 600; color: #94a3b8; font-size: 0.6rem; white-space: nowrap; border-bottom: 2px solid transparent; text-align: center; }
         .tab.active { color: #fbbf24; background: #1a1a2e; border-bottom-color: #f59e0b; }
+        .tab.admin-tab { color: #fca5a5; border-color: #7f1d1d33; }
+        .tab.admin-tab.active { color: #fca5a5; background: #450a0a; border-bottom-color: #ef4444; }
         .panel { display: none; padding: 12px; min-height: 440px; background: rgba(10, 10, 26, 0.85); }
         .panel.active { display: block; }
         .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -44,6 +45,7 @@
         .btn-purple { background: #8b5cf6; color: #fff; } 
         .btn-blue { background: #3b82f6; color: #fff; } 
         .btn-red { background: #dc2626; color: #fff; } 
+        .btn-danger { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef4444; }
         .btn-sm { padding: 4px 10px; font-size: 0.5rem; }
         .toast { position: fixed; bottom: 20px; right: 20px; background: #1a1a2e; color: #fbbf24; padding: 12px 18px; border-radius: 40px; border-right: 4px solid #f59e0b; z-index: 9999; animation: fadeOut 4.5s forwards; max-width: 92%; font-size: 0.8rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8); }
         .toast.error { border-right-color: #ef4444; color: #fca5a5; }
@@ -73,6 +75,19 @@
         .storage-bar { height: 10px; background: #334155; border-radius: 10px; margin: 6px 0; overflow: hidden; }
         .storage-fill { height: 100%; background: linear-gradient(90deg, #f59e0b, #ef4444); transition: width 0.3s; }
         .hp-fill { background: linear-gradient(90deg, #10b981, #ef4444); }
+        .chat-container { display: flex; flex-direction: column; height: 400px; background: #0a0a1a; border-radius: 1rem; border: 1px solid #f59e0b44; overflow: hidden; }
+        .chat-box { flex: 1; padding: 10px; overflow-y: auto; font-size: 0.65rem; display: flex; flex-direction: column; gap: 8px; }
+        .chat-msg { background: #1a1a2e; padding: 8px 12px; border-radius: 12px; border: 1px solid #334155; }
+        .chat-msg.me { border-color: #f59e0b66; background: #1e293b; }
+        .chat-msg.system-msg { border-color: #ef4444; background: rgba(127, 29, 29, 0.3); }
+        .chat-msg .sender { color: #fbbf24; font-weight: bold; font-size: 0.6rem; }
+        .chat-msg .time { color: #64748b; font-size: 0.4rem; float: left; margin-top: 2px; }
+        .chat-input-area { padding: 10px; background: #1a1a2e; border-top: 1px solid #f59e0b44; display: flex; gap: 5px; }
+        .chat-input-area input { margin: 0; flex: 1; }
+        .admin-panel-box { background: #0f0f0f; border: 1px solid #7f1d1d; border-radius: 1rem; padding: 12px; margin-bottom: 12px; }
+        .admin-panel-box h3 { color: #fca5a5; font-size: 0.75rem; margin-bottom: 8px; border-bottom: 1px solid #7f1d1d; padding-bottom: 4px; }
+        .spy-data { background: #1a1a2e; padding: 8px; border-radius: 8px; font-size: 0.55rem; color: #94a3b8; text-align: right; max-height: 150px; overflow-y: auto; direction: ltr; text-align: left; margin-top: 5px; }
+        .is-hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -90,9 +105,9 @@
         <div class="shield-bar" id="shieldBar">🛡️ سپر محافظتی فعال است...</div>
 
         <div class="login-box" id="loginBox" style="display:none">
-            <input type="text" id="playerName" placeholder="نام کشور (حداقل ۳ حرف)...">
+            <input type="text" id="playerName" placeholder="نام کاربری (حداقل ۳ حرف)...">
             <input type="password" id="playerPassword" placeholder="رمز عبور (حداقل ۴ حرف)...">
-            <button onclick="loginRegister()">🏴 ورود / تأسیس کشور</button>
+            <button onclick="loginRegister()">🏴 ورود / تأسیس حساب</button>
         </div>
 
         <div id="gameUI" style="display:none">
@@ -106,20 +121,24 @@
                 <div class="tab active" data-tab="mine">🪙 معدن</div>
                 <div class="tab" data-tab="military">⚔️ نظامی</div>
                 <div class="tab" data-tab="war">🔥 جنگ</div>
+                <div class="tab" data-tab="chat">💬 چت</div>
                 <div class="tab" data-tab="factions">🛡️ جناح‌ها</div>
                 <div class="tab" data-tab="market">🛒 بازار</div>
                 <div class="tab" data-tab="research">🔬 تحقیق</div>
                 <div class="tab" data-tab="rank">🏆 رتبه</div>
                 <div class="tab" data-tab="battlelog">📜 گزارش</div>
+                <div class="tab admin-tab admin-el is-hidden" data-tab="admin" id="tabAdmin">🛠️ مدیریت</div>
             </div>
             <div id="panelMine" class="panel active"><div id="mineContent"></div></div>
             <div id="panelMilitary" class="panel"><div id="militaryContent"></div></div>
             <div id="panelWar" class="panel"><div id="warContent"></div></div>
+            <div id="panelChat" class="panel"><div id="chatContent"></div></div>
             <div id="panelFactions" class="panel"><div id="factionsContent"></div></div>
             <div id="panelMarket" class="panel"><div id="marketContent"></div></div>
             <div id="panelResearch" class="panel"><div id="researchContent"></div></div>
             <div id="panelRank" class="panel"><div id="rankContent" class="empty">⏳ بارگذاری...</div></div>
             <div id="panelBattlelog" class="panel"><div id="battlelogContent"></div></div>
+            <div id="panelAdmin" class="panel admin-el is-hidden"><div id="adminContent"></div></div>
         </div>
     </div>
 
@@ -134,11 +153,14 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_gsgiccX5kQMLrXnSqbAPwQ_ZoRRsYT3';
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const DATA_KEY = "EMPIRE_DATA_V40_TOP_FAC";
+        const ADMIN_NAME = "Dev";
+        const ADMIN_PASS = "admin1313";
+
+        const DATA_KEY = "EMPIRE_DATA_V46_UNIQ"; 
         const SYNC_INTERVAL = 3000;
         const SHIELD_DURATION = 12 * 60 * 60 * 1000;
         
-        let player = null, allPlayers = [], marketOffers = [], battleLogs = [];
+        let player = null, allPlayers = [], marketOffers = [], battleLogs = [], chatMessages = [];
         let isConnected = false, saving = false;
         let isAttacking = false;
 
@@ -163,7 +185,7 @@
         const FACTIONS_DB = {
             "sky_knights": { n: "شوالیه‌های آسمان", i: "🛡️" },
             "red_baron": { n: "بارون‌های سرخ", i: "🌹" },
-            "iron_cross": { n: "صلیب‌های آهنی", i: "✠" },
+            "iron_cross": { n: "صلیب‌های آهنین", i: "✠" },
             "grey_wolves": { n: "گرگ‌های خاکستری", i: "🐺" },
             "desert_falcons": { n: "شاهین‌های صحرا", i: "🦅" },
             "sky_phantoms": { n: "شبح‌های آسمان", i: "👻" }
@@ -177,19 +199,23 @@
         }
         function ts() { return Date.now(); }
         function escapeHtml(str) { return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+        function isAdmin() { return player && player.name === ADMIN_NAME && player.password === ADMIN_PASS; }
 
         function getFormattedName(p) {
             const facTag = p.faction ? `<span style="color: #ef4444; font-size: 0.8em; margin-right: 4px;">[${FACTIONS_DB[p.faction]?.n || p.faction}]</span>` : '';
+            
+            // نمایش ویژه برای ادمین (رنگ آبی + ایموجی 🚬)
+            if (p.name === ADMIN_NAME) {
+                return `<span style="color: #3b82f6; font-weight: bold;">🚬 ${escapeHtml(p.name)}</span> ${facTag}`;
+            }
+            
             return `${escapeHtml(p.name)} ${facTag}`;
         }
 
-        // همگام‌سازی player با allPlayers برای جلوگیری از باگ سپر
         function syncPlayerToAllPlayers() {
             if (!player) return;
             const idx = allPlayers.findIndex(p => p.id === player.id);
-            if (idx >= 0) {
-                allPlayers[idx] = player;
-            }
+            if (idx >= 0) allPlayers[idx] = player;
         }
 
         async function initSupabase() {
@@ -222,8 +248,7 @@
         }
         
         function packData() {
-            // محدودیت ۱۵ گزارش آخر برای سبک شدن سرور
-            return { k: DATA_KEY, p: allPlayers.map(compressPlayer), m: marketOffers, l: battleLogs.slice(-15) }; 
+            return { k: DATA_KEY, p: allPlayers.map(compressPlayer), m: marketOffers, l: battleLogs.slice(-15), c: chatMessages.slice(-10) }; 
         }
 
         async function saveAll(force = false) {
@@ -258,6 +283,7 @@
                         allPlayers = (j.p||[]).map(decompressPlayer);
                         marketOffers = j.m || []; 
                         battleLogs = j.l || [];
+                        chatMessages = j.c || [];
                         if (player) {
                             const me = allPlayers.find(p => p.id === player.id);
                             if (me) player = me;
@@ -304,13 +330,23 @@
             return Object.values(stats).sort((a, b) => b.points - a.points);
         }
 
-        // --- GAME ACTIONS ---
         window.loginRegister = async function() {
             const name = document.getElementById("playerName").value.trim(), pass = document.getElementById("playerPassword").value.trim();
-            if (name.length < 3 || pass.length < 4) return toast("نام و رمز نامعتبر است", true);
-            let existing = allPlayers.find(p => p.name === name);
-            if (existing) { if (existing.password !== pass) return toast("رمز اشتباه است", true); player = existing; }
-            else { if (allPlayers.length >= 50) return toast("سرور پر است", true); player = createPlayer(name, pass); allPlayers.push(player); await saveAll(true); }
+            if (name.length < 3 || pass.length < 4) return toast("نام کاربری و رمز نامعتبر است", true);
+            
+            // بررسی یکتا بودن نام کاربری (بدون حساسیت به حروف بزرگ و کوچک)
+            const existing = allPlayers.find(p => p.name.toLowerCase() === name.toLowerCase());
+            
+            if (existing) { 
+                if (existing.password !== pass) return toast("رمز اشتباه است", true); 
+                player = existing; 
+            }
+            else { 
+                if (allPlayers.length >= 50) return toast("سرور پر است", true); 
+                player = createPlayer(name, pass); 
+                allPlayers.push(player); 
+                await saveAll(true); 
+            }
             document.getElementById("loginBox").style.display = 'none'; document.getElementById("gameUI").style.display = 'block';
             updateUI(); renderMine(); toast("ورود موفق", false, "peace");
         };
@@ -329,7 +365,6 @@
             if(player.gold < cost) return toast("طلا برای تعمیر کافی نیست", true);
             player.gold -= cost; def.hp = def.maxHp;
             await saveAll(); updateUI(); renderMilitary();
-            toast("سیستم دفاعی تعمیر شد", false, "peace");
         };
 
         window.joinFaction = async function(facId) { player.faction = facId; await saveAll(true); updateUI(); renderFactions(); renderRank(); toast(`به ${FACTIONS_DB[facId].n} پیوستید!`, false, "peace"); };
@@ -337,24 +372,18 @@
         window.launchAttack = async function(targetId) {
             if (isAttacking) return;
             isAttacking = true;
-
             try {
                 const target = allPlayers.find(p => p.id === targetId);
                 if (!target) return toast("هدف یافت نشد", true);
-                
                 const myAtt = calcAttackPower(player);
                 if (myAtt <= 0) return toast("برای حمله باید حداقل یک جنگنده بسازید!", true, "war");
-                
                 if (target.shieldExpiry && ts() < target.shieldExpiry) {
                     const remainingMs = target.shieldExpiry - ts();
                     const h = Math.floor(remainingMs / 3600000);
                     const m = Math.floor((remainingMs % 3600000) / 60000);
                     return toast(`🛡️ این کشور تحت حمایت سپر است (${h} ساعت و ${m} دقیقه باقیمانده)`, true);
                 }
-
-                let hadShield = false;
                 if (player.shieldExpiry && ts() < player.shieldExpiry) {
-                    hadShield = true;
                     player.shieldExpiry = 0;
                     const apIdx = allPlayers.findIndex(p => p.id === player.id);
                     if (apIdx >= 0) allPlayers[apIdx].shieldExpiry = 0;
@@ -373,17 +402,14 @@
                     target.gold-=loot.g; target.oil-=loot.o; target.metal-=loot.m;
                     player.gold+=loot.g; player.oil+=loot.o; player.metal+=loot.m;
                     player.xp+=15; target.xp+=3;
-                    
                     target.shieldExpiry = ts() + SHIELD_DURATION;
-
                     let attackerLost = 0;
                     for (const [k, f] of Object.entries(player.fighters)) { const lost = Math.ceil(f.count * ratio * 0.5); f.count = Math.max(0, f.count - lost); attackerLost += lost; }
                     for (const [k, f] of Object.entries(target.fighters)) { const lost = Math.ceil(f.count * 0.8); f.count = Math.max(0, f.count - lost); }
                     if(target.defenses) target.defenses.forEach(def => { def.hp = 0; });
                     target.defenses = target.defenses ? target.defenses.filter(def => def.hp > 0) : [];
-                    
-                    resultMsg = `🔥 <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد. 🛡️ سپر ۱۲ ساعته برای مدافع فعال شد.`;
-                    resultStr = `🏆 پیروزی!<br>غارت: ${loot.g}طلا | ${loot.o}نفت<br>تلفات شما: ${attackerLost} نیرو<br>سپر حفاظتی به دشمن داده شد`;
+                    resultMsg = `🔥 <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد.`;
+                    resultStr = `🏆 پیروزی!<br>غارت: ${loot.g}طلا | ${loot.o}نفت`;
                 } else {
                     isWin = false;
                     const ratio = myAtt / enemyDef;
@@ -392,12 +418,10 @@
                     for (const [k, f] of Object.entries(player.fighters)) { const lost = Math.ceil(f.count * 0.9); f.count = Math.max(0, f.count - lost); attackerLost += lost; }
                     for (const [k, f] of Object.entries(target.fighters)) { const lost = Math.ceil(f.count * ratio * 0.4); f.count = Math.max(0, f.count - lost); }
                     if(target.defenses) { target.defenses.forEach(def => { def.hp -= 40; if(def.hp < 0) def.hp = 0; }); target.defenses = target.defenses.filter(def => def.hp > 0); }
-                    
-                    resultMsg = `🛡️ <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد اما دفاع شد! نیروهای مهاجم نابود شدند.`;
-                    resultStr = `💥 شکست سنگین!<br>نیروهای شما نابود شدند`;
+                    resultMsg = `🛡️ <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد اما دفاع شد!`;
+                    resultStr = `💥 شکست سنگین!`;
                 }
                 
-                // اطمینان قطعی از حذف سپر مهاجم قبل از سیو نهایی
                 player.shieldExpiry = 0;
                 const preSaveIdx = allPlayers.findIndex(p => p.id === player.id);
                 if (preSaveIdx >= 0) allPlayers[preSaveIdx].shieldExpiry = 0;
@@ -410,32 +434,24 @@
                 const statusText = document.getElementById('battleStatusText');
                 const resultText = document.getElementById('battleResultText');
                 const expIcon = document.getElementById('explosionIcon');
-                
                 overlay.classList.add('active');
                 statusText.innerText = `هدف قفل شد: ${target.name}`;
                 statusText.style.color = "#fbbf24";
                 resultText.innerText = "";
                 expIcon.innerText = "🚀";
-                
                 await new Promise(r => setTimeout(r, 1000));
                 document.getElementById('app').classList.remove('screen-shake');
                 statusText.innerText = "برخورد!";
                 expIcon.innerText = "💥";
                 document.getElementById('app').classList.add('screen-shake');
-                
                 await new Promise(r => setTimeout(r, 1500));
                 document.getElementById('app').classList.remove('screen-shake');
-                
                 statusText.innerText = isWin ? "پیروزی!" : "شکست!";
                 statusText.style.color = isWin ? "#4ade80" : "#fca5a5";
                 resultText.innerHTML = resultStr;
-                
                 await new Promise(r => setTimeout(r, 2500));
                 overlay.classList.remove('active');
-                
                 updateUI(); renderWar(); renderBattlelog();
-                if (document.querySelector('.tab.active').dataset.tab === 'military') renderMilitary();
-
             } finally {
                 isAttacking = false;
             }
@@ -461,9 +477,96 @@
         };
         window.upgradeResearch = async function(branch) { const c=(player.research[branch]+1)*15; if(player.xp<c) return toast("XP کم است", true); player.xp-=c; player.research[branch]++; await saveAll(); updateUI(); renderResearch(); };
 
+        window.sendChat = async function() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text || text.length > 100) return;
+            chatMessages.push({ ts: ts(), n: player.name, t: escapeHtml(text) });
+            input.value = '';
+            renderChat();
+            await saveAll();
+        };
+
+        // --- ADMIN PANEL ACTIONS ---
+        window.adminGiveRes = async function() {
+            const id = document.getElementById('admSel').value;
+            const res = document.getElementById('admRes').value;
+            const amt = parseInt(document.getElementById('admAmt').value);
+            if(!id || !res || isNaN(amt) || amt <= 0) return toast("مقادیر نامعتبر است", true);
+            const target = allPlayers.find(p => p.id === id);
+            if(!target) return toast("بازیکن یافت نشد", true);
+            if(res === 'xp') target.xp += amt;
+            else target[res] += amt;
+            await saveAll(true); renderAdmin(); toast(`✅ منابع اضافه شد`, false, "peace");
+        };
+
+        window.adminToggleShield = async function() {
+            const id = document.getElementById('admSel').value;
+            if(!id) return toast("بازیکن را انتخاب کنید", true);
+            const target = allPlayers.find(p => p.id === id);
+            if(!target) return;
+            target.shieldExpiry = (target.shieldExpiry && ts() < target.shieldExpiry) ? 0 : ts() + SHIELD_DURATION;
+            await saveAll(true); renderAdmin();
+            toast(target.shieldExpiry ? `🛡️ سپر فعال شد` : `💔 سپر برداشته شد`, false, "peace");
+        };
+
+        window.adminDeletePlayer = async function() {
+            const id = document.getElementById('admSel').value;
+            if(!id) return toast("بازیکن را انتخاب کنید", true);
+            const target = allPlayers.find(p => p.id === id);
+            if(!target) return;
+            if(!confirm(`آیا از حذف کامل این کاربر مطمئنید؟`)) return;
+            allPlayers = allPlayers.filter(p => p.id !== id);
+            await saveAll(true); renderAdmin(); toast(`🗑️ کاربر حذف شد`, false, "war");
+        };
+
+        window.adminResetPlayer = async function() {
+            const id = document.getElementById('admSel').value;
+            if(!id) return toast("بازیکن را انتخاب کنید", true);
+            const target = allPlayers.find(p => p.id === id);
+            if(!target) return;
+            if(!confirm(`آیا از ریست منابع و ارتش این کاربر مطمئنید؟`)) return;
+            target.gold = 0; target.oil = 0; target.metal = 0; target.xp = 0;
+            target.fighters = {}; target.defenses = []; target.mineLevel = 1;
+            await saveAll(true); renderAdmin(); toast(`⚠️ کاربر ریست شد`, false, "war");
+        };
+
+        window.adminBroadcast = async function() {
+            const msg = document.getElementById('admBroad').value.trim();
+            if(!msg) return toast("پیام خالی است", true);
+            chatMessages.push({ ts: ts(), n: "SYSTEM", t: escapeHtml(msg), sys: true });
+            document.getElementById('admBroad').value = '';
+            await saveAll(true); renderAdmin(); toast("📢 پیام سراسری ارسال شد", false, "peace");
+        };
+
+        window.adminClearChat = async function() {
+            if(!confirm("آیا از پاک کردن تمام پیام‌های چت جهانی مطمئنید؟")) return;
+            chatMessages = [];
+            await saveAll(true); renderAdmin(); toast("🧹 چت جهانی پاک شد", false, "peace");
+        };
+
+        window.adminNuke = async function() {
+            if(!confirm("☢️ هشدار: آیا میخواهید کل سرور را پاک کنید؟")) return;
+            if(!confirm("آخرین اخطار: آیا واقعاً مطمئنید؟")) return;
+            allPlayers = []; marketOffers = []; battleLogs = []; chatMessages = [];
+            player = null;
+            await saveAll(true);
+            document.getElementById('gameUI').style.display = 'none';
+            document.getElementById('loginBox').style.display = 'flex';
+            toast("☢️ سرور با موفقیت نابود شد!", false, "war");
+        };
+
         // --- UI RENDERING ---
         function updateUI() { 
             if(!player) return; 
+            
+            if (!window.adminVisibilitySet) {
+                if (isAdmin()) {
+                    document.querySelectorAll('.admin-el').forEach(el => el.classList.remove('is-hidden'));
+                }
+                window.adminVisibilitySet = true;
+            }
+
             document.getElementById('rGold').innerText = Math.floor(player.gold).toLocaleString('fa-IR'); 
             document.getElementById('rOil').innerText = Math.floor(player.oil).toLocaleString('fa-IR'); 
             document.getElementById('rMetal').innerText = Math.floor(player.metal).toLocaleString('fa-IR'); 
@@ -474,7 +577,7 @@
                 const remainingMs = player.shieldExpiry - ts();
                 const h = Math.floor(remainingMs / 3600000);
                 const m = Math.floor((remainingMs % 3600000) / 60000);
-                shieldBar.innerHTML = `🛡️ سپر محافظتی فعال است: <b>${h} ساعت و ${m} دقیقه</b> باقیمانده (هیچکس نمی‌تواند به شما حمله کند)`;
+                shieldBar.innerHTML = `🛡️ سپر محافظتی فعال است: <b>${h} ساعت و ${m} دقیقه</b> باقیمانده`;
                 shieldBar.style.display = 'block';
             } else {
                 shieldBar.style.display = 'none';
@@ -513,10 +616,8 @@
             const myAtt = calcAttackPower(player); const myDef = calcDefensePower(player);
             let h=`<div class="info-bar">قدرت حمله: ${myAtt} | قدرت دفاع: ${myDef}</div><div class="section-title">🎯 اهداف</div>`;
             if(myAtt <= 0) h+=`<div class="empty">ابتدا جنگنده بسازید!</div>`;
-            
             allPlayers.filter(p=>p.id!==player.id).sort((a,b)=>calcDefensePower(a)-calcDefensePower(b)).forEach(t=>{
                 let btnHtml = '';
-                
                 if (t.shieldExpiry && ts() < t.shieldExpiry) {
                     const remainingMs = t.shieldExpiry - ts();
                     const hh = Math.floor(remainingMs / 3600000);
@@ -525,11 +626,107 @@
                 } else {
                     btnHtml = `<button class="btn btn-attack btn-sm" ${myAtt<=0||isAttacking?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله</button>`;
                 }
-                
                 h+=`<div class="player-row"><span>${getFormattedName(t)} </span>${btnHtml}</div>`;
             });
             document.getElementById('warContent').innerHTML = h; 
         }
+
+        function renderChat() {
+            const isTyping = document.activeElement?.id === 'chatInput';
+            const currentText = isTyping ? document.getElementById('chatInput')?.value || '' : '';
+            const last10 = chatMessages.slice(-10);
+            let h = `<div class="section-title">💬 چت جهانی (آخرین ۱۰ پیام)</div><div class="chat-container"><div class="chat-box" id="chatBox">`;
+            if(last10.length === 0) {
+                h += `<div class="empty">هیچ پیامی نیست</div>`;
+            } else {
+                last10.forEach(msg => {
+                    const isMe = msg.n === player?.name;
+                    const isSys = msg.sys;
+                    // رنگ آبی برای ادمین در چت
+                    const isAdm = msg.n === ADMIN_NAME;
+                    h += `<div class="chat-msg ${isMe ? 'me' : ''} ${isSys ? 'system-msg' : ''}">
+                        <span class="sender" style="${isSys ? 'color:#fca5a5' : ''} ${isAdm ? 'color:#3b82f6;' : ''}">${isSys ? '📢 [SYSTEM]' : (isAdm ? '🚬 ' : '') + escapeHtml(msg.n)}</span>
+                        <span class="time">${new Date(msg.ts).toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit'})}</span>
+                        <div style="margin-top: 3px; color: #e2e8f0; word-break: break-word;">${msg.t}</div>
+                    </div>`;
+                });
+            }
+            h += `</div><div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="پیام بنویسید..." maxlength="100" onkeydown="if(event.key==='Enter')sendChat()">
+                <button class="btn btn-gold" onclick="sendChat()">ارسال</button>
+            </div></div>`;
+            document.getElementById('chatContent').innerHTML = h;
+            if (isTyping) {
+                const newInput = document.getElementById('chatInput');
+                newInput.focus(); newInput.value = currentText;
+                newInput.setSelectionRange(newInput.value.length, newInput.value.length);
+            }
+            const chatBox = document.getElementById('chatBox');
+            if(chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function renderAdmin() {
+            if(!isAdmin()) return;
+            let playerOptions = `<option value="">انتخاب کاربر...</option>`;
+            allPlayers.forEach(p => { playerOptions += `<option value="${p.id}">${p.name} (طلا:${Math.floor(p.gold)})</option>`; });
+
+            let h = `
+            <div class="info-bar" style="border-color: #ef4444; color: #fca5a5;">⚠️ پنل مدیریت اختصاصی سرور</div>
+            
+            <div class="admin-panel-box">
+                <h3>🎁 اعطای منابع به کاربر</h3>
+                <select id="admSel">${playerOptions}</select>
+                <div style="display:flex; gap:5px; margin-top:5px;">
+                    <select id="admRes" style="width:40%"><option value="gold">طلای</option><option value="oil">نفت</option><option value="metal">فلز</option><option value="xp">XP</option></select>
+                    <input type="number" id="admAmt" placeholder="مقدار" style="width:40%">
+                    <button class="btn btn-green btn-sm" style="width:20%" onclick="adminGiveRes()">افزودن</button>
+                </div>
+            </div>
+
+            <div class="admin-panel-box">
+                <h3>🛡️ و 🗑️ مدیریت کاربر</h3>
+                <select id="admSel2" onchange="adminShowSpy()">${playerOptions}</select>
+                <div style="display:flex; flex-wrap: wrap; gap:5px; margin-top:5px;">
+                    <button class="btn btn-blue btn-sm" onclick="let s=document.getElementById('admSel2'); document.getElementById('admSel').value=s.value; adminToggleShield();">تغییر سپر</button>
+                    <button class="btn btn-gold btn-sm" onclick="let s=document.getElementById('admSel2'); document.getElementById('admSel').value=s.value; adminResetPlayer();">ریست منابع</button>
+                    <button class="btn btn-danger btn-sm" onclick="let s=document.getElementById('admSel2'); document.getElementById('admSel').value=s.value; adminDeletePlayer();">حذف کامل</button>
+                </div>
+                <div id="spyArea" class="spy-data" style="display:none; margin-top:10px;"></div>
+            </div>
+
+            <div class="admin-panel-box">
+                <h3>📢 مدیریت چت جهانی</h3>
+                <div style="display:flex; gap:5px; margin-bottom: 8px;">
+                    <input type="text" id="admBroad" placeholder="متن پیام سراسری..." maxlength="100" style="flex:1; margin:0">
+                    <button class="btn btn-red btn-sm" onclick="adminBroadcast()">ارسال</button>
+                </div>
+                <button class="btn btn-danger" style="width:100%; justify-content:center;" onclick="adminClearChat()">🧹 پاک کردن تمام چت‌ها</button>
+            </div>
+
+            <div class="admin-panel-box" style="border-color: #dc2626; background: rgba(220, 38, 38, 0.05);">
+                <h3 style="color:#dc2626;">☢️ زون خطر (تخریب کامل)</h3>
+                <button class="btn btn-danger" style="width:100%; background:#7f1d1d; justify-content:center;" onclick="adminNuke()">پاکسازی کل سرور</button>
+            </div>
+            `;
+            document.getElementById('adminContent').innerHTML = h;
+        }
+
+        window.adminShowSpy = function() {
+            const id = document.getElementById('admSel2').value;
+            const area = document.getElementById('spyArea');
+            if(!id) { area.style.display='none'; return; }
+            const t = allPlayers.find(p => p.id === id);
+            if(!t) return;
+            area.style.display = 'block';
+            let fightersStr = "بدون جنگنده";
+            if(Object.keys(t.fighters).length > 0) {
+                fightersStr = Object.entries(t.fighters).filter(([k,v]) => v.count > 0).map(([k,v]) => `${F_DB[k]?.n || k}: ${v.count}`).join(' | ');
+            }
+            area.innerHTML = `<b>اطلاعات مخفی ${t.name}:</b><br>
+            قدرت حمله: ${calcAttackPower(t)} | قدرت دفاع: ${calcDefensePower(t)}<br>
+            جنگنده‌ها: ${fightersStr}<br>
+            پدافندها: ${t.defenses.length > 0 ? t.defenses.map(d => D_DB[d.type]?.n).join(', ') : 'بدون پدافند'}`;
+        };
 
         function renderFactions() {
             const stats = getFactionStats();
@@ -585,15 +782,15 @@
             document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
             t.classList.add('active'); const tn = t.dataset.tab;
             document.getElementById('panel' + tn.charAt(0).toUpperCase() + tn.slice(1)).classList.add('active');
-            if (tn === 'mine') renderMine(); else if (tn === 'military') renderMilitary(); else if (tn === 'war') renderWar(); else if (tn === 'factions') renderFactions(); else if (tn === 'market') renderMarket(); else if (tn === 'research') renderResearch(); else if (tn === 'rank') renderRank(); else if (tn === 'battlelog') renderBattlelog();
+            if (tn === 'mine') renderMine(); else if (tn === 'military') renderMilitary(); else if (tn === 'war') renderWar(); else if (tn === 'chat') renderChat(); else if (tn === 'factions') renderFactions(); else if (tn === 'market') renderMarket(); else if (tn === 'research') renderResearch(); else if (tn === 'rank') renderRank(); else if (tn === 'battlelog') renderBattlelog(); else if (tn === 'admin') renderAdmin();
         }));
 
-        // توقف همگام‌سازی در طول حمله برای جلوگیری از باگ
         async function syncLoop() { 
             if (isConnected && !isAttacking) { 
                 await loadAll(); 
                 if (player) { 
                     updateUI(); 
+                    if (document.querySelector('.tab.active')?.dataset.tab === 'chat') renderChat();
                 } 
             } 
         }
