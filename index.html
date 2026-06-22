@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>امپراتوری جهانی 2027 | World Empire</title>
-    <!-- اضافه شدن کتابخانه سوپابیس -->
+    <title>Iron sky | آسمان آهنین</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
@@ -78,8 +77,8 @@
 <body>
     <div class="container" id="app">
         <div class="header">
-            <h1>🌍 امپراتوری جهانی <span style="color:#f59e0b">2027</span></h1>
-            <div class="sub">✈️ WORLD EMPIRE 🔥</div>
+            <h1>⚡ Iron sky <span style="color:#f59e0b">آسمان آهنین</span></h1>
+            <div class="sub">⚔️ IRON SKY 🔥</div>
             <div class="sync-status" id="syncStatus">
                 <span id="syncText">🔌 در حال اتصال به سرور...</span>
             </div>
@@ -128,15 +127,12 @@
     </div>
 
     <script>
-        // ==========================================
-        // تنظیمات اتصال به سوپابیس (جایگزین تلگرام)
-        // ==========================================
         const SUPABASE_URL = 'https://rxugexswtpvuotijdlzn.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_gsgiccX5kQMLrXnSqbAPwQ_ZoRRsYT3';
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const DATA_KEY = "EMPIRE_DATA_V40_TOP_FAC";
-        const SYNC_INTERVAL = 3000; // سرعت همگام سازی با سوپابیس بالاتر رفت
+        const SYNC_INTERVAL = 3000;
         
         let player = null, allPlayers = [], marketOffers = [], battleLogs = [];
         let isConnected = false, saving = false;
@@ -182,17 +178,13 @@
             return `${escapeHtml(p.name)} ${facTag}`;
         }
 
-        // ==========================================
-        // توابع ارتباط با سوپابیس (جایگزین تلگرام)
-        // ==========================================
         async function initSupabase() {
             updateSyncUI("🔌 در حال اتصال به دیتابیس...", "warn");
             try {
-                // تست ارتباط با یک درخواست ساده
                 const { data, error } = await db.from('game_state').select('id').eq('id', 'main_game').maybeSingle();
                 if (error) throw error;
                 isConnected = true; 
-                updateSyncUI("✅ متصل به سرور ", "online"); 
+                updateSyncUI("✅ متصل به سرور Supabase", "online"); 
                 return true;
             } catch (e) {
                 console.error(e);
@@ -209,14 +201,15 @@
         }
 
         function compressPlayer(p) {
-            return { i:p.id, n:p.name, p:p.password, g:p.gold, o:p.oil, m:p.metal, x:p.xp, fac:p.faction, t:p.lastMineCollect, l:p.mineLevel, r:[p.research.military, p.research.economy, p.research.aviation], f:p.fighters, d:p.defenses };
+            // اضافه شدن al برای ذخیره زمان حمله به افراد (Attack Logs)
+            return { i:p.id, n:p.name, p:p.password, g:p.gold, o:p.oil, m:p.metal, x:p.xp, fac:p.faction, t:p.lastMineCollect, l:p.mineLevel, r:[p.research.military, p.research.economy, p.research.aviation], f:p.fighters, d:p.defenses, al:p.attackLogs };
         }
         function decompressPlayer(c) {
-            return { id:c.i, name:c.n, password:c.p, gold:c.g||0, oil:c.o||0, metal:c.m||0, xp:c.x||0, faction:c.fac||null, lastMineCollect:c.t||ts(), mineLevel:c.l||1, research:{military:c.r?.[0]||0, economy:c.r?.[1]||0, aviation:c.r?.[2]||0}, fighters:c.f||{}, defenses:c.d||[] };
+            // خواندن اطلاعات محدودیت حمله از دیتابیس
+            return { id:c.i, name:c.n, password:c.p, gold:c.g||0, oil:c.o||0, metal:c.m||0, xp:c.x||0, faction:c.fac||null, lastMineCollect:c.t||ts(), mineLevel:c.l||1, research:{military:c.r?.[0]||0, economy:c.r?.[1]||0, aviation:c.r?.[2]||0}, fighters:c.f||{}, defenses:c.d||[], attackLogs: c.al || {} };
         }
         
         function packData() {
-            // در سوپابیس محدودیت 3800 کاراکتر را نداریم، پس ۵۰ لاگ آخر را نگه می‌داریم
             return { k: DATA_KEY, p: allPlayers.map(compressPlayer), m: marketOffers, l: battleLogs.slice(-50) }; 
         }
 
@@ -224,16 +217,9 @@
             if (!isConnected) return false;
             if (saving) return false;
             saving = true;
-            
             const dataToSave = packData();
-            
             try {
-                // upsert یعنی اگر رکورد بود آپدیت کن، اگر نبود بساز
-                const { error } = await db.from('game_state').upsert(
-                    { id: 'main_game', data: dataToSave },
-                    { onConflict: 'id' }
-                );
-                
+                const { error } = await db.from('game_state').upsert({ id: 'main_game', data: dataToSave }, { onConflict: 'id' });
                 if (error) throw error;
                 updateSyncUI("✅ ذخیره شد", "online");
                 return true;
@@ -250,8 +236,7 @@
             if (!isConnected) if (!await initSupabase()) return false;
             try {
                 const { data, error } = await db.from('game_state').select('data').eq('id', 'main_game').single();
-                if (error && error.code !== 'PGRST116') throw error; // PGRST116 = row not found
-                
+                if (error && error.code !== 'PGRST116') throw error;
                 if (data && data.data) {
                     const j = data.data;
                     if (j.k === DATA_KEY) {
@@ -261,7 +246,7 @@
                         return true;
                     }
                 }
-                return true; // اتصال برقرار ولی دیتایی نیست
+                return true;
             } catch (e) {
                 console.error("Load Error:", e);
                 return false;
@@ -269,7 +254,8 @@
         }
 
         function createPlayer(name, pass) {
-            return { id: name+"_"+ts().toString(36), name, password: pass, gold: 1000, oil: 300, metal: 300, xp: 0, faction: null, lastMineCollect: ts(), mineLevel: 1, research: {military:0,economy:0,aviation:0}, fighters: {}, defenses: [] };
+            // اضافه شدن آبجکت خالی برای لاگ حمله‌ها هنگام ساخت کاربر جدید
+            return { id: name+"_"+ts().toString(36), name, password: pass, gold: 1000, oil: 300, metal: 300, xp: 0, faction: null, lastMineCollect: ts(), mineLevel: 1, research: {military:0,economy:0,aviation:0}, fighters: {}, defenses: [], attackLogs: {} };
         }
         
         function calcMine(p) {
@@ -333,8 +319,25 @@
         window.launchAttack = async function(targetId) {
             const target = allPlayers.find(p => p.id === targetId);
             if (!target) return toast("هدف یافت نشد", true);
+            
             const myAtt = calcAttackPower(player);
             if (myAtt <= 0) return toast("برای حمله باید حداقل یک جنگنده بسازید!", true, "war");
+            
+            // --- سیستم محدودیت ۱۲ ساعته ---
+            const COOLDOWN_TIME = 12 * 60 * 60 * 1000; // 12 ساعت به میلی‌ثانیه
+            const lastAttackTime = player.attackLogs[targetId];
+            
+            if (lastAttackTime) {
+                const timePassed = ts() - lastAttackTime;
+                if (timePassed < COOLDOWN_TIME) {
+                    const remainingMs = COOLDOWN_TIME - timePassed;
+                    const remainingHours = Math.floor(remainingMs / 3600000);
+                    const remainingMins = Math.floor((remainingMs % 3600000) / 60000);
+                    return toast(`⏳ شما تا ${remainingHours} ساعت و ${remainingMins} دقیقه دیگر نمی‌توانید به این کشور حمله کنید.`, true);
+                }
+            }
+            // ----------------------------------
+
             const enemyDef = calcDefensePower(target);
             
             document.getElementById('app').classList.add('screen-shake');
@@ -389,6 +392,9 @@
                 resultStr = `💥 شکست سنگین!<br>نیروهای شما نابود شدند`;
                 statusText.style.color = "#fca5a5";
             }
+            
+            // ثبت زمان حمله در لاگ‌های بازیکن پس از انجام عملیات
+            player.attackLogs[targetId] = ts();
             
             resultText.innerHTML = resultStr;
             battleLogs.push({ ts: ts(), text: resultMsg });
@@ -455,8 +461,30 @@
             const myAtt = calcAttackPower(player); const myDef = calcDefensePower(player);
             let h=`<div class="info-bar">قدرت حمله: ${myAtt} | قدرت دفاع: ${myDef}</div><div class="section-title">🎯 اهداف</div>`;
             if(myAtt <= 0) h+=`<div class="empty">ابتدا جنگنده بسازید!</div>`;
+            
+            const COOLDOWN_TIME = 12 * 60 * 60 * 1000; // 12 ساعت
+            
             allPlayers.filter(p=>p.id!==player.id).sort((a,b)=>calcDefensePower(a)-calcDefensePower(b)).forEach(t=>{
-                h+=`<div class="player-row"><span>${getFormattedName(t)} </span><button class="btn btn-attack btn-sm" ${myAtt<=0?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله</button></div>`;
+                // بررسی محدودیت ۱۲ ساعته برای نمایش دکمه
+                const lastAttackTime = player.attackLogs[t.id];
+                let btnHtml = '';
+                
+                if (lastAttackTime) {
+                    const timePassed = ts() - lastAttackTime;
+                    if (timePassed < COOLDOWN_TIME) {
+                        const remainingMs = COOLDOWN_TIME - timePassed;
+                        const remainingHours = Math.floor(remainingMs / 3600000);
+                        const remainingMins = Math.floor((remainingMs % 3600000) / 60000);
+                        // غیرفعال کردن دکمه و نشان دادن زمان باقیمانده
+                        btnHtml = `<button class="btn btn-sm" style="background:#555;color:#ccc;" disabled>⏳ ${remainingHours}س ${remainingMins}د</button>`;
+                    } else {
+                        btnHtml = `<button class="btn btn-attack btn-sm" onclick="launchAttack('${t.id}')">⚔️ حمله</button>`;
+                    }
+                } else {
+                    btnHtml = `<button class="btn btn-attack btn-sm" ${myAtt<=0?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله</button>`;
+                }
+                
+                h+=`<div class="player-row"><span>${getFormattedName(t)} (دفاع: ${calcDefensePower(t)})</span>${btnHtml}</div>`;
             });
             document.getElementById('warContent').innerHTML = h; 
         }
