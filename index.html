@@ -129,7 +129,7 @@
     <script>
         const BOT_TOKEN = "8835164570:AAEyxh9VWtBKDdTc-GkL4mR7Qo-9hFWXAEk";
         const CHANNEL_ID = "@inclaw";
-        const DATA_KEY = "EMPIRE_DATA_V36_LOGS_IRAN";
+        const DATA_KEY = "EMPIRE_DATA_V37_RANK_XP";
         const SYNC_INTERVAL = 5000;
         const SAVE_THROTTLE = 3000;
         
@@ -137,7 +137,7 @@
         let isConnected = false, msgId = null, saving = false;
 
         const F_DB = {
-            "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
+            "A-4": { n: "A-4 Skyhawk", i: "🇺🇸", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
             "F-5E": { n: "F-5E Tiger", i: "🇺🇸", p: 20, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
             "MiG-21": { n: "MiG-21", i: "🇷🇺", p: 25, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
             "F-16": { n: "F-16", i: "🇺🇸", p: 130, c: { g: 5500, o: 1600, m: 900 }, r: 3 },
@@ -149,10 +149,10 @@
         
         // اضافه شدن پدافندهای ایرانی خرداد و باور
         const D_DB = {
-            "Patriot": { n: "Patriot", i: "🇺🇸", c: { g: 20000, o: 6000, m: 4000 }, def: 120, hp: 180 },
-            "S-400": { n: "S-400", i: "🇷🇺", c: { g: 25000, o: 8000, m: 6000 }, def: 150, hp: 200 },
             "Khordad": { n: "خرداد-۱۵", i: "🇮🇷", c: { g: 8000, o: 2000, m: 1500 }, def: 60, hp: 100 },
-            "Bavar": { n: "باور-۳۷۳", i: "🇮🇷", c: { g: 14000, o: 4500, m: 3000 }, def: 100, hp: 150 },
+            "Bavar": { n: "باور-۳۷۳", i: "🇮🇷", c: { g: 15000, o: 4500, m: 3000 }, def: 100, hp: 150 },
+            "Patriot": { n: "Patriot", i: "🇺🇸", c: { g: 20000, o: 6000, m: 4000 }, def: 120, hp: 180 },
+            "S-400": { n: "S-400", i: "🇷🇺", c: { g: 25000, o: 8000, m: 6000 }, def: 150, hp: 200 }
         };
 
         function toast(m, e = false, type = "") {
@@ -532,7 +532,29 @@
         }
         function renderMarket() { let h=`<div class="section-title">🛒 فروش منبع</div><div class="card"><select id="mktGive"><option value="gold">💰 طلا بدهم</option><option value="oil">🛢️ نفت بدهم</option><option value="metal">⛏️ فلز بدهم</option></select><input type="number" id="mktGiveAmt" placeholder="مقدار فروش"><select id="mktGet"><option value="gold">💰 طلا بگیرم</option><option value="oil">🛢️ نفت بگیرم</option><option value="metal">⛏️ فلز بگیرم</option></select><input type="number" id="mktGetAmt" placeholder="مقدار درخواست"><button class="btn btn-gold" onclick="createMarketOffer()">ثبت در بازار</button></div><div class="section-title">📜 بازار جهانی</div>`; if(marketOffers.length===0) h+=`<div class="empty">بازار خالی است</div>`; marketOffers.forEach(o=>{ const r={gold:"💰طلا",oil:"🛢️نفت",metal:"⛏️فلز"}; h+=`<div class="player-row"><span>${escapeHtml(o.seller)}: ${o.ga} ${r[o.give]} ➡️ ${o.gta} ${r[o.get]}</span>${o.sid===player.id?'<button class="btn btn-red btn-sm" disabled>شما</button>':`<button class="btn btn-green btn-sm" onclick="buyMarketOffer('${o.id}')">خرید</button>`}</div>`}); document.getElementById('marketContent').innerHTML = h; }
         function renderResearch() { const b={military:"⚔️ نظامی",economy:"💰 اقتصاد",aviation:"✈️ هوانوردی"}; let h=`<div class="section-title">🔬 تحقیقات (XP: ${player.xp})</div><div class="grid2">`; for(const [k,n] of Object.entries(b)) { const l=player.research[k],c=(l+1)*15; h+=`<div class="card"><div class="icon">${n}</div><div class="cost">سطح: ${l}</div><div class="cost">هزینه: ${c} XP</div><button class="btn btn-purple btn-sm" ${player.xp<c?'disabled':''} onclick="upgradeResearch('${k}')">ارتقا</button></div>`; } document.getElementById('researchContent').innerHTML = h+`</div>`; }
-        function renderRank() { let h=`<div class="section-title">🏆 رتبه‌بندی</div>`; [...allPlayers].sort((a,b)=>(calcAttackPower(b)+calcDefensePower(b))-(calcAttackPower(a)+calcDefensePower(a))).forEach((p,i)=>h+=`<div class="player-row"><span>#${i+1} ${escapeHtml(p.name)} ${p.id===player.id?'(شما)':''}</span><span>⚔️ ${calcAttackPower(p)} | 🛡️ ${calcDefensePower(p)}</span></div>`); document.getElementById('rankContent').innerHTML = h; }
+        
+        // سیستم رتبه‌بندی بر اساس XP با تاج برای ۳ نفر اول
+        function renderRank() { 
+            let h=`<div class="section-title">🏆 رتبه‌بندی بر اساس XP</div>`; 
+            // مرتب‌سازی بر اساس XP
+            const sortedPlayers = [...allPlayers].sort((a,b)=>(b.xp||0)-(a.xp||0));
+            sortedPlayers.forEach((p, i) => {
+                const rank = i + 1;
+                let crown = "";
+                let style = "";
+                // اضافه کردن تاج و رنگ طلایی به ۳ نفر اول
+                if (rank <= 3) {
+                    crown = "👑 ";
+                    style = "color: #fbbf24; font-weight: bold; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);";
+                }
+                h+=`<div class="player-row">
+                    <span style="${style}">#${rank} ${crown}${escapeHtml(p.name)} ${p.id===player.id?'(شما)':''}</span>
+                    <span>⭐ XP: ${p.xp || 0}</span>
+                </div>`;
+            });
+            document.getElementById('rankContent').innerHTML = h; 
+        }
+
         function renderBattlelog() { let h=`<div class="section-title">📜 آخرین ۵ گزارش جنگ (حمله و دفاع)</div><div class="battle-log">`; if(battleLogs.length===0) h+=`<div class="empty">جنگی ثبت نشده</div>`; battleLogs.slice().reverse().forEach(l=>h+=`<div class="log-entry">${l.text}<br><small>${new Date(l.ts).toLocaleTimeString('fa-IR')}</small></div>`); document.getElementById('battlelogContent').innerHTML = h+`</div>`; }
 
         document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
