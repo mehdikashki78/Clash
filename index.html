@@ -456,7 +456,7 @@
             let h=`<div class="info-bar">قدرت حمله: ${myAtt} | قدرت دفاع: ${myDef}</div><div class="section-title">🎯 اهداف</div>`;
             if(myAtt <= 0) h+=`<div class="empty">ابتدا جنگنده بسازید!</div>`;
             allPlayers.filter(p=>p.id!==player.id).sort((a,b)=>calcDefensePower(a)-calcDefensePower(b)).forEach(t=>{
-                h+=`<div class="player-row"><span>${getFormattedName(t)} (دفاع: ${calcDefensePower(t)})</span><button class="btn btn-attack btn-sm" ${myAtt<=0?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله</button></div>`;
+                h+=`<div class="player-row"><span>${getFormattedName(t)} </span><button class="btn btn-attack btn-sm" ${myAtt<=0?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله</button></div>`;
             });
             document.getElementById('warContent').innerHTML = h; 
         }
