@@ -250,7 +250,7 @@
             letter-spacing: 2px;
         }
 
-        /* ===== استایل‌های اصلی (همانند قبل) ===== */
+        /* ===== استایل‌های اصلی ===== */
         * {
             margin: 0;
             padding: 0;
@@ -1960,6 +1960,334 @@
         .btn-attack:hover {
             background: #dc2626;
         }
+
+        /* ===== استایل‌های نقشه آسمان ===== */
+        .sky-map-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: radial-gradient(ellipse at 30% 40%, #1a3a5a, #0a0a2a 70%, #050510);
+            border-radius: 1.2rem;
+            border: 1px solid #f59e0b44;
+            overflow: hidden;
+            cursor: grab;
+            touch-action: none;
+            box-shadow: inset 0 0 60px rgba(0, 20, 60, 0.6);
+        }
+        .sky-map-container:active {
+            cursor: grabbing;
+        }
+        .sky-map-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-origin: center center;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+        /* ستاره‌ها */
+        .sky-stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.5), transparent),
+                radial-gradient(2px 2px at 80px 20px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(3px 3px at 120px 90px, rgba(255, 255, 255, 0.4), transparent),
+                radial-gradient(2px 2px at 160px 40px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(2px 2px at 200px 110px, rgba(255, 255, 255, 0.5), transparent),
+                radial-gradient(3px 3px at 250px 30px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(2px 2px at 300px 80px, rgba(255, 255, 255, 0.4), transparent),
+                radial-gradient(2px 2px at 350px 50px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(3px 3px at 400px 100px, rgba(255, 255, 255, 0.5), transparent),
+                radial-gradient(2px 2px at 450px 20px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(2px 2px at 500px 70px, rgba(255, 255, 255, 0.4), transparent),
+                radial-gradient(3px 3px at 550px 40px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(2px 2px at 600px 90px, rgba(255, 255, 255, 0.5), transparent),
+                radial-gradient(2px 2px at 650px 30px, rgba(255, 255, 255, 0.7), transparent),
+                radial-gradient(3px 3px at 700px 80px, rgba(255, 255, 255, 0.4), transparent),
+                radial-gradient(2px 2px at 750px 50px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(2px 2px at 800px 110px, rgba(255, 255, 255, 0.5), transparent);
+            background-size: 200px 150px;
+            background-repeat: repeat;
+            opacity: 0.8;
+        }
+        /* ابرها */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 1000px;
+            filter: blur(20px);
+            pointer-events: none;
+            animation: cloudDrift 25s linear infinite alternate;
+        }
+        .cloud1 {
+            width: 300px;
+            height: 60px;
+            top: 15%;
+            left: -10%;
+            background: rgba(255, 255, 255, 0.04);
+            animation-duration: 35s;
+        }
+        .cloud2 {
+            width: 400px;
+            height: 80px;
+            top: 55%;
+            right: -15%;
+            background: rgba(255, 255, 255, 0.025);
+            animation-duration: 45s;
+            animation-delay: -10s;
+        }
+        .cloud3 {
+            width: 200px;
+            height: 40px;
+            top: 80%;
+            left: 20%;
+            background: rgba(255, 255, 255, 0.03);
+            animation-duration: 30s;
+            animation-delay: -5s;
+        }
+        @keyframes cloudDrift {
+            0% {
+                transform: translateX(0) scale(1);
+            }
+            100% {
+                transform: translateX(80px) scale(1.1);
+            }
+        }
+        .sky-player {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            z-index: 10;
+            transition: filter 0.2s, transform 0.2s;
+            user-select: none;
+            touch-action: none;
+            width: 50px;
+            height: 50px;
+        }
+        .sky-player:hover {
+            filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.6));
+            transform: translate(-50%, -50%) scale(1.15);
+            z-index: 20;
+        }
+        .sky-player .plane-icon {
+            font-size: 2.2rem;
+            line-height: 1;
+            transition: transform 0.3s;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+            transform: rotate(-20deg);
+        }
+        .sky-player .player-label {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.45rem;
+            color: #e2e8f0;
+            white-space: nowrap;
+            margin-top: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            pointer-events: none;
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sky-player .shield-ring {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid rgba(59, 130, 246, 0.7);
+            animation: shieldPulse 1.5s ease-in-out infinite;
+            pointer-events: none;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @keyframes shieldPulse {
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.25);
+                opacity: 1;
+            }
+        }
+        .sky-player .shield-ring::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            animation: shieldPulse2 2s ease-in-out infinite;
+        }
+        @keyframes shieldPulse2 {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.4);
+                opacity: 0.6;
+            }
+        }
+        .sky-player.me .plane-icon {
+            filter: drop-shadow(0 0 20px #fbbf24);
+        }
+        .sky-player.me .player-label {
+            border-color: #fbbf24;
+            color: #fbbf24;
+        }
+        .sky-player .player-tooltip {
+            position: absolute;
+            bottom: calc(100% + 12px);
+            background: rgba(10, 10, 26, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid #f59e0b44;
+            border-radius: 12px;
+            padding: 10px 14px;
+            min-width: 140px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            z-index: 100;
+        }
+        .sky-player .player-tooltip .tp-name {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+        .sky-player .player-tooltip .tp-detail {
+            font-size: 0.5rem;
+            color: #94a3b8;
+        }
+        .sky-player .player-tooltip .tp-attack {
+            margin-top: 4px;
+            pointer-events: auto;
+            padding: 4px 12px;
+            font-size: 0.5rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+        .sky-player .player-tooltip .tp-attack:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+        .sky-player .player-tooltip .tp-attack:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .sky-player:hover .player-tooltip {
+            display: flex;
+        }
+        .sky-map-zoom-controls {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 30;
+        }
+        .sky-map-zoom-controls button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid #f59e0b44;
+            background: rgba(10, 10, 26, 0.8);
+            backdrop-filter: blur(4px);
+            color: #fbbf24;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+        .sky-map-zoom-controls button:hover {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: #f59e0b;
+        }
+        .sky-map-zoom-level {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            font-size: 0.55rem;
+            color: #94a3b8;
+            background: rgba(10, 10, 26, 0.7);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid #1e293b;
+            backdrop-filter: blur(4px);
+            z-index: 30;
+        }
+        .sky-map-legend {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.45rem;
+            color: #94a3b8;
+            background: rgba(10, 10, 26, 0.6);
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1px solid #1e293b;
+            backdrop-filter: blur(4px);
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .sky-map-legend span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sky-map-legend .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .sky-map-legend .dot.me-dot {
+            background: #fbbf24;
+            box-shadow: 0 0 8px #fbbf24;
+        }
+        .sky-map-legend .dot.other-dot {
+            background: #60a5fa;
+        }
+        .sky-map-legend .dot.shield-dot {
+            background: #3b82f6;
+            box-shadow: 0 0 8px #3b82f6;
+            border: 1px solid #93c5fd;
+        }
     </style>
 </head>
 <body>
@@ -2051,6 +2379,7 @@
             SHIELD_DURATION = 12 * 60 * 60 * 1000;
         const OFFER_EXPIRY = 60 * 60 * 1000;
         const MAX_MINE_LEVEL = 25;
+        const MAX_PLAYERS = 1000; // محدودیت جدید ۱۰۰۰ نفره
 
         const F_DB = { "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
             "F-5E": { n: "F-5E Tiger", i: "🇺🇸", p: 20, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
@@ -2092,6 +2421,16 @@
         let displayedChatCount = 0;
         let adminPlayerHash = '';
         let loadingHidden = false;
+
+        // متغیرهای نقشه آسمان
+        let skyZoom = 1;
+        const SKY_MIN_ZOOM = 0.5,
+            SKY_MAX_ZOOM = 2.5;
+        let skyPos = { x: 0, y: 0 };
+        let isDragging = false,
+            dragStart = { x: 0, y: 0 },
+            dragOrigin = { x: 0, y: 0 };
+        let skyPlayerPositions = {}; // ذخیره موقعیت‌های بازیکنان
 
         // ===== توابع کمکی =====
         function saveInputs(containerId) {
@@ -2340,7 +2679,7 @@
                 if (ex.password !== pw) return toast("رمز اشتباه", true);
                 player = ex;
             } else {
-                if (allPlayers.length >= 500) return toast("سرور پر", true);
+                if (allPlayers.length >= MAX_PLAYERS) return toast("سرور پر است (حداکثر " + MAX_PLAYERS + " بازیکن)", true);
                 player = createPlayer(n, pw);
                 allPlayers.push(player);
                 await saveAll(true);
@@ -2374,7 +2713,6 @@
         };
 
         window.upgradeMine = async function() {
-            // ===== محدودیت سطح ۲۵ =====
             if (player.mineLevel >= MAX_MINE_LEVEL) {
                 toast(`🔒 معدن در بالاترین سطح (${MAX_MINE_LEVEL}) است!`, true);
                 return;
@@ -2443,7 +2781,183 @@
             renderRank();
         };
 
-        // ===== جنگ =====
+        // ===== جنگ (نقشه آسمان) =====
+        // محاسبه موقعیت‌های تصادفی بر اساس id بازیکن (ثابت)
+        function getPlayerPosition(pId) {
+            if (skyPlayerPositions[pId]) return skyPlayerPositions[pId];
+            // از هش id برای تولید موقعیت ثابت استفاده می‌کنیم
+            let hash = 0;
+            for (let i = 0; i < pId.length; i++) {
+                hash = (hash << 5) - hash + pId.charCodeAt(i);
+                hash |= 0;
+            }
+            const x = ((Math.abs(hash) % 85) + 5) / 100; // 5% تا 90%
+            const y = ((Math.abs(hash >> 8) % 85) + 5) / 100;
+            const pos = { x, y };
+            skyPlayerPositions[pId] = pos;
+            return pos;
+        }
+
+        // رندر نقشه آسمان
+        function renderSkyMap() {
+            const container = document.getElementById('warContent');
+            if (!container) return;
+
+            const targets = allPlayers.filter(p => p.id !== player.id && p.name !== ADMIN_NAME);
+            const allTargets = [player, ...targets];
+
+            let h = '';
+            h += `<div class="info-bar" style="margin-bottom:8px;">⚔️ قدرت شما: <b>${calcAtt(player)}</b> | 🛡️ دفاع شما: <b>${calcDef(player)}</b> | بازیکنان: ${allTargets.length}</div>`;
+
+            h += `<div class="sky-map-container" id="skyMapContainer">
+                <div class="sky-stars"></div>
+                <div class="cloud cloud1"></div>
+                <div class="cloud cloud2"></div>
+                <div class="cloud cloud3"></div>
+                <div class="sky-map-inner" id="skyMapInner" style="transform: translate(${skyPos.x}px, ${skyPos.y}px) scale(${skyZoom});">`;
+
+            // رندر هر بازیکن
+            allTargets.forEach(p => {
+                const pos = getPlayerPosition(p.id);
+                const isMe = p.id === player.id;
+                const hasShield = p.shieldExpiry && ts() < p.shieldExpiry;
+                const isAdmP = isAdm(p.name);
+                const att = calcAtt(p);
+                const def = calcDef(p);
+
+                // انتخاب آیکون هواپیما بر اساس جناح یا تصادفی
+                let planeIcon = '✈️';
+                if (p.faction) {
+                    const fi = getFI(p.faction);
+                    if (fi === '🛡️') planeIcon = '🛩️';
+                    else if (fi === '🌹') planeIcon = '🚁';
+                    else if (fi === '✠') planeIcon = '🛰️';
+                    else if (fi === '🐺') planeIcon = '🦅';
+                    else if (fi === '🦅') planeIcon = '🪶';
+                    else planeIcon = '✈️';
+                } else {
+                    planeIcon = isAdmP ? '🛸' : '✈️';
+                }
+
+                const label = isAdmP ? '🚬 ' + p.name : p.name;
+                const isMeClass = isMe ? 'me' : '';
+                const shieldHtml = hasShield ? `<div class="shield-ring"></div>` : '';
+
+                // مختصات به درصد
+                const px = pos.x * 100;
+                const py = pos.y * 100;
+
+                h += `<div class="sky-player ${isMeClass}" style="left:${px}%;top:${py}%;" data-player-id="${p.id}">
+                    ${shieldHtml}
+                    <div class="plane-icon">${planeIcon}</div>
+                    <div class="player-label">${escapeHtml(label)}</div>
+                    <div class="player-tooltip">
+                        <div class="tp-name">${isAdmP?'🚬 ':''}${escapeHtml(p.name)}</div>
+                        <div class="tp-detail">⚔️ ${att} | 🛡️ ${def} | XP: ${p.xp}</div>
+                        <div class="tp-detail">${p.faction?getFI(p.faction)+' '+escapeHtml(getFN(p.faction)):'بدون جناح'}</div>
+                        ${hasShield?'<div class="tp-detail" style="color:#93c5fd;">🛡️ سپر فعال</div>':''}
+                        ${!isMe ? `<button class="tp-attack" onclick="launchAttack('${p.id}')" ${hasShield||isAttacking?'disabled':''}>🔥 حمله</button>` : `<div style="font-size:0.5rem;color:#fbbf24;">👈 شما</div>`}
+                    </div>
+                </div>`;
+            });
+
+            h += `</div>
+                <div class="sky-map-zoom-controls">
+                    <button onclick="skyZoomIn()">+</button>
+                    <button onclick="skyZoomOut()">−</button>
+                </div>
+                <div class="sky-map-zoom-level">🔍 ${Math.round(skyZoom*100)}%</div>
+                <div class="sky-map-legend">
+                    <span><span class="dot me-dot"></span> شما</span>
+                    <span><span class="dot other-dot"></span> سایر بازیکنان</span>
+                    <span><span class="dot shield-dot"></span> سپر فعال</span>
+                </div>
+            </div>`;
+
+            container.innerHTML = h;
+
+            // راه‌اندازی رویدادهای درگ برای نقشه
+            setupSkyMapDrag();
+
+            // بعد از رندر، اطمینان از اعمال زوم
+            applySkyTransform();
+        }
+
+        // توابع زوم
+        window.skyZoomIn = function() {
+            skyZoom = Math.min(SKY_MAX_ZOOM, skyZoom + 0.15);
+            applySkyTransform();
+        };
+        window.skyZoomOut = function() {
+            skyZoom = Math.max(SKY_MIN_ZOOM, skyZoom - 0.15);
+            applySkyTransform();
+        };
+
+        function applySkyTransform() {
+            const inner = document.getElementById('skyMapInner');
+            if (inner) {
+                inner.style.transform = `translate(${skyPos.x}px, ${skyPos.y}px) scale(${skyZoom})`;
+            }
+            const level = document.querySelector('.sky-map-zoom-level');
+            if (level) {
+                level.textContent = `🔍 ${Math.round(skyZoom*100)}%`;
+            }
+        }
+
+        // راه‌اندازی درگ برای نقشه
+        function setupSkyMapDrag() {
+            const container = document.getElementById('skyMapContainer');
+            if (!container) return;
+
+            // حذف رویدادهای قبلی با clone
+            const newContainer = container.cloneNode(true);
+            container.parentNode.replaceChild(newContainer, container);
+            // دوباره المنت‌ها را پیدا می‌کنیم
+            const freshContainer = document.getElementById('skyMapContainer');
+            if (!freshContainer) return;
+            const inner = document.getElementById('skyMapInner');
+
+            let isDraggingLocal = false,
+                startX, startY, origX, origY;
+
+            const onStart = (e) => {
+                const ev = e.touches ? e.touches[0] : e;
+                isDraggingLocal = true;
+                startX = ev.clientX;
+                startY = ev.clientY;
+                origX = skyPos.x;
+                origY = skyPos.y;
+                freshContainer.style.cursor = 'grabbing';
+            };
+
+            const onMove = (e) => {
+                if (!isDraggingLocal) return;
+                e.preventDefault();
+                const ev = e.touches ? e.touches[0] : e;
+                const dx = ev.clientX - startX;
+                const dy = ev.clientY - startY;
+                skyPos.x = origX + dx;
+                skyPos.y = origY + dy;
+                applySkyTransform();
+            };
+
+            const onEnd = () => {
+                isDraggingLocal = false;
+                freshContainer.style.cursor = 'grab';
+            };
+
+            // ماوس
+            freshContainer.addEventListener('mousedown', onStart);
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onEnd);
+
+            // لمسی
+            freshContainer.addEventListener('touchstart', onStart, { passive: false });
+            document.addEventListener('touchmove', onMove, { passive: false });
+            document.addEventListener('touchend', onEnd);
+        }
+
+        // ===== جنگ (تابع حمله) =====
         window.launchAttack = async function(tId) {
             if (isAttacking) return;
             isAttacking = true;
@@ -2539,7 +3053,7 @@
                 await new Promise(r => setTimeout(r, 2500));
                 ov.classList.remove('active');
                 updateUI();
-                renderWar();
+                if (activeTab === 'war') renderSkyMap();
                 renderBattlelog();
             } finally { isAttacking = false; }
         };
@@ -2881,18 +3395,9 @@
             document.getElementById('militaryContent').innerHTML = h;
         }
 
+        // ===== جنگ (تب جنگ) =====
         function renderWar() {
-            const targets = allPlayers.filter(p => p.id !== player.id && p.name !== ADMIN_NAME);
-            if (targets.length === 0) { document.getElementById('warContent').innerHTML =
-                    '<div class="empty">هدفی نیست</div>'; return; }
-            let h = `<div class="info-bar">⚔️ قدرت شما: <b>${calcAtt(player)}</b> | 🛡️ دفاع شما: <b>${calcDef(player)}</b></div>`;
-            targets.sort((a, b) => b.xp - a.xp);
-            targets.forEach(t => {
-                const sh = t.shieldExpiry && ts() < t.shieldExpiry;
-                h +=
-                    `<div class="player-row" style="${sh?'opacity:0.5':''}"><div><div style="font-size:0.7rem;font-weight:700;">${fmtName(t)}</div><div style="font-size:0.5rem;color:#94a3b8;">XP: ${t.xp}</div>${sh?'<div style="font-size:0.45rem;color:#93c5fd;">🛡️ سپر فعال</div>':''}</div><button class="btn btn-attack btn-sm" onclick="launchAttack('${t.id}')" ${sh||isAttacking?'disabled':''}>🔥 حمله</button></div>`;
-            });
-            document.getElementById('warContent').innerHTML = h;
+            renderSkyMap();
         }
 
         function renderChat() {
@@ -3172,8 +3677,9 @@
                 if (changed) {
                     if (activeTab === 'factions') renderFactions();
                     if (activeTab === 'rank') renderRank();
-                    if (activeTab === 'war') renderWar();
                     if (activeTab === 'battlelog') renderBattlelog();
+                    // جنگ با نقشه آسمان - هر بار به‌روزرسانی می‌شود
+                    if (activeTab === 'war') renderWar();
                 }
 
                 if (changed) {
@@ -3217,7 +3723,6 @@
             displayedChatCount = chatMessages.length;
             expireMarketOffers();
 
-            // مخفی کردن لودینگ با افکت محو
             const overlay = document.getElementById('loadingOverlay');
             if (overlay) {
                 setTimeout(() => {
