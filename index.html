@@ -2328,7 +2328,6 @@
             if (res === 'xp') t.xp += amt;
             else t[res] += amt;
             await saveAll(true);
-            // force re-render admin to update dropdown options
             adminPlayerHash = '';
             renderAdmin();
             toast(`✅ ${amt} ${res} به ${t.name} اضافه شد`, false, "peace");
@@ -2384,7 +2383,7 @@
             displayedChatCount = chatMessages.length;
             await saveAll(true);
             if (activeTab === 'chat') renderChat();
-            adminPlayerHash = ''; // force re-render admin? Not needed but we can update dropdowns.
+            adminPlayerHash = '';
             renderAdmin();
             toast("📢 پیام ارسال شد", false, "peace");
         };
@@ -2563,11 +2562,13 @@
             document.getElementById('militaryContent').innerHTML = h;
         }
 
+        // ===== جنگ: قدرت و دفاع مهاجم پنهان شد =====
         function renderWar() {
             const targets = allPlayers.filter(p => p.id !== player.id && p.name !== ADMIN_NAME);
             if (targets.length === 0) { document.getElementById('warContent').innerHTML =
                     '<div class="empty">هدفی نیست</div>'; return; }
-            let h = `<div class="info-bar">⚔️ حمله: <b>${calcAtt(player)}</b> | 🛡️ دفاع: <b>${calcDef(player)}</b></div>`;
+            // حذف نمایش قدرت و دفاع مهاجم (فقط یک خط خالی یا توضیح)
+            let h = `<div class="info-bar" style="color:#94a3b8;">⚔️ دشمنان را انتخاب کنید</div>`;
             targets.sort((a, b) => b.xp - a.xp);
             targets.forEach(t => {
                 const a = calcAtt(t),
@@ -2742,10 +2743,8 @@
         function renderAdmin() {
             if (!isAdmin()) return;
 
-            // محاسبه هش بازیکنان برای جلوگیری از رندر بی‌مورد
             const currentHash = allPlayers.map(p => p.id + ':' + p.name + ':' + p.xp).join('|');
             const adminContent = document.getElementById('adminContent');
-            // اگر هش یکسان است و محتوای admin از قبل وجود دارد، فقط ورودی‌ها را بازیابی کن و برگرد
             if (adminPlayerHash === currentHash && adminContent.innerHTML.trim() !== '') {
                 if (adminSavedInputs) {
                     setTimeout(() => restoreInputs(adminSavedInputs), 10);
@@ -2755,7 +2754,6 @@
             }
             adminPlayerHash = currentHash;
 
-            // ساخت HTML پنل مدیریت
             let h = '<div class="admin-panel-box"><h3>👥 مدیریت بازیکنان</h3><select id="admSel" style="margin-bottom:8px;">';
             allPlayers.forEach(p => {
                 h += `<option value="${p.id}">${isAdm(p.name)?'🚬 ':''}${escapeHtml(p.name)} (XP:${p.xp})</option>`;
@@ -2770,7 +2768,6 @@
                 `<div class="admin-panel-box"><h3>☢️ منطقه خطر</h3><button class="btn btn-red" onclick="adminNuke()">☢️ نابودی کامل</button></div>`;
             adminContent.innerHTML = h;
 
-            // بازیابی ورودی‌های ذخیره شده (اگر وجود داشته باشد)
             if (adminSavedInputs) {
                 setTimeout(() => restoreInputs(adminSavedInputs), 10);
                 adminSavedInputs = null;
@@ -2818,7 +2815,6 @@
             if (syncLoopRunning) return;
             syncLoopRunning = true;
             try {
-                // ذخیره ورودی‌های تب‌ها
                 const savedChat = saveInputs('panelChat');
                 const savedMkt = saveInputs('panelMarket');
                 const savedAdmin = saveInputs('adminContent');
@@ -2833,7 +2829,6 @@
 
                 if (activeTab === 'mine') updateMineVisuals();
 
-                // چت: فقط پیام‌های جدید اضافه شوند
                 if (activeTab === 'chat' && chatMessages.length > displayedChatCount) {
                     const box = document.getElementById('chatBox');
                     if (box) {
@@ -2854,14 +2849,12 @@
                     displayedChatCount = chatMessages.length;
                 }
 
-                // بازار: اگر تعداد پیشنهادها تغییر کرد
                 const prevMktLen = savedMkt._prevMktLen || 0;
                 if (activeTab === 'market' && marketOffers.length !== prevMktLen) {
                     renderMarket();
                     restoreInputs(savedMkt);
                 }
 
-                // تب‌های بدون ورودی
                 if (changed) {
                     if (activeTab === 'factions') renderFactions();
                     if (activeTab === 'rank') renderRank();
@@ -2869,7 +2862,6 @@
                     if (activeTab === 'battlelog') renderBattlelog();
                 }
 
-                // نظامی و تحقیق
                 if (changed) {
                     if (activeTab === 'military') { renderMilitary();
                         restoreInputs(savedRes); }
@@ -2877,14 +2869,11 @@
                         restoreInputs(savedRes); }
                 }
 
-                // مدیریت: رندر فقط در صورت نیاز (با هش) و بازیابی ورودی‌ها
                 if (activeTab === 'admin' && isAdmin()) {
-                    // ذخیره ورودی‌های جاری قبل از رندر
                     adminSavedInputs = savedAdmin;
-                    renderAdmin(); // این تابع خودش ورودی‌ها را بازیابی می‌کند
+                    renderAdmin();
                 }
 
-                // ذخیره طول‌ها برای مقایسه بعدی
                 savedChat._prevChatLen = chatMessages.length;
                 savedMkt._prevMktLen = marketOffers.length;
 
