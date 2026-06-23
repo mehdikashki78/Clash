@@ -88,6 +88,9 @@
         .admin-panel-box h3 { color: #fca5a5; font-size: 0.75rem; margin-bottom: 8px; border-bottom: 1px solid #7f1d1d; padding-bottom: 4px; }
         .spy-data { background: #1a1a2e; padding: 8px; border-radius: 8px; font-size: 0.55rem; color: #94a3b8; text-align: right; max-height: 150px; overflow-y: auto; direction: ltr; text-align: left; margin-top: 5px; }
         .is-hidden { display: none !important; }
+        
+        /* استایل بنر اطلاعیه سراسری */
+        .global-banner { background: linear-gradient(90deg, #7f1d1d 0%, #450a0a 100%); padding: 10px; text-align: center; font-size: 0.75rem; color: #fca5a5; border-bottom: 1px solid #ef4444; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
@@ -102,6 +105,12 @@
 
         <div class="online-bar warn" id="onlineBar">🟡 <span id="onlineText">در حال همگام‌سازی...</span></div>
         
+        <!-- بنر اطلاعیه سراسری (مخفی در ابتدا) -->
+        <div class="global-banner is-hidden" id="globalBanner">
+            <span id="bannerText" style="flex:1; text-align: center; padding: 0 10px;"></span>
+            <button id="bannerDismissBtn" class="btn btn-danger btn-sm is-hidden" onclick="adminRemoveBanner()" style="margin-left: 10px;">❌</button>
+        </div>
+
         <div class="shield-bar" id="shieldBar">🛡️ سپر محافظتی فعال است...</div>
 
         <div class="login-box" id="loginBox" style="display:none">
@@ -153,16 +162,18 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_gsgiccX5kQMLrXnSqbAPwQ_ZoRRsYT3';
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const ADMIN_NAME = "Dev";
+        const ADMIN_NAME = "Admin";
         const ADMIN_PASS = "admin1313";
 
-        const DATA_KEY = "EMPIRE_DATA_V46_UNIQ"; 
+        const DATA_KEY = "EMPIRE_DATA_V47_BANNER"; 
         const SYNC_INTERVAL = 3000;
         const SHIELD_DURATION = 12 * 60 * 60 * 1000;
         
         let player = null, allPlayers = [], marketOffers = [], battleLogs = [], chatMessages = [];
         let isConnected = false, saving = false;
         let isAttacking = false;
+        let globalBanner = ""; // متن اطلاعیه سراسری
+        let chatLocked = false; // وضعیت قفل چت
 
         const F_DB = {
             "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
@@ -203,12 +214,9 @@
 
         function getFormattedName(p) {
             const facTag = p.faction ? `<span style="color: #ef4444; font-size: 0.8em; margin-right: 4px;">[${FACTIONS_DB[p.faction]?.n || p.faction}]</span>` : '';
-            
-            // نمایش ویژه برای ادمین (رنگ آبی + ایموجی 🚬)
             if (p.name === ADMIN_NAME) {
                 return `<span style="color: #3b82f6; font-weight: bold;">🚬 ${escapeHtml(p.name)}</span> ${facTag}`;
             }
-            
             return `${escapeHtml(p.name)} ${facTag}`;
         }
 
@@ -248,7 +256,7 @@
         }
         
         function packData() {
-            return { k: DATA_KEY, p: allPlayers.map(compressPlayer), m: marketOffers, l: battleLogs.slice(-15), c: chatMessages.slice(-10) }; 
+            return { k: DATA_KEY, p: allPlayers.map(compressPlayer), m: marketOffers, l: battleLogs.slice(-15), c: chatMessages.slice(-10), b: globalBanner, cl: chatLocked }; 
         }
 
         async function saveAll(force = false) {
@@ -284,6 +292,8 @@
                         marketOffers = j.m || []; 
                         battleLogs = j.l || [];
                         chatMessages = j.c || [];
+                        globalBanner = j.b || "";
+                        chatLocked = j.cl || false;
                         if (player) {
                             const me = allPlayers.find(p => p.id === player.id);
                             if (me) player = me;
@@ -333,20 +343,9 @@
         window.loginRegister = async function() {
             const name = document.getElementById("playerName").value.trim(), pass = document.getElementById("playerPassword").value.trim();
             if (name.length < 3 || pass.length < 4) return toast("نام کاربری و رمز نامعتبر است", true);
-            
-            // بررسی یکتا بودن نام کاربری (بدون حساسیت به حروف بزرگ و کوچک)
             const existing = allPlayers.find(p => p.name.toLowerCase() === name.toLowerCase());
-            
-            if (existing) { 
-                if (existing.password !== pass) return toast("رمز اشتباه است", true); 
-                player = existing; 
-            }
-            else { 
-                if (allPlayers.length >= 50) return toast("سرور پر است", true); 
-                player = createPlayer(name, pass); 
-                allPlayers.push(player); 
-                await saveAll(true); 
-            }
+            if (existing) { if (existing.password !== pass) return toast("رمز اشتباه است", true); player = existing; }
+            else { if (allPlayers.length >= 50) return toast("سرور پر است", true); player = createPlayer(name, pass); allPlayers.push(player); await saveAll(true); }
             document.getElementById("loginBox").style.display = 'none'; document.getElementById("gameUI").style.display = 'block';
             updateUI(); renderMine(); toast("ورود موفق", false, "peace");
         };
@@ -478,6 +477,8 @@
         window.upgradeResearch = async function(branch) { const c=(player.research[branch]+1)*15; if(player.xp<c) return toast("XP کم است", true); player.xp-=c; player.research[branch]++; await saveAll(); updateUI(); renderResearch(); };
 
         window.sendChat = async function() {
+            // اگر چت قفل بود و کاربر ادمین نبود، اجازه نده
+            if (chatLocked && !isAdmin()) return toast("🔒 چت توسط مدیریت بسته شده است", true);
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             if (!text || text.length > 100) return;
@@ -545,10 +546,34 @@
             await saveAll(true); renderAdmin(); toast("🧹 چت جهانی پاک شد", false, "peace");
         };
 
+        // --- قابلیت جدید: تنظیم اطلاعیه سراسری ---
+        window.adminSetBanner = async function() {
+            const msg = document.getElementById('admBannerText').value.trim();
+            if(!msg) return toast("متن اطلاعیه خالی است", true);
+            globalBanner = msg;
+            document.getElementById('admBannerText').value = '';
+            await saveAll(true); renderAdmin(); updateUI(); 
+            toast("📢 اطلاعیه سراسری تنظیم شد", false, "peace");
+        };
+
+        // --- قابلیت جدید: حذف اطلاعیه سراسری ---
+        window.adminRemoveBanner = async function() {
+            globalBanner = "";
+            await saveAll(true); updateUI(); renderAdmin(); 
+            toast("اطلاعیه حذف شد", false, "peace");
+        };
+
+        // --- قابلیت جدید: قفل و باز کردن چت ---
+        window.adminToggleChat = async function() {
+            chatLocked = !chatLocked;
+            await saveAll(true); renderAdmin(); 
+            toast(chatLocked ? "🔒 چت جهانی بسته شد" : "🔓 چت جهانی باز شد", false, "peace");
+        };
+
         window.adminNuke = async function() {
             if(!confirm("☢️ هشدار: آیا میخواهید کل سرور را پاک کنید؟")) return;
             if(!confirm("آخرین اخطار: آیا واقعاً مطمئنید؟")) return;
-            allPlayers = []; marketOffers = []; battleLogs = []; chatMessages = [];
+            allPlayers = []; marketOffers = []; battleLogs = []; chatMessages = []; globalBanner = ""; chatLocked = false;
             player = null;
             await saveAll(true);
             document.getElementById('gameUI').style.display = 'none';
@@ -569,9 +594,22 @@
 
             document.getElementById('rGold').innerText = Math.floor(player.gold).toLocaleString('fa-IR'); 
             document.getElementById('rOil').innerText = Math.floor(player.oil).toLocaleString('fa-IR'); 
-            document.getElementById('rMetal').innerText = Math.floor(player.metal).toLocaleString('fa-IR'); 
+            document.getElementById('rMetal').innerText = Math.floor(player.metal).toLocaleString('fa-رس'); 
             document.getElementById('rXP').innerText = player.xp; 
             
+            // نمایش بنر سراسری
+            const bannerEl = document.getElementById('globalBanner');
+            const bannerTextEl = document.getElementById('bannerText');
+            const bannerDismissBtn = document.getElementById('bannerDismissBtn');
+            if (globalBanner) {
+                bannerTextEl.innerText = "📢 " + globalBanner;
+                bannerEl.classList.remove('is-hidden');
+                if (isAdmin()) bannerDismissBtn.classList.remove('is-hidden');
+                else bannerDismissBtn.classList.add('is-hidden');
+            } else {
+                bannerEl.classList.add('is-hidden');
+            }
+
             const shieldBar = document.getElementById('shieldBar');
             if (player.shieldExpiry && ts() < player.shieldExpiry) {
                 const remainingMs = player.shieldExpiry - ts();
@@ -642,7 +680,6 @@
                 last10.forEach(msg => {
                     const isMe = msg.n === player?.name;
                     const isSys = msg.sys;
-                    // رنگ آبی برای ادمین در چت
                     const isAdm = msg.n === ADMIN_NAME;
                     h += `<div class="chat-msg ${isMe ? 'me' : ''} ${isSys ? 'system-msg' : ''}">
                         <span class="sender" style="${isSys ? 'color:#fca5a5' : ''} ${isAdm ? 'color:#3b82f6;' : ''}">${isSys ? '📢 [SYSTEM]' : (isAdm ? '🚬 ' : '') + escapeHtml(msg.n)}</span>
@@ -651,12 +688,21 @@
                     </div>`;
                 });
             }
-            h += `</div><div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="پیام بنویسید..." maxlength="100" onkeydown="if(event.key==='Enter')sendChat()">
-                <button class="btn btn-gold" onclick="sendChat()">ارسال</button>
-            </div></div>`;
+            h += `</div>`;
+            
+            // بررسی وضعیت قفل بودن چت
+            if (chatLocked && !isAdmin()) {
+                h += `<div style="padding:12px;text-align:center;color:#fca5a5;font-size:0.7rem;background:rgba(127,29,29,0.2);border-radius:8px;border:1px dashed #7f1d1d;">🔒 چت جهانی در حال حاضر توسط مدیریت بسته شده است.</div>`;
+            } else {
+                h += `<div class="chat-input-area">
+                    <input type="text" id="chatInput" placeholder="پیام بنویسید..." maxlength="100" onkeydown="if(event.key==='Enter')sendChat()">
+                    <button class="btn btn-gold" onclick="sendChat()">ارسال</button>
+                </div>`;
+            }
+            
+            h += `</div>`;
             document.getElementById('chatContent').innerHTML = h;
-            if (isTyping) {
+            if (!chatLocked && isTyping) {
                 const newInput = document.getElementById('chatInput');
                 newInput.focus(); newInput.value = currentText;
                 newInput.setSelectionRange(newInput.value.length, newInput.value.length);
@@ -673,6 +719,20 @@
             let h = `
             <div class="info-bar" style="border-color: #ef4444; color: #fca5a5;">⚠️ پنل مدیریت اختصاصی سرور</div>
             
+            <div class="admin-panel-box">
+                <h3>📢 مدیریت اطلاعیه سراسری</h3>
+                <div style="display:flex; gap:5px; margin-bottom: 8px;">
+                    <input type="text" id="admBannerText" placeholder="متن اطلاعیه سراسری برای بالای صفحه..." maxlength="150" style="flex:1; margin:0">
+                    <button class="btn btn-blue btn-sm" onclick="adminSetBanner()">اعلان</button>
+                    <button class="btn btn-danger btn-sm" onclick="adminRemoveBanner()">حذف بنر</button>
+                </div>
+                <div style="display:flex; gap:5px;">
+                    <button class="btn btn-sm" style="width:100%; justify-content:center; ${chatLocked ? 'background:#10b981; color:#fff;' : 'background:#dc2626; color:#fff;'}" onclick="adminToggleChat()">
+                        ${chatLocked ? '🔓 باز کردن چت جهانی' : '🔒 قفل کردن چت جهانی'}
+                    </button>
+                </div>
+            </div>
+
             <div class="admin-panel-box">
                 <h3>🎁 اعطای منابع به کاربر</h3>
                 <select id="admSel">${playerOptions}</select>
@@ -695,9 +755,9 @@
             </div>
 
             <div class="admin-panel-box">
-                <h3>📢 مدیریت چت جهانی</h3>
+                <h3>💬 مدیریت چت و سیستم</h3>
                 <div style="display:flex; gap:5px; margin-bottom: 8px;">
-                    <input type="text" id="admBroad" placeholder="متن پیام سراسری..." maxlength="100" style="flex:1; margin:0">
+                    <input type="text" id="admBroad" placeholder="متن پیام سراسری سیستم..." maxlength="100" style="flex:1; margin:0">
                     <button class="btn btn-red btn-sm" onclick="adminBroadcast()">ارسال</button>
                 </div>
                 <button class="btn btn-danger" style="width:100%; justify-content:center;" onclick="adminClearChat()">🧹 پاک کردن تمام چت‌ها</button>
