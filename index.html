@@ -7,6 +7,249 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
     </script>
     <style>
+        /* ===== LOADING OVERLAY ===== */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, #0f0f2a 0%, #05050f 100%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+            overflow: hidden;
+        }
+        #loadingOverlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .loader-ring {
+            position: relative;
+            width: 140px;
+            height: 140px;
+        }
+        .loader-ring .ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            animation: spinRing 1.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+        .loader-ring .ring:nth-child(1) {
+            border-top-color: #f59e0b;
+            animation-delay: 0s;
+        }
+        .loader-ring .ring:nth-child(2) {
+            border-right-color: #ef4444;
+            animation-delay: 0.4s;
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+        }
+        .loader-ring .ring:nth-child(3) {
+            border-bottom-color: #3b82f6;
+            animation-delay: 0.8s;
+            width: 55%;
+            height: 55%;
+            top: 22.5%;
+            left: 22.5%;
+        }
+        .loader-ring .ring:nth-child(4) {
+            border-left-color: #10b981;
+            animation-delay: 1.2s;
+            width: 30%;
+            height: 30%;
+            top: 35%;
+            left: 35%;
+        }
+        @keyframes spinRing {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .loader-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.8rem;
+            animation: pulseIcon 1.2s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.4));
+        }
+        @keyframes pulseIcon {
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.15);
+                opacity: 0.8;
+            }
+        }
+        .loader-title {
+            margin-top: 30px;
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+            letter-spacing: 2px;
+            animation: glowTitle 2s ease-in-out infinite alternate;
+            position: relative;
+        }
+        .loader-title::after {
+            content: '⚡';
+            position: absolute;
+            top: -10px;
+            right: -40px;
+            font-size: 1.2rem;
+            -webkit-text-fill-color: initial;
+            color: #fbbf24;
+            animation: sparkle 1.4s ease-in-out infinite;
+        }
+        @keyframes glowTitle {
+            0% {
+                filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.2));
+            }
+            100% {
+                filter: drop-shadow(0 0 30px rgba(245, 158, 11, 0.5));
+            }
+        }
+        @keyframes sparkle {
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.9) rotate(-10deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.3) rotate(10deg);
+            }
+        }
+        .loader-sub {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            margin-top: 4px;
+            letter-spacing: 6px;
+            font-weight: 300;
+        }
+        .loader-bar-track {
+            margin-top: 28px;
+            width: 220px;
+            height: 4px;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        .loader-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f59e0b, #ef4444, #8b5cf6);
+            border-radius: 4px;
+            animation: loadProgress 2.6s ease-in-out forwards;
+            position: relative;
+        }
+        .loader-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 300%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            animation: barShimmer 1.8s linear infinite;
+        }
+        @keyframes loadProgress {
+            0% {
+                width: 0%;
+            }
+            20% {
+                width: 18%;
+            }
+            40% {
+                width: 42%;
+            }
+            60% {
+                width: 68%;
+            }
+            80% {
+                width: 85%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+        @keyframes barShimmer {
+            0% {
+                transform: translateX(-33.33%);
+            }
+            100% {
+                transform: translateX(0%);
+            }
+        }
+        .loader-dots {
+            margin-top: 18px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .loader-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f59e0b;
+            animation: dotBounce 1.4s ease-in-out infinite;
+        }
+        .loader-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+            background: #ef4444;
+        }
+        .loader-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+            background: #3b82f6;
+        }
+        .loader-dots span:nth-child(4) {
+            animation-delay: 0.6s;
+            background: #10b981;
+        }
+        .loader-dots span:nth-child(5) {
+            animation-delay: 0.8s;
+            background: #8b5cf6;
+        }
+        @keyframes dotBounce {
+            0%,
+            80%,
+            100% {
+                transform: scale(0.4);
+                opacity: 0.3;
+            }
+            40% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+        .loader-version {
+            position: absolute;
+            bottom: 30px;
+            color: #334155;
+            font-size: 0.5rem;
+            letter-spacing: 2px;
+        }
+
         /* ===== استایل‌های اصلی (همانند قبل) ===== */
         * {
             margin: 0;
@@ -306,6 +549,12 @@
             padding: 4px 10px;
             font-size: 0.5rem;
         }
+        .btn-max {
+            background: #334155;
+            color: #94a3b8;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
         .toast {
             position: fixed;
             bottom: 20px;
@@ -590,7 +839,8 @@
         .is-hidden {
             display: none !important;
         }
-        /* ===== استایل‌های معدن، جناح، بازار، رتبه و ... (همانند قبل) ===== */
+
+        /* ===== استایل‌های معدن، جناح، بازار، رتبه و ... ===== */
         .mine-card {
             background: linear-gradient(160deg, #1a1a2e 0%, #0f1729 50%, #1a1025 100%);
             border: 1px solid #f59e0b55;
@@ -698,14 +948,6 @@
             background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.18) 45%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.18) 55%, transparent 100%);
             animation: barShimmer 2.8s linear infinite;
         }
-        @keyframes barShimmer {
-            0% {
-                transform: translateX(-33.33%)
-            }
-            100% {
-                transform: translateX(0%)
-            }
-        }
         .mine-bar-fill.gold-bar {
             background: linear-gradient(90deg, #92400e, #d97706, #f59e0b, #fbbf24);
         }
@@ -797,6 +1039,9 @@
             display: block;
             margin-top: 3px;
             font-size: 0.65rem;
+        }
+        .mine-upgrade-cost.max-level {
+            color: #4ade80;
         }
         .mine-stats-row {
             display: flex;
@@ -1638,7 +1883,8 @@
         .fac-rank-pts-fill.fpo {
             background: linear-gradient(90deg, #1e3a5f, #2563eb, #3b82f6);
         }
-        /* ===== استایل‌های پنل مدیریت (رفع پرش) ===== */
+
+        /* ===== استایل‌های پنل مدیریت ===== */
         #panelAdmin {
             min-height: 400px;
         }
@@ -1664,7 +1910,6 @@
             padding: 5px 14px;
             min-height: 32px;
         }
-        /* رنگ‌های دکمه‌ها */
         .btn-gold {
             background: #f59e0b;
             color: #0f172a;
@@ -1718,6 +1963,28 @@
     </style>
 </head>
 <body>
+
+    <!-- ===== LOADING OVERLAY ===== -->
+    <div id="loadingOverlay">
+        <div class="loader-ring">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="loader-icon">⚡</div>
+        </div>
+        <div class="loader-title">IRON SKY</div>
+        <div class="loader-sub">آسمان آهنین</div>
+        <div class="loader-bar-track">
+            <div class="loader-bar-fill" id="loaderBarFill"></div>
+        </div>
+        <div class="loader-dots">
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="loader-version">v2.5 · IRON SKY</div>
+    </div>
+
+    <!-- ===== MAIN APP ===== -->
     <div class="container" id="app">
         <div class="header">
             <h1>⚡ Iron sky <span style="color:#f59e0b">آسمان آهنین</span></h1>
@@ -1782,7 +2049,8 @@
             DATA_KEY = "EMPIRE_DATA_V60_NOJUMP",
             SYNC_INTERVAL = 3000,
             SHIELD_DURATION = 12 * 60 * 60 * 1000;
-        const OFFER_EXPIRY = 60 * 60 * 1000; // 1 ساعت
+        const OFFER_EXPIRY = 60 * 60 * 1000;
+        const MAX_MINE_LEVEL = 25;
 
         const F_DB = { "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
             "F-5E": { n: "F-5E Tiger", i: "🇺🇸", p: 20, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
@@ -1823,6 +2091,7 @@
         let adminSavedInputs = null;
         let displayedChatCount = 0;
         let adminPlayerHash = '';
+        let loadingHidden = false;
 
         // ===== توابع کمکی =====
         function saveInputs(containerId) {
@@ -2051,7 +2320,6 @@
                 }
                 return true;
             });
-            // برگرداندن منابع به فروشنده
             expired.forEach(o => {
                 const seller = allPlayers.find(p => p.id === o.sid);
                 if (seller) {
@@ -2059,10 +2327,7 @@
                     toast(`⏳ آگهی ${o.seller} منقضی شد و ${o.ga} ${RES_META[o.give]?.name || o.give} برگشت`, false, "peace");
                 }
             });
-            if (expired.length > 0) {
-                // ذخیره خودکار بعد از تغییر
-                saveAll(true);
-            }
+            if (expired.length > 0) saveAll(true);
         }
 
         // ===== توابع ورود و ثبت =====
@@ -2109,6 +2374,11 @@
         };
 
         window.upgradeMine = async function() {
+            // ===== محدودیت سطح ۲۵ =====
+            if (player.mineLevel >= MAX_MINE_LEVEL) {
+                toast(`🔒 معدن در بالاترین سطح (${MAX_MINE_LEVEL}) است!`, true);
+                return;
+            }
             const c = player.mineLevel * 10000;
             if (player.gold < c) return toast("طلا کم", true);
             player.gold -= c;
@@ -2116,7 +2386,7 @@
             await saveAll();
             updateUI();
             renderMine();
-            toast("⛏️ سطح " + player.mineLevel, false, "peace");
+            toast(`⛏️ ارتقا به سطح ${player.mineLevel}`, false, "peace");
         };
 
         // ===== نظامی =====
@@ -2173,7 +2443,7 @@
             renderRank();
         };
 
-        // ===== جنگ (فقط قدرت و دفاع خود را نشان بده) =====
+        // ===== جنگ =====
         window.launchAttack = async function(tId) {
             if (isAttacking) return;
             isAttacking = true;
@@ -2552,11 +2822,34 @@
             const gP = Math.min(100, (m.gold / cap) * 100),
                 oP = Math.min(100, (m.oil / cap) * 100),
                 mP = Math.min(100, (m.metal / cap) * 100);
-            const upCost = player.mineLevel * 10000,
-                total = m.gold + m.oil + m.metal;
-            const nextCap = 300 + (player.mineLevel) * 250;
+            const upCost = player.mineLevel * 10000;
+            const isMax = player.mineLevel >= MAX_MINE_LEVEL;
+            const total = m.gold + m.oil + m.metal;
+            const nextCap = isMax ? cap : 300 + (player.mineLevel) * 250;
+
+            let upgradeHtml = '';
+            if (isMax) {
+                upgradeHtml =
+                    `<div class="mine-upgrade-section" style="border-color:#4ade80;background:rgba(16,185,129,0.05);">
+                        <div class="mine-upgrade-info">
+                            <span style="color:#4ade80;font-weight:800;font-size:0.8rem;">🏆 سطح MAX (${MAX_MINE_LEVEL})</span>
+                            <span class="mine-upgrade-cost max-level">✅ بالاترین سطح معدن</span>
+                        </div>
+                        <button class="btn btn-max" disabled>🔒 ارتقا کامل</button>
+                    </div>`;
+            } else {
+                upgradeHtml =
+                    `<div class="mine-upgrade-section">
+                        <div class="mine-upgrade-info">
+                            ⬆️ سطح ${player.mineLevel+1}: ${cap} ← ${nextCap} <span style="color:#4ade80;font-size:0.5rem;">(+${nextCap-cap})</span>
+                            <span class="mine-upgrade-cost">💰 ${upCost.toLocaleString('fa-IR')} طلا</span>
+                        </div>
+                        <button class="btn btn-purple" onclick="upgradeMine()" ${player.gold<upCost?'disabled':''}>ارتقا</button>
+                    </div>`;
+            }
+
             document.getElementById('mineContent').innerHTML =
-                `<div class="mine-card"><div class="mine-header"><div class="mine-icon-wrap">⛏️</div><div><div class="mine-title">معدن سطح ${player.mineLevel}</div><div class="mine-subtitle">ظرفیت: ${cap.toLocaleString('fa-IR')} | نرخ: ثابت</div></div></div><div class="mine-stats-row"><div class="mine-stat"><div class="mine-stat-val">${m.goldRate.toFixed(1)}/ث</div><div class="mine-stat-label">طلای ثانیه</div></div><div class="mine-stat"><div class="mine-stat-val">${m.oilRate.toFixed(1)}/ث</div><div class="mine-stat-label">نفت ثانیه</div></div><div class="mine-stat"><div class="mine-stat-val">${m.metalRate.toFixed(1)}/ث</div><div class="mine-stat-label">فلز ثانیه</div></div></div><div class="mine-res-section"><div><div class="mine-res-info"><span class="mine-res-name">💰 طلا</span><span class="mine-res-vals"><span id="mineValGold">${m.gold}</span> / ${cap}</span><span class="mine-rate">${m.goldRate.toFixed(1)}/ث</span></div><div class="mine-bar-track"><div id="mineBarGold" class="mine-bar-fill gold-bar" style="width:${gP}%"><span id="minePctGold" class="mine-pct">${Math.floor(gP)}%</span></div></div></div><div><div class="mine-res-info"><span class="mine-res-name">🛢️ نفت</span><span class="mine-res-vals"><span id="mineValOil">${m.oil}</span> / ${cap}</span><span class="mine-rate">${m.oilRate.toFixed(1)}/ث</span></div><div class="mine-bar-track"><div id="mineBarOil" class="mine-bar-fill oil-bar" style="width:${oP}%"><span id="minePctOil" class="mine-pct">${Math.floor(oP)}%</span></div></div></div><div><div class="mine-res-info"><span class="mine-res-name">⛏️ فلز</span><span class="mine-res-vals"><span id="mineValMetal">${m.metal}</span> / ${cap}</span><span class="mine-rate">${m.metalRate.toFixed(1)}/ث</span></div><div class="mine-bar-track"><div id="mineBarMetal" class="mine-bar-fill metal-bar" style="width:${mP}%"><span id="minePctMetal" class="mine-pct">${Math.floor(mP)}%</span></div></div></div></div><div class="mine-time-row" id="mineTimeRow">⏱️ پر شدن: <span style="color:#fbbf24">${timeToFull(m.gold,m.goldRate,cap)} طلا</span> | <span style="color:#60a5fa">${timeToFull(m.oil,m.oilRate,cap)} نفت</span> | <span style="color:#d1d5db">${timeToFull(m.metal,m.metalRate,cap)} فلز</span></div><button id="mineCollectBtn" class="btn btn-gold mine-collect-btn ${total>0?'collect-pulse':''}" onclick="collectMine()" ${total<=0?'disabled':''}>💎 ${total>0?'استخراج ('+Math.floor(total).toLocaleString('fa-IR')+' منبع)':'در حال تولید...'}</button><div class="mine-upgrade-section"><div class="mine-upgrade-info">⬆️ سطح ${player.mineLevel+1}: ${cap} ← ${nextCap} <span style="color:#4ade80;font-size:0.5rem;">(+${nextCap-cap})</span><span class="mine-upgrade-cost">💰 ${upCost.toLocaleString('fa-IR')} طلا</span></div><button class="btn btn-purple" onclick="upgradeMine()" ${player.gold<upCost?'disabled':''}>ارتقا</button></div></div>`;
+                `<div class="mine-card"><div class="mine-header"><div class="mine-icon-wrap">⛏️</div><div><div class="mine-title">معدن سطح ${player.mineLevel}${isMax?' 🏆':''}</div><div class="mine-subtitle">ظرفیت: ${cap.toLocaleString('fa-IR')} | نرخ: ثابت ${isMax?'| MAX':''}</div></div></div><div class="mine-stats-row"><div class="mine-stat"><div class="mine-stat-val">${m.goldRate.toFixed(1)}/ث</div><div class="mine-stat-label">طلای ثانیه</div></div><div class="mine-stat"><div class="mine-stat-val">${m.oilRate.toFixed(1)}/ث</div><div class="mine-stat-label">نفت ثانیه</div></div><div class="mine-stat"><div class="mine-stat-val">${m.metalRate.toFixed(1)}/ث</div><div class="mine-stat-label">فلز ثانیه</div></div></div><div class="mine-res-section"><div><div class="mine-res-info"><span class="mine-res-name">💰 طلا</span><span class="mine-res-vals"><span id="mineValGold">${m.gold}</span> / ${cap}</span><span class="mine-rate">${m.goldRate.toFixed(1)}/ث</span></div><div class="mine-bar-track"><div id="mineBarGold" class="mine-bar-fill gold-bar" style="width:${gP}%"><span id="minePctGold" class="mine-pct">${Math.floor(gP)}%</span></div></div></div><div><div class="mine-res-info"><span class="mine-res-name">🛢️ نفت</span><span class="mine-res-vals"><span id="mineValOil">${m.oil}</span> / ${cap}</span><span class="mine-rate">${m.oilRate.toFixed(1)}/ث</span></div><div class="mine-bar-track"><div id="mineBarOil" class="mine-bar-fill oil-bar" style="width:${oP}%"><span id="minePctOil" class="mine-pct">${Math.floor(oP)}%</span></div></div></div><div><div class="mine-res-info"><span class="mine-res-name">⛏️ فلز</span><span class="mine-res-vals"><span id="mineValMetal">${m.metal}</span> / ${cap}</span><span class="mine-rate">${m.metalRate.toFixed(1)}/ث</span></div><div class="mine-bar-track"><div id="mineBarMetal" class="mine-bar-fill metal-bar" style="width:${mP}%"><span id="minePctMetal" class="mine-pct">${Math.floor(mP)}%</span></div></div></div></div><div class="mine-time-row" id="mineTimeRow">⏱️ پر شدن: <span style="color:#fbbf24">${timeToFull(m.gold,m.goldRate,cap)} طلا</span> | <span style="color:#60a5fa">${timeToFull(m.oil,m.oilRate,cap)} نفت</span> | <span style="color:#d1d5db">${timeToFull(m.metal,m.metalRate,cap)} فلز</span></div><button id="mineCollectBtn" class="btn btn-gold mine-collect-btn ${total>0?'collect-pulse':''}" onclick="collectMine()" ${total<=0?'disabled':''}>💎 ${total>0?'استخراج ('+Math.floor(total).toLocaleString('fa-IR')+' منبع)':'در حال تولید...'}</button>${upgradeHtml}</div>`;
         }
 
         function renderMilitary() {
@@ -2588,16 +2881,13 @@
             document.getElementById('militaryContent').innerHTML = h;
         }
 
-        // ===== جنگ: فقط قدرت و دفاع خود را نشان بده، قدرت و دفاع هدف مخفی شود =====
         function renderWar() {
             const targets = allPlayers.filter(p => p.id !== player.id && p.name !== ADMIN_NAME);
             if (targets.length === 0) { document.getElementById('warContent').innerHTML =
                     '<div class="empty">هدفی نیست</div>'; return; }
-            // نمایش قدرت و دفاع خود
             let h = `<div class="info-bar">⚔️ قدرت شما: <b>${calcAtt(player)}</b> | 🛡️ دفاع شما: <b>${calcDef(player)}</b></div>`;
             targets.sort((a, b) => b.xp - a.xp);
             targets.forEach(t => {
-                // قدرت و دفاع هدف را نمایش ندهید (فقط XP و نام)
                 const sh = t.shieldExpiry && ts() < t.shieldExpiry;
                 h +=
                     `<div class="player-row" style="${sh?'opacity:0.5':''}"><div><div style="font-size:0.7rem;font-weight:700;">${fmtName(t)}</div><div style="font-size:0.5rem;color:#94a3b8;">XP: ${t.xp}</div>${sh?'<div style="font-size:0.45rem;color:#93c5fd;">🛡️ سپر فعال</div>':''}</div><button class="btn btn-attack btn-sm" onclick="launchAttack('${t.id}')" ${sh||isAttacking?'disabled':''}>🔥 حمله</button></div>`;
@@ -2674,7 +2964,6 @@
         }
 
         function renderMarket() {
-            // ابتدا آگهی‌های منقضی شده را حذف می‌کنیم (قبلاً در syncLoop انجام شده، ولی برای اطمینان دوباره)
             expireMarketOffers();
             let h = '';
             h +=
@@ -2845,7 +3134,6 @@
                 const savedRes = saveInputs('panelResearch');
 
                 await loadAll();
-                // انقضای آگهی‌ها
                 expireMarketOffers();
                 updateUI();
 
@@ -2921,13 +3209,23 @@
             });
         });
 
+        // ===== بارگذاری اولیه و مخفی کردن لودینگ =====
         (async function() {
             await initSupabase();
             await loadAll();
             lastHash = dataHash();
             displayedChatCount = chatMessages.length;
-            // حذف آگهی‌های منقضی در ابتدا
             expireMarketOffers();
+
+            // مخفی کردن لودینگ با افکت محو
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    setTimeout(() => { overlay.style.display = 'none'; }, 800);
+                }, 500);
+            }
+
             document.getElementById('loginBox').style.display = 'flex';
             updateSyncUI("✅ آماده", "online");
             setInterval(syncLoop, SYNC_INTERVAL);
