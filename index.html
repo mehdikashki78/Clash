@@ -2815,7 +2815,7 @@
                 const def = calcDef(p);
 
                 // آواتار بر اساس جناح
-                let planeIcon = '✈️';
+                let planeIcon = '🛩️';
                 if (p.faction) {
                     const fi = getFI(p.faction);
                     if (fi === '🛡️') planeIcon = '🛡️';
@@ -2823,7 +2823,7 @@
                     else if (fi === '✠') planeIcon = '✠';
                     else if (fi === '🐺') planeIcon = '🐺';
                     else if (fi === '🦅') planeIcon = '🦅';
-                    else planeIcon = '✈️';
+                    else planeIcon = '🛩️';
                 } else {
                     planeIcon = isAdmP ? '🛸' : '✈️';
                 }
