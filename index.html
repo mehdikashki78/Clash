@@ -1987,7 +1987,6 @@
             transition: transform 0.1s ease-out;
             will-change: transform;
         }
-        /* ستاره‌ها */
         .sky-stars {
             position: absolute;
             top: 0;
@@ -2017,7 +2016,6 @@
             background-repeat: repeat;
             opacity: 0.8;
         }
-        /* ابرها */
         .cloud {
             position: absolute;
             background: rgba(255, 255, 255, 0.03);
@@ -2379,7 +2377,7 @@
             SHIELD_DURATION = 12 * 60 * 60 * 1000;
         const OFFER_EXPIRY = 60 * 60 * 1000;
         const MAX_MINE_LEVEL = 25;
-        const MAX_PLAYERS = 1000; // محدودیت جدید ۱۰۰۰ نفره
+        const MAX_PLAYERS = 1000;
 
         const F_DB = { "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
             "F-5E": { n: "F-5E Tiger", i: "🇺🇸", p: 20, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
@@ -2420,17 +2418,11 @@
         let adminSavedInputs = null;
         let displayedChatCount = 0;
         let adminPlayerHash = '';
-        let loadingHidden = false;
-
-        // متغیرهای نقشه آسمان
         let skyZoom = 1;
         const SKY_MIN_ZOOM = 0.5,
             SKY_MAX_ZOOM = 2.5;
         let skyPos = { x: 0, y: 0 };
-        let isDragging = false,
-            dragStart = { x: 0, y: 0 },
-            dragOrigin = { x: 0, y: 0 };
-        let skyPlayerPositions = {}; // ذخیره موقعیت‌های بازیکنان
+        let skyPlayerPositions = {};
 
         // ===== توابع کمکی =====
         function saveInputs(containerId) {
@@ -2782,28 +2774,26 @@
         };
 
         // ===== جنگ (نقشه آسمان) =====
-        // محاسبه موقعیت‌های تصادفی بر اساس id بازیکن (ثابت)
         function getPlayerPosition(pId) {
             if (skyPlayerPositions[pId]) return skyPlayerPositions[pId];
-            // از هش id برای تولید موقعیت ثابت استفاده می‌کنیم
             let hash = 0;
             for (let i = 0; i < pId.length; i++) {
                 hash = (hash << 5) - hash + pId.charCodeAt(i);
                 hash |= 0;
             }
-            const x = ((Math.abs(hash) % 85) + 5) / 100; // 5% تا 90%
+            const x = ((Math.abs(hash) % 85) + 5) / 100;
             const y = ((Math.abs(hash >> 8) % 85) + 5) / 100;
             const pos = { x, y };
             skyPlayerPositions[pId] = pos;
             return pos;
         }
 
-        // رندر نقشه آسمان
         function renderSkyMap() {
             const container = document.getElementById('warContent');
             if (!container) return;
 
-            const targets = allPlayers.filter(p => p.id !== player.id && p.name !== ADMIN_NAME);
+            // همه بازیکنان به جز خودمان (ادمین هم نمایش داده شود)
+            const targets = allPlayers.filter(p => p.id !== player.id);
             const allTargets = [player, ...targets];
 
             let h = '';
@@ -2816,7 +2806,6 @@
                 <div class="cloud cloud3"></div>
                 <div class="sky-map-inner" id="skyMapInner" style="transform: translate(${skyPos.x}px, ${skyPos.y}px) scale(${skyZoom});">`;
 
-            // رندر هر بازیکن
             allTargets.forEach(p => {
                 const pos = getPlayerPosition(p.id);
                 const isMe = p.id === player.id;
@@ -2825,25 +2814,23 @@
                 const att = calcAtt(p);
                 const def = calcDef(p);
 
-                // انتخاب آیکون هواپیما بر اساس جناح یا تصادفی
+                // آواتار بر اساس جناح
                 let planeIcon = '✈️';
                 if (p.faction) {
                     const fi = getFI(p.faction);
-                    if (fi === '🛡️') planeIcon = '🛩️';
-                    else if (fi === '🌹') planeIcon = '🚁';
-                    else if (fi === '✠') planeIcon = '🛰️';
-                    else if (fi === '🐺') planeIcon = '🦅';
-                    else if (fi === '🦅') planeIcon = '🪶';
+                    if (fi === '🛡️') planeIcon = '🛡️';
+                    else if (fi === '🌹') planeIcon = '🌹';
+                    else if (fi === '✠') planeIcon = '✠';
+                    else if (fi === '🐺') planeIcon = '🐺';
+                    else if (fi === '🦅') planeIcon = '🦅';
                     else planeIcon = '✈️';
                 } else {
-                    planeIcon = isAdmP ? '🛸' : '✈️';
+                    planeIcon = isAdmP ? '🛸' : '';
                 }
 
                 const label = isAdmP ? '🚬 ' + p.name : p.name;
                 const isMeClass = isMe ? 'me' : '';
                 const shieldHtml = hasShield ? `<div class="shield-ring"></div>` : '';
-
-                // مختصات به درصد
                 const px = pos.x * 100;
                 const py = pos.y * 100;
 
@@ -2853,7 +2840,7 @@
                     <div class="player-label">${escapeHtml(label)}</div>
                     <div class="player-tooltip">
                         <div class="tp-name">${isAdmP?'🚬 ':''}${escapeHtml(p.name)}</div>
-                        <div class="tp-detail">⚔️ ${att} | 🛡️ ${def} | XP: ${p.xp}</div>
+                        ${isMe ? `<div class="tp-detail">⚔️ ${att} | 🛡️ ${def} | XP: ${p.xp}</div>` : `<div class="tp-detail">XP: ${p.xp}</div>`}
                         <div class="tp-detail">${p.faction?getFI(p.faction)+' '+escapeHtml(getFN(p.faction)):'بدون جناح'}</div>
                         ${hasShield?'<div class="tp-detail" style="color:#93c5fd;">🛡️ سپر فعال</div>':''}
                         ${!isMe ? `<button class="tp-attack" onclick="launchAttack('${p.id}')" ${hasShield||isAttacking?'disabled':''}>🔥 حمله</button>` : `<div style="font-size:0.5rem;color:#fbbf24;">👈 شما</div>`}
@@ -2875,15 +2862,10 @@
             </div>`;
 
             container.innerHTML = h;
-
-            // راه‌اندازی رویدادهای درگ برای نقشه
             setupSkyMapDrag();
-
-            // بعد از رندر، اطمینان از اعمال زوم
             applySkyTransform();
         }
 
-        // توابع زوم
         window.skyZoomIn = function() {
             skyZoom = Math.min(SKY_MAX_ZOOM, skyZoom + 0.15);
             applySkyTransform();
@@ -2904,18 +2886,13 @@
             }
         }
 
-        // راه‌اندازی درگ برای نقشه
         function setupSkyMapDrag() {
             const container = document.getElementById('skyMapContainer');
             if (!container) return;
-
-            // حذف رویدادهای قبلی با clone
             const newContainer = container.cloneNode(true);
             container.parentNode.replaceChild(newContainer, container);
-            // دوباره المنت‌ها را پیدا می‌کنیم
             const freshContainer = document.getElementById('skyMapContainer');
             if (!freshContainer) return;
-            const inner = document.getElementById('skyMapInner');
 
             let isDraggingLocal = false,
                 startX, startY, origX, origY;
@@ -2946,12 +2923,9 @@
                 freshContainer.style.cursor = 'grab';
             };
 
-            // ماوس
             freshContainer.addEventListener('mousedown', onStart);
             document.addEventListener('mousemove', onMove);
             document.addEventListener('mouseup', onEnd);
-
-            // لمسی
             freshContainer.addEventListener('touchstart', onStart, { passive: false });
             document.addEventListener('touchmove', onMove, { passive: false });
             document.addEventListener('touchend', onEnd);
@@ -3395,7 +3369,6 @@
             document.getElementById('militaryContent').innerHTML = h;
         }
 
-        // ===== جنگ (تب جنگ) =====
         function renderWar() {
             renderSkyMap();
         }
@@ -3678,7 +3651,6 @@
                     if (activeTab === 'factions') renderFactions();
                     if (activeTab === 'rank') renderRank();
                     if (activeTab === 'battlelog') renderBattlelog();
-                    // جنگ با نقشه آسمان - هر بار به‌روزرسانی می‌شود
                     if (activeTab === 'war') renderWar();
                 }
 
@@ -3715,7 +3687,6 @@
             });
         });
 
-        // ===== بارگذاری اولیه و مخفی کردن لودینگ =====
         (async function() {
             await initSupabase();
             await loadAll();
