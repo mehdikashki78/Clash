@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
     </script>
     <style>
+        /* ===== استایل‌های اصلی (همانند قبل) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -577,6 +578,7 @@
             border-radius: 1rem;
             padding: 12px;
             margin-bottom: 12px;
+            min-height: 80px;
         }
         .admin-panel-box h3 {
             color: #fca5a5;
@@ -588,6 +590,7 @@
         .is-hidden {
             display: none !important;
         }
+        /* ===== استایل‌های معدن، جناح، بازار، رتبه و ... (همانند قبل) ===== */
         .mine-card {
             background: linear-gradient(160deg, #1a1a2e 0%, #0f1729 50%, #1a1025 100%);
             border: 1px solid #f59e0b55;
@@ -1635,18 +1638,9 @@
         .fac-rank-pts-fill.fpo {
             background: linear-gradient(90deg, #1e3a5f, #2563eb, #3b82f6);
         }
-        /* admin button enhancements */
-        .admin-panel-box .btn-sm {
-            font-size: 0.55rem;
-            padding: 5px 14px;
-        }
-        .admin-panel-box select,
-        .admin-panel-box input {
-            font-size: 0.65rem;
-            padding: 8px 10px;
-        }
-        .admin-panel-box .btn {
-            min-height: 32px;
+        /* ===== استایل‌های پنل مدیریت (رفع پرش) ===== */
+        #panelAdmin {
+            min-height: 400px;
         }
         .admin-panel-box .flex-wrap {
             display: flex;
@@ -1660,6 +1654,17 @@
         .admin-panel-box .flex-wrap .btn {
             flex: 0 1 auto;
         }
+        .admin-panel-box select,
+        .admin-panel-box input {
+            font-size: 0.65rem;
+            padding: 8px 10px;
+        }
+        .admin-panel-box .btn-sm {
+            font-size: 0.55rem;
+            padding: 5px 14px;
+            min-height: 32px;
+        }
+        /* رنگ‌های دکمه‌ها */
         .btn-gold {
             background: #f59e0b;
             color: #0f172a;
@@ -1768,6 +1773,7 @@
     </div>
 
     <script>
+        // ===== تنظیمات اولیه =====
         const SUPABASE_URL = 'https://rxugexswtpvuotijdlzn.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_gsgiccX5kQMLrXnSqbAPwQ_ZoRRsYT3';
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1798,6 +1804,7 @@
         const RES_META = { gold: { name: "طلا", icon: "💰", theme: "gold-theme" }, oil: { name: "نفت", icon: "🛢️",
                 theme: "oil-theme" }, metal: { name: "فلز", icon: "⛏️", theme: "metal-theme" } };
 
+        // ===== متغیرهای سراسری =====
         let player = null,
             allPlayers = [],
             marketOffers = [],
@@ -1813,11 +1820,10 @@
         let lastHash = '',
             syncLoopRunning = false;
         let adminSavedInputs = null;
-
-        // NEW: to avoid duplicate chat messages
         let displayedChatCount = 0;
+        let adminPlayerHash = ''; // برای جلوگیری از رندر اضافی
 
-        /* ===== توابع کمکی ===== */
+        // ===== توابع کمکی =====
         function saveInputs(containerId) {
             const c = document.getElementById(containerId);
             if (!c) return { v: {}, fid: null, fp: 0 };
@@ -1900,7 +1906,7 @@
             if (i >= 0) allPlayers[i] = { ...player };
         }
 
-        /* ===== Supabase ===== */
+        // ===== Supabase =====
         async function initSupabase() {
             updateSyncUI("🔌 اتصال...", "warn");
             try {
@@ -1987,6 +1993,7 @@
                     aviation: 0 }, fighters: {}, defenses: [], shieldExpiry: 0 };
         }
 
+        // ===== توابع اصلی بازی (معدن، نظامی، جنگ، بازار، تحقیق، چت، جناح، رتبه، گزارش) =====
         function calcMine(p) {
             const el = Math.min((ts() - (p.lastMineCollect || ts())) / 1000, 600);
             const cap = 300 + (p.mineLevel - 1) * 250;
@@ -2032,7 +2039,7 @@
                 chatLocked;
         }
 
-        /* ===== ورود/ثبت ===== */
+        // ===== توابع ورود و ثبت =====
         window.loginRegister = async function() {
             const n = document.getElementById("playerName").value.trim(),
                 pw = document.getElementById("playerPassword").value.trim();
@@ -2051,8 +2058,8 @@
             document.getElementById("gameUI").style.display = 'block';
             if (isAdmin()) {
                 document.querySelectorAll('.admin-el').forEach(e => e.classList.remove('is-hidden'));
+                adminPlayerHash = ''; // reset to force render
             }
-            // set initial displayedChatCount after loading
             displayedChatCount = chatMessages.length;
             startMineTimer();
             updateUI();
@@ -2060,7 +2067,7 @@
             toast("ورود موفق", false, "peace");
         };
 
-        /* ===== معدن ===== */
+        // ===== معدن =====
         window.collectMine = async function() {
             const m = calcMine(player);
             const t = m.gold + m.oil + m.metal;
@@ -2086,7 +2093,7 @@
             toast("⛏️ سطح " + player.mineLevel, false, "peace");
         };
 
-        /* ===== نظامی ===== */
+        // ===== نظامی =====
         window.buildFighter = async function(k) {
             const f = F_DB[k];
             if (player.gold < f.c.g || player.oil < f.c.o || player.metal < f.c.m) return toast("منابع کم", true);
@@ -2129,7 +2136,7 @@
             renderMilitary();
         };
 
-        /* ===== جناح‌ها ===== */
+        // ===== جناح =====
         window.joinFaction = async function(fId) {
             if (player.faction) return toast("🔒 جناح قابل ترک نیست", true);
             player.faction = fId;
@@ -2140,7 +2147,7 @@
             renderRank();
         };
 
-        /* ===== جنگ ===== */
+        // ===== جنگ =====
         window.launchAttack = async function(tId) {
             if (isAttacking) return;
             isAttacking = true;
@@ -2241,7 +2248,7 @@
             } finally { isAttacking = false; }
         };
 
-        /* ===== بازار ===== */
+        // ===== بازار =====
         window.createMarketOffer = async function() {
             const gr = document.getElementById('mktGive').value,
                 gt = document.getElementById('mktGet').value;
@@ -2275,7 +2282,7 @@
             toast("✅ معامله شد", false, "peace");
         };
 
-        /* ===== تحقیق ===== */
+        // ===== تحقیق =====
         window.upgradeResearch = async function(b) {
             const c = (player.research[b] + 1) * 15;
             if (player.xp < c) return toast("XP کم", true);
@@ -2286,17 +2293,15 @@
             renderResearch();
         };
 
-        /* ===== چت (رفع ارسال تکراری و اسکرول) ===== */
+        // ===== چت =====
         window.sendChat = async function() {
             if (chatLocked && !isAdmin()) return toast("🔒 چت بسته", true);
             const inp = document.getElementById('chatInput');
             if (!inp) return;
             const text = inp.value.trim();
             if (!text || text.length > 100) return;
-            // push to chatMessages
             chatMessages.push({ ts: ts(), n: player.name, t: escapeHtml(text) });
             inp.value = '';
-            // append to DOM immediately
             const box = document.getElementById('chatBox');
             if (box) {
                 const time = new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
@@ -2306,15 +2311,13 @@
                 div.innerHTML =
                     `<div class="${sCls}">${styledName(player.name)} <span class="time">${time}</span></div><div>${escapeHtml(text)}</div>`;
                 box.appendChild(div);
-                // scroll to bottom
                 box.scrollTop = box.scrollHeight;
             }
-            // update displayed count to avoid duplicate in sync
             displayedChatCount = chatMessages.length;
             await saveAll();
         };
 
-        /* ===== مدیریت ===== */
+        // ===== مدیریت (Admin) با رندر هوشمند =====
         window.adminGiveRes = async function() {
             const id = document.getElementById('admSel').value,
                 res = document.getElementById('admRes').value,
@@ -2325,6 +2328,8 @@
             if (res === 'xp') t.xp += amt;
             else t[res] += amt;
             await saveAll(true);
+            // force re-render admin to update dropdown options
+            adminPlayerHash = '';
             renderAdmin();
             toast(`✅ ${amt} ${res} به ${t.name} اضافه شد`, false, "peace");
         };
@@ -2336,6 +2341,7 @@
             if (!t) return;
             t.shieldExpiry = (t.shieldExpiry && ts() < t.shieldExpiry) ? 0 : ts() + SHIELD_DURATION;
             await saveAll(true);
+            adminPlayerHash = '';
             renderAdmin();
             toast(t.shieldExpiry ? `🛡️ سپر فعال شد` : `🛡️ سپر غیرفعال شد`, false, "peace");
         };
@@ -2346,6 +2352,7 @@
             if (!confirm("حذف کامل بازیکن؟")) return;
             allPlayers = allPlayers.filter(p => p.id !== id);
             await saveAll(true);
+            adminPlayerHash = '';
             renderAdmin();
             toast("🗑️ حذف شد", false, "peace");
         };
@@ -2364,6 +2371,7 @@
             t.mineLevel = 1;
             t.research = { military: 0, economy: 0, aviation: 0 };
             await saveAll(true);
+            adminPlayerHash = '';
             renderAdmin();
             toast(`🔄 ${t.name} ریست شد`, false, "peace");
         };
@@ -2373,10 +2381,10 @@
             if (!msg) return toast("متن پیام را وارد کنید", true);
             chatMessages.push({ ts: ts(), n: "SYSTEM", t: escapeHtml(msg), sys: true });
             document.getElementById('admBroad').value = '';
-            // update displayed count
             displayedChatCount = chatMessages.length;
             await saveAll(true);
             if (activeTab === 'chat') renderChat();
+            adminPlayerHash = ''; // force re-render admin? Not needed but we can update dropdowns.
             renderAdmin();
             toast("📢 پیام ارسال شد", false, "peace");
         };
@@ -2435,7 +2443,7 @@
             toast("☢️ سرور نابود شد", true);
         };
 
-        /* ===== تایمر معدن ===== */
+        // ===== تایمر معدن =====
         function startMineTimer() {
             if (mineTimer) clearInterval(mineTimer);
             mineTimer = setInterval(() => {
@@ -2512,8 +2520,8 @@
             } else { sb.style.display = 'none'; }
         }
 
-        /* ===== رندرها ===== */
-        function renderMine() { /* همان کد قبلی */ 
+        // ===== رندرهای تب‌ها =====
+        function renderMine() {
             const m = calcMine(player),
                 cap = m.cap;
             const gP = Math.min(100, (m.gold / cap) * 100),
@@ -2572,7 +2580,6 @@
         }
 
         function renderChat() {
-            // store scroll position
             const box = document.getElementById('chatBox');
             let scrollTop = 0;
             if (box) scrollTop = box.scrollTop;
@@ -2592,16 +2599,13 @@
 
             const newBox = document.getElementById('chatBox');
             if (newBox) {
-                // restore scroll position if possible, otherwise scroll to bottom
                 if (scrollTop > 0 && newBox.scrollHeight > scrollTop) {
                     newBox.scrollTop = scrollTop;
                 } else {
                     newBox.scrollTop = newBox.scrollHeight;
                 }
             }
-            // update displayed count to current length (already displayed)
             displayedChatCount = chatMessages.length;
-            // do not focus input to avoid page scroll
         }
 
         function renderFactions() {
@@ -2734,8 +2738,24 @@
             document.getElementById('battlelogContent').innerHTML = h;
         }
 
+        // ===== رندر مدیریت (با جلوگیری از رندر اضافی و حفظ ورودی‌ها) =====
         function renderAdmin() {
             if (!isAdmin()) return;
+
+            // محاسبه هش بازیکنان برای جلوگیری از رندر بی‌مورد
+            const currentHash = allPlayers.map(p => p.id + ':' + p.name + ':' + p.xp).join('|');
+            const adminContent = document.getElementById('adminContent');
+            // اگر هش یکسان است و محتوای admin از قبل وجود دارد، فقط ورودی‌ها را بازیابی کن و برگرد
+            if (adminPlayerHash === currentHash && adminContent.innerHTML.trim() !== '') {
+                if (adminSavedInputs) {
+                    setTimeout(() => restoreInputs(adminSavedInputs), 10);
+                    adminSavedInputs = null;
+                }
+                return;
+            }
+            adminPlayerHash = currentHash;
+
+            // ساخت HTML پنل مدیریت
             let h = '<div class="admin-panel-box"><h3>👥 مدیریت بازیکنان</h3><select id="admSel" style="margin-bottom:8px;">';
             allPlayers.forEach(p => {
                 h += `<option value="${p.id}">${isAdm(p.name)?'🚬 ':''}${escapeHtml(p.name)} (XP:${p.xp})</option>`;
@@ -2748,13 +2768,16 @@
                 `<div class="admin-panel-box"><h3>🏳️ بنر</h3><input type="text" id="admBannerText" placeholder="متن بنر..."><div class="flex-wrap" style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;"><button class="btn btn-red btn-sm" onclick="adminSetBanner()">🏳️ تنظیم</button><button class="btn btn-danger btn-sm" onclick="adminRemoveBanner()">❌ حذف</button></div></div>`;
             h +=
                 `<div class="admin-panel-box"><h3>☢️ منطقه خطر</h3><button class="btn btn-red" onclick="adminNuke()">☢️ نابودی کامل</button></div>`;
-            document.getElementById('adminContent').innerHTML = h;
+            adminContent.innerHTML = h;
+
+            // بازیابی ورودی‌های ذخیره شده (اگر وجود داشته باشد)
             if (adminSavedInputs) {
                 setTimeout(() => restoreInputs(adminSavedInputs), 10);
                 adminSavedInputs = null;
             }
         }
 
+        // ===== تابع رندر تب فعال =====
         function renderActiveTab() {
             switch (activeTab) {
                 case 'mine':
@@ -2790,11 +2813,12 @@
             }
         }
 
-        /* ===== سینک هوشمند ===== */
+        // ===== سینک هوشمند (همگام‌سازی بدون گم شدن ورودی‌ها) =====
         async function syncLoop() {
             if (syncLoopRunning) return;
             syncLoopRunning = true;
             try {
+                // ذخیره ورودی‌های تب‌ها
                 const savedChat = saveInputs('panelChat');
                 const savedMkt = saveInputs('panelMarket');
                 const savedAdmin = saveInputs('adminContent');
@@ -2809,11 +2833,10 @@
 
                 if (activeTab === 'mine') updateMineVisuals();
 
-                // Chat: only append if there are new messages beyond displayedChatCount
+                // چت: فقط پیام‌های جدید اضافه شوند
                 if (activeTab === 'chat' && chatMessages.length > displayedChatCount) {
                     const box = document.getElementById('chatBox');
                     if (box) {
-                        // append only new messages from displayedChatCount to end
                         for (let i = displayedChatCount; i < chatMessages.length; i++) {
                             const msg = chatMessages[i];
                             const time = new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit',
@@ -2831,14 +2854,14 @@
                     displayedChatCount = chatMessages.length;
                 }
 
-                // Market: if offers changed
+                // بازار: اگر تعداد پیشنهادها تغییر کرد
                 const prevMktLen = savedMkt._prevMktLen || 0;
                 if (activeTab === 'market' && marketOffers.length !== prevMktLen) {
                     renderMarket();
                     restoreInputs(savedMkt);
                 }
 
-                // Tabs without input fields
+                // تب‌های بدون ورودی
                 if (changed) {
                     if (activeTab === 'factions') renderFactions();
                     if (activeTab === 'rank') renderRank();
@@ -2846,6 +2869,7 @@
                     if (activeTab === 'battlelog') renderBattlelog();
                 }
 
+                // نظامی و تحقیق
                 if (changed) {
                     if (activeTab === 'military') { renderMilitary();
                         restoreInputs(savedRes); }
@@ -2853,18 +2877,21 @@
                         restoreInputs(savedRes); }
                 }
 
+                // مدیریت: رندر فقط در صورت نیاز (با هش) و بازیابی ورودی‌ها
                 if (activeTab === 'admin' && isAdmin()) {
+                    // ذخیره ورودی‌های جاری قبل از رندر
                     adminSavedInputs = savedAdmin;
-                    renderAdmin();
+                    renderAdmin(); // این تابع خودش ورودی‌ها را بازیابی می‌کند
                 }
 
+                // ذخیره طول‌ها برای مقایسه بعدی
                 savedChat._prevChatLen = chatMessages.length;
                 savedMkt._prevMktLen = marketOffers.length;
 
             } catch (e) { console.error('syncLoop error:', e); } finally { syncLoopRunning = false; }
         }
 
-        /* ===== راه‌اندازی ===== */
+        // ===== راه‌اندازی اولیه =====
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 const t = this.dataset.tab;
@@ -2883,7 +2910,7 @@
             await initSupabase();
             await loadAll();
             lastHash = dataHash();
-            displayedChatCount = chatMessages.length; // init
+            displayedChatCount = chatMessages.length;
             document.getElementById('loginBox').style.display = 'flex';
             updateSyncUI("✅ آماده", "online");
             setInterval(syncLoop, SYNC_INTERVAL);
