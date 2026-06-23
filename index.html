@@ -4,235 +4,866 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Iron sky | آسمان آهنین</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
-        body { background: #0a0a1a; min-height: 100vh; padding: 10px; color: #e2e8f0; overflow-x: hidden; }
-        .container { max-width: 1100px; margin: 0 auto; background: rgba(15, 23, 42, 0.92); border-radius: 2rem; overflow: hidden; border: 2px solid #f59e0b; box-shadow: 0 0 60px rgba(245, 158, 11, 0.15); backdrop-filter: blur(4px); }
-        .header { background: linear-gradient(145deg, #1a1a2e 0%, #0f0f23 100%); padding: 1.2rem 1rem; text-align: center; }
-        .header h1 { color: #fbbf24; text-shadow: 0 0 40px rgba(245, 158, 11, 0.3); font-size: 1.6rem; }
-        .header .sub { font-size: 0.65rem; color: #f59e0b; letter-spacing: 4px; opacity: 0.8; }
-        .sync-status { background: #0a0a1a; padding: 8px; text-align: center; font-size: 0.6rem; color: #fbbf24; border-bottom: 1px solid #f59e0b33; display: flex; justify-content: center; gap: 8px; align-items: center; }
-        .login-box { padding: 18px; background: #0a0a1a; display: flex; flex-direction: column; gap: 12px; }
-        .login-box input { padding: 14px 18px; border-radius: 40px; border: 1px solid #f59e0b44; text-align: center; font-size: 1rem; background: #1a1a2e; color: white; outline: 2px solid transparent; }
-        .login-box input:focus { outline-color: #f59e0b; }
-        .login-box button { background: linear-gradient(135deg, #f59e0b, #d97706); border: none; padding: 14px; border-radius: 40px; font-weight: 700; cursor: pointer; color: #0f172a; font-size: 1.05rem; }
-        .res-bar { display: flex; justify-content: space-around; padding: 8px; background: #0a0a1a; flex-wrap: wrap; border-bottom: 1px solid #f59e0b44; }
-        .res-item { background: #1a1a2e; padding: 4px 14px; border-radius: 30px; font-weight: 600; font-size: 0.65rem; border: 1px solid #f59e0b22; }
-        .res-item span { color: #fbbf24; font-weight: 700; }
-        .online-bar { background: #0a1a0a; padding: 4px; text-align: center; font-size: 0.55rem; color: #4ade80; }
-        .online-bar.offline { background: #1a0a0a; color: #fca5a5; }
-        .online-bar.warn { background: #1a1a0a; color: #fbbf24; }
-        .shield-bar { background: #0a1a2e; padding: 8px; text-align: center; font-size: 0.65rem; color: #93c5fd; border-bottom: 1px solid #3b82f633; display: none; font-weight: 600; }
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+        }
 
-        .global-banner {
-            background: linear-gradient(90deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
-            padding: 12px 16px;
+        body {
+            background: #0b0b1a;
+            min-height: 100vh;
+            padding: 12px;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            background-image: radial-gradient(ellipse at 20% 50%, #1a1a3e 0%, #0b0b1a 70%);
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f59e0b;
+            border-radius: 10px;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(10, 10, 30, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 3rem;
+            overflow: hidden;
+            border: 2px solid rgba(245, 158, 11, 0.3);
+            box-shadow: 0 0 80px rgba(245, 158, 11, 0.08), inset 0 0 80px rgba(245, 158, 11, 0.02);
+            transition: box-shadow 0.4s;
+        }
+        .container:hover {
+            box-shadow: 0 0 100px rgba(245, 158, 11, 0.12);
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(145deg, #13132a 0%, #0a0a1a 100%);
+            padding: 1.6rem 1rem 1rem;
             text-align: center;
-            font-size: 0.78rem;
+            position: relative;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+        }
+        .header h1 {
+            color: #fbbf24;
+            text-shadow: 0 0 60px rgba(245, 158, 11, 0.25), 0 4px 20px rgba(0, 0, 0, 0.6);
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+        .header h1 span {
+            color: #f59e0b;
+        }
+        .header .sub {
+            font-size: 0.7rem;
+            color: #f59e0b;
+            letter-spacing: 6px;
+            opacity: 0.7;
+            margin-top: 2px;
+            font-weight: 700;
+        }
+        .sync-status {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 12px;
+            text-align: center;
+            font-size: 0.6rem;
+            color: #fbbf24;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+            border-radius: 0 0 20px 20px;
+        }
+        .sync-status #syncText {
+            font-weight: 600;
+        }
+
+        /* ===== ONLINE BAR ===== */
+        .online-bar {
+            background: rgba(10, 26, 10, 0.7);
+            padding: 5px 10px;
+            text-align: center;
+            font-size: 0.6rem;
+            color: #4ade80;
+            border-bottom: 1px solid rgba(74, 222, 128, 0.2);
+            backdrop-filter: blur(4px);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+        .online-bar.offline {
+            background: rgba(26, 10, 10, 0.8);
             color: #fca5a5;
-            border-bottom: 2px solid #ef4444;
+            border-color: rgba(252, 165, 165, 0.2);
+        }
+        .online-bar.warn {
+            background: rgba(26, 26, 10, 0.8);
+            color: #fbbf24;
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+
+        /* ===== SHIELD BAR ===== */
+        .shield-bar {
+            background: rgba(16, 30, 60, 0.8);
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #93c5fd;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.25);
+            display: none;
+            font-weight: 700;
+            backdrop-filter: blur(4px);
+            animation: shieldPulse 2s infinite;
+        }
+        @keyframes shieldPulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        /* ===== LOGIN BOX ===== */
+        .login-box {
+            padding: 28px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            backdrop-filter: blur(8px);
+        }
+        .login-box input {
+            padding: 16px 22px;
+            border-radius: 60px;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            text-align: center;
+            font-size: 1rem;
+            background: rgba(20, 20, 40, 0.8);
+            color: white;
+            outline: none;
+            transition: all 0.3s;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .login-box input:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.15);
+            background: rgba(30, 30, 60, 0.9);
+        }
+        .login-box input::placeholder {
+            color: #64748b;
+            font-weight: 400;
+        }
+        .login-box button {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            padding: 16px;
+            border-radius: 60px;
+            font-weight: 800;
+            cursor: pointer;
+            color: #0f172a;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.2);
+            letter-spacing: 1px;
+        }
+        .login-box button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 40px rgba(245, 158, 11, 0.35);
+        }
+
+        /* ===== RES BAR ===== */
+        .res-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 8px;
+            background: rgba(0, 0, 0, 0.5);
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+            gap: 6px;
+            backdrop-filter: blur(4px);
+        }
+        .res-item {
+            background: rgba(20, 20, 40, 0.7);
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            border: 1px solid rgba(245, 158, 11, 0.15);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .res-item span {
+            color: #fbbf24;
+            font-weight: 900;
+            font-size: 0.8rem;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding: 0 4px;
+            gap: 2px;
+            backdrop-filter: blur(4px);
+        }
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .tab {
+            padding: 12px 14px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #94a3b8;
+            font-size: 0.65rem;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            text-align: center;
+            transition: all 0.25s;
+            border-radius: 12px 12px 0 0;
+            background: transparent;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+        .tab:hover {
+            color: #e2e8f0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .tab.active {
+            color: #fbbf24;
+            background: rgba(245, 158, 11, 0.08);
+            border-bottom-color: #f59e0b;
+            box-shadow: 0 -4px 20px rgba(245, 158, 11, 0.05);
+        }
+        .tab.admin-tab {
+            color: #fca5a5;
+            border-color: transparent;
+        }
+        .tab.admin-tab.active {
+            color: #fca5a5;
+            background: rgba(220, 38, 38, 0.08);
+            border-bottom-color: #ef4444;
+        }
+
+        /* ===== PANELS ===== */
+        .panel {
+            display: none;
+            padding: 16px 14px;
+            min-height: 480px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
+            animation: panelFade 0.35s ease;
+        }
+        .panel.active {
+            display: block;
+        }
+        @keyframes panelFade {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== CARDS ===== */
+        .grid2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 14px;
+        }
+        .card {
+            background: rgba(20, 20, 40, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            padding: 16px 12px;
+            text-align: center;
+            border: 1px solid rgba(245, 158, 11, 0.12);
+            transition: all 0.3s;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(245, 158, 11, 0.3);
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.4);
+        }
+        .card .icon {
+            font-size: 2.8rem;
+            line-height: 1.2;
+        }
+        .card .cost {
+            font-size: 0.6rem;
+            color: #fbbf24;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        .card h3 {
+            font-size: 1rem;
+            margin: 6px 0 2px;
+            color: #f1f5f9;
+        }
+
+        /* ===== PLAYER ROW ===== */
+        .player-row {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 1.8rem;
+            padding: 10px 16px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(245, 158, 11, 0.08);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            animation: bannerIn 0.6s ease;
-            position: relative;
-            overflow: hidden;
+            flex-wrap: wrap;
+            gap: 8px;
+            backdrop-filter: blur(4px);
+            transition: all 0.2s;
         }
-        .global-banner::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 300%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(239,68,68,0.15), transparent);
-            animation: bannerSweep 3s linear infinite;
+        .player-row:hover {
+            border-color: rgba(245, 158, 11, 0.2);
+            background: rgba(0, 0, 0, 0.5);
         }
-        @keyframes bannerIn { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes bannerSweep { 0% { transform: translateX(-33%); } 100% { transform: translateX(33%); } }
 
-        .tabs { display: flex; background: #0a0a1a; border-bottom: 1px solid #f59e0b44; overflow-x: auto; scrollbar-width: none; }
-        .tabs::-webkit-scrollbar { display: none; }
-        .tab { padding: 10px 12px; cursor: pointer; font-weight: 600; color: #94a3b8; font-size: 0.6rem; white-space: nowrap; border-bottom: 2px solid transparent; text-align: center; }
-        .tab.active { color: #fbbf24; background: #1a1a2e; border-bottom-color: #f59e0b; }
-        .tab.admin-tab { color: #fca5a5; border-color: #7f1d1d33; }
-        .tab.admin-tab.active { color: #fca5a5; background: #450a0a; border-bottom-color: #ef4444; }
-        .panel { display: none; padding: 12px; min-height: 440px; background: rgba(10, 10, 26, 0.85); }
-        .panel.active { display: block; }
-        .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .card { background: #1a1a2e; border-radius: 1.2rem; padding: 12px; text-align: center; border: 1px solid #f59e0b44; margin-bottom: 8px; }
-        .card .icon { font-size: 1.8rem; }
-        .card .cost { font-size: 0.55rem; color: #fbbf24; margin-top: 4px; }
-        .player-row { background: #0a0a1a; border-radius: 1.2rem; padding: 8px 12px; margin-bottom: 8px; border: 1px solid #f59e0b44; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
-        .btn { transition: 0.2s; cursor: pointer; border: none; padding: 6px 16px; border-radius: 30px; font-weight: 700; font-size: 0.6rem; display: inline-flex; align-items: center; gap: 6px; margin: 2px; }
-        .btn:active { transform: scale(0.94); }
-        .btn-attack { background: #ef4444; color: #fff; }
-        .btn-gold { background: #f59e0b; color: #0f172a; }
-        .btn-green { background: #10b981; color: #fff; }
-        .btn-purple { background: #8b5cf6; color: #fff; }
-        .btn-blue { background: #3b82f6; color: #fff; }
-        .btn-red { background: #dc2626; color: #fff; }
-        .btn-danger { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef4444; }
-        .btn-sm { padding: 4px 10px; font-size: 0.5rem; }
-        .toast { position: fixed; bottom: 20px; right: 20px; background: #1a1a2e; color: #fbbf24; padding: 12px 18px; border-radius: 40px; border-right: 4px solid #f59e0b; z-index: 9999; animation: fadeOut 4.5s forwards; max-width: 92%; font-size: 0.8rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8); }
-        .toast.error { border-right-color: #ef4444; color: #fca5a5; }
-        .toast.war { background: #1a0a0a; border-right-color: #ef4444; color: #fca5a5; }
-        .toast.peace { background: #0a1a0a; border-right-color: #10b981; color: #4ade80; }
-        @keyframes fadeOut { 0% { opacity: 1; transform: translateY(0); } 70% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(20px); visibility: hidden; } }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-        .empty { text-align: center; padding: 24px; color: #94a3b8; font-size: 0.8rem; }
-        .section-title { color: #fbbf24; margin: 10px 0 6px; font-size: 0.7rem; border-bottom: 1px solid #334155; padding-bottom: 4px; }
-        .info-bar { background: #1a1a2e; padding: 8px; border-radius: 10px; margin-bottom: 10px; font-size: 0.6rem; text-align: center; color: #fbbf24; border: 1px solid #f59e0b44; }
-        input, select { background: #1a1a2e; border: 1px solid #334155; color: white; padding: 6px 10px; border-radius: 12px; text-align: center; width: 100%; margin: 3px 0; font-size: 0.6rem; }
-        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.45rem; font-weight: 700; }
-        .badge-blue { background: #1e40af; color: #93c5fd; }
-        .battle-log { background: #0a0a1a; border: 1px solid #f59e0b44; border-radius: 1rem; padding: 10px; max-height: 300px; overflow-y: auto; font-size: 0.6rem; }
-        .battle-log .log-entry { padding: 4px 0; border-bottom: 1px solid #1a1a2e; }
-        .attacker { color: #fca5a5; } .defender { color: #7dd3fc; } .loot { color: #4ade80; } .lost { color: #ef4444; }
-        .battle-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(4px); }
-        .battle-overlay.active { display: flex; animation: fadeIn 0.3s; }
-        .explosion { font-size: 8rem; animation: boom 0.8s infinite alternate; filter: drop-shadow(0 0 20px #ef4444); }
-        @keyframes boom { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.4); opacity: 0.7; } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .battle-text { color: #fbbf24; font-size: 1.5rem; font-weight: bold; margin-top: 20px; text-shadow: 0 0 10px #f59e0b; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        .result-text { color: white; font-size: 1.2rem; text-align: center; margin-top: 10px; max-width: 90%; }
-        .screen-shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
-        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
-        .storage-bar { height: 10px; background: #334155; border-radius: 10px; margin: 6px 0; overflow: hidden; }
-        .storage-fill { height: 100%; background: linear-gradient(90deg, #f59e0b, #ef4444); transition: width 0.3s; }
-        .hp-fill { background: linear-gradient(90deg, #10b981, #ef4444); }
-        .chat-container { display: flex; flex-direction: column; height: 400px; background: #0a0a1a; border-radius: 1rem; border: 1px solid #f59e0b44; overflow: hidden; }
-        .chat-box { flex: 1; padding: 10px; overflow-y: auto; font-size: 0.65rem; display: flex; flex-direction: column; gap: 8px; }
-        .chat-msg { background: #1a1a2e; padding: 8px 12px; border-radius: 12px; border: 1px solid #334155; }
-        .chat-msg.me { border-color: #f59e0b66; background: #1e293b; }
-        .chat-msg.system-msg { border-color: #ef4444; background: rgba(127, 29, 29, 0.3); }
-        .chat-msg .sender { color: #fbbf24; font-weight: bold; font-size: 0.6rem; }
-        .chat-msg .time { color: #64748b; font-size: 0.4rem; float: left; margin-top: 2px; }
-        .chat-input-area { padding: 10px; background: #1a1a2e; border-top: 1px solid #f59e0b44; display: flex; gap: 5px; }
-        .chat-input-area input { margin: 0; flex: 1; }
-        .admin-panel-box { background: #0f0f0f; border: 1px solid #7f1d1d; border-radius: 1rem; padding: 12px; margin-bottom: 12px; }
-        .admin-panel-box h3 { color: #fca5a5; font-size: 0.75rem; margin-bottom: 8px; border-bottom: 1px solid #7f1d1d; padding-bottom: 4px; }
-        .spy-data { background: #1a1a2e; padding: 8px; border-radius: 8px; font-size: 0.55rem; color: #94a3b8; text-align: right; max-height: 150px; overflow-y: auto; direction: ltr; text-align: left; margin-top: 5px; }
-        .is-hidden { display: none !important; }
+        /* ===== BUTTONS ===== */
+        .btn {
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 0.65rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 2px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+        }
+        .btn:active {
+            transform: scale(0.94);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .btn-attack {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            color: #fff;
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #0f172a;
+        }
+        .btn-green {
+            background: linear-gradient(135deg, #10b981, #047857);
+            color: #fff;
+        }
+        .btn-purple {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            color: #fff;
+        }
+        .btn-blue {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #fff;
+        }
+        .btn-red {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            color: #fff;
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #7f1d1d, #450a0a);
+            color: #fca5a5;
+            border: 1px solid #ef4444;
+        }
+        .btn-sm {
+            padding: 5px 14px;
+            font-size: 0.55rem;
+        }
 
-        /* === استایل‌های جدید معدن === */
-        .mine-card {
-            background: linear-gradient(160deg, #1a1a2e 0%, #0f1729 50%, #1a1025 100%);
-            border: 1px solid #f59e0b55;
-            border-radius: 1.4rem;
-            padding: 18px;
-            position: relative;
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: rgba(20, 20, 40, 0.9);
+            backdrop-filter: blur(12px);
+            color: #fbbf24;
+            padding: 14px 24px;
+            border-radius: 60px;
+            border-right: 5px solid #f59e0b;
+            z-index: 9999;
+            animation: slideUp 0.4s ease forwards, fadeOut 4.5s ease forwards 0.5s;
+            max-width: 92%;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toast.error {
+            border-right-color: #ef4444;
+            color: #fca5a5;
+        }
+        .toast.war {
+            background: rgba(30, 10, 10, 0.9);
+            border-right-color: #ef4444;
+            color: #fca5a5;
+        }
+        .toast.peace {
+            background: rgba(10, 30, 10, 0.9);
+            border-right-color: #10b981;
+            color: #4ade80;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            70% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+                visibility: hidden;
+            }
+        }
+
+        /* ===== EMPTY ===== */
+        .empty {
+            text-align: center;
+            padding: 32px 16px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* ===== SECTION TITLE ===== */
+        .section-title {
+            color: #fbbf24;
+            margin: 14px 0 10px;
+            font-size: 0.8rem;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+            padding-bottom: 6px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ===== INFO BAR ===== */
+        .info-bar {
+            background: rgba(20, 20, 40, 0.6);
+            padding: 10px 14px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            font-size: 0.7rem;
+            text-align: center;
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.1);
+            backdrop-filter: blur(4px);
+            font-weight: 700;
+        }
+
+        /* ===== INPUTS & SELECTS ===== */
+        input,
+        select {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 20px;
+            text-align: center;
+            width: 100%;
+            margin: 4px 0;
+            font-size: 0.65rem;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s;
+        }
+        input:focus,
+        select:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.05);
+        }
+        input::placeholder {
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        /* ===== BADGE ===== */
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 0.5rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .badge-blue {
+            background: rgba(30, 64, 175, 0.6);
+            color: #93c5fd;
+        }
+
+        /* ===== BATTLE LOG ===== */
+        .battle-log {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(245, 158, 11, 0.08);
+            border-radius: 1.8rem;
+            padding: 12px;
+            max-height: 320px;
+            overflow-y: auto;
+            font-size: 0.65rem;
+            backdrop-filter: blur(4px);
+        }
+        .battle-log .log-entry {
+            padding: 6px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .battle-log .log-entry:last-child {
+            border-bottom: none;
+        }
+        .battle-log .log-entry small {
+            color: #64748b;
+            font-size: 0.5rem;
+        }
+        .attacker {
+            color: #fca5a5;
+        }
+        .defender {
+            color: #7dd3fc;
+        }
+        .loot {
+            color: #4ade80;
+        }
+        .lost {
+            color: #ef4444;
+        }
+
+        /* ===== BATTLE OVERLAY ===== */
+        .battle-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(8px);
+            animation: overlayIn 0.4s ease;
+        }
+        .battle-overlay.active {
+            display: flex;
+        }
+        @keyframes overlayIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .explosion {
+            font-size: 8rem;
+            animation: boom 0.7s infinite alternate ease-in-out;
+            filter: drop-shadow(0 0 40px #ef4444);
+        }
+        @keyframes boom {
+            0% {
+                transform: scale(1) rotate(-5deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.3) rotate(5deg);
+                opacity: 0.7;
+            }
+        }
+        .battle-text {
+            color: #fbbf24;
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-top: 24px;
+            text-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
+            animation: pulse 1.2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.06);
+            }
+        }
+        .result-text {
+            color: #e2e8f0;
+            font-size: 1.3rem;
+            text-align: center;
+            margin-top: 14px;
+            max-width: 90%;
+            font-weight: 700;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .screen-shake {
+            animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+        }
+        @keyframes shake {
+            10%,
+            90% {
+                transform: translate3d(-2px, 0, 0);
+            }
+            20%,
+            80% {
+                transform: translate3d(4px, 0, 0);
+            }
+            30%,
+            50%,
+            70% {
+                transform: translate3d(-6px, 0, 0);
+            }
+            40%,
+            60% {
+                transform: translate3d(6px, 0, 0);
+            }
+        }
+
+        /* ===== STORAGE BAR ===== */
+        .storage-bar {
+            height: 10px;
+            background: rgba(51, 65, 85, 0.5);
+            border-radius: 20px;
+            margin: 6px 0 4px;
             overflow: hidden;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3);
         }
-        .mine-card::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle at 30% 20%, rgba(245,158,11,0.04) 0%, transparent 50%),
-                        radial-gradient(circle at 70% 80%, rgba(139,92,246,0.03) 0%, transparent 50%);
-            pointer-events: none;
+        .storage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f59e0b, #ef4444);
+            transition: width 0.6s ease;
+            border-radius: 20px;
         }
-        .mine-header {
-            display: flex; align-items: center; gap: 14px;
-            margin-bottom: 18px; position: relative; z-index: 1;
+        .hp-fill {
+            background: linear-gradient(90deg, #10b981, #ef4444);
         }
-        .mine-icon-wrap {
-            font-size: 2.8rem;
-            animation: mineSwing 2s ease-in-out infinite;
-            filter: drop-shadow(0 0 8px rgba(245,158,11,0.4));
+
+        /* ===== CHAT ===== */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 420px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 2rem;
+            border: 1px solid rgba(245, 158, 11, 0.08);
+            overflow: hidden;
+            backdrop-filter: blur(4px);
         }
-        @keyframes mineSwing {
-            0%, 100% { transform: rotate(-12deg) scale(1); }
-            50% { transform: rotate(12deg) scale(1.1); }
+        .chat-box {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            font-size: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
-        .mine-title { color: #fbbf24; font-size: 1.15rem; font-weight: 800; }
-        .mine-subtitle { color: #94a3b8; font-size: 0.6rem; margin-top: 2px; }
-        .mine-res-section {
-            display: flex; flex-direction: column; gap: 14px;
-            margin-bottom: 14px; position: relative; z-index: 1;
+        .chat-msg {
+            background: rgba(20, 20, 40, 0.6);
+            padding: 10px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(51, 65, 85, 0.2);
+            backdrop-filter: blur(4px);
+            animation: msgIn 0.25s ease;
         }
-        .mine-res-info {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 5px; font-size: 0.65rem;
+        @keyframes msgIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .mine-res-name { font-weight: 700; }
-        .mine-res-vals { color: #e2e8f0; font-weight: 600; font-size: 0.6rem; }
-        .mine-rate { color: #4ade80; font-size: 0.5rem; font-weight: 600; background: rgba(16,185,129,0.1); padding: 1px 8px; border-radius: 20px; }
-        .mine-bar-track {
-            height: 18px; background: #0a0a1a;
-            border-radius: 12px; overflow: hidden;
-            position: relative;
-            border: 1px solid #1e293b;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        .chat-msg.me {
+            border-color: rgba(245, 158, 11, 0.3);
+            background: rgba(30, 41, 59, 0.7);
         }
-        .mine-bar-fill {
-            height: 100%; border-radius: 12px;
-            transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative; overflow: hidden;
+        .chat-msg.system-msg {
+            border-color: #ef4444;
+            background: rgba(127, 29, 29, 0.25);
         }
-        .mine-bar-fill::after {
-            content: '';
-            position: absolute; top: 0; left: -100%; width: 300%; height: 100%;
-            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 45%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0.18) 55%, transparent 100%);
-            animation: barShimmer 2.8s linear infinite;
+        .chat-msg .sender {
+            color: #fbbf24;
+            font-weight: 700;
+            font-size: 0.65rem;
         }
-        @keyframes barShimmer { 0% { transform: translateX(-33.33%); } 100% { transform: translateX(0%); } }
-        .mine-bar-fill.gold-bar { background: linear-gradient(90deg, #92400e, #d97706, #f59e0b, #fbbf24); }
-        .mine-bar-fill.oil-bar { background: linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6, #60a5fa); }
-        .mine-bar-fill.metal-bar { background: linear-gradient(90deg, #374151, #6b7280, #9ca3af, #d1d5db); }
-        .mine-bar-fill.full { animation: barGlow 1.2s ease-in-out infinite; }
-        @keyframes barGlow {
-            0%, 100% { filter: brightness(1) saturate(1); }
-            50% { filter: brightness(1.5) saturate(1.3); }
+        .chat-msg .time {
+            color: #64748b;
+            font-size: 0.45rem;
+            float: left;
+            margin-top: 2px;
         }
-        .mine-pct {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 0.45rem; font-weight: 800; color: white;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-            pointer-events: none; z-index: 2;
+        .chat-input-area {
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(245, 158, 11, 0.08);
+            display: flex;
+            gap: 8px;
+            backdrop-filter: blur(4px);
         }
-        .mine-time-row {
-            text-align: center; font-size: 0.52rem; color: #94a3b8;
-            margin-bottom: 14px; padding: 8px;
-            background: rgba(10,10,26,0.6); border-radius: 10px;
-            border: 1px solid #1e293b; position: relative; z-index: 1;
+        .chat-input-area input {
+            margin: 0;
+            flex: 1;
+            font-size: 0.7rem;
+            padding: 10px 16px;
         }
-        .mine-collect-btn {
-            width: 100%; padding: 15px; font-size: 0.95rem;
-            border-radius: 16px; margin-bottom: 14px;
-            font-weight: 800; letter-spacing: 0.5px;
-            position: relative; z-index: 1;
+
+        /* ===== ADMIN PANEL ===== */
+        .admin-panel-box {
+            background: rgba(15, 15, 15, 0.6);
+            border: 1px solid rgba(127, 29, 29, 0.3);
+            border-radius: 2rem;
+            padding: 16px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(8px);
         }
-        .collect-pulse { animation: collectBeat 1.5s ease-in-out infinite; }
-        @keyframes collectBeat {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(245,158,11,0); }
-            50% { transform: scale(1.03); box-shadow: 0 0 25px rgba(245,158,11,0.5); }
+        .admin-panel-box h3 {
+            color: #fca5a5;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(127, 29, 29, 0.2);
+            padding-bottom: 6px;
+            font-weight: 800;
         }
-        .mine-upgrade-section {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px; background: rgba(10,10,26,0.6);
-            border-radius: 12px; border: 1px solid #1e293b;
-            position: relative; z-index: 1;
+        .spy-data {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            color: #94a3b8;
+            text-align: right;
+            max-height: 160px;
+            overflow-y: auto;
+            direction: ltr;
+            text-align: left;
+            margin-top: 10px;
+            border: 1px solid rgba(245, 158, 11, 0.05);
+            backdrop-filter: blur(4px);
+            line-height: 1.8;
         }
-        .mine-upgrade-info { font-size: 0.6rem; color: #94a3b8; }
-        .mine-upgrade-cost { color: #fbbf24; font-weight: 700; display: block; margin-top: 3px; font-size: 0.65rem; }
-        .mine-stats-row {
-            display: flex; justify-content: space-around;
-            margin-bottom: 14px; position: relative; z-index: 1;
+
+        /* ===== HIDE ===== */
+        .is-hidden {
+            display: none !important;
         }
-        .mine-stat {
-            text-align: center; padding: 8px 12px;
-            background: rgba(10,10,26,0.6); border-radius: 10px;
-            border: 1px solid #1e293b; flex: 1; margin: 0 3px;
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            .res-item {
+                font-size: 0.6rem;
+                padding: 4px 12px;
+            }
+            .tab {
+                font-size: 0.55rem;
+                padding: 8px 10px;
+            }
+            .grid2 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .card .icon {
+                font-size: 2.2rem;
+            }
+            .login-box input {
+                font-size: 0.9rem;
+                padding: 14px 16px;
+            }
+            .login-box button {
+                font-size: 1rem;
+                padding: 14px;
+            }
+            .toast {
+                font-size: 0.75rem;
+                padding: 12px 18px;
+                bottom: 16px;
+                right: 16px;
+            }
         }
-        .mine-stat-val { color: #fbbf24; font-size: 0.85rem; font-weight: 800; }
-        .mine-stat-label { color: #64748b; font-size: 0.45rem; margin-top: 2px; }
+        @media (max-width: 420px) {
+            .grid2 {
+                grid-template-columns: 1fr;
+            }
+            .res-item span {
+                min-width: 30px;
+                font-size: 0.7rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container" id="app">
         <div class="header">
-            <h1>⚡ Iron sky <span style="color:#f59e0b">آسمان آهنین</span></h1>
+            <h1>⚡ Iron sky <span>آسمان آهنین</span></h1>
             <div class="sub">⚔️ IRON SKY 🔥</div>
             <div class="sync-status" id="syncStatus">
                 <span id="syncText">🔌 در حال اتصال به سرور...</span>
@@ -240,12 +871,6 @@
         </div>
 
         <div class="online-bar warn" id="onlineBar">🟡 <span id="onlineText">در حال همگام‌سازی...</span></div>
-
-        <!-- بنر اطلاعیه سراسری -->
-        <div class="global-banner is-hidden" id="globalBanner">
-            <span id="bannerText" style="flex:1; text-align: center; padding: 0 10px; position: relative; z-index: 1;"></span>
-            <button id="bannerDismissBtn" class="btn btn-danger btn-sm is-hidden" onclick="adminRemoveBanner()" style="margin-left: 10px; position: relative; z-index: 2;">❌</button>
-        </div>
 
         <div class="shield-bar" id="shieldBar">🛡️ سپر محافظتی فعال است...</div>
 
@@ -294,18 +919,26 @@
     </div>
 
     <script>
-        /* ===== ثابت‌ها و تنظیمات ===== */
         const SUPABASE_URL = 'https://rxugexswtpvuotijdlzn.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_gsgiccX5kQMLrXnSqbAPwQ_ZoRRsYT3';
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const ADMIN_NAME = "Admin";
+        const ADMIN_NAME = "Dev";
         const ADMIN_PASS = "admin1313";
-        const DATA_KEY = "EMPIRE_DATA_V48_FIX";
+
+        const DATA_KEY = "EMPIRE_DATA_V46_UNIQ";
         const SYNC_INTERVAL = 3000;
         const SHIELD_DURATION = 12 * 60 * 60 * 1000;
 
-        /* ===== دیتابیس آیتم‌ها ===== */
+        let player = null,
+            allPlayers = [],
+            marketOffers = [],
+            battleLogs = [],
+            chatMessages = [];
+        let isConnected = false,
+            saving = false;
+        let isAttacking = false;
+
         const F_DB = {
             "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
             "F-5E": { n: "F-5E Tiger", i: "🇺🇸", p: 20, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
@@ -321,7 +954,7 @@
             "Patriot": { n: "Patriot", i: "🇺🇸", c: { g: 20000, o: 6000, m: 4000 }, def: 120, hp: 180 },
             "S-400": { n: "S-400", i: "🇷🇺", c: { g: 25000, o: 8000, m: 6000 }, def: 150, hp: 200 },
             "Khordad": { n: "خرداد-۱۵", i: "🇮🇷", c: { g: 8000, o: 2000, m: 1500 }, def: 60, hp: 100 },
-            "Bavar": { n: "باور-۳۷۳", i: "🇮🇷", c: { g: 15000, o: 4500, m: 3000 }, def: 100, hp: 150 }
+            "Bavar": { n: "باور-۳۷۳", i: "🇮🇷", c: { g: 15000, o: 4500, m: 3000 }, def: 100, hp: 150 },
         };
 
         const FACTIONS_DB = {
@@ -333,57 +966,39 @@
             "sky_phantoms": { n: "شبح‌های آسمان", i: "👻" }
         };
 
-        /* ===== متغیرهای وضعیت ===== */
-        let player = null;
-        let allPlayers = [];
-        let marketOffers = [];
-        let battleLogs = [];
-        let chatMessages = [];
-        let isConnected = false;
-        let saving = false;
-        let isAttacking = false;
-        let globalBanner = "";
-        let chatLocked = false;
-        let mineTimer = null;
-        let activeTab = "mine";
-
-        /* ===== توابع کمکی ===== */
         function toast(m, e = false, type = "") {
             const t = document.createElement("div");
             t.className = "toast" + (e ? " error" : "") + (type ? " " + type : "");
             t.innerHTML = m;
             document.body.appendChild(t);
-            setTimeout(() => { if (t.parentNode) t.remove(); }, 4500);
+            setTimeout(() => t.remove(), 4500);
         }
+
         function ts() { return Date.now(); }
-        function escapeHtml(str) { return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
-        function isAdmin() { return player && player.name === ADMIN_NAME && player.password === ADMIN_PASS; }
+
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function isAdmin() {
+            return player && player.name === ADMIN_NAME && player.password === ADMIN_PASS;
+        }
 
         function getFormattedName(p) {
-            const facTag = p.faction ? `<span style="color: #ef4444; font-size: 0.8em; margin-right: 4px;">[${FACTIONS_DB[p.faction]?.n || p.faction}]</span>` : '';
+            const facTag = p.faction ? `<span style="color: #ef4444; font-size: 0.8em; margin-right: 4px;">[${FACTIONS_DB[p.faction]?.n || p.faction}]</span>` :
+                '';
             if (p.name === ADMIN_NAME) {
                 return `<span style="color: #3b82f6; font-weight: bold;">🚬 ${escapeHtml(p.name)}</span> ${facTag}`;
             }
             return `${escapeHtml(p.name)} ${facTag}`;
         }
 
-        function timeToFull(current, rate, cap) {
-            if (rate <= 0) return '∞';
-            const remaining = cap - current;
-            if (remaining <= 0) return '✅ پر';
-            const secs = Math.ceil(remaining / rate);
-            if (secs >= 3600) return Math.floor(secs / 3600) + 'س ' + Math.floor((secs % 3600) / 60) + 'د';
-            if (secs >= 60) return Math.floor(secs / 60) + 'د ' + (secs % 60) + 'ث';
-            return secs + ' ثانیه';
-        }
-
         function syncPlayerToAllPlayers() {
             if (!player) return;
             const idx = allPlayers.findIndex(p => p.id === player.id);
-            if (idx >= 0) allPlayers[idx] = { ...player };
+            if (idx >= 0) allPlayers[idx] = player;
         }
 
-        /* ===== سوپابیس: اتصال، ذخیره، بارگذاری ===== */
         async function initSupabase() {
             updateSyncUI("🔌 در حال اتصال به دیتابیس...", "warn");
             try {
@@ -394,7 +1009,7 @@
                 return true;
             } catch (e) {
                 console.error(e);
-                updateSyncUI("❌ خطا در اتصال", "error");
+                updateSyncUI("❌ خطا در اتصال به سوپابیس", "error");
                 return false;
             }
         }
@@ -409,44 +1024,32 @@
         }
 
         function compressPlayer(p) {
-            return {
-                i: p.id, n: p.name, p: p.password,
-                g: p.gold, o: p.oil, m: p.metal, x: p.xp,
-                fac: p.faction, t: p.lastMineCollect, l: p.mineLevel,
-                r: [p.research.military, p.research.economy, p.research.aviation],
-                f: p.fighters, d: p.defenses, sh: p.shieldExpiry
-            };
+            return { i: p.id, n: p.name, p: p.password, g: p.gold, o: p.oil, m: p.metal, x: p.xp, fac: p.faction,
+                t: p.lastMineCollect, l: p.mineLevel, r: [p.research.military, p.research.economy, p.research.aviation],
+                f: p.fighters, d: p.defenses, sh: p.shieldExpiry };
         }
 
         function decompressPlayer(c) {
-            return {
-                id: c.i, name: c.n, password: c.p,
-                gold: c.g || 0, oil: c.o || 0, metal: c.m || 0, xp: c.x || 0,
+            return { id: c.i, name: c.n, password: c.p, gold: c.g || 0, oil: c.o || 0, metal: c.m || 0, xp: c.x || 0,
                 faction: c.fac || null, lastMineCollect: c.t || ts(), mineLevel: c.l || 1,
-                research: { military: c.r?.[0] || 0, economy: c.r?.[1] || 0, aviation: c.r?.[2] || 0 },
-                fighters: c.f || {}, defenses: c.d || [], shieldExpiry: c.sh || 0
-            };
+                research: { military: c.r ? .[0] || 0, economy: c.r ? .[1] || 0, aviation: c.r ? .[2] || 0 },
+                fighters: c.f || {}, defenses: c.d || [], shieldExpiry: c.sh || 0 };
         }
 
         function packData() {
-            return {
-                k: DATA_KEY,
-                p: allPlayers.map(compressPlayer),
-                m: marketOffers,
-                l: battleLogs.slice(-15),
-                c: chatMessages.slice(-10),
-                b: globalBanner,
-                cl: chatLocked
-            };
+            return { k: DATA_KEY, p: allPlayers.map(compressPlayer), m: marketOffers, l: battleLogs.slice(-15),
+                c: chatMessages.slice(-10) };
         }
 
         async function saveAll(force = false) {
             if (!isConnected) return false;
+            if (saving && !force) return false;
             if (saving) return false;
             saving = true;
             syncPlayerToAllPlayers();
+            const dataToSave = packData();
             try {
-                const { error } = await db.from('game_state').upsert({ id: 'main_game', data: packData() }, { onConflict: 'id' });
+                const { error } = await db.from('game_state').upsert({ id: 'main_game', data: dataToSave }, { onConflict: 'id' });
                 if (error) throw error;
                 updateSyncUI("✅ ذخیره شد", "online");
                 return true;
@@ -471,12 +1074,11 @@
                         marketOffers = j.m || [];
                         battleLogs = j.l || [];
                         chatMessages = j.c || [];
-                        globalBanner = j.b || "";
-                        chatLocked = j.cl || false;
                         if (player) {
                             const me = allPlayers.find(p => p.id === player.id);
                             if (me) player = me;
                         }
+                        return true;
                     }
                 }
                 return true;
@@ -486,72 +1088,48 @@
             }
         }
 
-        /* ===== منطق بازی ===== */
         function createPlayer(name, pass) {
-            return {
-                id: name + "_" + ts().toString(36), name, password: pass,
-                gold: 1000, oil: 300, metal: 300, xp: 0,
-                faction: null, lastMineCollect: ts(), mineLevel: 1,
-                research: { military: 0, economy: 0, aviation: 0 },
-                fighters: {}, defenses: [], shieldExpiry: 0
-            };
+            return { id: name + "_" + ts().toString(36), name, password: pass, gold: 1000, oil: 300, metal: 300, xp: 0,
+                faction: null, lastMineCollect: ts(), mineLevel: 1, research: { military: 0, economy: 0, aviation: 0 },
+                fighters: {}, defenses: [], shieldExpiry: 0 };
         }
 
         function calcMine(p) {
-            const elapsed = Math.min((ts() - (p.lastMineCollect || ts())) / 1000, 300);
+            const sec = Math.min((ts() - (p.lastMineCollect || ts())) / 1000, 300);
             const cap = p.mineLevel * 300;
-            const rate = p.mineLevel * 0.5;
-            return {
-                gold: Math.min(cap, Math.floor(rate * 2 * elapsed)),
-                oil: Math.min(cap, Math.floor(rate * elapsed)),
-                metal: Math.min(cap, Math.floor(rate * 1.5 * elapsed)),
-                cap: cap,
-                goldRate: rate * 2,
-                oilRate: rate,
-                metalRate: rate * 1.5
-            };
+            const yieldRate = p.mineLevel * 0.5;
+            return { gold: Math.min(cap, Math.floor(yieldRate * 2 * sec)), oil: Math.min(cap, Math.floor(yieldRate * sec)),
+                metal: Math.min(cap, Math.floor(yieldRate * 1.5 * sec)), cap: cap };
         }
 
         function calcAttackPower(p) {
             if (!p || !p.fighters) return 0;
             let power = 0;
-            for (const [n, d] of Object.entries(p.fighters)) {
+            for (const [n, d] of Object.entries(p.fighters))
                 if (F_DB[n] && d.count > 0) power += F_DB[n].p * d.count;
-            }
             return Math.floor(power);
         }
 
         function calcDefensePower(p) {
             if (!p) return 0;
             let power = calcAttackPower(p) * 0.5;
-            if (p.defenses) {
-                p.defenses.forEach(def => {
-                    if (D_DB[def.type] && def.hp > 0) {
-                        power += D_DB[def.type].def * (def.hp / def.maxHp);
-                    }
-                });
-            }
+            if (p.defenses) p.defenses.forEach(def => { if (D_DB[def.type] && def.hp > 0) power += D_DB[def.type].def * (def
+                    .hp / def.maxHp); });
             return Math.floor(power);
         }
 
         function getFactionStats() {
             const stats = {};
-            for (const id in FACTIONS_DB) {
-                stats[id] = { id, name: FACTIONS_DB[id].n, icon: FACTIONS_DB[id].i, members: 0, points: 0 };
-            }
-            allPlayers.forEach(p => {
-                if (p.faction && stats[p.faction]) {
-                    stats[p.faction].members++;
-                    stats[p.faction].points += (p.xp || 0);
-                }
-            });
+            for (const id in FACTIONS_DB) stats[id] = { id, name: FACTIONS_DB[id].n, icon: FACTIONS_DB[id].i, members: 0,
+                points: 0 };
+            allPlayers.forEach(p => { if (p.faction && stats[p.faction]) { stats[p.faction].members++;
+                    stats[p.faction].points += (p.xp || 0); } });
             return Object.values(stats).sort((a, b) => b.points - a.points);
         }
 
-        /* ===== اکشن‌های بازی ===== */
-        window.loginRegister = async function () {
-            const name = document.getElementById("playerName").value.trim();
-            const pass = document.getElementById("playerPassword").value.trim();
+        window.loginRegister = async function() {
+            const name = document.getElementById("playerName").value.trim(),
+                pass = document.getElementById("playerPassword").value.trim();
             if (name.length < 3 || pass.length < 4) return toast("نام کاربری و رمز نامعتبر است", true);
             const existing = allPlayers.find(p => p.name.toLowerCase() === name.toLowerCase());
             if (existing) {
@@ -565,16 +1143,13 @@
             }
             document.getElementById("loginBox").style.display = 'none';
             document.getElementById("gameUI").style.display = 'block';
-            startMineTimer();
             updateUI();
-            renderActiveTab();
+            renderMine();
             toast("ورود موفق", false, "peace");
         };
 
-        window.collectMine = async function () {
+        window.collectMine = async function() {
             const m = calcMine(player);
-            const total = m.gold + m.oil + m.metal;
-            if (total <= 0) return toast("معدن خالی است", true);
             player.gold += m.gold;
             player.oil += m.oil;
             player.metal += m.metal;
@@ -582,10 +1157,9 @@
             await saveAll();
             updateUI();
             renderMine();
-            toast(`💎 +${m.gold} طلا | +${m.oil} نفت | +${m.metal} فلز`, false, "peace");
+            toast("💎 استخراج شد", false, "peace");
         };
-
-        window.upgradeMine = async function () {
+        window.upgradeMine = async function() {
             const c = player.mineLevel * 10000;
             if (player.gold < c) return toast("طلا کم است", true);
             player.gold -= c;
@@ -593,13 +1167,13 @@
             await saveAll();
             updateUI();
             renderMine();
-            toast("⛏️ معدن به سطح " + player.mineLevel + " ارتقا یافت!", false, "peace");
+            toast("معدن ارتقا یافت!", false, "peace");
         };
 
-        window.buildFighter = async function (key) {
+        window.buildFighter = async function(key) {
             const f = F_DB[key];
             if (player.gold < f.c.g || player.oil < f.c.o || player.metal < f.c.m) return toast("منابع کم است", true);
-            if ((player.research?.aviation || 0) < f.r) return toast("تحقیقات هوایی کافی نیست", true);
+            if ((player.research?.aviation || 0) < f.r) return toast("تحقیقات کم است", true);
             player.gold -= f.c.g;
             player.oil -= f.c.o;
             player.metal -= f.c.m;
@@ -608,12 +1182,10 @@
             await saveAll();
             updateUI();
             renderMilitary();
-            toast(`✈️ ${f.n} ساخته شد!`, false, "peace");
         };
-
-        window.buildDefense = async function (key) {
+        window.buildDefense = async function(key) {
             const d = D_DB[key];
-            if (player.gold < d.c.g || player.oil < d.c.o || player.metal < d.c.m) return toast("منابع کم است", true);
+            if (player.gold < d.c.g) return toast("طلا کم است", true);
             player.gold -= d.c.g;
             player.oil -= d.c.o;
             player.metal -= d.c.m;
@@ -622,10 +1194,9 @@
             await saveAll();
             updateUI();
             renderMilitary();
-            toast(`🛡️ ${d.n} ساخته شد!`, false, "peace");
         };
 
-        window.repairDefense = async function (defId) {
+        window.repairDefense = async function(defId) {
             const def = player.defenses.find(d => d.id === defId);
             if (!def) return;
             const dmg = def.maxHp - def.hp;
@@ -636,34 +1207,30 @@
             await saveAll();
             updateUI();
             renderMilitary();
-            toast("🔧 تعمیر انجام شد", false, "peace");
         };
 
-        window.joinFaction = async function (facId) {
-            if (player.faction === facId) {
-                player.faction = null;
-                toast("از جناح خارج شدید", false, "peace");
-            } else {
-                player.faction = facId;
-                toast(`به ${FACTIONS_DB[facId].n} پیوستید!`, false, "peace");
-            }
+        window.joinFaction = async function(facId) {
+            player.faction = facId;
             await saveAll(true);
             updateUI();
             renderFactions();
             renderRank();
+            toast(`به ${FACTIONS_DB[facId].n} پیوستید!`, false, "peace");
         };
 
-        window.launchAttack = async function (targetId) {
+        window.launchAttack = async function(targetId) {
             if (isAttacking) return;
             isAttacking = true;
             try {
                 const target = allPlayers.find(p => p.id === targetId);
                 if (!target) return toast("هدف یافت نشد", true);
                 const myAtt = calcAttackPower(player);
-                if (myAtt <= 0) return toast("برای حمله باید جنگنده بسازید!", true, "war");
+                if (myAtt <= 0) return toast("برای حمله باید حداقل یک جنگنده بسازید!", true, "war");
                 if (target.shieldExpiry && ts() < target.shieldExpiry) {
-                    const rm = target.shieldExpiry - ts();
-                    return toast(`🛡️ سپر فعال (${Math.floor(rm / 3600000)}س ${Math.floor((rm % 3600000) / 60000)}د)`, true);
+                    const remainingMs = target.shieldExpiry - ts();
+                    const h = Math.floor(remainingMs / 3600000);
+                    const m = Math.floor((remainingMs % 3600000) / 60000);
+                    return toast(`🛡️ این کشور تحت حمایت سپر است (${h} ساعت و ${m} دقیقه باقیمانده)`, true);
                 }
                 if (player.shieldExpiry && ts() < player.shieldExpiry) {
                     player.shieldExpiry = 0;
@@ -671,50 +1238,64 @@
                     if (apIdx >= 0) allPlayers[apIdx].shieldExpiry = 0;
                     updateUI();
                     await saveAll(true);
-                    toast("🛡️ سپر شما به دلیل حمله از بین رفت!", false, "war");
+                    toast("🛡️ سپر شما به دلیل آغاز حمله از بین رفت!", false, "war");
                 }
 
                 const enemyDef = calcDefensePower(target);
-                let resultMsg = "", resultStr = "", isWin = false;
+                let resultMsg = "",
+                    resultStr = "",
+                    isWin = false;
 
                 if (myAtt > enemyDef) {
                     isWin = true;
                     const ratio = enemyDef / myAtt;
-                    const loot = {
-                        g: Math.floor(target.gold * 0.3),
-                        o: Math.floor(target.oil * 0.3),
-                        m: Math.floor(target.metal * 0.3)
-                    };
-                    target.gold -= loot.g; target.oil -= loot.o; target.metal -= loot.m;
-                    player.gold += loot.g; player.oil += loot.o; player.metal += loot.m;
-                    player.xp += 15; target.xp += 3;
+                    const loot = { g: Math.floor(target.gold * 0.3), o: Math.floor(target.oil * 0.3), m: Math.floor(target
+                            .metal * 0.3) };
+                    target.gold -= loot.g;
+                    target.oil -= loot.o;
+                    target.metal -= loot.m;
+                    player.gold += loot.g;
+                    player.oil += loot.o;
+                    player.metal += loot.m;
+                    player.xp += 15;
+                    target.xp += 3;
                     target.shieldExpiry = ts() + SHIELD_DURATION;
+                    let attackerLost = 0;
                     for (const [k, f] of Object.entries(player.fighters)) {
                         const lost = Math.ceil(f.count * ratio * 0.5);
                         f.count = Math.max(0, f.count - lost);
+                        attackerLost += lost;
                     }
                     for (const [k, f] of Object.entries(target.fighters)) {
-                        f.count = Math.max(0, f.count - Math.ceil(f.count * 0.8));
+                        const lost = Math.ceil(f.count * 0.8);
+                        f.count = Math.max(0, f.count - lost);
                     }
                     if (target.defenses) target.defenses.forEach(def => { def.hp = 0; });
                     target.defenses = target.defenses ? target.defenses.filter(def => def.hp > 0) : [];
-                    resultMsg = `🔥 <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد.`;
-                    resultStr = `🏆 پیروزی!<br>غارت: ${loot.g} طلا | ${loot.o} نفت | ${loot.m} فلز`;
+                    resultMsg =
+                        `🔥 <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد.`;
+                    resultStr = `🏆 پیروزی!<br>غارت: ${loot.g}طلا | ${loot.o}نفت`;
                 } else {
                     isWin = false;
                     const ratio = myAtt / enemyDef;
-                    player.xp += 2; target.xp += 15;
+                    player.xp += 2;
+                    target.xp += 15;
+                    let attackerLost = 0;
                     for (const [k, f] of Object.entries(player.fighters)) {
-                        f.count = Math.max(0, f.count - Math.ceil(f.count * 0.9));
+                        const lost = Math.ceil(f.count * 0.9);
+                        f.count = Math.max(0, f.count - lost);
+                        attackerLost += lost;
                     }
                     for (const [k, f] of Object.entries(target.fighters)) {
-                        f.count = Math.max(0, f.count - Math.ceil(f.count * ratio * 0.4));
+                        const lost = Math.ceil(f.count * ratio * 0.4);
+                        f.count = Math.max(0, f.count - lost);
                     }
                     if (target.defenses) {
                         target.defenses.forEach(def => { def.hp -= 40; if (def.hp < 0) def.hp = 0; });
                         target.defenses = target.defenses.filter(def => def.hp > 0);
                     }
-                    resultMsg = `🛡️ <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد اما دفاع شد!`;
+                    resultMsg =
+                        `🛡️ <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد اما دفاع شد!`;
                     resultStr = `💥 شکست سنگین!`;
                 }
 
@@ -725,7 +1306,6 @@
                 battleLogs.push({ ts: ts(), text: resultMsg });
                 await saveAll(true);
 
-                /* انیمیشن نبرد */
                 document.getElementById('app').classList.add('screen-shake');
                 const overlay = document.getElementById('battleOverlay');
                 const statusText = document.getElementById('battleStatusText');
@@ -756,31 +1336,25 @@
             }
         };
 
-        /* ===== بازار ===== */
-        window.createMarketOffer = async function () {
-            const giveRes = document.getElementById('mktGive').value;
-            const getRes = document.getElementById('mktGet').value;
-            const giveAmt = parseInt(document.getElementById('mktGiveAmt').value);
-            const getAmt = parseInt(document.getElementById('mktGetAmt').value);
-            if (giveAmt <= 0 || getAmt <= 0) return toast("مقدار نامعتبر", true);
-            if (giveRes === getRes) return toast("منبع مشابه نمی‌توانید معامله کنید", true);
+        window.createMarketOffer = async function() {
+            const giveRes = document.getElementById('mktGive').value,
+                getRes = document.getElementById('mktGet').value;
+            const giveAmt = parseInt(document.getElementById('mktGiveAmt').value),
+                getAmt = parseInt(document.getElementById('mktGetAmt').value);
+            if (giveAmt <= 0 || getAmt <= 0) return toast("مقدار نامعتبر است", true);
             if (player[giveRes] < giveAmt) return toast("منابع کافی ندارید", true);
             player[giveRes] -= giveAmt;
-            marketOffers.push({
-                id: ts().toString(36), seller: player.name, sid: player.id,
-                give: giveRes, ga: giveAmt, get: getRes, gta: getAmt
-            });
+            marketOffers.push({ id: ts().toString(36), seller: player.name, sid: player.id, give: giveRes, ga: giveAmt,
+                get: getRes, gta: getAmt });
             await saveAll();
             updateUI();
             renderMarket();
-            toast("📋 پیشنهاد ثبت شد", false, "peace");
         };
-
-        window.buyMarketOffer = async function (offerId) {
+        window.buyMarketOffer = async function(offerId) {
             const o = marketOffers.find(x => x.id === offerId);
             if (!o) return;
             if (o.sid === player.id) return toast("این پیشنهاد شماست", true);
-            if (player[o.get] < o.gta) return toast("منابع کافی ندارید", true);
+            if (player[o.get] < o.gta) return toast("پول کافی ندارید", true);
             player[o.get] -= o.gta;
             player[o.give] += o.ga;
             const seller = allPlayers.find(p => p.id === o.sid);
@@ -789,11 +1363,8 @@
             await saveAll(true);
             updateUI();
             renderMarket();
-            toast("✅ معامله انجام شد!", false, "peace");
         };
-
-        /* ===== تحقیق ===== */
-        window.upgradeResearch = async function (branch) {
+        window.upgradeResearch = async function(branch) {
             const c = (player.research[branch] + 1) * 15;
             if (player.xp < c) return toast("XP کم است", true);
             player.xp -= c;
@@ -801,14 +1372,10 @@
             await saveAll();
             updateUI();
             renderResearch();
-            toast("🔬 تحقیق ارتقا یافت!", false, "peace");
         };
 
-        /* ===== چت ===== */
-        window.sendChat = async function () {
-            if (chatLocked && !isAdmin()) return toast("🔒 چت توسط مدیریت بسته شده", true);
+        window.sendChat = async function() {
             const input = document.getElementById('chatInput');
-            if (!input) return;
             const text = input.value.trim();
             if (!text || text.length > 100) return;
             chatMessages.push({ ts: ts(), n: player.name, t: escapeHtml(text) });
@@ -817,12 +1384,12 @@
             await saveAll();
         };
 
-        /* ===== اکشن‌های ادمین ===== */
-        window.adminGiveRes = async function () {
+        // --- ADMIN ---
+        window.adminGiveRes = async function() {
             const id = document.getElementById('admSel').value;
             const res = document.getElementById('admRes').value;
             const amt = parseInt(document.getElementById('admAmt').value);
-            if (!id || !res || isNaN(amt) || amt <= 0) return toast("مقادیر نامعتبر", true);
+            if (!id || !res || isNaN(amt) || amt <= 0) return toast("مقادیر نامعتبر است", true);
             const target = allPlayers.find(p => p.id === id);
             if (!target) return toast("بازیکن یافت نشد", true);
             if (res === 'xp') target.xp += amt;
@@ -832,7 +1399,7 @@
             toast("✅ منابع اضافه شد", false, "peace");
         };
 
-        window.adminToggleShield = async function () {
+        window.adminToggleShield = async function() {
             const id = document.getElementById('admSel').value;
             if (!id) return toast("بازیکن را انتخاب کنید", true);
             const target = allPlayers.find(p => p.id === id);
@@ -843,31 +1410,37 @@
             toast(target.shieldExpiry ? "🛡️ سپر فعال شد" : "💔 سپر برداشته شد", false, "peace");
         };
 
-        window.adminDeletePlayer = async function () {
+        window.adminDeletePlayer = async function() {
             const id = document.getElementById('admSel').value;
             if (!id) return toast("بازیکن را انتخاب کنید", true);
-            if (!confirm("آیا از حذف کامل این کاربر مطمئنید؟")) return;
+            const target = allPlayers.find(p => p.id === id);
+            if (!target) return;
+            if (!confirm(`آیا از حذف کامل این کاربر مطمئنید؟`)) return;
             allPlayers = allPlayers.filter(p => p.id !== id);
             await saveAll(true);
             renderAdmin();
             toast("🗑️ کاربر حذف شد", false, "war");
         };
 
-        window.adminResetPlayer = async function () {
+        window.adminResetPlayer = async function() {
             const id = document.getElementById('admSel').value;
             if (!id) return toast("بازیکن را انتخاب کنید", true);
             const target = allPlayers.find(p => p.id === id);
             if (!target) return;
-            if (!confirm("آیا از ریست منابع و ارتش این کاربر مطمئنید؟")) return;
-            target.gold = 0; target.oil = 0; target.metal = 0; target.xp = 0;
-            target.fighters = {}; target.defenses = []; target.mineLevel = 1;
-            target.research = { military: 0, economy: 0, aviation: 0 };
+            if (!confirm(`آیا از ریست منابع و ارتش این کاربر مطمئنید؟`)) return;
+            target.gold = 0;
+            target.oil = 0;
+            target.metal = 0;
+            target.xp = 0;
+            target.fighters = {};
+            target.defenses = [];
+            target.mineLevel = 1;
             await saveAll(true);
             renderAdmin();
             toast("⚠️ کاربر ریست شد", false, "war");
         };
 
-        window.adminBroadcast = async function () {
+        window.adminBroadcast = async function() {
             const msg = document.getElementById('admBroad').value.trim();
             if (!msg) return toast("پیام خالی است", true);
             chatMessages.push({ ts: ts(), n: "SYSTEM", t: escapeHtml(msg), sys: true });
@@ -877,285 +1450,75 @@
             toast("📢 پیام سراسری ارسال شد", false, "peace");
         };
 
-        window.adminClearChat = async function () {
-            if (!confirm("آیا از پاک کردن تمام پیام‌های چت مطمئنید؟")) return;
+        window.adminClearChat = async function() {
+            if (!confirm("آیا از پاک کردن تمام پیام‌های چت جهانی مطمئنید؟")) return;
             chatMessages = [];
             await saveAll(true);
             renderAdmin();
-            toast("🧹 چت پاک شد", false, "peace");
+            toast("🧹 چت جهانی پاک شد", false, "peace");
         };
 
-        window.adminSetBanner = async function () {
-            const msg = document.getElementById('admBannerText').value.trim();
-            if (!msg) return toast("متن اطلاعیه خالی است", true);
-            globalBanner = msg;
-            document.getElementById('admBannerText').value = '';
-            await saveAll(true);
-            updateUI();
-            renderAdmin();
-            toast("📢 اطلاعیه سراسری تنظیم شد", false, "peace");
-        };
-
-        window.adminRemoveBanner = async function () {
-            globalBanner = "";
-            await saveAll(true);
-            updateUI();
-            if (isAdmin()) renderAdmin();
-            toast("اطلاعیه حذف شد", false, "peace");
-        };
-
-        window.adminToggleChat = async function () {
-            chatLocked = !chatLocked;
-            await saveAll(true);
-            renderAdmin();
-            toast(chatLocked ? "🔒 چت بسته شد" : "🔓 چت باز شد", false, "peace");
-        };
-
-        window.adminNuke = async function () {
-            if (!confirm("☢️ آیا میخواهید کل سرور را پاک کنید؟")) return;
+        window.adminNuke = async function() {
+            if (!confirm("☢️ هشدار: آیا میخواهید کل سرور را پاک کنید؟")) return;
             if (!confirm("آخرین اخطار: آیا واقعاً مطمئنید؟")) return;
-            allPlayers = []; marketOffers = []; battleLogs = []; chatMessages = [];
-            globalBanner = ""; chatLocked = false;
+            allPlayers = [];
+            marketOffers = [];
+            battleLogs = [];
+            chatMessages = [];
             player = null;
             await saveAll(true);
             document.getElementById('gameUI').style.display = 'none';
             document.getElementById('loginBox').style.display = 'flex';
-            toast("☢️ سرور نابود شد!", false, "war");
+            toast("☢️ سرور با موفقیت نابود شد!", false, "war");
         };
 
-        /* ===== تایمر معدن ثانیه‌ای ===== */
-        function startMineTimer() {
-            if (mineTimer) clearInterval(mineTimer);
-            mineTimer = setInterval(() => {
-                if (player && activeTab === "mine") {
-                    updateMineVisuals();
-                }
-            }, 1000);
-        }
-
-        function updateMineVisuals() {
-            if (!player) return;
-            const m = calcMine(player);
-            const cap = m.cap;
-
-            const gBar = document.getElementById('mineBarGold');
-            const oBar = document.getElementById('mineBarOil');
-            const mBar = document.getElementById('mineBarMetal');
-            const gVal = document.getElementById('mineValGold');
-            const oVal = document.getElementById('mineValOil');
-            const mVal = document.getElementById('mineValMetal');
-            const gPctEl = document.getElementById('minePctGold');
-            const oPctEl = document.getElementById('minePctOil');
-            const mPctEl = document.getElementById('minePctMetal');
-            const timeEl = document.getElementById('mineTimeRow');
-            const totalEl = document.getElementById('mineTotal');
-
-            if (gBar) {
-                const gPct = Math.min(100, (m.gold / cap) * 100);
-                gBar.style.width = gPct + '%';
-                if (gPct >= 95) gBar.classList.add('full'); else gBar.classList.remove('full');
-            }
-            if (oBar) {
-                const oPct = Math.min(100, (m.oil / cap) * 100);
-                oBar.style.width = oPct + '%';
-                if (oPct >= 95) oBar.classList.add('full'); else oBar.classList.remove('full');
-            }
-            if (mBar) {
-                const mPct = Math.min(100, (m.metal / cap) * 100);
-                mBar.style.width = mPct + '%';
-                if (mPct >= 95) mBar.classList.add('full'); else mBar.classList.remove('full');
-            }
-            if (gVal) gVal.textContent = m.gold.toLocaleString('fa-IR');
-            if (oVal) oVal.textContent = m.oil.toLocaleString('fa-IR');
-            if (mVal) mVal.textContent = m.metal.toLocaleString('fa-IR');
-            if (gPctEl) gPctEl.textContent = Math.min(100, Math.floor((m.gold / cap) * 100)) + '%';
-            if (oPctEl) oPctEl.textContent = Math.min(100, Math.floor((m.oil / cap) * 100)) + '%';
-            if (mPctEl) mPctEl.textContent = Math.min(100, Math.floor((m.metal / cap) * 100)) + '%';
-            if (timeEl) {
-                timeEl.innerHTML = `⏱️ پر شدن: <span style="color:#fbbf24">${timeToFull(m.gold, m.goldRate, cap)} طلا</span> | <span style="color:#60a5fa">${timeToFull(m.oil, m.oilRate, cap)} نفت</span> | <span style="color:#d1d5db">${timeToFull(m.metal, m.metalRate, cap)} فلز</span>`;
-            }
-            if (totalEl) {
-                const total = m.gold + m.oil + m.metal;
-                totalEl.textContent = total.toLocaleString('fa-IR');
-            }
-
-            /* دکمه استخراج */
-            const btn = document.getElementById('mineCollectBtn');
-            if (btn) {
-                const total = m.gold + m.oil + m.metal;
-                if (total > 0) {
-                    btn.disabled = false;
-                    btn.style.opacity = '1';
-                    btn.classList.add('collect-pulse');
-                    btn.innerHTML = `💎 استخراج کنید (${total.toLocaleString('fa-IR')} منبع)`;
-                } else {
-                    btn.disabled = true;
-                    btn.style.opacity = '0.4';
-                    btn.classList.remove('collect-pulse');
-                    btn.innerHTML = '💎 در حال تولید...';
-                }
-            }
-        }
-
-        /* ===== رندر UI ===== */
+        // --- UI RENDERING ---
         function updateUI() {
             if (!player) return;
-
-            /* نمایش تب ادمین */
-            if (!window.adminVisibilitySet) {
-                if (isAdmin()) {
-                    document.querySelectorAll('.admin-el').forEach(el => el.classList.remove('is-hidden'));
-                }
-                window.adminVisibilitySet = true;
+            if (isAdmin()) {
+                document.querySelectorAll('.admin-el').forEach(el => el.classList.remove('is-hidden'));
+            } else {
+                document.querySelectorAll('.admin-el').forEach(el => el.classList.add('is-hidden'));
             }
-
-            /* === رفع باگ اصلی: 'fa-رس' بود به جای 'fa-IR' === */
             document.getElementById('rGold').innerText = Math.floor(player.gold).toLocaleString('fa-IR');
             document.getElementById('rOil').innerText = Math.floor(player.oil).toLocaleString('fa-IR');
             document.getElementById('rMetal').innerText = Math.floor(player.metal).toLocaleString('fa-IR');
-            document.getElementById('rXP').innerText = player.xp.toLocaleString('fa-IR');
-
-            /* بنر اطلاعیه سراسری */
-            const bannerEl = document.getElementById('globalBanner');
-            const bannerTextEl = document.getElementById('bannerText');
-            const bannerDismissBtn = document.getElementById('bannerDismissBtn');
-            if (globalBanner && globalBanner.trim()) {
-                bannerTextEl.innerHTML = "📢 " + escapeHtml(globalBanner);
-                bannerEl.classList.remove('is-hidden');
-                if (isAdmin()) bannerDismissBtn.classList.remove('is-hidden');
-                else bannerDismissBtn.classList.add('is-hidden');
-            } else {
-                bannerEl.classList.add('is-hidden');
-            }
-
-            /* سپر */
+            document.getElementById('rXP').innerText = player.xp;
             const shieldBar = document.getElementById('shieldBar');
             if (player.shieldExpiry && ts() < player.shieldExpiry) {
-                const rm = player.shieldExpiry - ts();
-                const h = Math.floor(rm / 3600000);
-                const m = Math.floor((rm % 3600000) / 60000);
-                shieldBar.innerHTML = `🛡️ سپر محافظتی: <b>${h} ساعت و ${m} دقیقه</b> باقیمانده`;
+                const remainingMs = player.shieldExpiry - ts();
+                const h = Math.floor(remainingMs / 3600000);
+                const m = Math.floor((remainingMs % 3600000) / 60000);
+                shieldBar.innerHTML = `🛡️ سپر محافظتی فعال است: <b>${h} ساعت و ${m} دقیقه</b> باقیمانده`;
                 shieldBar.style.display = 'block';
             } else {
                 shieldBar.style.display = 'none';
             }
         }
 
-        /* ===== رندر معدن (گرافیکی و جذاب) ===== */
         function renderMine() {
             const m = calcMine(player);
-            const cap = m.cap;
-            const gPct = Math.min(100, (m.gold / cap) * 100);
-            const oPct = Math.min(100, (m.oil / cap) * 100);
-            const mPct = Math.min(100, (m.metal / cap) * 100);
+            const gPct = Math.min(100, (m.gold / m.cap) * 100);
+            const oPct = Math.min(100, (m.oil / m.cap) * 100);
+            const mPct = Math.min(100, (m.metal / m.cap) * 100);
             const upCost = player.mineLevel * 10000;
-            const total = m.gold + m.oil + m.metal;
-
-            document.getElementById('mineContent').innerHTML = `
-                <div class="mine-card">
-                    <div class="mine-header">
-                        <div class="mine-icon-wrap">⛏️</div>
-                        <div>
-                            <div class="mine-title">معدن سطح ${player.mineLevel}</div>
-                            <div class="mine-subtitle">ظرفیت هر منبع: ${cap.toLocaleString('fa-IR')} واحد</div>
-                        </div>
-                    </div>
-
-                    <div class="mine-stats-row">
-                        <div class="mine-stat">
-                            <div class="mine-stat-val">${m.goldRate}/ث</div>
-                            <div class="mine-stat-label">طلای ثانیه</div>
-                        </div>
-                        <div class="mine-stat">
-                            <div class="mine-stat-val">${m.oilRate}/ث</div>
-                            <div class="mine-stat-label">نفت ثانیه</div>
-                        </div>
-                        <div class="mine-stat">
-                            <div class="mine-stat-val">${m.metalRate}/ث</div>
-                            <div class="mine-stat-label">فلز ثانیه</div>
-                        </div>
-                    </div>
-
-                    <div class="mine-res-section">
-                        <div class="mine-res-row">
-                            <div class="mine-res-info">
-                                <span class="mine-res-name">💰 طلا</span>
-                                <span class="mine-res-vals"><span id="mineValGold">${m.gold.toLocaleString('fa-IR')}</span> / ${cap.toLocaleString('fa-IR')}</span>
-                                <span class="mine-rate">+${m.goldRate}/ث</span>
-                            </div>
-                            <div class="mine-bar-track">
-                                <div class="mine-bar-fill gold-bar ${gPct >= 95 ? 'full' : ''}" id="mineBarGold" style="width:${gPct}%"></div>
-                                <span class="mine-pct" id="minePctGold">${Math.floor(gPct)}%</span>
-                            </div>
-                        </div>
-
-                        <div class="mine-res-row">
-                            <div class="mine-res-info">
-                                <span class="mine-res-name">🛢️ نفت</span>
-                                <span class="mine-res-vals"><span id="mineValOil">${m.oil.toLocaleString('fa-IR')}</span> / ${cap.toLocaleString('fa-IR')}</span>
-                                <span class="mine-rate">+${m.oilRate}/ث</span>
-                            </div>
-                            <div class="mine-bar-track">
-                                <div class="mine-bar-fill oil-bar ${oPct >= 95 ? 'full' : ''}" id="mineBarOil" style="width:${oPct}%"></div>
-                                <span class="mine-pct" id="minePctOil">${Math.floor(oPct)}%</span>
-                            </div>
-                        </div>
-
-                        <div class="mine-res-row">
-                            <div class="mine-res-info">
-                                <span class="mine-res-name">⛏️ فلز</span>
-                                <span class="mine-res-vals"><span id="mineValMetal">${m.metal.toLocaleString('fa-IR')}</span> / ${cap.toLocaleString('fa-IR')}</span>
-                                <span class="mine-rate">+${m.metalRate}/ث</span>
-                            </div>
-                            <div class="mine-bar-track">
-                                <div class="mine-bar-fill metal-bar ${mPct >= 95 ? 'full' : ''}" id="mineBarMetal" style="width:${mPct}%"></div>
-                                <span class="mine-pct" id="minePctMetal">${Math.floor(mPct)}%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mine-time-row" id="mineTimeRow">
-                        ⏱️ پر شدن: <span style="color:#fbbf24">${timeToFull(m.gold, m.goldRate, cap)} طلا</span> | <span style="color:#60a5fa">${timeToFull(m.oil, m.oilRate, cap)} نفت</span> | <span style="color:#d1d5db">${timeToFull(m.metal, m.metalRate, cap)} فلز</span>
-                    </div>
-
-                    <button class="btn btn-gold mine-collect-btn ${total > 0 ? 'collect-pulse' : ''}" id="mineCollectBtn" onclick="collectMine()" ${total <= 0 ? 'disabled style="opacity:0.4"' : ''}>
-                        ${total > 0 ? '💎 استخراج کنید (' + total.toLocaleString('fa-IR') + ' منبع)' : '💎 در حال تولید...'}
-                    </button>
-
-                    <div class="mine-upgrade-section">
-                        <div class="mine-upgrade-info">
-                            <span>⬆️ ارتقا به سطح ${player.mineLevel + 1}</span>
-                            <span class="mine-upgrade-cost">💰 ${upCost.toLocaleString('fa-IR')} طلا</span>
-                        </div>
-                        <button class="btn btn-green btn-sm" ${player.gold < upCost ? 'disabled' : ''} onclick="upgradeMine()">ارتقا</button>
-                    </div>
-                </div>
-            `;
+            document.getElementById('mineContent').innerHTML =
+                `<div class="card"><div class="icon">🪙</div><h3>معدن سطح ${player.mineLevel}</h3><p class="cost" style="margin-bottom:8px">ظرفیت: ${m.cap}</p><div class="storage-bar"><div class="storage-fill" style="width:${gPct}%"></div></div><div class="cost">💰 طلا: ${m.gold}</div><div class="storage-bar"><div class="storage-fill" style="width:${oPct}%"></div></div><div class="cost">🛢️ نفت: ${m.oil}</div><div class="storage-bar"><div class="storage-fill" style="width:${mPct}%"></div></div><div class="cost">⛏️ فلز: ${m.metal}</div><button class="btn btn-gold" style="margin-top:10px" onclick="collectMine()">💎 استخراج</button><hr style="border-color:#334155;margin:10px 0"><p class="cost">ارتقا: ${upCost.toLocaleString('fa-IR')} طلا</p><button class="btn btn-green" ${player.gold<upCost?'disabled':''} onclick="upgradeMine()">⬆️ ارتقا</button></div>`;
         }
 
-        /* ===== رندر نظامی ===== */
         function renderMilitary() {
-            let h = `<div class="section-title">✈️ جنگنده‌ها (قدرت حمله: ${calcAttackPower(player)})</div><div class="grid2">`;
+            let h = `<div class="section-title">✈️ جنگنده‌ها</div><div class="grid2">`;
             for (const [k, f] of Object.entries(F_DB)) {
                 const reqMet = (player.research?.aviation || 0) >= f.r;
                 const canAfford = player.gold >= f.c.g && player.oil >= f.c.o && player.metal >= f.c.m;
-                h += `<div class="card" style="opacity:${reqMet ? 1 : 0.5}">
-                    <div class="icon">${f.i}</div><div>${f.n}</div>
-                    <div class="cost">قدرت: ${f.p} ${f.r > 0 ? '| تحقیق: ' + f.r : ''}</div>
-                    <div class="cost">💰${f.c.g} | 🛢️${f.c.o} | ⛏️${f.c.m}</div>
-                    <div class="badge badge-blue">دارید: ${player.fighters[k]?.count || 0}</div>
-                    <button class="btn btn-blue btn-sm" ${(!reqMet || !canAfford) ? 'disabled' : ''} onclick="buildFighter('${k}')">ساخت</button>
-                </div>`;
+                h +=
+                    `<div class="card" style="opacity:${reqMet?1:0.5}"><div class="icon">${f.i}</div><div>${f.n}</div><div class="cost">قدرت:${f.p} ${f.r>0?`| تحقیق:${f.r}`:''}</div><div class="cost">💰${f.c.g} | 🛢️${f.c.o} | ⛏️${f.c.m}</div><div class="badge badge-blue">دارید: ${player.fighters[k]?.count||0}</div><button class="btn btn-blue btn-sm" ${(!reqMet||!canAfford)?'disabled':''} onclick="buildFighter('${k}')">ساخت</button></div>`;
             }
-            h += `</div><div class="section-title">🛡️ سیستم‌های دفاعی (قدرت دفاع: ${calcDefensePower(player)})</div><div class="grid2">`;
+            h += `</div><div class="section-title">🛡️ سیستم‌های دفاعی</div><div class="grid2">`;
             for (const [k, d] of Object.entries(D_DB)) {
                 const canAfford = player.gold >= d.c.g && player.oil >= d.c.o && player.metal >= d.c.m;
-                h += `<div class="card">
-                    <div class="icon">${d.i}</div><div>${d.n}</div>
-                    <div class="cost">دفاع: ${d.def} | HP: ${d.hp}</div>
-                    <div class="cost">💰${d.c.g} | 🛢️${d.c.o} | ⛏️${d.c.m}</div>
-                    <button class="btn btn-green btn-sm" ${!canAfford ? 'disabled' : ''} onclick="buildDefense('${k}')">ساخت</button>
-                </div>`;
+                h +=
+                    `<div class="card"><div class="icon">${d.i}</div><div>${d.n}</div><div class="cost">دفاع:${d.def} | HP:${d.hp}</div><div class="cost">💰${d.c.g} | 🛢️${d.c.o} | ⛏️${d.c.m}</div><button class="btn btn-green btn-sm" ${!canAfford?'disabled':''} onclick="buildDefense('${k}')">ساخت</button></div>`;
             }
             h += `</div>`;
             if (player.defenses && player.defenses.length > 0) {
@@ -1165,54 +1528,41 @@
                     const hpPct = (def.hp / def.maxHp) * 100;
                     const dmg = def.maxHp - def.hp;
                     const repairCost = dmg * 10;
-                    h += `<div class="player-row" style="flex-direction:column;align-items:stretch;">
-                        <div style="display:flex;justify-content:space-between;width:100%;margin-bottom:5px;">
-                            <span>${dInfo.i} ${dInfo.n}</span>
-                            <span style="color:${hpPct > 50 ? '#4ade80' : '#ef4444'}">${def.hp}/${def.maxHp}</span>
-                        </div>
-                        <div class="storage-bar"><div class="storage-fill hp-fill" style="width:${hpPct}%"></div></div>
-                        ${dmg > 0 ? `<button class="btn btn-gold btn-sm" ${player.gold < repairCost ? 'disabled' : ''} onclick="repairDefense('${def.id}')">تعمیر (${repairCost} طلا)</button>` : '<span style="color:#4ade80;font-size:0.5rem;text-align:center;">آماده</span>'}
-                    </div>`;
+                    h +=
+                        `<div class="player-row" style="flex-direction:column;align-items:stretch;"><div style="display:flex;justify-content:space-between;width:100%;margin-bottom:5px;"><span>${dInfo.i} ${dInfo.n}</span><span style="color:${hpPct>50?'#4ade80':'#ef4444'}">${def.hp}/${def.maxHp}</span></div><div class="storage-bar"><div class="storage-fill hp-fill" style="width:${hpPct}%"></div></div>${dmg > 0 ? `<button class="btn btn-gold btn-sm" ${player.gold<repairCost?'disabled':''} onclick="repairDefense('${def.id}')">تعمیر (${repairCost} طلا)</button>` : `<span style="color:#4ade80;font-size:0.5rem;text-align:center;">آماده</span>`}</div>`;
                 });
             }
             document.getElementById('militaryContent').innerHTML = h;
         }
 
-        /* ===== رندر جنگ ===== */
         function renderWar() {
             const myAtt = calcAttackPower(player);
             const myDef = calcDefensePower(player);
-            let h = `<div class="info-bar">⚔️ قدرت حمله: ${myAtt} | 🛡️ قدرت دفاع: ${myDef}</div><div class="section-title">🎯 اهداف</div>`;
+            let h =
+                `<div class="info-bar">قدرت حمله: ${myAtt} | قدرت دفاع: ${myDef}</div><div class="section-title">🎯 اهداف</div>`;
             if (myAtt <= 0) h += `<div class="empty">ابتدا جنگنده بسازید!</div>`;
-            const targets = allPlayers.filter(p => p.id !== player.id).sort((a, b) => calcDefensePower(a) - calcDefensePower(b));
-            targets.forEach(t => {
+            allPlayers.filter(p => p.id !== player.id).sort((a, b) => calcDefensePower(a) - calcDefensePower(b)).forEach(t => {
                 let btnHtml = '';
                 if (t.shieldExpiry && ts() < t.shieldExpiry) {
-                    const rm = t.shieldExpiry - ts();
-                    const hh = Math.floor(rm / 3600000);
-                    const mm = Math.floor((rm % 3600000) / 60000);
+                    const remainingMs = t.shieldExpiry - ts();
+                    const hh = Math.floor(remainingMs / 3600000);
+                    const mm = Math.floor((remainingMs % 3600000) / 60000);
                     btnHtml = `<button class="btn btn-sm" style="background:#3b82f6;color:#fff;" disabled>🛡️ ${hh}س ${mm}د</button>`;
                 } else {
-                    btnHtml = `<button class="btn btn-attack btn-sm" ${myAtt <= 0 || isAttacking ? 'disabled' : ''} onclick="launchAttack('${t.id}')">⚔️ حمله</button>`;
+                    btnHtml =
+                        `<button class="btn btn-attack btn-sm" ${myAtt<=0||isAttacking?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله</button>`;
                 }
-                const tDef = calcDefensePower(t);
-                h += `<div class="player-row">
-                    <div style="text-align:right;">
-                        <div>${getFormattedName(t)}</div>
-                        <div style="font-size:0.45rem;color:#64748b;">🛡️ ${tDef}</div>
-                    </div>
-                    ${btnHtml}
-                </div>`;
+                h += `<div class="player-row"><span>${getFormattedName(t)} </span>${btnHtml}</div>`;
             });
             document.getElementById('warContent').innerHTML = h;
         }
 
-        /* ===== رندر چت ===== */
         function renderChat() {
             const isTyping = document.activeElement?.id === 'chatInput';
-            const currentText = isTyping ? (document.getElementById('chatInput')?.value || '') : '';
+            const currentText = isTyping ? document.getElementById('chatInput')?.value || '' : '';
             const last10 = chatMessages.slice(-10);
-            let h = `<div class="section-title">💬 چت جهانی (آخرین ۱۰ پیام)</div><div class="chat-container"><div class="chat-box" id="chatBox">`;
+            let h =
+                `<div class="section-title">💬 چت جهانی (آخرین ۱۰ پیام)</div><div class="chat-container"><div class="chat-box" id="chatBox">`;
             if (last10.length === 0) {
                 h += `<div class="empty">هیچ پیامی نیست</div>`;
             } else {
@@ -1221,303 +1571,188 @@
                     const isSys = msg.sys;
                     const isAdm = msg.n === ADMIN_NAME;
                     h += `<div class="chat-msg ${isMe ? 'me' : ''} ${isSys ? 'system-msg' : ''}">
-                        <span class="sender" style="${isSys ? 'color:#fca5a5;' : ''} ${isAdm ? 'color:#3b82f6;' : ''}">${isSys ? '📢 [SYSTEM]' : (isAdm ? '🚬 ' : '') + escapeHtml(msg.n)}</span>
-                        <span class="time">${new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' })}</span>
-                        <div style="margin-top:3px;color:#e2e8f0;word-break:break-word;">${msg.t}</div>
+                        <span class="sender" style="${isSys ? 'color:#fca5a5' : ''} ${isAdm ? 'color:#3b82f6;' : ''}">${isSys ? '📢 [SYSTEM]' : (isAdm ? '🚬 ' : '') + escapeHtml(msg.n)}</span>
+                        <span class="time">${new Date(msg.ts).toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit'})}</span>
+                        <div style="margin-top: 3px; color: #e2e8f0; word-break: break-word;">${msg.t}</div>
                     </div>`;
                 });
             }
-            h += `</div>`;
-            if (chatLocked && !isAdmin()) {
-                h += `<div style="padding:12px;text-align:center;color:#fca5a5;font-size:0.7rem;background:rgba(127,29,29,0.2);border-radius:8px;border:1px dashed #7f1d1d;">🔒 چت جهانی توسط مدیریت بسته شده</div>`;
-            } else {
-                h += `<div class="chat-input-area">
-                    <input type="text" id="chatInput" placeholder="پیام بنویسید..." maxlength="100" onkeydown="if(event.key==='Enter')sendChat()">
-                    <button class="btn btn-gold" onclick="sendChat()">ارسال</button>
-                </div>`;
-            }
-            h += `</div>`;
+            h += `</div><div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="پیام بنویسید..." maxlength="100" onkeydown="if(event.key==='Enter')sendChat()">
+                <button class="btn btn-gold" onclick="sendChat()">ارسال</button>
+            </div></div>`;
             document.getElementById('chatContent').innerHTML = h;
-            if (!chatLocked && isTyping) {
+            if (isTyping) {
                 const newInput = document.getElementById('chatInput');
-                if (newInput) {
-                    newInput.focus();
-                    newInput.value = currentText;
-                    newInput.setSelectionRange(newInput.value.length, newInput.value.length);
-                }
+                newInput.focus();
+                newInput.value = currentText;
+                newInput.setSelectionRange(newInput.value.length, newInput.value.length);
             }
             const chatBox = document.getElementById('chatBox');
             if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        /* ===== رندر جناح‌ها ===== */
-        function renderFactions() {
-            const stats = getFactionStats();
-            let h = `<div class="section-title">🛡️ جناح‌های نظامی</div>`;
-            stats.forEach(fac => {
-                const isMyFaction = player.faction === fac.id;
-                const borderStyle = isMyFaction ? 'border-color:#f59e0b; background:rgba(245,158,11,0.05);' : '';
-                h += `<div class="player-row" style="${borderStyle}">
-                    <div>
-                        <div>${fac.icon} <b>${fac.n}</b></div>
-                        <div style="font-size:0.45rem;color:#64748b;">👥 ${fac.members} عضو | ⭐ ${fac.points.toLocaleString('fa-IR')} امتیاز</div>
-                    </div>
-                    <button class="btn btn-sm ${isMyFaction ? 'btn-red' : 'btn-green'}" onclick="joinFaction('${fac.id}')">
-                        ${isMyFaction ? '❌ خروج' : '✅ پیوستن'}
-                    </button>
-                </div>`;
-            });
-            if (!player.faction) {
-                h += `<div class="empty" style="margin-top:12px;">هنوز به جناحی نپیوسته‌اید</div>`;
-            }
-            document.getElementById('factionsContent').innerHTML = h;
-        }
-
-        /* ===== رندر بازار ===== */
-        function renderMarket() {
-            const resNames = { gold: 'طلای', oil: 'نفت', metal: 'فلز' };
-            const resIcons = { gold: '💰', oil: '🛢️', metal: '⛏️' };
-            let h = `<div class="section-title">➕ ثبت پیشنهاد جدید</div>
-            <div style="background:#1a1a2e;padding:10px;border-radius:12px;border:1px solid #334155;margin-bottom:12px;">
-                <div style="display:flex;gap:5px;align-items:end;">
-                    <div style="flex:1;"><label style="font-size:0.5rem;color:#94a3b8;">می‌دهم</label>
-                        <select id="mktGive"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select>
-                    </div>
-                    <div style="flex:1;"><label style="font-size:0.5rem;color:#94a3b8;">مقدار</label>
-                        <input type="number" id="mktGiveAmt" placeholder="مقدار" min="1">
-                    </div>
-                </div>
-                <div style="display:flex;gap:5px;align-items:end;margin-top:5px;">
-                    <div style="flex:1;"><label style="font-size:0.5rem;color:#94a3b8;">می‌خواهم</label>
-                        <select id="mktGet"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select>
-                    </div>
-                    <div style="flex:1;"><label style="font-size:0.5rem;color:#94a3b8;">مقدار</label>
-                        <input type="number" id="mktGetAmt" placeholder="مقدار" min="1">
-                    </div>
-                </div>
-                <button class="btn btn-gold btn-sm" style="width:100%;margin-top:8px;justify-content:center;" onclick="createMarketOffer()">📋 ثبت پیشنهاد</button>
-            </div>
-            <div class="section-title">🛒 پیشنهادهای فعال (${marketOffers.length})</div>`;
-            if (marketOffers.length === 0) {
-                h += `<div class="empty">هیچ پیشنهادی نیست</div>`;
-            } else {
-                marketOffers.forEach(o => {
-                    const isMine = o.sid === player.id;
-                    h += `<div class="player-row" style="${isMine ? 'border-color:#f59e0b66;' : ''}">
-                        <div>
-                            <div style="font-size:0.6rem;">${escapeHtml(o.seller)} ${isMine ? '<span style="color:#fbbf24;font-size:0.45rem;">(شما)</span>' : ''}</div>
-                            <div style="font-size:0.5rem;color:#4ade80;">${resIcons[o.give]} ${o.ga.toLocaleString('fa-IR')} ${resNames[o.give]} → ${resIcons[o.get]} ${o.gta.toLocaleString('fa-IR')} ${resNames[o.get]}</div>
-                        </div>
-                        ${isMine ? '<span style="font-size:0.45rem;color:#64748b;">پیشنهاد شما</span>' : `<button class="btn btn-green btn-sm" ${player[o.get] < o.gta ? 'disabled' : ''} onclick="buyMarketOffer('${o.id}')">خرید</button>`}
-                    </div>`;
-                });
-            }
-            document.getElementById('marketContent').innerHTML = h;
-        }
-
-        /* ===== رندر تحقیق ===== */
-        function renderResearch() {
-            const branches = [
-                { key: 'military', name: '⚔️ نظامی', desc: 'ارتقای قدرت جنگی', icon: '⚔️' },
-                { key: 'economy', name: '💰 اقتصادی', desc: 'بهبود تولید منابع', icon: '📈' },
-                { key: 'aviation', name: '✈️ هوایی', desc: 'باز کردن قفل جنگنده‌ها', icon: '🛩️' }
-            ];
-            let h = `<div class="info-bar">⭐ XP فعلی: ${player.xp.toLocaleString('fa-IR')}</div>`;
-            branches.forEach(b => {
-                const lvl = player.research[b.key];
-                const cost = (lvl + 1) * 15;
-                const canUpgrade = player.xp >= cost;
-                let details = '';
-                if (b.key === 'aviation') {
-                    const unlocked = Object.entries(F_DB).filter(([k, f]) => f.r <= lvl).map(([k, f]) => f.n);
-                    const nextUnlock = Object.entries(F_DB).filter(([k, f]) => f.r === lvl + 1).map(([k, f]) => f.n);
-                    details = `<div style="font-size:0.45rem;color:#94a3b8;margin-top:4px;">قفل‌شده‌ها: ${unlocked.join('، ') || 'هیچ'}</div>`;
-                    if (nextUnlock.length > 0) {
-                        details += `<div style="font-size:0.45rem;color:#4ade80;">سطح بعد: ${nextUnlock.join('، ')}</div>`;
-                    }
-                }
-                h += `<div class="card" style="text-align:right;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;">
-                        <div>
-                            <div style="font-size:0.8rem;font-weight:700;color:#fbbf24;">${b.name} - سطح ${lvl}</div>
-                            <div style="font-size:0.5rem;color:#94a3b8;">${b.desc}</div>
-                            ${details}
-                        </div>
-                        <div style="text-align:center;">
-                            <div style="font-size:1.5rem;">${b.icon}</div>
-                            <button class="btn btn-purple btn-sm" ${!canUpgrade ? 'disabled' : ''} onclick="upgradeResearch('${b.key}')">⬆️ (${cost} XP)</button>
-                        </div>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('researchContent').innerHTML = h;
-        }
-
-        /* ===== رندر رتبه‌بندی ===== */
-        function renderRank() {
-            const sorted = [...allPlayers].sort((a, b) => b.xp - a.xp);
-            let h = `<div class="section-title">🏆 رتبه‌بندی بازیکنان</div>`;
-            sorted.forEach((p, i) => {
-                const isMe = p.id === player.id;
-                const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${(i + 1).toLocaleString('fa-IR')}.`;
-                const bgStyle = isMe ? 'border-color:#f59e0b;background:rgba(245,158,11,0.05);' : '';
-                h += `<div class="player-row" style="${bgStyle}">
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        <span style="font-size:1.1rem;min-width:28px;text-align:center;">${medal}</span>
-                        <div>
-                            <div>${getFormattedName(p)}</div>
-                            <div style="font-size:0.45rem;color:#64748b;">⚔️${calcAttackPower(p)} | 🛡️${calcDefensePower(p)} | 💰${Math.floor(p.gold).toLocaleString('fa-IR')}</div>
-                        </div>
-                    </div>
-                    <span style="color:#fbbf24;font-weight:700;font-size:0.7rem;">⭐ ${p.xp.toLocaleString('fa-IR')}</span>
-                </div>`;
-            });
-            document.getElementById('rankContent').innerHTML = h;
-        }
-
-        /* ===== رندر گزارش نبرد ===== */
-        function renderBattlelog() {
-            let h = `<div class="section-title">📜 گزارش نبردهای اخیر</div>`;
-            if (battleLogs.length === 0) {
-                h += `<div class="empty">هنوز نبردی رخ نداده</div>`;
-            } else {
-                h += `<div class="battle-log">`;
-                [...battleLogs].reverse().forEach(log => {
-                    h += `<div class="log-entry" style="padding:6px 0;border-bottom:1px solid #1a1a2e;">
-                        <div style="font-size:0.55rem;color:#64748b;margin-bottom:2px;">${new Date(log.ts).toLocaleString('fa-IR')}</div>
-                        <div>${log.text}</div>
-                    </div>`;
-                });
-                h += `</div>`;
-            }
-            document.getElementById('battlelogContent').innerHTML = h;
-        }
-
-        /* ===== رندر پنل ادمین ===== */
         function renderAdmin() {
             if (!isAdmin()) return;
             let playerOptions = `<option value="">انتخاب کاربر...</option>`;
-            allPlayers.forEach(p => {
-                playerOptions += `<option value="${p.id}">${escapeHtml(p.name)} (💰${Math.floor(p.gold).toLocaleString('fa-IR')} | ⭐${p.xp})</option>`;
-            });
+            allPlayers.forEach(p => { playerOptions += `<option value="${p.id}">${p.name} (طلا:${Math.floor(p.gold)})</option>`; });
 
             let h = `
-            <div class="info-bar" style="border-color:#ef4444;color:#fca5a5;">⚠️ پنل مدیریت اختصاصی سرور | بازیکنان: ${allPlayers.length}</div>
-
-            <div class="admin-panel-box">
-                <h3>📢 مدیریت اطلاعیه سراسری</h3>
-                <div style="display:flex;gap:5px;margin-bottom:8px;">
-                    <input type="text" id="admBannerText" placeholder="متن اطلاعیه برای بالای صفحه..." maxlength="150" style="flex:1;margin:0;">
-                    <button class="btn btn-blue btn-sm" onclick="adminSetBanner()">اعلان</button>
-                    <button class="btn btn-danger btn-sm" onclick="adminRemoveBanner()">حذف</button>
-                </div>
-                <div style="display:flex;gap:5px;">
-                    <button class="btn btn-sm" style="width:100%;justify-content:center;${chatLocked ? 'background:#10b981;color:#fff;' : 'background:#dc2626;color:#fff;'}" onclick="adminToggleChat()">
-                        ${chatLocked ? '🔓 باز کردن چت جهانی' : '🔒 قفل کردن چت جهانی'}
-                    </button>
-                </div>
-            </div>
-
+            <div class="info-bar" style="border-color: #ef4444; color: #fca5a5;">⚠️ پنل مدیریت اختصاصی سرور</div>
             <div class="admin-panel-box">
                 <h3>🎁 اعطای منابع به کاربر</h3>
                 <select id="admSel">${playerOptions}</select>
-                <div style="display:flex;gap:5px;margin-top:5px;">
-                    <select id="admRes" style="width:35%;margin:0;">
-                        <option value="gold">💰 طلا</option>
-                        <option value="oil">🛢️ نفت</option>
-                        <option value="metal">⛏️ فلز</option>
-                        <option value="xp">⭐ XP</option>
-                    </select>
-                    <input type="number" id="admAmt" placeholder="مقدار" style="width:35%;margin:0;" min="1">
-                    <button class="btn btn-gold btn-sm" style="width:30%;margin:0;" onclick="adminGiveRes()">اعطا</button>
+                <div style="display:flex; gap:5px; margin-top:5px;">
+                    <select id="admRes" style="width:40%"><option value="gold">طلای</option><option value="oil">نفت</option><option value="metal">فلز</option><option value="xp">XP</option></select>
+                    <input type="number" id="admAmt" placeholder="مقدار" style="width:40%">
+                    <button class="btn btn-green btn-sm" style="width:20%" onclick="adminGiveRes()">افزودن</button>
                 </div>
             </div>
-
             <div class="admin-panel-box">
-                <h3>🛠️ عملیات مدیریتی</h3>
-                <div style="display:flex;flex-wrap:wrap;gap:5px;">
-                    <button class="btn btn-blue btn-sm" onclick="adminToggleShield()">🛡️ سپر</button>
-                    <button class="btn btn-red btn-sm" onclick="adminResetPlayer()">⚠️ ریست منابع</button>
-                    <button class="btn btn-danger btn-sm" onclick="adminDeletePlayer()">🗑️ حذف کاربر</button>
+                <h3>🛡️ و 🗑️ مدیریت کاربر</h3>
+                <select id="admSel2" onchange="adminShowSpy()">${playerOptions}</select>
+                <div style="display:flex; flex-wrap: wrap; gap:5px; margin-top:5px;">
+                    <button class="btn btn-blue btn-sm" onclick="let s=document.getElementById('admSel2'); document.getElementById('admSel').value=s.value; adminToggleShield();">تغییر سپر</button>
+                    <button class="btn btn-gold btn-sm" onclick="let s=document.getElementById('admSel2'); document.getElementById('admSel').value=s.value; adminResetPlayer();">ریست منابع</button>
+                    <button class="btn btn-danger btn-sm" onclick="let s=document.getElementById('admSel2'); document.getElementById('admSel').value=s.value; adminDeletePlayer();">حذف کامل</button>
                 </div>
+                <div id="spyArea" class="spy-data" style="display:none; margin-top:10px;"></div>
             </div>
-
             <div class="admin-panel-box">
-                <h3>📢 پیام سراسری در چت</h3>
-                <div style="display:flex;gap:5px;">
-                    <input type="text" id="admBroad" placeholder="متن پیام سراسری..." maxlength="150" style="flex:1;margin:0;">
-                    <button class="btn btn-gold btn-sm" onclick="adminBroadcast()">ارسال</button>
-                    <button class="btn btn-danger btn-sm" onclick="adminClearChat()">🧹 پاک</button>
+                <h3>📢 مدیریت چت جهانی</h3>
+                <div style="display:flex; gap:5px; margin-bottom: 8px;">
+                    <input type="text" id="admBroad" placeholder="متن پیام سراسری..." maxlength="100" style="flex:1; margin:0">
+                    <button class="btn btn-red btn-sm" onclick="adminBroadcast()">ارسال</button>
                 </div>
+                <button class="btn btn-danger" style="width:100%; justify-content:center;" onclick="adminClearChat()">🧹 پاک کردن تمام چت‌ها</button>
             </div>
-
-            <div class="admin-panel-box" style="border-color:#dc2626;">
-                <h3 style="color:#fca5a5;">☢️ منطقه خطر</h3>
-                <button class="btn btn-danger" style="width:100%;justify-content:center;" onclick="adminNuke()">☢️ نابودی کامل سرور</button>
+            <div class="admin-panel-box" style="border-color: #dc2626; background: rgba(220, 38, 38, 0.05);">
+                <h3 style="color:#dc2626;">☢️ زون خطر (تخریب کامل)</h3>
+                <button class="btn btn-danger" style="width:100%; background:#7f1d1d; justify-content:center;" onclick="adminNuke()">پاکسازی کل سرور</button>
             </div>
             `;
             document.getElementById('adminContent').innerHTML = h;
         }
 
-        /* ===== سوئیچ تب‌ها ===== */
-        const renderMap = {
-            mine: renderMine,
-            military: renderMilitary,
-            war: renderWar,
-            chat: renderChat,
-            factions: renderFactions,
-            market: renderMarket,
-            research: renderResearch,
-            rank: renderRank,
-            battlelog: renderBattlelog,
-            admin: renderAdmin
+        window.adminShowSpy = function() {
+            const id = document.getElementById('admSel2').value;
+            const area = document.getElementById('spyArea');
+            if (!id) { area.style.display = 'none'; return; }
+            const t = allPlayers.find(p => p.id === id);
+            if (!t) return;
+            area.style.display = 'block';
+            let fightersStr = "بدون جنگنده";
+            if (Object.keys(t.fighters).length > 0) {
+                fightersStr = Object.entries(t.fighters).filter(([k, v]) => v.count > 0).map(([k, v]) =>
+                    `${F_DB[k]?.n || k}: ${v.count}`).join(' | ');
+            }
+            area.innerHTML =
+                `<b>اطلاعات مخفی ${t.name}:</b><br>قدرت حمله: ${calcAttackPower(t)} | قدرت دفاع: ${calcDefensePower(t)}<br>جنگنده‌ها: ${fightersStr}<br>پدافندها: ${t.defenses.length > 0 ? t.defenses.map(d => D_DB[d.type]?.n).join(', ') : 'بدون پدافند'}`;
         };
 
-        function renderActiveTab() {
-            const fn = renderMap[activeTab];
-            if (fn) fn();
+        function renderFactions() {
+            const stats = getFactionStats();
+            let h = `<div class="section-title">🛡️ جناح‌ها</div><div class="grid2">`;
+            stats.forEach(f => {
+                const isMember = player.faction === f.id;
+                h +=
+                    `<div class="card"><div class="icon">${f.icon}</div><div>${f.name}</div><div class="cost">👥 ${f.members} نفر</div><div class="cost">⭐ ${f.points} امتیاز</div>${player.faction ? (isMember ? `<button class="btn btn-red btn-sm" disabled>جناح شما</button>` : `<button class="btn btn-sm" disabled>عضو جناح دیگرید</button>`) : `<button class="btn btn-green btn-sm" onclick="joinFaction('${f.id}')">پیوستن</button>`}</div>`;
+            });
+            h += `</div>`;
+            document.getElementById('factionsContent').innerHTML = h;
         }
 
-        function switchTab(tabName) {
-            activeTab = tabName;
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.querySelector(`.tab[data-tab="${tabName}"]`)?.classList.add('active');
-            document.getElementById('panel' + tabName.charAt(0).toUpperCase() + tabName.slice(1))?.classList.add('active');
-            renderActiveTab();
+        function renderMarket() {
+            let h =
+                `<div class="section-title">🛒 فروش</div><div class="card"><select id="mktGive"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGiveAmt" placeholder="مقدار"><select id="mktGet"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGetAmt" placeholder="مقدار درخواست"><button class="btn btn-gold" onclick="createMarketOffer()">ثبت</button></div><div class="section-title">📜 بازار</div>`;
+            if (marketOffers.length === 0) h += `<div class="empty">بازار خالی است</div>`;
+            marketOffers.forEach(o => {
+                const r = { gold: "💰طلا", oil: "🛢️نفت", metal: "⛏️فلز" };
+                h +=
+                    `<div class="player-row"><span>${escapeHtml(o.seller)}: ${o.ga} ${r[o.give]} ➡️ ${o.gta} ${r[o.get]}</span>${o.sid===player.id?'<button class="btn btn-red btn-sm" disabled>شما</button>':`<button class="btn btn-green btn-sm" onclick="buyMarketOffer('${o.id}')">خرید</button>`}</div>`;
+            });
+            document.getElementById('marketContent').innerHTML = h;
         }
 
-        document.querySelectorAll('.tab').forEach(t => {
-            t.addEventListener('click', () => switchTab(t.dataset.tab));
-        });
+        function renderResearch() {
+            const b = { military: "⚔️ نظامی", economy: "💰 اقتصاد", aviation: "✈️ هوانوردی" };
+            let h = `<div class="section-title">🔬 تحقیقات (XP: ${player.xp})</div><div class="grid2">`;
+            for (const [k, n] of Object.entries(b)) {
+                const l = player.research[k],
+                    c = (l + 1) * 15;
+                h +=
+                    `<div class="card"><div class="icon">${n}</div><div class="cost">سطح: ${l}</div><div class="cost">هزینه: ${c} XP</div><button class="btn btn-purple btn-sm" ${player.xp<c?'disabled':''} onclick="upgradeResearch('${k}')">ارتقا</button></div>`;
+            }
+            document.getElementById('researchContent').innerHTML = h + `</div>`;
+        }
 
-        /* ===== حلقه اصلی بازی ===== */
-        async function gameLoop() {
-            await loadAll();
-            if (player) {
-                const me = allPlayers.find(p => p.id === player.id);
-                if (me) player = me;
-                updateUI();
-                if (activeTab === "mine") {
-                    /* فقط آپدیت بصری، بدون رندر کامل */
-                    updateMineVisuals();
+        function renderRank() {
+            let h = "";
+            const fStats = getFactionStats();
+            h += `<div class="section-title">🛡️ رتبه جناح‌ها</div>`;
+            fStats.forEach((f, i) => {
+                const rank = i + 1;
+                let crown = rank <= 3 ? "👑 " : "";
+                let style = rank <= 3 ? "color: #fbbf24; font-weight: bold;" : "";
+                h +=
+                    `<div class="player-row"><span style="${style}">#${rank} ${crown}${f.icon} ${f.name}</span><span>👥 ${f.members} | ⭐ ${f.points}</span></div>`;
+            });
+            h += `<div class="section-title">🏆 رتبه بازیکنان</div>`;
+            const sortedPlayers = [...allPlayers].sort((a, b) => (b.xp || 0) - (a.xp || 0));
+            sortedPlayers.forEach((p, i) => {
+                const rank = i + 1;
+                let crown = rank <= 3 ? "👑 " : "";
+                let style = rank <= 3 ? "color: #fbbf24; font-weight: bold;" : "";
+                h +=
+                    `<div class="player-row"><span style="${style}">#${rank} ${crown}${getFormattedName(p)} ${p.id===player.id?'(شما)':''}</span><span>⭐ ${p.xp || 0}</span></div>`;
+            });
+            document.getElementById('rankContent').innerHTML = h;
+        }
+
+        function renderBattlelog() {
+            let h =
+                `<div class="section-title">📜 گزارش جنگ‌ها (آخرین ۱۵ مورد)</div><div class="battle-log">`;
+            if (battleLogs.length === 0) h += `<div class="empty">جنگی ثبت نشده</div>`;
+            battleLogs.slice().reverse().forEach(l => h +=
+                `<div class="log-entry">${l.text}<br><small>${new Date(l.ts).toLocaleTimeString('fa-IR')}</small></div>`);
+            document.getElementById('battlelogContent').innerHTML = h + `</div>`;
+        }
+
+        document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+            t.classList.add('active');
+            const tn = t.dataset.tab;
+            document.getElementById('panel' + tn.charAt(0).toUpperCase() + tn.slice(1)).classList.add('active');
+            if (tn === 'mine') renderMine();
+            else if (tn === 'military') renderMilitary();
+            else if (tn === 'war') renderWar();
+            else if (tn === 'chat') renderChat();
+            else if (tn === 'factions') renderFactions();
+            else if (tn === 'market') renderMarket();
+            else if (tn === 'research') renderResearch();
+            else if (tn === 'rank') renderRank();
+            else if (tn === 'battlelog') renderBattlelog();
+            else if (tn === 'admin') renderAdmin();
+        }));
+
+        async function syncLoop() {
+            if (isConnected && !isAttacking) {
+                await loadAll();
+                if (player) {
+                    updateUI();
+                    if (document.querySelector('.tab.active')?.dataset.tab === 'chat') renderChat();
                 }
             }
         }
 
-        /* ===== شروع ===== */
         async function init() {
-            const ok = await initSupabase();
-            if (ok) {
+            if (await initSupabase()) {
                 await loadAll();
-                document.getElementById("loginBox").style.display = 'flex';
-                /* همگام‌سازی هر ۳ ثانیه */
-                setInterval(gameLoop, SYNC_INTERVAL);
-            } else {
-                document.getElementById("syncText").innerText = "❌ اتصال برقرار نشد. صفحه را رفرش کنید.";
+                document.getElementById('loginBox').style.display = 'flex';
+                setInterval(syncLoop, SYNC_INTERVAL);
             }
         }
-
         init();
     </script>
 </body>
