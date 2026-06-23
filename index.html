@@ -2340,7 +2340,7 @@
                 if (ex.password !== pw) return toast("رمز اشتباه", true);
                 player = ex;
             } else {
-                if (allPlayers.length >= 50) return toast("سرور پر", true);
+                if (allPlayers.length >= 500) return toast("سرور پر", true);
                 player = createPlayer(n, pw);
                 allPlayers.push(player);
                 await saveAll(true);
