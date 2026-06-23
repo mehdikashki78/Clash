@@ -3,1040 +3,407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Iron sky | آسمان آهنین</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <title>Iron Sky | آسمان آهنین</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ============================================================
-           RESET & BASE
-           ============================================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+        :root{
+            --bg-void:#05060d;
+            --bg-deep:#0a0d18;
+            --bg-panel:#10131f;
+            --bg-card:#151a2b;
+            --bg-card-2:#1b2138;
+            --line:#2a3252;
+            --line-soft:#1e2438;
+            --amber:#f5a623;
+            --amber-bright:#ffc857;
+            --amber-dim:#8a6018;
+            --danger:#e63946;
+            --danger-dim:#7a1f28;
+            --ally:#4cc9f0;
+            --success:#2ec4b6;
+            --success-bright:#5eead4;
+            --text:#dfe4f3;
+            --text-dim:#8891ad;
+            --text-faint:#5b6280;
+            --radius:18px;
+            --radius-sm:12px;
+            --font-display:'Rajdhani', 'Vazirmatn', sans-serif;
+            --font-body:'Vazirmatn', system-ui, sans-serif;
         }
-
-        body {
-            background: #0b0b1a;
-            min-height: 100vh;
-            padding: 14px;
-            color: #e2e8f0;
-            overflow-x: hidden;
+        *{ margin:0; padding:0; box-sizing:border-box; font-family:var(--font-body); -webkit-tap-highlight-color: transparent; }
+        html{ scroll-behavior:smooth; }
+        body{
+            background: var(--bg-void);
+            min-height:100vh;
+            padding:10px;
+            color: var(--text);
+            overflow-x:hidden;
+            position:relative;
+        }
+        /* ambient radar / starfield backdrop */
+        body::before{
+            content:"";
+            position:fixed; inset:0;
+            background:
+                radial-gradient(circle at 18% 15%, rgba(245,166,35,0.07), transparent 38%),
+                radial-gradient(circle at 85% 80%, rgba(76,201,240,0.06), transparent 42%),
+                radial-gradient(circle at 50% 50%, rgba(230,57,70,0.04), transparent 60%);
+            pointer-events:none;
+            z-index:0;
+        }
+        body::after{
+            content:"";
+            position:fixed; inset:0;
             background-image:
-                radial-gradient(ellipse at 20% 30%, #1a1a3e 0%, #0b0b1a 70%),
-                radial-gradient(ellipse at 80% 70%, #1a1a2e 0%, transparent 60%);
-            background-attachment: fixed;
+                linear-gradient(rgba(245,166,35,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(245,166,35,0.025) 1px, transparent 1px);
+            background-size: 34px 34px;
+            pointer-events:none;
+            z-index:0;
+            mask-image: radial-gradient(circle at 50% 30%, black 0%, transparent 75%);
         }
+        .radar-sweep{
+            position:fixed; top:-40%; right:-30%;
+            width:600px; height:600px;
+            pointer-events:none; z-index:0;
+            opacity:0.5;
+        }
+        .radar-sweep svg{ width:100%; height:100%; }
+        .radar-sweep .sweep-arm{
+            transform-origin:300px 300px;
+            animation: radarspin 6s linear infinite;
+        }
+        @keyframes radarspin{ from{ transform:rotate(0deg);} to{ transform:rotate(360deg);} }
 
-        /* ============================================================
-           SCROLLBAR
-           ============================================================ */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(20, 20, 40, 0.4);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #f59e0b, #d97706);
-            border-radius: 10px;
-        }
-
-        /* ============================================================
-           CONTAINER
-           ============================================================ */
-        .container {
-            max-width: 1150px;
-            margin: 0 auto;
-            background: rgba(8, 8, 24, 0.78);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 3rem;
-            overflow: hidden;
-            border: 1px solid rgba(245, 158, 11, 0.25);
+        .container{
+            max-width:1100px; margin:0 auto;
+            background: linear-gradient(165deg, rgba(16,19,31,0.96), rgba(10,13,24,0.98));
+            border-radius: 1.6rem;
+            overflow:hidden;
+            border:1px solid var(--line);
             box-shadow:
-                0 0 80px rgba(245, 158, 11, 0.06),
-                inset 0 0 80px rgba(245, 158, 11, 0.02);
-            transition: box-shadow 0.5s ease;
+                0 0 0 1px rgba(245,166,35,0.08),
+                0 30px 80px -20px rgba(0,0,0,0.8),
+                0 0 100px -40px rgba(245,166,35,0.25);
+            position:relative; z-index:1;
+            backdrop-filter: blur(6px);
+            animation: containerIn 0.6s cubic-bezier(.2,.8,.2,1);
         }
-        .container:hover {
-            box-shadow: 0 0 100px rgba(245, 158, 11, 0.10);
+        @keyframes containerIn{ from{ opacity:0; transform:translateY(14px) scale(0.99);} to{ opacity:1; transform:translateY(0) scale(1);} }
+
+        .header{
+            background:
+                linear-gradient(145deg, #11142280 0%, #05060d 100%);
+            padding:1.4rem 1rem 1.1rem;
+            text-align:center;
+            position:relative;
+            border-bottom: 1px solid var(--line-soft);
+            overflow:hidden;
+        }
+        .header::before{
+            content:"";
+            position:absolute; left:0; right:0; top:0; height:2px;
+            background: linear-gradient(90deg, transparent, var(--amber), transparent);
+            animation: scanline 3.5s ease-in-out infinite;
+        }
+        @keyframes scanline{ 0%,100%{ opacity:0.3;} 50%{ opacity:1;} }
+        .header h1{
+            font-family:var(--font-display);
+            color:var(--amber-bright);
+            text-shadow: 0 0 30px rgba(245,166,35,0.45), 0 0 70px rgba(245,166,35,0.15);
+            font-size:1.85rem;
+            font-weight:800;
+            letter-spacing:0.5px;
+            display:flex; align-items:center; justify-content:center; gap:8px;
+        }
+        .header h1 .accent{ color:var(--text); font-weight:600; }
+        .header .sub{
+            font-family:var(--font-display);
+            font-size:0.7rem; color:var(--amber);
+            letter-spacing:5px; opacity:0.75; margin-top:4px; font-weight:600;
+        }
+        .sync-status{
+            background: rgba(5,6,13,0.6);
+            padding:8px; text-align:center; font-size:0.62rem; color:var(--amber-bright);
+            border-bottom:1px solid var(--line-soft);
+            display:flex; justify-content:center; gap:8px; align-items:center;
+            font-family:var(--font-display); letter-spacing:0.5px; font-weight:600;
+        }
+        .login-box{
+            padding:22px 18px; background:var(--bg-deep);
+            display:flex; flex-direction:column; gap:14px;
+            position:relative;
+            animation: fadeUp 0.5s ease;
+        }
+        @keyframes fadeUp{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+        .login-title{
+            text-align:center; color:var(--text-dim); font-size:0.75rem;
+            letter-spacing:1px; margin-bottom:2px;
+        }
+        .login-box input{
+            padding:15px 18px; border-radius:14px; border:1px solid var(--line);
+            text-align:center; font-size:1rem; background:var(--bg-card); color:white;
+            outline:2px solid transparent; transition: border-color .2s, box-shadow .2s;
+        }
+        .login-box input:focus{ outline-color:transparent; border-color:var(--amber); box-shadow:0 0 0 4px rgba(245,166,35,0.12); }
+        .login-box button{
+            background: linear-gradient(135deg, var(--amber), #d9820b);
+            border:none; padding:15px; border-radius:14px; font-weight:800;
+            cursor:pointer; color:#0f172a; font-size:1.05rem;
+            font-family:var(--font-display); letter-spacing:0.5px;
+            transition: transform .15s, box-shadow .15s;
+            box-shadow: 0 6px 20px -4px rgba(245,166,35,0.5);
+        }
+        .login-box button:active{ transform:scale(0.97); }
+
+        .res-bar{
+            display:flex; justify-content:space-around; padding:10px 8px; gap:8px;
+            background: var(--bg-deep); flex-wrap:wrap; border-bottom:1px solid var(--line-soft);
+        }
+        .res-item{
+            background: var(--bg-card);
+            padding:7px 16px; border-radius:30px; font-weight:600; font-size:0.68rem;
+            border:1px solid var(--line-soft);
+            display:flex; align-items:center; gap:5px;
+            transition: border-color .3s, box-shadow .3s;
+        }
+        .res-item:hover{ border-color: rgba(245,166,35,0.4); box-shadow:0 0 14px -4px rgba(245,166,35,0.3); }
+        .res-item span{ color:var(--amber-bright); font-weight:800; font-family:var(--font-display); font-size:0.85rem; }
+
+        .online-bar{ background:rgba(46,196,182,0.08); padding:6px; text-align:center; font-size:0.6rem; color:var(--success-bright); font-weight:600; letter-spacing:0.4px; }
+        .online-bar.offline{ background:rgba(230,57,70,0.1); color:#ffb4ba; }
+        .online-bar.warn{ background:rgba(245,166,35,0.08); color:var(--amber-bright); }
+
+        .shield-bar{
+            background: linear-gradient(90deg, rgba(76,201,240,0.12), rgba(76,201,240,0.05));
+            padding:9px; text-align:center; font-size:0.68rem; color:#bfe8ff;
+            border-bottom:1px solid rgba(76,201,240,0.25); display:none; font-weight:600;
         }
 
-        /* ============================================================
-           HEADER
-           ============================================================ */
-        .header {
-            background: linear-gradient(145deg, rgba(20, 20, 44, 0.9), rgba(8, 8, 20, 0.95));
-            padding: 1.8rem 1rem 1.2rem;
-            text-align: center;
-            position: relative;
-            border-bottom: 1px solid rgba(245, 158, 11, 0.12);
-            overflow: hidden;
+        .tabs{
+            display:flex; background:var(--bg-deep); border-bottom:1px solid var(--line-soft);
+            overflow-x:auto; scrollbar-width:none;
         }
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 40%, rgba(245, 158, 11, 0.04), transparent 60%);
-            pointer-events: none;
-            animation: headerGlow 10s infinite alternate ease-in-out;
+        .tabs::-webkit-scrollbar{ display:none; }
+        .tab{
+            padding:12px 14px; cursor:pointer; font-weight:700; color:var(--text-faint);
+            font-size:0.62rem; white-space:nowrap; border-bottom:2px solid transparent;
+            text-align:center; transition: color .2s, background .2s, border-color .2s;
+            font-family:var(--font-display); letter-spacing:0.3px;
         }
-        @keyframes headerGlow {
-            0% {
-                transform: translate(-10%, -10%);
-            }
-            100% {
-                transform: translate(10%, 10%);
-            }
-        }
-        .header h1 {
-            color: #fbbf24;
-            text-shadow: 0 0 60px rgba(245, 158, 11, 0.25), 0 4px 30px rgba(0, 0, 0, 0.7);
-            font-size: 2.2rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            position: relative;
-            z-index: 1;
-        }
-        .header h1 span {
-            color: #f59e0b;
-        }
-        .header .sub {
-            font-size: 0.7rem;
-            color: #f59e0b;
-            letter-spacing: 8px;
-            opacity: 0.7;
-            margin-top: 2px;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
-        }
-        .sync-status {
-            background: rgba(0, 0, 0, 0.45);
-            padding: 6px 16px;
-            text-align: center;
-            font-size: 0.6rem;
-            color: #fbbf24;
-            border-bottom: 1px solid rgba(245, 158, 11, 0.08);
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            align-items: center;
-            border-radius: 0 0 20px 20px;
-            backdrop-filter: blur(4px);
-        }
-        .sync-status #syncText {
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .tab:hover{ color:var(--text-dim); background:rgba(245,166,35,0.04); }
+        .tab.active{ color:var(--amber-bright); background:var(--bg-card); border-bottom-color:var(--amber); }
+        .tab.admin-tab{ color:#c2737a; border-color:rgba(127,29,29,0.2); }
+        .tab.admin-tab.active{ color:#ffb4ba; background:rgba(69,10,10,0.4); border-bottom-color:var(--danger); }
 
-        /* ============================================================
-           ONLINE BAR
-           ============================================================ */
-        .online-bar {
-            background: rgba(10, 30, 10, 0.6);
-            padding: 6px 12px;
-            text-align: center;
-            font-size: 0.6rem;
-            color: #4ade80;
-            border-bottom: 1px solid rgba(74, 222, 128, 0.12);
-            backdrop-filter: blur(4px);
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            transition: all 0.4s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .online-bar.offline {
-            background: rgba(30, 10, 10, 0.7);
-            color: #fca5a5;
-            border-color: rgba(252, 165, 165, 0.15);
-        }
-        .online-bar.warn {
-            background: rgba(30, 30, 10, 0.7);
-            color: #fbbf24;
-            border-color: rgba(251, 191, 36, 0.15);
-        }
-        .online-bar .dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: currentColor;
-            animation: pulse-dot 1.8s infinite;
-        }
-        @keyframes pulse-dot {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.4;
-                transform: scale(0.8);
-            }
-        }
+        .panel{ display:none; padding:14px; min-height:440px; background:rgba(8,10,18,0.5); }
+        .panel.active{ display:block; animation: panelIn 0.35s ease; }
+        @keyframes panelIn{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:translateY(0);} }
 
-        /* ============================================================
-           SHIELD BAR
-           ============================================================ */
-        .shield-bar {
-            background: rgba(16, 30, 60, 0.7);
-            padding: 10px 14px;
-            text-align: center;
-            font-size: 0.7rem;
-            color: #93c5fd;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-            display: none;
-            font-weight: 700;
-            backdrop-filter: blur(4px);
-            animation: shieldPulse 2.5s infinite ease-in-out;
-            letter-spacing: 0.5px;
-        }
-        @keyframes shieldPulse {
-            0%,
-            100% {
-                opacity: 1;
-                text-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
-            }
-            50% {
-                opacity: 0.75;
-                text-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-            }
-        }
+        .grid2{ display:grid; grid-template-columns:repeat(2,1fr); gap:11px; }
 
-        /* ============================================================
-           LOGIN BOX
-           ============================================================ */
-        .login-box {
-            padding: 32px 24px 40px;
-            background: rgba(0, 0, 0, 0.35);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            backdrop-filter: blur(8px);
-            align-items: center;
+        .card{
+            background: linear-gradient(160deg, var(--bg-card-2), var(--bg-card));
+            border-radius: var(--radius); padding:14px 12px; text-align:center;
+            border:1px solid var(--line-soft); margin-bottom:9px; position:relative;
+            transition: transform .2s, border-color .2s, box-shadow .2s;
         }
-        .login-box input {
-            width: 100%;
-            max-width: 400px;
-            padding: 16px 24px;
-            border-radius: 60px;
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            text-align: center;
-            font-size: 1rem;
-            background: rgba(16, 16, 36, 0.8);
-            color: white;
-            outline: none;
-            transition: all 0.3s;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+        .card::before{
+            content:""; position:absolute; top:0; right:0; left:0; height:1px;
+            background:linear-gradient(90deg, transparent, rgba(245,166,35,0.4), transparent);
         }
-        .login-box input:focus {
-            border-color: #f59e0b;
-            box-shadow: 0 0 40px rgba(245, 158, 11, 0.10);
-            background: rgba(24, 24, 48, 0.9);
-        }
-        .login-box input::placeholder {
-            color: #64748b;
-            font-weight: 400;
-        }
-        .login-box button {
-            width: 100%;
-            max-width: 400px;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            border: none;
-            padding: 16px;
-            border-radius: 60px;
-            font-weight: 800;
-            cursor: pointer;
-            color: #0f172a;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            box-shadow: 0 8px 40px rgba(245, 158, 11, 0.15);
-            letter-spacing: 1px;
-        }
-        .login-box button:hover {
-            transform: scale(1.02);
-            box-shadow: 0 12px 50px rgba(245, 158, 11, 0.30);
-        }
-        .login-box .login-hint {
-            font-size: 0.65rem;
-            color: #64748b;
-            text-align: center;
-            margin-top: 4px;
-            font-weight: 400;
-        }
+        .card:hover{ transform:translateY(-2px); border-color: rgba(245,166,35,0.35); box-shadow:0 10px 26px -10px rgba(0,0,0,0.6); }
+        .card .icon{ font-size:2rem; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
+        .card .cost{ font-size:0.6rem; color:var(--amber-bright); margin-top:5px; font-weight:600; }
+        .card h3{ font-family:var(--font-display); font-weight:700; letter-spacing:0.3px; }
 
-        /* ============================================================
-           RES BAR
-           ============================================================ */
-        .res-bar {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            padding: 12px 10px;
-            background: rgba(0, 0, 0, 0.35);
-            border-bottom: 1px solid rgba(245, 158, 11, 0.06);
-            backdrop-filter: blur(4px);
+        .player-row{
+            background: var(--bg-card); border-radius: var(--radius); padding:10px 14px; margin-bottom:8px;
+            border:1px solid var(--line-soft); display:flex; justify-content:space-between; align-items:center;
+            flex-wrap:wrap; gap:8px; transition: border-color .2s, transform .15s;
         }
-        .res-item {
-            background: rgba(16, 16, 36, 0.7);
-            padding: 6px 20px;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 0.7rem;
-            border: 1px solid rgba(245, 158, 11, 0.08);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            transition: all 0.2s;
-        }
-        .res-item:hover {
-            border-color: rgba(245, 158, 11, 0.25);
-            transform: translateY(-2px);
-        }
-        .res-item span {
-            color: #fbbf24;
-            font-weight: 900;
-            font-size: 0.8rem;
-            min-width: 44px;
-            text-align: center;
-        }
+        .player-row:hover{ border-color:rgba(245,166,35,0.3); transform:translateX(-1px); }
 
-        /* ============================================================
-           TABS
-           ============================================================ */
-        .tabs {
-            display: flex;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid rgba(245, 158, 11, 0.06);
-            overflow-x: auto;
-            scrollbar-width: none;
-            padding: 0 6px;
-            gap: 2px;
-            backdrop-filter: blur(4px);
+        .btn{
+            transition:.18s; cursor:pointer; border:none; padding:8px 18px; border-radius:30px;
+            font-weight:800; font-size:0.65rem; display:inline-flex; align-items:center; gap:6px;
+            margin:2px; font-family:var(--font-display); letter-spacing:0.3px;
+            box-shadow: 0 4px 14px -4px rgba(0,0,0,0.4);
         }
-        .tabs::-webkit-scrollbar {
-            display: none;
-        }
-        .tab {
-            padding: 12px 16px;
-            cursor: pointer;
-            font-weight: 700;
-            color: #94a3b8;
-            font-size: 0.65rem;
-            white-space: nowrap;
-            border-bottom: 3px solid transparent;
-            text-align: center;
-            transition: all 0.25s;
-            border-radius: 14px 14px 0 0;
-            background: transparent;
-            letter-spacing: 0.3px;
-            flex-shrink: 0;
-        }
-        .tab:hover {
-            color: #e2e8f0;
-            background: rgba(255, 255, 255, 0.02);
-        }
-        .tab.active {
-            color: #fbbf24;
-            background: rgba(245, 158, 11, 0.06);
-            border-bottom-color: #f59e0b;
-            box-shadow: 0 -4px 30px rgba(245, 158, 11, 0.04);
-        }
-        .tab.admin-tab {
-            color: #fca5a5;
-            border-color: transparent;
-        }
-        .tab.admin-tab.active {
-            color: #fca5a5;
-            background: rgba(220, 38, 38, 0.06);
-            border-bottom-color: #ef4444;
-        }
+        .btn:active{ transform:scale(0.94); }
+        .btn:hover:not(:disabled){ filter:brightness(1.1); transform:translateY(-1px); }
+        .btn-attack{ background:linear-gradient(135deg,#ef4444,var(--danger)); color:#fff; }
+        .btn-gold{ background:linear-gradient(135deg,var(--amber-bright),var(--amber)); color:#0f172a; }
+        .btn-green{ background:linear-gradient(135deg,#34d399,var(--success)); color:#06281f; }
+        .btn-purple{ background:linear-gradient(135deg,#a78bfa,#8b5cf6); color:#fff; }
+        .btn-blue{ background:linear-gradient(135deg,#60a5fa,#3b82f6); color:#fff; }
+        .btn-red{ background:linear-gradient(135deg,#f87171,#dc2626); color:#fff; }
+        .btn-danger{ background:rgba(127,29,29,0.5); color:#ffb4ba; border:1px solid var(--danger); box-shadow:none; }
+        .btn-sm{ padding:6px 12px; font-size:0.56rem; }
 
-        /* ============================================================
-           PANELS
-           ============================================================ */
-        .panel {
-            display: none;
-            padding: 18px 14px;
-            min-height: 460px;
-            background: rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(4px);
-            animation: panelFade 0.35s ease;
+        .toast{
+            position:fixed; bottom:20px; right:20px; background:var(--bg-card-2); color:var(--amber-bright);
+            padding:13px 20px; border-radius:16px; border-right:4px solid var(--amber); z-index:9999;
+            animation: toastIn 0.3s ease, fadeOut 4.5s forwards; max-width:92%; font-size:0.8rem;
+            box-shadow:0 14px 40px -8px rgba(0,0,0,0.85); font-weight:600;
         }
-        .panel.active {
-            display: block;
-        }
-        @keyframes panelFade {
-            from {
-                opacity: 0;
-                transform: translateY(14px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        .toast.error{ border-right-color:var(--danger); color:#ffb4ba; }
+        .toast.war{ background:rgba(40,10,10,0.95); border-right-color:var(--danger); color:#ffb4ba; }
+        .toast.peace{ background:rgba(8,30,24,0.95); border-right-color:var(--success); color:var(--success-bright); }
+        @keyframes toastIn{ from{ opacity:0; transform:translateY(14px) scale(0.96);} to{ opacity:1; transform:translateY(0) scale(1);} }
+        @keyframes fadeOut{ 0%{opacity:1; transform:translateY(0);} 75%{opacity:1; transform:translateY(0);} 100%{opacity:0; transform:translateY(20px); visibility:hidden;} }
 
-        /* ============================================================
-           CARDS
-           ============================================================ */
-        .grid2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
-            gap: 16px;
-        }
-        .card {
-            background: rgba(16, 16, 36, 0.65);
-            backdrop-filter: blur(10px);
-            border-radius: 2.2rem;
-            padding: 18px 14px;
-            text-align: center;
-            border: 1px solid rgba(245, 158, 11, 0.06);
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        }
-        .card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(245, 158, 11, 0.20);
-            box-shadow: 0 16px 60px rgba(0, 0, 0, 0.4);
-            background: rgba(20, 20, 44, 0.75);
-        }
-        .card .icon {
-            font-size: 3rem;
-            line-height: 1.2;
-            margin-bottom: 4px;
-        }
-        .card .cost {
-            font-size: 0.6rem;
-            color: #fbbf24;
-            margin-top: 4px;
-            font-weight: 600;
-            opacity: 0.9;
-        }
-        .card h3 {
-            font-size: 1rem;
-            margin: 6px 0 2px;
-            color: #f1f5f9;
-            font-weight: 700;
-        }
+        button:disabled{ opacity:0.42; cursor:not-allowed; filter:none !important; }
+        .empty{ text-align:center; padding:30px 14px; color:var(--text-faint); font-size:0.8rem; }
+        .empty::before{ content:"📭"; display:block; font-size:1.8rem; margin-bottom:8px; opacity:0.6; }
 
-        /* ============================================================
-           PLAYER ROW
-           ============================================================ */
-        .player-row {
-            background: rgba(0, 0, 0, 0.30);
-            border-radius: 2rem;
-            padding: 10px 18px;
-            margin-bottom: 8px;
-            border: 1px solid rgba(245, 158, 11, 0.04);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            backdrop-filter: blur(4px);
-            transition: all 0.2s;
+        .section-title{
+            color:var(--amber-bright); margin:12px 0 8px; font-size:0.72rem;
+            border-bottom:1px solid var(--line-soft); padding-bottom:6px;
+            font-family:var(--font-display); letter-spacing:0.6px; font-weight:700;
+            display:flex; align-items:center; gap:6px;
         }
-        .player-row:hover {
-            border-color: rgba(245, 158, 11, 0.12);
-            background: rgba(0, 0, 0, 0.40);
+        .info-bar{
+            background: linear-gradient(135deg, rgba(245,166,35,0.1), rgba(245,166,35,0.03));
+            padding:10px; border-radius:14px; margin-bottom:12px; font-size:0.64rem;
+            text-align:center; color:var(--amber-bright); border:1px solid rgba(245,166,35,0.25);
+            font-weight:600; letter-spacing:0.3px;
         }
+        input, select{
+            background:var(--bg-card); border:1px solid var(--line); color:white; padding:8px 12px;
+            border-radius:12px; text-align:center; width:100%; margin:4px 0; font-size:0.62rem;
+            transition: border-color .2s;
+        }
+        input:focus, select:focus{ outline:none; border-color:var(--amber); }
+        .badge{ display:inline-block; padding:3px 10px; border-radius:12px; font-size:0.5rem; font-weight:800; letter-spacing:0.3px; }
+        .badge-blue{ background:rgba(30,64,175,0.4); color:#93c5fd; border:1px solid rgba(96,165,250,0.3); }
 
-        /* ============================================================
-           BUTTONS
-           ============================================================ */
-        .btn {
-            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            cursor: pointer;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 800;
-            font-size: 0.65rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin: 2px;
-            letter-spacing: 0.4px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            flex-shrink: 0;
+        .battle-log{
+            background:var(--bg-deep); border:1px solid var(--line-soft); border-radius:var(--radius);
+            padding:12px; max-height:320px; overflow-y:auto; font-size:0.65rem;
         }
-        .btn:active {
-            transform: scale(0.94);
-        }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-        }
-        .btn:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-        .btn-attack {
-            background: linear-gradient(135deg, #ef4444, #b91c1c);
-            color: #fff;
-        }
-        .btn-gold {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: #0f172a;
-        }
-        .btn-green {
-            background: linear-gradient(135deg, #10b981, #047857);
-            color: #fff;
-        }
-        .btn-purple {
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-            color: #fff;
-        }
-        .btn-blue {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            color: #fff;
-        }
-        .btn-red {
-            background: linear-gradient(135deg, #dc2626, #991b1b);
-            color: #fff;
-        }
-        .btn-danger {
-            background: linear-gradient(135deg, #7f1d1d, #450a0a);
-            color: #fca5a5;
-            border: 1px solid #ef4444;
-        }
-        .btn-sm {
-            padding: 5px 14px;
-            font-size: 0.55rem;
-        }
-        .btn-glow {
-            box-shadow: 0 0 30px rgba(245, 158, 11, 0.10);
-        }
+        .battle-log .log-entry{ padding:8px 4px; border-bottom:1px solid var(--line-soft); line-height:1.6; }
+        .battle-log .log-entry:last-child{ border-bottom:none; }
+        .attacker{ color:#ffb4ba; font-weight:700; } .defender{ color:#9fe0ff; font-weight:700; }
+        .loot{ color:var(--success-bright); font-weight:700; } .lost{ color:var(--danger); }
 
-        /* ============================================================
-           TOAST
-           ============================================================ */
-        .toast {
-            position: fixed;
-            bottom: 28px;
-            right: 28px;
-            background: rgba(12, 12, 32, 0.92);
-            backdrop-filter: blur(16px);
-            color: #fbbf24;
-            padding: 14px 26px;
-            border-radius: 60px;
-            border-right: 5px solid #f59e0b;
-            z-index: 9999;
-            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, fadeOut 4.5s ease forwards 0.6s;
-            max-width: 92%;
-            font-size: 0.85rem;
-            font-weight: 600;
-            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .battle-overlay{
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            background: radial-gradient(circle at 50% 40%, rgba(40,10,10,0.92), rgba(0,0,0,0.96));
+            z-index:10000; display:none; justify-content:center; align-items:center;
+            flex-direction:column; backdrop-filter:blur(6px);
         }
-        .toast.error {
-            border-right-color: #ef4444;
-            color: #fca5a5;
+        .battle-overlay.active{ display:flex; animation:fadeIn 0.3s; }
+        .battle-overlay .crosshair{
+            position:absolute; width:280px; height:280px; border:1px solid rgba(245,166,35,0.25);
+            border-radius:50%; animation: crosshairPulse 2s ease-in-out infinite;
         }
-        .toast.war {
-            background: rgba(30, 8, 8, 0.92);
-            border-right-color: #ef4444;
-            color: #fca5a5;
+        .battle-overlay .crosshair::before, .battle-overlay .crosshair::after{
+            content:""; position:absolute; background:rgba(245,166,35,0.3);
         }
-        .toast.peace {
-            background: rgba(8, 30, 8, 0.92);
-            border-right-color: #10b981;
-            color: #4ade80;
+        .battle-overlay .crosshair::before{ left:50%; top:-14px; bottom:-14px; width:1px; }
+        .battle-overlay .crosshair::after{ top:50%; left:-14px; right:-14px; height:1px; }
+        @keyframes crosshairPulse{ 0%,100%{ transform:scale(1); opacity:0.6;} 50%{ transform:scale(1.08); opacity:1;} }
+        .explosion{ font-size:7.5rem; animation:boom 0.7s infinite alternate; filter:drop-shadow(0 0 30px #ef4444); position:relative; z-index:2; }
+        @keyframes boom{ 0%{ transform:scale(1); opacity:1;} 100%{ transform:scale(1.35); opacity:0.75;} }
+        @keyframes fadeIn{ from{ opacity:0;} to{ opacity:1;} }
+        .battle-text{
+            color:var(--amber-bright); font-size:1.5rem; font-weight:800; margin-top:22px;
+            text-shadow:0 0 16px rgba(245,166,35,0.6); animation:pulse 1s infinite;
+            font-family:var(--font-display); letter-spacing:0.5px; position:relative; z-index:2;
         }
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        @keyframes fadeOut {
-            0% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            70% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
-                visibility: hidden;
-            }
-        }
+        @keyframes pulse{ 0%{transform:scale(1);} 50%{transform:scale(1.05);} 100%{transform:scale(1);} }
+        .result-text{ color:#fff; font-size:1.15rem; text-align:center; margin-top:12px; max-width:90%; position:relative; z-index:2; font-weight:600; }
+        .screen-shake{ animation:shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake{ 10%,90%{transform:translate3d(-1px,0,0);} 20%,80%{transform:translate3d(2px,0,0);} 30%,50%,70%{transform:translate3d(-4px,0,0);} 40%,60%{transform:translate3d(4px,0,0);} }
 
-        /* ============================================================
-           EMPTY
-           ============================================================ */
-        .empty {
-            text-align: center;
-            padding: 36px 16px;
-            color: #94a3b8;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
+        .storage-bar{ height:11px; background:var(--bg-deep); border:1px solid var(--line-soft); border-radius:10px; margin:7px 0; overflow:hidden; }
+        .storage-fill{ height:100%; background:linear-gradient(90deg,var(--amber),#ef4444); transition:width .4s ease; border-radius:10px; }
+        .hp-fill{ background:linear-gradient(90deg,var(--success),#ef4444); }
 
-        /* ============================================================
-           SECTION TITLE
-           ============================================================ */
-        .section-title {
-            color: #fbbf24;
-            margin: 16px 0 12px;
-            font-size: 0.85rem;
-            border-bottom: 1px solid rgba(51, 65, 85, 0.30);
-            padding-bottom: 8px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .chat-container{
+            display:flex; flex-direction:column; height:420px; background:var(--bg-deep);
+            border-radius:var(--radius); border:1px solid var(--line-soft); overflow:hidden;
         }
-        .section-title::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, rgba(245, 158, 11, 0.15), transparent);
-        }
-
-        /* ============================================================
-           INFO BAR
-           ============================================================ */
-        .info-bar {
-            background: rgba(16, 16, 36, 0.55);
-            padding: 12px 18px;
-            border-radius: 24px;
-            margin-bottom: 16px;
-            font-size: 0.7rem;
-            text-align: center;
-            color: #fbbf24;
-            border: 1px solid rgba(245, 158, 11, 0.06);
-            backdrop-filter: blur(4px);
-            font-weight: 700;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* ============================================================
-           INPUTS & SELECTS
-           ============================================================ */
-        input,
-        select {
-            background: rgba(12, 12, 32, 0.75);
-            border: 1px solid rgba(51, 65, 85, 0.40);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 24px;
-            text-align: center;
-            width: 100%;
-            margin: 4px 0;
-            font-size: 0.65rem;
-            font-weight: 600;
-            outline: none;
-            transition: all 0.3s;
-            backdrop-filter: blur(4px);
-        }
-        input:focus,
-        select:focus {
-            border-color: #f59e0b;
-            box-shadow: 0 0 30px rgba(245, 158, 11, 0.04);
-        }
-        input::placeholder {
-            color: #64748b;
-            font-weight: 400;
-        }
-
-        /* ============================================================
-           BADGE
-           ============================================================ */
-        .badge {
-            display: inline-block;
-            padding: 3px 14px;
-            border-radius: 30px;
-            font-size: 0.5rem;
-            font-weight: 800;
-            letter-spacing: 0.4px;
-        }
-        .badge-blue {
-            background: rgba(30, 64, 175, 0.50);
-            color: #93c5fd;
-            backdrop-filter: blur(4px);
-        }
-
-        /* ============================================================
-           BATTLE LOG
-           ============================================================ */
-        .battle-log {
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(245, 158, 11, 0.04);
-            border-radius: 2rem;
-            padding: 14px;
-            max-height: 340px;
-            overflow-y: auto;
-            font-size: 0.65rem;
-            backdrop-filter: blur(4px);
-        }
-        .battle-log .log-entry {
-            padding: 6px 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .battle-log .log-entry:last-child {
-            border-bottom: none;
-        }
-        .battle-log .log-entry small {
-            color: #64748b;
-            font-size: 0.5rem;
-        }
-        .attacker {
-            color: #fca5a5;
-        }
-        .defender {
-            color: #7dd3fc;
-        }
-        .loot {
-            color: #4ade80;
-        }
-        .lost {
-            color: #ef4444;
-        }
-
-        /* ============================================================
-           BATTLE OVERLAY
-           ============================================================ */
-        .battle-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.88);
-            z-index: 10000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            backdrop-filter: blur(12px);
-            animation: overlayIn 0.5s ease;
-        }
-        .battle-overlay.active {
-            display: flex;
-        }
-        @keyframes overlayIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        .explosion {
-            font-size: 8rem;
-            animation: boom 0.7s infinite alternate ease-in-out;
-            filter: drop-shadow(0 0 50px #ef4444);
-        }
-        @keyframes boom {
-            0% {
-                transform: scale(1) rotate(-6deg);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1.3) rotate(6deg);
-                opacity: 0.7;
-            }
-        }
-        .battle-text {
-            color: #fbbf24;
-            font-size: 2rem;
-            font-weight: 900;
-            margin-top: 28px;
-            text-shadow: 0 0 40px rgba(245, 158, 11, 0.4);
-            animation: pulse 1.4s infinite;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.06);
-            }
-        }
-        .result-text {
-            color: #e2e8f0;
-            font-size: 1.4rem;
-            text-align: center;
-            margin-top: 16px;
-            max-width: 90%;
-            font-weight: 700;
-            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
-        }
-        .screen-shake {
-            animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
-        }
-        @keyframes shake {
-            10%,
-            90% {
-                transform: translate3d(-3px, 0, 0);
-            }
-            20%,
-            80% {
-                transform: translate3d(6px, 0, 0);
-            }
-            30%,
-            50%,
-            70% {
-                transform: translate3d(-8px, 0, 0);
-            }
-            40%,
-            60% {
-                transform: translate3d(8px, 0, 0);
-            }
-        }
-
-        /* ============================================================
-           STORAGE BAR
-           ============================================================ */
-        .storage-bar {
-            height: 10px;
-            background: rgba(51, 65, 85, 0.30);
-            border-radius: 20px;
-            margin: 6px 0 4px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-        .storage-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #f59e0b, #ef4444);
-            transition: width 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            border-radius: 20px;
-        }
-        .hp-fill {
-            background: linear-gradient(90deg, #10b981, #ef4444);
-        }
-
-        /* ============================================================
-           CHAT
-           ============================================================ */
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 430px;
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 2.2rem;
-            border: 1px solid rgba(245, 158, 11, 0.04);
-            overflow: hidden;
-            backdrop-filter: blur(4px);
-        }
-        .chat-box {
-            flex: 1;
-            padding: 14px;
-            overflow-y: auto;
-            font-size: 0.7rem;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .chat-msg {
-            background: rgba(16, 16, 36, 0.55);
-            padding: 10px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(51, 65, 85, 0.10);
-            backdrop-filter: blur(4px);
+        .chat-box{ flex:1; padding:12px; overflow-y:auto; font-size:0.68rem; display:flex; flex-direction:column; gap:9px; }
+        .chat-msg{
+            background:var(--bg-card); padding:9px 13px; border-radius:14px; border:1px solid var(--line-soft);
             animation: msgIn 0.25s ease;
         }
-        @keyframes msgIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .chat-msg.me {
-            border-color: rgba(245, 158, 11, 0.20);
-            background: rgba(30, 41, 59, 0.60);
-        }
-        .chat-msg.system-msg {
-            border-color: #ef4444;
-            background: rgba(127, 29, 29, 0.20);
-        }
-        .chat-msg .sender {
-            color: #fbbf24;
-            font-weight: 700;
-            font-size: 0.65rem;
-        }
-        .chat-msg .time {
-            color: #64748b;
-            font-size: 0.45rem;
-            float: left;
-            margin-top: 2px;
-        }
-        .chat-input-area {
-            padding: 12px 14px;
-            background: rgba(0, 0, 0, 0.25);
-            border-top: 1px solid rgba(245, 158, 11, 0.04);
-            display: flex;
-            gap: 10px;
-            backdrop-filter: blur(4px);
-        }
-        .chat-input-area input {
-            margin: 0;
-            flex: 1;
-            font-size: 0.7rem;
-            padding: 10px 18px;
-            border-radius: 40px;
-        }
+        @keyframes msgIn{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:translateY(0);} }
+        .chat-msg.me{ border-color:rgba(245,166,35,0.35); background:#1d2336; }
+        .chat-msg.system-msg{ border-color:var(--danger); background:rgba(127,29,29,0.18); }
+        .chat-msg .sender{ color:var(--amber-bright); font-weight:800; font-size:0.62rem; font-family:var(--font-display); }
+        .chat-msg .time{ color:var(--text-faint); font-size:0.45rem; float:left; margin-top:3px; }
+        .chat-input-area{ padding:11px; background:var(--bg-card); border-top:1px solid var(--line-soft); display:flex; gap:6px; }
+        .chat-input-area input{ margin:0; flex:1; }
 
-        /* ============================================================
-           ADMIN PANEL
-           ============================================================ */
-        .admin-panel-box {
-            background: rgba(12, 12, 20, 0.60);
-            border: 1px solid rgba(127, 29, 29, 0.20);
-            border-radius: 2.2rem;
-            padding: 18px;
-            margin-bottom: 18px;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        .admin-panel-box{
+            background:#0c0808; border:1px solid var(--danger-dim); border-radius:var(--radius);
+            padding:13px; margin-bottom:13px; box-shadow: inset 0 0 30px -10px rgba(230,57,70,0.15);
         }
-        .admin-panel-box h3 {
-            color: #fca5a5;
-            font-size: 0.8rem;
-            margin-bottom: 12px;
-            border-bottom: 1px solid rgba(127, 29, 29, 0.15);
-            padding-bottom: 6px;
-            font-weight: 800;
+        .admin-panel-box h3{
+            color:#ffb4ba; font-size:0.75rem; margin-bottom:9px; border-bottom:1px solid var(--danger-dim);
+            padding-bottom:6px; font-family:var(--font-display); letter-spacing:0.4px;
         }
-        .spy-data {
-            background: rgba(0, 0, 0, 0.30);
-            padding: 12px 16px;
-            border-radius: 24px;
-            font-size: 0.6rem;
-            color: #94a3b8;
-            text-align: right;
-            max-height: 160px;
-            overflow-y: auto;
-            direction: ltr;
-            text-align: left;
-            margin-top: 12px;
-            border: 1px solid rgba(245, 158, 11, 0.03);
-            backdrop-filter: blur(4px);
-            line-height: 1.8;
+        .spy-data{
+            background:var(--bg-card); padding:10px; border-radius:10px; font-size:0.58rem; color:var(--text-dim);
+            max-height:160px; overflow-y:auto; direction:ltr; text-align:left; margin-top:6px; line-height:1.7;
         }
+        .is-hidden{ display:none !important; }
 
-        /* ============================================================
-           HIDE
-           ============================================================ */
-        .is-hidden {
-            display: none !important;
+        @media (max-width:480px){
+            .header h1{ font-size:1.5rem; }
+            .grid2{ grid-template-columns:repeat(2,1fr); gap:8px; }
         }
-
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
-        @media (max-width: 640px) {
-            .header h1 {
-                font-size: 1.5rem;
-            }
-            .res-item {
-                font-size: 0.6rem;
-                padding: 4px 14px;
-            }
-            .tab {
-                font-size: 0.55rem;
-                padding: 8px 10px;
-            }
-            .grid2 {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-            .card .icon {
-                font-size: 2.4rem;
-            }
-            .login-box input {
-                font-size: 0.9rem;
-                padding: 14px 16px;
-            }
-            .login-box button {
-                font-size: 1rem;
-                padding: 14px;
-            }
-            .toast {
-                font-size: 0.75rem;
-                padding: 12px 18px;
-                bottom: 16px;
-                right: 16px;
-            }
-            .panel {
-                padding: 12px 10px;
-            }
-            .player-row {
-                padding: 8px 12px;
-            }
+        @media (prefers-reduced-motion: reduce){
+            *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
         }
-        @media (max-width: 420px) {
-            .grid2 {
-                grid-template-columns: 1fr;
-            }
-            .res-item span {
-                min-width: 30px;
-                font-size: 0.7rem;
-            }
-        }
+        ::-webkit-scrollbar{ width:7px; height:7px; }
+        ::-webkit-scrollbar-track{ background:var(--bg-deep); }
+        ::-webkit-scrollbar-thumb{ background:var(--line); border-radius:10px; }
+        ::-webkit-scrollbar-thumb:hover{ background:var(--amber-dim); }
     </style>
 </head>
 <body>
+    <div class="radar-sweep" aria-hidden="true">
+        <svg viewBox="0 0 600 600">
+            <circle cx="300" cy="300" r="280" fill="none" stroke="#f5a623" stroke-opacity="0.08" stroke-width="1"/>
+            <circle cx="300" cy="300" r="190" fill="none" stroke="#f5a623" stroke-opacity="0.07" stroke-width="1"/>
+            <circle cx="300" cy="300" r="100" fill="none" stroke="#f5a623" stroke-opacity="0.06" stroke-width="1"/>
+            <g class="sweep-arm">
+                <path d="M300,300 L300,20 A280,280 0 0,1 460,90 Z" fill="url(#sweepGrad)"/>
+            </g>
+            <defs>
+                <linearGradient id="sweepGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#f5a623" stop-opacity="0.25"/>
+                    <stop offset="100%" stop-color="#f5a623" stop-opacity="0"/>
+                </linearGradient>
+            </defs>
+        </svg>
+    </div>
+
     <div class="container" id="app">
         <div class="header">
-            <h1>⚡ Iron sky <span>آسمان آهنین</span></h1>
-            <div class="sub">⚔️ IRON SKY 🔥</div>
+            <h1>⚡ IRON SKY <span class="accent">| آسمان آهنین</span></h1>
+            <div class="sub">⚔️ THEATER OF WAR 🔥</div>
             <div class="sync-status" id="syncStatus">
                 <span id="syncText">🔌 در حال اتصال به سرور...</span>
             </div>
         </div>
 
-        <div class="online-bar warn" id="onlineBar">
-            <span class="dot"></span>
-            <span id="onlineText">در حال همگام‌سازی...</span>
-        </div>
+        <div class="online-bar warn" id="onlineBar">🟡 <span id="onlineText">در حال همگام‌سازی...</span></div>
 
         <div class="shield-bar" id="shieldBar">🛡️ سپر محافظتی فعال است...</div>
 
         <div class="login-box" id="loginBox" style="display:none">
-            <input type="text" id="playerName" placeholder="نام کاربری (حداقل ۳ حرف)...">
-            <input type="password" id="playerPassword" placeholder="رمز عبور (حداقل ۴ حرف)...">
+            <div class="login-title">برای ورود به میدان نبرد، هویت خود را ثبت کنید</div>
+            <input type="text" id="playerName" placeholder="🪪 نام کاربری (حداقل ۳ حرف)...">
+            <input type="password" id="playerPassword" placeholder="🔑 رمز عبور (حداقل ۴ حرف)...">
             <button onclick="loginRegister()">🏴 ورود / تأسیس حساب</button>
-            <div class="login-hint">🔐 اطلاعات شما به‌صورت امن ذخیره می‌شود</div>
         </div>
 
         <div id="gameUI" style="display:none">
@@ -1072,18 +439,13 @@
     </div>
 
     <div class="battle-overlay" id="battleOverlay">
+        <div class="crosshair" aria-hidden="true"></div>
         <div class="explosion" id="explosionIcon">💥</div>
         <div class="battle-text" id="battleStatusText">در حال درگیری...</div>
         <div class="result-text" id="battleResultText"></div>
     </div>
 
     <script>
-        // ================================================================
-        //  ════════════════════════════════════════════════════════════════
-        //  تمام کدهای مربوط به Supabase و منطق بازی بدون تغییر باقی می‌ماند
-        //  ════════════════════════════════════════════════════════════════
-        // ================================================================
-
         const SUPABASE_URL = 'https://rxugexswtpvuotijdlzn.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_gsgiccX5kQMLrXnSqbAPwQ_ZoRRsYT3';
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1091,17 +453,12 @@
         const ADMIN_NAME = "Dev";
         const ADMIN_PASS = "admin1313";
 
-        const DATA_KEY = "EMPIRE_DATA_V46_UNIQ";
+        const DATA_KEY = "EMPIRE_DATA_V46_UNIQ"; 
         const SYNC_INTERVAL = 3000;
         const SHIELD_DURATION = 12 * 60 * 60 * 1000;
-
-        let player = null,
-            allPlayers = [],
-            marketOffers = [],
-            battleLogs = [],
-            chatMessages = [];
-        let isConnected = false,
-            saving = false;
+        
+        let player = null, allPlayers = [], marketOffers = [], battleLogs = [], chatMessages = [];
+        let isConnected = false, saving = false;
         let isAttacking = false;
 
         const F_DB = {
@@ -1114,7 +471,7 @@
             "Su-57": { n: "Su-57 Felon", i: "🇷🇺", p: 400, c: { g: 22000, o: 6000, m: 4500 }, r: 6 },
             "F-22": { n: "F-22 Raptor", i: "🇺🇸", p: 500, c: { g: 38000, o: 11000, m: 8500 }, r: 8 }
         };
-
+        
         const D_DB = {
             "Patriot": { n: "Patriot", i: "🇺🇸", c: { g: 20000, o: 6000, m: 4000 }, def: 120, hp: 180 },
             "S-400": { n: "S-400", i: "🇷🇺", c: { g: 25000, o: 8000, m: 6000 }, def: 150, hp: 200 },
@@ -1134,27 +491,21 @@
         function toast(m, e = false, type = "") {
             const t = document.createElement("div");
             t.className = "toast" + (e ? " error" : "") + (type ? " " + type : "");
-            t.innerHTML = m;
-            document.body.appendChild(t);
+            t.innerHTML = m; document.body.appendChild(t);
             setTimeout(() => t.remove(), 4500);
         }
-
         function ts() { return Date.now(); }
-
-        function escapeHtml(str) {
-            return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        }
-
-        function isAdmin() {
-            return player && player.name === ADMIN_NAME && player.password === ADMIN_PASS;
-        }
+        function escapeHtml(str) { return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+        function isAdmin() { return player && player.name === ADMIN_NAME && player.password === ADMIN_PASS; }
 
         function getFormattedName(p) {
-            const facTag = p.faction ? `<span style="color: #ef4444; font-size: 0.8em; margin-right: 4px;">[${FACTIONS_DB[p.faction]?.n || p.faction}]</span>` :
-                '';
+            const facTag = p.faction ? `<span style="color: #ef4444; font-size: 0.8em; margin-right: 4px;">[${FACTIONS_DB[p.faction]?.n || p.faction}]</span>` : '';
+            
+            // نمایش ویژه برای ادمین (رنگ آبی + ایموجی 🚬)
             if (p.name === ADMIN_NAME) {
                 return `<span style="color: #3b82f6; font-weight: bold;">🚬 ${escapeHtml(p.name)}</span> ${facTag}`;
             }
+            
             return `${escapeHtml(p.name)} ${facTag}`;
         }
 
@@ -1169,8 +520,8 @@
             try {
                 const { data, error } = await db.from('game_state').select('id').eq('id', 'main_game').maybeSingle();
                 if (error) throw error;
-                isConnected = true;
-                updateSyncUI("✅ متصل به سرور", "online");
+                isConnected = true; 
+                updateSyncUI("✅ متصل به سرور", "online"); 
                 return true;
             } catch (e) {
                 console.error(e);
@@ -1181,29 +532,20 @@
 
         function updateSyncUI(text, status) {
             document.getElementById("syncText").innerText = text;
-            const ob = document.getElementById("onlineBar");
-            ob.classList.remove("offline", "warn");
-            if (status === "error") ob.classList.add("offline");
-            else if (status === "warn") ob.classList.add("warn");
+            const ob = document.getElementById("onlineBar"); ob.classList.remove("offline", "warn");
+            if (status === "error") ob.classList.add("offline"); else if (status === "warn") ob.classList.add("warn");
             document.getElementById("onlineText").innerText = text;
         }
 
         function compressPlayer(p) {
-            return { i: p.id, n: p.name, p: p.password, g: p.gold, o: p.oil, m: p.metal, x: p.xp, fac: p.faction,
-                t: p.lastMineCollect, l: p.mineLevel, r: [p.research.military, p.research.economy, p.research.aviation],
-                f: p.fighters, d: p.defenses, sh: p.shieldExpiry };
+            return { i:p.id, n:p.name, p:p.password, g:p.gold, o:p.oil, m:p.metal, x:p.xp, fac:p.faction, t:p.lastMineCollect, l:p.mineLevel, r:[p.research.military, p.research.economy, p.research.aviation], f:p.fighters, d:p.defenses, sh:p.shieldExpiry };
         }
-
         function decompressPlayer(c) {
-            return { id: c.i, name: c.n, password: c.p, gold: c.g || 0, oil: c.o || 0, metal: c.m || 0, xp: c.x || 0,
-                faction: c.fac || null, lastMineCollect: c.t || ts(), mineLevel: c.l || 1,
-                research: { military: c.r ? .[0] || 0, economy: c.r ? .[1] || 0, aviation: c.r ? .[2] || 0 },
-                fighters: c.f || {}, defenses: c.d || [], shieldExpiry: c.sh || 0 };
+            return { id:c.i, name:c.n, password:c.p, gold:c.g||0, oil:c.o||0, metal:c.m||0, xp:c.x||0, faction:c.fac||null, lastMineCollect:c.t||ts(), mineLevel:c.l||1, research:{military:c.r?.[0]||0, economy:c.r?.[1]||0, aviation:c.r?.[2]||0}, fighters:c.f||{}, defenses:c.d||[], shieldExpiry: c.sh || 0 };
         }
-
+        
         function packData() {
-            return { k: DATA_KEY, p: allPlayers.map(compressPlayer), m: marketOffers, l: battleLogs.slice(-15),
-                c: chatMessages.slice(-10) };
+            return { k: DATA_KEY, p: allPlayers.map(compressPlayer), m: marketOffers, l: battleLogs.slice(-15), c: chatMessages.slice(-10) }; 
         }
 
         async function saveAll(force = false) {
@@ -1235,8 +577,8 @@
                 if (data && data.data) {
                     const j = data.data;
                     if (j.k === DATA_KEY) {
-                        allPlayers = (j.p || []).map(decompressPlayer);
-                        marketOffers = j.m || [];
+                        allPlayers = (j.p||[]).map(decompressPlayer);
+                        marketOffers = j.m || []; 
                         battleLogs = j.l || [];
                         chatMessages = j.c || [];
                         if (player) {
@@ -1254,138 +596,75 @@
         }
 
         function createPlayer(name, pass) {
-            return { id: name + "_" + ts().toString(36), name, password: pass, gold: 1000, oil: 300, metal: 300, xp: 0,
-                faction: null, lastMineCollect: ts(), mineLevel: 1, research: { military: 0, economy: 0, aviation: 0 },
-                fighters: {}, defenses: [], shieldExpiry: 0 };
+            return { id: name+"_"+ts().toString(36), name, password: pass, gold: 1000, oil: 300, metal: 300, xp: 0, faction: null, lastMineCollect: ts(), mineLevel: 1, research: {military:0,economy:0,aviation:0}, fighters: {}, defenses: [], shieldExpiry: 0 };
         }
-
+        
         function calcMine(p) {
-            const sec = Math.min((ts() - (p.lastMineCollect || ts())) / 1000, 300);
+            const sec = Math.min((ts()-(p.lastMineCollect||ts()))/1000, 300);
             const cap = p.mineLevel * 300;
             const yieldRate = p.mineLevel * 0.5;
-            return { gold: Math.min(cap, Math.floor(yieldRate * 2 * sec)), oil: Math.min(cap, Math.floor(yieldRate * sec)),
-                metal: Math.min(cap, Math.floor(yieldRate * 1.5 * sec)), cap: cap };
+            return { gold: Math.min(cap, Math.floor(yieldRate * 2 * sec)), oil: Math.min(cap, Math.floor(yieldRate * sec)), metal: Math.min(cap, Math.floor(yieldRate * 1.5 * sec)), cap: cap };
         }
-
+        
         function calcAttackPower(p) {
             if (!p || !p.fighters) return 0;
             let power = 0;
-            for (const [n, d] of Object.entries(p.fighters))
-                if (F_DB[n] && d.count > 0) power += F_DB[n].p * d.count;
+            for (const [n, d] of Object.entries(p.fighters)) if (F_DB[n] && d.count > 0) power += F_DB[n].p * d.count;
             return Math.floor(power);
         }
-
+        
         function calcDefensePower(p) {
             if (!p) return 0;
             let power = calcAttackPower(p) * 0.5;
-            if (p.defenses) p.defenses.forEach(def => { if (D_DB[def.type] && def.hp > 0) power += D_DB[def.type].def * (def
-                    .hp / def.maxHp); });
+            if (p.defenses) p.defenses.forEach(def => { if(D_DB[def.type] && def.hp > 0) power += D_DB[def.type].def * (def.hp / def.maxHp); });
             return Math.floor(power);
         }
 
         function getFactionStats() {
             const stats = {};
-            for (const id in FACTIONS_DB) stats[id] = { id, name: FACTIONS_DB[id].n, icon: FACTIONS_DB[id].i, members: 0,
-                points: 0 };
-            allPlayers.forEach(p => { if (p.faction && stats[p.faction]) { stats[p.faction].members++;
-                    stats[p.faction].points += (p.xp || 0); } });
+            for(const id in FACTIONS_DB) stats[id] = { id, name: FACTIONS_DB[id].n, icon: FACTIONS_DB[id].i, members: 0, points: 0 };
+            allPlayers.forEach(p => { if(p.faction && stats[p.faction]) { stats[p.faction].members++; stats[p.faction].points += (p.xp || 0); } });
             return Object.values(stats).sort((a, b) => b.points - a.points);
         }
 
-        // ================================================================
-        //  WINDOW FUNCTIONS (همه توابع بازی بدون تغییر)
-        // ================================================================
-
         window.loginRegister = async function() {
-            const name = document.getElementById("playerName").value.trim(),
-                pass = document.getElementById("playerPassword").value.trim();
+            const name = document.getElementById("playerName").value.trim(), pass = document.getElementById("playerPassword").value.trim();
             if (name.length < 3 || pass.length < 4) return toast("نام کاربری و رمز نامعتبر است", true);
+            
+            // بررسی یکتا بودن نام کاربری (بدون حساسیت به حروف بزرگ و کوچک)
             const existing = allPlayers.find(p => p.name.toLowerCase() === name.toLowerCase());
-            if (existing) {
-                if (existing.password !== pass) return toast("رمز اشتباه است", true);
-                player = existing;
-            } else {
-                if (allPlayers.length >= 50) return toast("سرور پر است", true);
-                player = createPlayer(name, pass);
-                allPlayers.push(player);
-                await saveAll(true);
+            
+            if (existing) { 
+                if (existing.password !== pass) return toast("رمز اشتباه است", true); 
+                player = existing; 
             }
-            document.getElementById("loginBox").style.display = 'none';
-            document.getElementById("gameUI").style.display = 'block';
-            updateUI();
-            renderMine();
-            toast("ورود موفق", false, "peace");
+            else { 
+                if (allPlayers.length >= 50) return toast("سرور پر است", true); 
+                player = createPlayer(name, pass); 
+                allPlayers.push(player); 
+                await saveAll(true); 
+            }
+            document.getElementById("loginBox").style.display = 'none'; document.getElementById("gameUI").style.display = 'block';
+            updateUI(); renderMine(); toast("ورود موفق", false, "peace");
         };
-
-        window.collectMine = async function() {
-            const m = calcMine(player);
-            player.gold += m.gold;
-            player.oil += m.oil;
-            player.metal += m.metal;
-            player.lastMineCollect = ts();
-            await saveAll();
-            updateUI();
-            renderMine();
-            toast("💎 استخراج شد", false, "peace");
-        };
-        window.upgradeMine = async function() {
-            const c = player.mineLevel * 10000;
-            if (player.gold < c) return toast("طلا کم است", true);
-            player.gold -= c;
-            player.mineLevel++;
-            await saveAll();
-            updateUI();
-            renderMine();
-            toast("معدن ارتقا یافت!", false, "peace");
-        };
-
-        window.buildFighter = async function(key) {
-            const f = F_DB[key];
-            if (player.gold < f.c.g || player.oil < f.c.o || player.metal < f.c.m) return toast("منابع کم است", true);
-            if ((player.research?.aviation || 0) < f.r) return toast("تحقیقات کم است", true);
-            player.gold -= f.c.g;
-            player.oil -= f.c.o;
-            player.metal -= f.c.m;
-            if (!player.fighters[key]) player.fighters[key] = { count: 0 };
-            player.fighters[key].count++;
-            await saveAll();
-            updateUI();
-            renderMilitary();
-        };
-        window.buildDefense = async function(key) {
-            const d = D_DB[key];
-            if (player.gold < d.c.g) return toast("طلا کم است", true);
-            player.gold -= d.c.g;
-            player.oil -= d.c.o;
-            player.metal -= d.c.m;
-            if (!player.defenses) player.defenses = [];
-            player.defenses.push({ id: ts().toString(36), type: key, hp: d.hp, maxHp: d.hp });
-            await saveAll();
-            updateUI();
-            renderMilitary();
-        };
+        
+        window.collectMine = async function() { const m = calcMine(player); player.gold+=m.gold; player.oil+=m.oil; player.metal+=m.metal; player.lastMineCollect=ts(); await saveAll(); updateUI(); renderMine(); toast(`💎 استخراج شد`, false, "peace"); };
+        window.upgradeMine = async function() { const c = player.mineLevel * 10000; if (player.gold<c) return toast("طلا کم است", true); player.gold-=c; player.mineLevel++; await saveAll(); updateUI(); renderMine(); toast("معدن ارتقا یافت!", false, "peace"); };
+        
+        window.buildFighter = async function(key) { const f=F_DB[key]; if (player.gold<f.c.g||player.oil<f.c.o||player.metal<f.c.m) return toast("منابع کم است", true); if ((player.research?.aviation||0)<f.r) return toast("تحقیقات کم است", true); player.gold-=f.c.g; player.oil-=f.c.o; player.metal-=f.c.m; if(!player.fighters[key]) player.fighters[key]={count:0}; player.fighters[key].count++; await saveAll(); updateUI(); renderMilitary(); };
+        window.buildDefense = async function(key) { const d=D_DB[key]; if (player.gold<d.c.g) return toast("طلا کم است", true); player.gold-=d.c.g; player.oil-=d.c.o; player.metal-=d.c.m; if(!player.defenses) player.defenses = []; player.defenses.push({id: ts().toString(36), type:key, hp:d.hp, maxHp:d.hp}); await saveAll(); updateUI(); renderMilitary(); };
 
         window.repairDefense = async function(defId) {
             const def = player.defenses.find(d => d.id === defId);
-            if (!def) return;
+            if(!def) return;
             const dmg = def.maxHp - def.hp;
             const cost = dmg * 10;
-            if (player.gold < cost) return toast("طلا برای تعمیر کافی نیست", true);
-            player.gold -= cost;
-            def.hp = def.maxHp;
-            await saveAll();
-            updateUI();
-            renderMilitary();
+            if(player.gold < cost) return toast("طلا برای تعمیر کافی نیست", true);
+            player.gold -= cost; def.hp = def.maxHp;
+            await saveAll(); updateUI(); renderMilitary();
         };
 
-        window.joinFaction = async function(facId) {
-            player.faction = facId;
-            await saveAll(true);
-            updateUI();
-            renderFactions();
-            renderRank();
-            toast(`به ${FACTIONS_DB[facId].n} پیوستید!`, false, "peace");
-        };
+        window.joinFaction = async function(facId) { player.faction = facId; await saveAll(true); updateUI(); renderFactions(); renderRank(); toast(`به ${FACTIONS_DB[facId].n} پیوستید!`, false, "peace"); };
 
         window.launchAttack = async function(targetId) {
             if (isAttacking) return;
@@ -1411,63 +690,35 @@
                 }
 
                 const enemyDef = calcDefensePower(target);
-                let resultMsg = "",
-                    resultStr = "",
-                    isWin = false;
-
+                let resultMsg = "", resultStr = "", isWin = false;
+                
                 if (myAtt > enemyDef) {
                     isWin = true;
                     const ratio = enemyDef / myAtt;
-                    const loot = { g: Math.floor(target.gold * 0.3), o: Math.floor(target.oil * 0.3), m: Math.floor(target
-                            .metal * 0.3) };
-                    target.gold -= loot.g;
-                    target.oil -= loot.o;
-                    target.metal -= loot.m;
-                    player.gold += loot.g;
-                    player.oil += loot.o;
-                    player.metal += loot.m;
-                    player.xp += 15;
-                    target.xp += 3;
+                    const loot = { g: Math.floor(target.gold*0.3), o: Math.floor(target.oil*0.3), m: Math.floor(target.metal*0.3) };
+                    target.gold-=loot.g; target.oil-=loot.o; target.metal-=loot.m;
+                    player.gold+=loot.g; player.oil+=loot.o; player.metal+=loot.m;
+                    player.xp+=15; target.xp+=3;
                     target.shieldExpiry = ts() + SHIELD_DURATION;
                     let attackerLost = 0;
-                    for (const [k, f] of Object.entries(player.fighters)) {
-                        const lost = Math.ceil(f.count * ratio * 0.5);
-                        f.count = Math.max(0, f.count - lost);
-                        attackerLost += lost;
-                    }
-                    for (const [k, f] of Object.entries(target.fighters)) {
-                        const lost = Math.ceil(f.count * 0.8);
-                        f.count = Math.max(0, f.count - lost);
-                    }
-                    if (target.defenses) target.defenses.forEach(def => { def.hp = 0; });
+                    for (const [k, f] of Object.entries(player.fighters)) { const lost = Math.ceil(f.count * ratio * 0.5); f.count = Math.max(0, f.count - lost); attackerLost += lost; }
+                    for (const [k, f] of Object.entries(target.fighters)) { const lost = Math.ceil(f.count * 0.8); f.count = Math.max(0, f.count - lost); }
+                    if(target.defenses) target.defenses.forEach(def => { def.hp = 0; });
                     target.defenses = target.defenses ? target.defenses.filter(def => def.hp > 0) : [];
-                    resultMsg =
-                        `🔥 <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد.`;
+                    resultMsg = `🔥 <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span> غارت شد.`;
                     resultStr = `🏆 پیروزی!<br>غارت: ${loot.g}طلا | ${loot.o}نفت`;
                 } else {
                     isWin = false;
                     const ratio = myAtt / enemyDef;
-                    player.xp += 2;
-                    target.xp += 15;
+                    player.xp+=2; target.xp+=15;
                     let attackerLost = 0;
-                    for (const [k, f] of Object.entries(player.fighters)) {
-                        const lost = Math.ceil(f.count * 0.9);
-                        f.count = Math.max(0, f.count - lost);
-                        attackerLost += lost;
-                    }
-                    for (const [k, f] of Object.entries(target.fighters)) {
-                        const lost = Math.ceil(f.count * ratio * 0.4);
-                        f.count = Math.max(0, f.count - lost);
-                    }
-                    if (target.defenses) {
-                        target.defenses.forEach(def => { def.hp -= 40; if (def.hp < 0) def.hp = 0; });
-                        target.defenses = target.defenses.filter(def => def.hp > 0);
-                    }
-                    resultMsg =
-                        `🛡️ <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد اما دفاع شد!`;
+                    for (const [k, f] of Object.entries(player.fighters)) { const lost = Math.ceil(f.count * 0.9); f.count = Math.max(0, f.count - lost); attackerLost += lost; }
+                    for (const [k, f] of Object.entries(target.fighters)) { const lost = Math.ceil(f.count * ratio * 0.4); f.count = Math.max(0, f.count - lost); }
+                    if(target.defenses) { target.defenses.forEach(def => { def.hp -= 40; if(def.hp < 0) def.hp = 0; }); target.defenses = target.defenses.filter(def => def.hp > 0); }
+                    resultMsg = `🛡️ <span class="attacker">${getFormattedName(player)}</span> به <span class="defender">${getFormattedName(target)}</span> حمله کرد اما دفاع شد!`;
                     resultStr = `💥 شکست سنگین!`;
                 }
-
+                
                 player.shieldExpiry = 0;
                 const preSaveIdx = allPlayers.findIndex(p => p.id === player.id);
                 if (preSaveIdx >= 0) allPlayers[preSaveIdx].shieldExpiry = 0;
@@ -1497,51 +748,31 @@
                 resultText.innerHTML = resultStr;
                 await new Promise(r => setTimeout(r, 2500));
                 overlay.classList.remove('active');
-                updateUI();
-                renderWar();
-                renderBattlelog();
+                updateUI(); renderWar(); renderBattlelog();
             } finally {
                 isAttacking = false;
             }
         };
 
         window.createMarketOffer = async function() {
-            const giveRes = document.getElementById('mktGive').value,
-                getRes = document.getElementById('mktGet').value;
-            const giveAmt = parseInt(document.getElementById('mktGiveAmt').value),
-                getAmt = parseInt(document.getElementById('mktGetAmt').value);
-            if (giveAmt <= 0 || getAmt <= 0) return toast("مقدار نامعتبر است", true);
+            const giveRes = document.getElementById('mktGive').value, getRes = document.getElementById('mktGet').value;
+            const giveAmt = parseInt(document.getElementById('mktGiveAmt').value), getAmt = parseInt(document.getElementById('mktGetAmt').value);
+            if (giveAmt<=0||getAmt<=0) return toast("مقدار نامعتبر است", true);
             if (player[giveRes] < giveAmt) return toast("منابع کافی ندارید", true);
             player[giveRes] -= giveAmt;
-            marketOffers.push({ id: ts().toString(36), seller: player.name, sid: player.id, give: giveRes, ga: giveAmt,
-                get: getRes, gta: getAmt });
-            await saveAll();
-            updateUI();
-            renderMarket();
+            marketOffers.push({ id: ts().toString(36), seller: player.name, sid: player.id, give: giveRes, ga: giveAmt, get: getRes, gta: getAmt });
+            await saveAll(); updateUI(); renderMarket();
         };
         window.buyMarketOffer = async function(offerId) {
-            const o = marketOffers.find(x => x.id === offerId);
-            if (!o) return;
+            const o = marketOffers.find(x => x.id === offerId); if (!o) return;
             if (o.sid === player.id) return toast("این پیشنهاد شماست", true);
             if (player[o.get] < o.gta) return toast("پول کافی ندارید", true);
-            player[o.get] -= o.gta;
-            player[o.give] += o.ga;
-            const seller = allPlayers.find(p => p.id === o.sid);
-            if (seller) seller[o.get] += o.gta;
+            player[o.get] -= o.gta; player[o.give] += o.ga;
+            const seller = allPlayers.find(p => p.id === o.sid); if (seller) seller[o.get] += o.gta;
             marketOffers = marketOffers.filter(x => x.id !== offerId);
-            await saveAll(true);
-            updateUI();
-            renderMarket();
+            await saveAll(true); updateUI(); renderMarket();
         };
-        window.upgradeResearch = async function(branch) {
-            const c = (player.research[branch] + 1) * 15;
-            if (player.xp < c) return toast("XP کم است", true);
-            player.xp -= c;
-            player.research[branch]++;
-            await saveAll();
-            updateUI();
-            renderResearch();
-        };
+        window.upgradeResearch = async function(branch) { const c=(player.research[branch]+1)*15; if(player.xp<c) return toast("XP کم است", true); player.xp-=c; player.research[branch]++; await saveAll(); updateUI(); renderResearch(); };
 
         window.sendChat = async function() {
             const input = document.getElementById('chatInput');
@@ -1553,87 +784,68 @@
             await saveAll();
         };
 
-        // --- ADMIN PANEL ACTIONS (بدون تغییر) ---
+        // --- ADMIN PANEL ACTIONS ---
         window.adminGiveRes = async function() {
             const id = document.getElementById('admSel').value;
             const res = document.getElementById('admRes').value;
             const amt = parseInt(document.getElementById('admAmt').value);
-            if (!id || !res || isNaN(amt) || amt <= 0) return toast("مقادیر نامعتبر است", true);
+            if(!id || !res || isNaN(amt) || amt <= 0) return toast("مقادیر نامعتبر است", true);
             const target = allPlayers.find(p => p.id === id);
-            if (!target) return toast("بازیکن یافت نشد", true);
-            if (res === 'xp') target.xp += amt;
+            if(!target) return toast("بازیکن یافت نشد", true);
+            if(res === 'xp') target.xp += amt;
             else target[res] += amt;
-            await saveAll(true);
-            renderAdmin();
-            toast("✅ منابع اضافه شد", false, "peace");
+            await saveAll(true); renderAdmin(); toast(`✅ منابع اضافه شد`, false, "peace");
         };
 
         window.adminToggleShield = async function() {
             const id = document.getElementById('admSel').value;
-            if (!id) return toast("بازیکن را انتخاب کنید", true);
+            if(!id) return toast("بازیکن را انتخاب کنید", true);
             const target = allPlayers.find(p => p.id === id);
-            if (!target) return;
+            if(!target) return;
             target.shieldExpiry = (target.shieldExpiry && ts() < target.shieldExpiry) ? 0 : ts() + SHIELD_DURATION;
-            await saveAll(true);
-            renderAdmin();
-            toast(target.shieldExpiry ? "🛡️ سپر فعال شد" : "💔 سپر برداشته شد", false, "peace");
+            await saveAll(true); renderAdmin();
+            toast(target.shieldExpiry ? `🛡️ سپر فعال شد` : `💔 سپر برداشته شد`, false, "peace");
         };
 
         window.adminDeletePlayer = async function() {
             const id = document.getElementById('admSel').value;
-            if (!id) return toast("بازیکن را انتخاب کنید", true);
+            if(!id) return toast("بازیکن را انتخاب کنید", true);
             const target = allPlayers.find(p => p.id === id);
-            if (!target) return;
-            if (!confirm(`آیا از حذف کامل این کاربر مطمئنید؟`)) return;
+            if(!target) return;
+            if(!confirm(`آیا از حذف کامل این کاربر مطمئنید؟`)) return;
             allPlayers = allPlayers.filter(p => p.id !== id);
-            await saveAll(true);
-            renderAdmin();
-            toast("🗑️ کاربر حذف شد", false, "war");
+            await saveAll(true); renderAdmin(); toast(`🗑️ کاربر حذف شد`, false, "war");
         };
 
         window.adminResetPlayer = async function() {
             const id = document.getElementById('admSel').value;
-            if (!id) return toast("بازیکن را انتخاب کنید", true);
+            if(!id) return toast("بازیکن را انتخاب کنید", true);
             const target = allPlayers.find(p => p.id === id);
-            if (!target) return;
-            if (!confirm(`آیا از ریست منابع و ارتش این کاربر مطمئنید؟`)) return;
-            target.gold = 0;
-            target.oil = 0;
-            target.metal = 0;
-            target.xp = 0;
-            target.fighters = {};
-            target.defenses = [];
-            target.mineLevel = 1;
-            await saveAll(true);
-            renderAdmin();
-            toast("⚠️ کاربر ریست شد", false, "war");
+            if(!target) return;
+            if(!confirm(`آیا از ریست منابع و ارتش این کاربر مطمئنید؟`)) return;
+            target.gold = 0; target.oil = 0; target.metal = 0; target.xp = 0;
+            target.fighters = {}; target.defenses = []; target.mineLevel = 1;
+            await saveAll(true); renderAdmin(); toast(`⚠️ کاربر ریست شد`, false, "war");
         };
 
         window.adminBroadcast = async function() {
             const msg = document.getElementById('admBroad').value.trim();
-            if (!msg) return toast("پیام خالی است", true);
+            if(!msg) return toast("پیام خالی است", true);
             chatMessages.push({ ts: ts(), n: "SYSTEM", t: escapeHtml(msg), sys: true });
             document.getElementById('admBroad').value = '';
-            await saveAll(true);
-            renderAdmin();
-            toast("📢 پیام سراسری ارسال شد", false, "peace");
+            await saveAll(true); renderAdmin(); toast("📢 پیام سراسری ارسال شد", false, "peace");
         };
 
         window.adminClearChat = async function() {
-            if (!confirm("آیا از پاک کردن تمام پیام‌های چت جهانی مطمئنید؟")) return;
+            if(!confirm("آیا از پاک کردن تمام پیام‌های چت جهانی مطمئنید؟")) return;
             chatMessages = [];
-            await saveAll(true);
-            renderAdmin();
-            toast("🧹 چت جهانی پاک شد", false, "peace");
+            await saveAll(true); renderAdmin(); toast("🧹 چت جهانی پاک شد", false, "peace");
         };
 
         window.adminNuke = async function() {
-            if (!confirm("☢️ هشدار: آیا میخواهید کل سرور را پاک کنید؟")) return;
-            if (!confirm("آخرین اخطار: آیا واقعاً مطمئنید؟")) return;
-            allPlayers = [];
-            marketOffers = [];
-            battleLogs = [];
-            chatMessages = [];
+            if(!confirm("☢️ هشدار: آیا میخواهید کل سرور را پاک کنید؟")) return;
+            if(!confirm("آخرین اخطار: آیا واقعاً مطمئنید؟")) return;
+            allPlayers = []; marketOffers = []; battleLogs = []; chatMessages = [];
             player = null;
             await saveAll(true);
             document.getElementById('gameUI').style.display = 'none';
@@ -1641,22 +853,22 @@
             toast("☢️ سرور با موفقیت نابود شد!", false, "war");
         };
 
-        // ================================================================
-        //  UI RENDERING (همه توابع رندر، بدون تغییر منطق، فقط ظاهر بهبود یافته)
-        // ================================================================
-
-        function updateUI() {
-            if (!player) return;
+        // --- UI RENDERING ---
+        function updateUI() { 
+            if(!player) return; 
+            
             if (!window.adminVisibilitySet) {
                 if (isAdmin()) {
                     document.querySelectorAll('.admin-el').forEach(el => el.classList.remove('is-hidden'));
                 }
                 window.adminVisibilitySet = true;
             }
-            document.getElementById('rGold').innerText = Math.floor(player.gold).toLocaleString('fa-IR');
-            document.getElementById('rOil').innerText = Math.floor(player.oil).toLocaleString('fa-IR');
-            document.getElementById('rMetal').innerText = Math.floor(player.metal).toLocaleString('fa-IR');
-            document.getElementById('rXP').innerText = player.xp;
+
+            document.getElementById('rGold').innerText = Math.floor(player.gold).toLocaleString('fa-IR'); 
+            document.getElementById('rOil').innerText = Math.floor(player.oil).toLocaleString('fa-IR'); 
+            document.getElementById('rMetal').innerText = Math.floor(player.metal).toLocaleString('fa-IR'); 
+            document.getElementById('rXP').innerText = player.xp; 
+            
             const shieldBar = document.getElementById('shieldBar');
             if (player.shieldExpiry && ts() < player.shieldExpiry) {
                 const remainingMs = player.shieldExpiry - ts();
@@ -1668,53 +880,40 @@
                 shieldBar.style.display = 'none';
             }
         }
-
-        function renderMine() {
-            const m = calcMine(player);
-            const gPct = Math.min(100, (m.gold / m.cap) * 100);
-            const oPct = Math.min(100, (m.oil / m.cap) * 100);
-            const mPct = Math.min(100, (m.metal / m.cap) * 100);
-            const upCost = player.mineLevel * 10000;
-            document.getElementById('mineContent').innerHTML =
-                `<div class="card"><div class="icon">🪙</div><h3>معدن سطح ${player.mineLevel}</h3><p class="cost" style="margin-bottom:8px">ظرفیت: ${m.cap}</p><div class="storage-bar"><div class="storage-fill" style="width:${gPct}%"></div></div><div class="cost">💰 طلا: ${m.gold}</div><div class="storage-bar"><div class="storage-fill" style="width:${oPct}%"></div></div><div class="cost">🛢️ نفت: ${m.oil}</div><div class="storage-bar"><div class="storage-fill" style="width:${mPct}%"></div></div><div class="cost">⛏️ فلز: ${m.metal}</div><button class="btn btn-gold" style="margin-top:10px" onclick="collectMine()">💎 استخراج</button><hr style="border-color:#334155;margin:10px 0"><p class="cost">ارتقا: ${upCost.toLocaleString('fa-IR')} طلا</p><button class="btn btn-green" ${player.gold<upCost?'disabled':''} onclick="upgradeMine()">⬆️ ارتقا</button></div>`;
+        
+        function renderMine() { 
+            const m = calcMine(player); const gPct = Math.min(100, (m.gold / m.cap) * 100); const oPct = Math.min(100, (m.oil / m.cap) * 100); const mPct = Math.min(100, (m.metal / m.cap) * 100); const upCost = player.mineLevel * 10000;
+            document.getElementById('mineContent').innerHTML = `<div class="card"><div class="icon">🪙</div><h3>معدن سطح ${player.mineLevel}</h3><p class="cost" style="margin-bottom:8px">ظرفیت: ${m.cap}</p><div class="storage-bar"><div class="storage-fill" style="width:${gPct}%"></div></div><div class="cost">💰 طلا: ${m.gold}</div><div class="storage-bar"><div class="storage-fill" style="width:${oPct}%"></div></div><div class="cost">🛢️ نفت: ${m.oil}</div><div class="storage-bar"><div class="storage-fill" style="width:${mPct}%"></div></div><div class="cost">⛏️ فلز: ${m.metal}</div><button class="btn btn-gold" style="margin-top:10px" onclick="collectMine()">💎 استخراج</button><hr style="border-color:#334155;margin:10px 0"><p class="cost">ارتقا: ${upCost.toLocaleString('fa-IR')} طلا</p><button class="btn btn-green" ${player.gold<upCost?'disabled':''} onclick="upgradeMine()">⬆️ ارتقا</button></div>`;
         }
-
-        function renderMilitary() {
-            let h = `<div class="section-title">✈️ جنگنده‌ها</div><div class="grid2">`;
-            for (const [k, f] of Object.entries(F_DB)) {
-                const reqMet = (player.research?.aviation || 0) >= f.r;
-                const canAfford = player.gold >= f.c.g && player.oil >= f.c.o && player.metal >= f.c.m;
-                h +=
-                    `<div class="card" style="opacity:${reqMet?1:0.5}"><div class="icon">${f.i}</div><div>${f.n}</div><div class="cost">قدرت:${f.p} ${f.r>0?`| تحقیق:${f.r}`:''}</div><div class="cost">💰${f.c.g} | 🛢️${f.c.o} | ⛏️${f.c.m}</div><div class="badge badge-blue">دارید: ${player.fighters[k]?.count||0}</div><button class="btn btn-blue btn-sm" ${(!reqMet||!canAfford)?'disabled':''} onclick="buildFighter('${k}')">ساخت</button></div>`;
+        
+        function renderMilitary() { 
+            let h=`<div class="section-title">✈️ جنگنده‌ها</div><div class="grid2">`; 
+            for(const [k,f] of Object.entries(F_DB)) {
+                const reqMet = (player.research?.aviation||0) >= f.r;
+                const canAfford = player.gold>=f.c.g && player.oil>=f.c.o && player.metal>=f.c.m;
+                h+=`<div class="card" style="opacity:${reqMet?1:0.5}"><div class="icon">${f.i}</div><div>${f.n}</div><div class="cost">قدرت:${f.p} ${f.r>0?`| تحقیق:${f.r}`:''}</div><div class="cost">💰${f.c.g} | 🛢️${f.c.o} | ⛏️${f.c.m}</div><div class="badge badge-blue">دارید: ${player.fighters[k]?.count||0}</div><button class="btn btn-blue btn-sm" ${(!reqMet||!canAfford)?'disabled':''} onclick="buildFighter('${k}')">ساخت</button></div>`; 
             }
-            h += `</div><div class="section-title">🛡️ سیستم‌های دفاعی</div><div class="grid2">`;
-            for (const [k, d] of Object.entries(D_DB)) {
-                const canAfford = player.gold >= d.c.g && player.oil >= d.c.o && player.metal >= d.c.m;
-                h +=
-                    `<div class="card"><div class="icon">${d.i}</div><div>${d.n}</div><div class="cost">دفاع:${d.def} | HP:${d.hp}</div><div class="cost">💰${d.c.g} | 🛢️${d.c.o} | ⛏️${d.c.m}</div><button class="btn btn-green btn-sm" ${!canAfford?'disabled':''} onclick="buildDefense('${k}')">ساخت</button></div>`;
+            h+=`</div><div class="section-title">🛡️ سیستم‌های دفاعی</div><div class="grid2">`; 
+            for(const [k,d] of Object.entries(D_DB)) {
+                const canAfford = player.gold>=d.c.g && player.oil>=d.c.o && player.metal>=d.c.m;
+                h+=`<div class="card"><div class="icon">${d.i}</div><div>${d.n}</div><div class="cost">دفاع:${d.def} | HP:${d.hp}</div><div class="cost">💰${d.c.g} | 🛢️${d.c.o} | ⛏️${d.c.m}</div><button class="btn btn-green btn-sm" ${!canAfford?'disabled':''} onclick="buildDefense('${k}')">ساخت</button></div>`; 
             }
-            h += `</div>`;
-            if (player.defenses && player.defenses.length > 0) {
-                h += `<div class="section-title">🔧 وضعیت پدافندها</div>`;
+            h+=`</div>`;
+            if(player.defenses && player.defenses.length > 0) {
+                h+=`<div class="section-title">🔧 وضعیت پدافندها</div>`;
                 player.defenses.forEach(def => {
-                    const dInfo = D_DB[def.type];
-                    const hpPct = (def.hp / def.maxHp) * 100;
-                    const dmg = def.maxHp - def.hp;
-                    const repairCost = dmg * 10;
-                    h +=
-                        `<div class="player-row" style="flex-direction:column;align-items:stretch;"><div style="display:flex;justify-content:space-between;width:100%;margin-bottom:5px;"><span>${dInfo.i} ${dInfo.n}</span><span style="color:${hpPct>50?'#4ade80':'#ef4444'}">${def.hp}/${def.maxHp}</span></div><div class="storage-bar"><div class="storage-fill hp-fill" style="width:${hpPct}%"></div></div>${dmg > 0 ? `<button class="btn btn-gold btn-sm" ${player.gold<repairCost?'disabled':''} onclick="repairDefense('${def.id}')">تعمیر (${repairCost} طلا)</button>` : `<span style="color:#4ade80;font-size:0.5rem;text-align:center;">آماده</span>`}</div>`;
+                    const dInfo = D_DB[def.type]; const hpPct = (def.hp / def.maxHp) * 100; const dmg = def.maxHp - def.hp; const repairCost = dmg * 10;
+                    h+=`<div class="player-row" style="flex-direction:column;align-items:stretch;"><div style="display:flex;justify-content:space-between;width:100%;margin-bottom:5px;"><span>${dInfo.i} ${dInfo.n}</span><span style="color:${hpPct>50?'#4ade80':'#ef4444'}">${def.hp}/${def.maxHp}</span></div><div class="storage-bar"><div class="storage-fill hp-fill" style="width:${hpPct}%"></div></div>${dmg > 0 ? `<button class="btn btn-gold btn-sm" ${player.gold<repairCost?'disabled':''} onclick="repairDefense('${def.id}')">تعمیر (${repairCost} طلا)</button>` : `<span style="color:#4ade80;font-size:0.5rem;text-align:center;">آماده</span>`}</div>`;
                 });
             }
-            document.getElementById('militaryContent').innerHTML = h;
+            document.getElementById('militaryContent').innerHTML = h; 
         }
-
-        function renderWar() {
-            const myAtt = calcAttackPower(player);
-            const myDef = calcDefensePower(player);
-            let h =
-                `<div class="info-bar">⚡ قدرت حمله: ${myAtt} &nbsp;|&nbsp; 🛡️ قدرت دفاع: ${myDef}</div><div class="section-title">🎯 اهداف</div>`;
-            if (myAtt <= 0) h += `<div class="empty">ابتدا جنگنده بسازید!</div>`;
-            allPlayers.filter(p => p.id !== player.id).sort((a, b) => calcDefensePower(a) - calcDefensePower(b)).forEach(t => {
+        
+        function renderWar() { 
+            const myAtt = calcAttackPower(player); const myDef = calcDefensePower(player);
+            let h=`<div class="info-bar">قدرت حمله: ${myAtt} | قدرت دفاع: ${myDef}</div><div class="section-title">🎯 اهداف</div>`;
+            if(myAtt <= 0) h+=`<div class="empty">ابتدا جنگنده بسازید!</div>`;
+            allPlayers.filter(p=>p.id!==player.id).sort((a,b)=>calcDefensePower(a)-calcDefensePower(b)).forEach(t=>{
                 let btnHtml = '';
                 if (t.shieldExpiry && ts() < t.shieldExpiry) {
                     const remainingMs = t.shieldExpiry - ts();
@@ -1722,26 +921,25 @@
                     const mm = Math.floor((remainingMs % 3600000) / 60000);
                     btnHtml = `<button class="btn btn-sm" style="background:#3b82f6;color:#fff;" disabled>🛡️ ${hh}س ${mm}د</button>`;
                 } else {
-                    btnHtml =
-                        `<button class="btn btn-attack btn-sm" ${myAtt<=0||isAttacking?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله</button>`;
+                    btnHtml = `<button class="btn btn-attack btn-sm" ${myAtt<=0||isAttacking?'disabled':''} onclick="launchAttack('${t.id}')">⚔️ حمله</button>`;
                 }
-                h += `<div class="player-row"><span>${getFormattedName(t)} </span>${btnHtml}</div>`;
+                h+=`<div class="player-row"><span>${getFormattedName(t)} </span>${btnHtml}</div>`;
             });
-            document.getElementById('warContent').innerHTML = h;
+            document.getElementById('warContent').innerHTML = h; 
         }
 
         function renderChat() {
             const isTyping = document.activeElement?.id === 'chatInput';
             const currentText = isTyping ? document.getElementById('chatInput')?.value || '' : '';
             const last10 = chatMessages.slice(-10);
-            let h =
-                `<div class="section-title">💬 چت جهانی (آخرین ۱۰ پیام)</div><div class="chat-container"><div class="chat-box" id="chatBox">`;
-            if (last10.length === 0) {
+            let h = `<div class="section-title">💬 چت جهانی (آخرین ۱۰ پیام)</div><div class="chat-container"><div class="chat-box" id="chatBox">`;
+            if(last10.length === 0) {
                 h += `<div class="empty">هیچ پیامی نیست</div>`;
             } else {
                 last10.forEach(msg => {
                     const isMe = msg.n === player?.name;
                     const isSys = msg.sys;
+                    // رنگ آبی برای ادمین در چت
                     const isAdm = msg.n === ADMIN_NAME;
                     h += `<div class="chat-msg ${isMe ? 'me' : ''} ${isSys ? 'system-msg' : ''}">
                         <span class="sender" style="${isSys ? 'color:#fca5a5' : ''} ${isAdm ? 'color:#3b82f6;' : ''}">${isSys ? '📢 [SYSTEM]' : (isAdm ? '🚬 ' : '') + escapeHtml(msg.n)}</span>
@@ -1757,21 +955,21 @@
             document.getElementById('chatContent').innerHTML = h;
             if (isTyping) {
                 const newInput = document.getElementById('chatInput');
-                newInput.focus();
-                newInput.value = currentText;
+                newInput.focus(); newInput.value = currentText;
                 newInput.setSelectionRange(newInput.value.length, newInput.value.length);
             }
             const chatBox = document.getElementById('chatBox');
-            if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+            if(chatBox) chatBox.scrollTop = chatBox.scrollHeight;
         }
 
         function renderAdmin() {
-            if (!isAdmin()) return;
+            if(!isAdmin()) return;
             let playerOptions = `<option value="">انتخاب کاربر...</option>`;
             allPlayers.forEach(p => { playerOptions += `<option value="${p.id}">${p.name} (طلا:${Math.floor(p.gold)})</option>`; });
 
             let h = `
             <div class="info-bar" style="border-color: #ef4444; color: #fca5a5;">⚠️ پنل مدیریت اختصاصی سرور</div>
+            
             <div class="admin-panel-box">
                 <h3>🎁 اعطای منابع به کاربر</h3>
                 <select id="admSel">${playerOptions}</select>
@@ -1781,6 +979,7 @@
                     <button class="btn btn-green btn-sm" style="width:20%" onclick="adminGiveRes()">افزودن</button>
                 </div>
             </div>
+
             <div class="admin-panel-box">
                 <h3>🛡️ و 🗑️ مدیریت کاربر</h3>
                 <select id="admSel2" onchange="adminShowSpy()">${playerOptions}</select>
@@ -1791,6 +990,7 @@
                 </div>
                 <div id="spyArea" class="spy-data" style="display:none; margin-top:10px;"></div>
             </div>
+
             <div class="admin-panel-box">
                 <h3>📢 مدیریت چت جهانی</h3>
                 <div style="display:flex; gap:5px; margin-bottom: 8px;">
@@ -1799,6 +999,7 @@
                 </div>
                 <button class="btn btn-danger" style="width:100%; justify-content:center;" onclick="adminClearChat()">🧹 پاک کردن تمام چت‌ها</button>
             </div>
+
             <div class="admin-panel-box" style="border-color: #dc2626; background: rgba(220, 38, 38, 0.05);">
                 <h3 style="color:#dc2626;">☢️ زون خطر (تخریب کامل)</h3>
                 <button class="btn btn-danger" style="width:100%; background:#7f1d1d; justify-content:center;" onclick="adminNuke()">پاکسازی کل سرور</button>
@@ -1810,17 +1011,18 @@
         window.adminShowSpy = function() {
             const id = document.getElementById('admSel2').value;
             const area = document.getElementById('spyArea');
-            if (!id) { area.style.display = 'none'; return; }
+            if(!id) { area.style.display='none'; return; }
             const t = allPlayers.find(p => p.id === id);
-            if (!t) return;
+            if(!t) return;
             area.style.display = 'block';
             let fightersStr = "بدون جنگنده";
-            if (Object.keys(t.fighters).length > 0) {
-                fightersStr = Object.entries(t.fighters).filter(([k, v]) => v.count > 0).map(([k, v]) =>
-                    `${F_DB[k]?.n || k}: ${v.count}`).join(' | ');
+            if(Object.keys(t.fighters).length > 0) {
+                fightersStr = Object.entries(t.fighters).filter(([k,v]) => v.count > 0).map(([k,v]) => `${F_DB[k]?.n || k}: ${v.count}`).join(' | ');
             }
-            area.innerHTML =
-                `<b>اطلاعات مخفی ${t.name}:</b><br>قدرت حمله: ${calcAttackPower(t)} | قدرت دفاع: ${calcDefensePower(t)}<br>جنگنده‌ها: ${fightersStr}<br>پدافندها: ${t.defenses.length > 0 ? t.defenses.map(d => D_DB[d.type]?.n).join(', ') : 'بدون پدافند'}`;
+            area.innerHTML = `<b>اطلاعات مخفی ${t.name}:</b><br>
+            قدرت حمله: ${calcAttackPower(t)} | قدرت دفاع: ${calcDefensePower(t)}<br>
+            جنگنده‌ها: ${fightersStr}<br>
+            پدافندها: ${t.defenses.length > 0 ? t.defenses.map(d => D_DB[d.type]?.n).join(', ') : 'بدون پدافند'}`;
         };
 
         function renderFactions() {
@@ -1828,112 +1030,71 @@
             let h = `<div class="section-title">🛡️ جناح‌ها</div><div class="grid2">`;
             stats.forEach(f => {
                 const isMember = player.faction === f.id;
-                h +=
-                    `<div class="card"><div class="icon">${f.icon}</div><div>${f.name}</div><div class="cost">👥 ${f.members} نفر</div><div class="cost">⭐ ${f.points} امتیاز</div>${player.faction ? (isMember ? `<button class="btn btn-red btn-sm" disabled>جناح شما</button>` : `<button class="btn btn-sm" disabled>عضو جناح دیگرید</button>`) : `<button class="btn btn-green btn-sm" onclick="joinFaction('${f.id}')">پیوستن</button>`}</div>`;
+                h += `<div class="card"><div class="icon">${f.icon}</div><div>${f.name}</div><div class="cost">👥 ${f.members} نفر</div><div class="cost">⭐ ${f.points} امتیاز</div>${player.faction ? (isMember ? `<button class="btn btn-red btn-sm" disabled>جناح شما</button>` : `<button class="btn btn-sm" disabled>عضو جناح دیگرید</button>`) : `<button class="btn btn-green btn-sm" onclick="joinFaction('${f.id}')">پیوستن</button>`}</div>`;
             });
             h += `</div>`;
             document.getElementById('factionsContent').innerHTML = h;
         }
 
-        function renderMarket() {
-            let h =
-                `<div class="section-title">🛒 فروش</div><div class="card"><select id="mktGive"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGiveAmt" placeholder="مقدار"><select id="mktGet"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGetAmt" placeholder="مقدار درخواست"><button class="btn btn-gold" onclick="createMarketOffer()">ثبت</button></div><div class="section-title">📜 بازار</div>`;
-            if (marketOffers.length === 0) h += `<div class="empty">بازار خالی است</div>`;
-            marketOffers.forEach(o => {
-                const r = { gold: "💰طلا", oil: "🛢️نفت", metal: "⛏️فلز" };
-                h +=
-                    `<div class="player-row"><span>${escapeHtml(o.seller)}: ${o.ga} ${r[o.give]} ➡️ ${o.gta} ${r[o.get]}</span>${o.sid===player.id?'<button class="btn btn-red btn-sm" disabled>شما</button>':`<button class="btn btn-green btn-sm" onclick="buyMarketOffer('${o.id}')">خرید</button>`}</div>`;
-            });
-            document.getElementById('marketContent').innerHTML = h;
+        function renderMarket() { 
+            let h=`<div class="section-title">🛒 فروش</div><div class="card"><select id="mktGive"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGiveAmt" placeholder="مقدار"><select id="mktGet"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGetAmt" placeholder="مقدار درخواست"><button class="btn btn-gold" onclick="createMarketOffer()">ثبت</button></div><div class="section-title">📜 بازار</div>`; 
+            if(marketOffers.length===0) h+=`<div class="empty">بازار خالی است</div>`; 
+            marketOffers.forEach(o=>{ const r={gold:"💰طلا",oil:"🛢️نفت",metal:"⛏️فلز"}; h+=`<div class="player-row"><span>${escapeHtml(o.seller)}: ${o.ga} ${r[o.give]} ➡️ ${o.gta} ${r[o.get]}</span>${o.sid===player.id?'<button class="btn btn-red btn-sm" disabled>شما</button>':`<button class="btn btn-green btn-sm" onclick="buyMarketOffer('${o.id}')">خرید</button>`}</div>`}); 
+            document.getElementById('marketContent').innerHTML = h; 
         }
-
-        function renderResearch() {
-            const b = { military: "⚔️ نظامی", economy: "💰 اقتصاد", aviation: "✈️ هوانوردی" };
-            let h = `<div class="section-title">🔬 تحقیقات (XP: ${player.xp})</div><div class="grid2">`;
-            for (const [k, n] of Object.entries(b)) {
-                const l = player.research[k],
-                    c = (l + 1) * 15;
-                h +=
-                    `<div class="card"><div class="icon">${n}</div><div class="cost">سطح: ${l}</div><div class="cost">هزینه: ${c} XP</div><button class="btn btn-purple btn-sm" ${player.xp<c?'disabled':''} onclick="upgradeResearch('${k}')">ارتقا</button></div>`;
-            }
-            document.getElementById('researchContent').innerHTML = h + `</div>`;
+        
+        function renderResearch() { 
+            const b={military:"⚔️ نظامی",economy:"💰 اقتصاد",aviation:"✈️ هوانوردی"}; 
+            let h=`<div class="section-title">🔬 تحقیقات (XP: ${player.xp})</div><div class="grid2">`; 
+            for(const [k,n] of Object.entries(b)) { const l=player.research[k],c=(l+1)*15; h+=`<div class="card"><div class="icon">${n}</div><div class="cost">سطح: ${l}</div><div class="cost">هزینه: ${c} XP</div><button class="btn btn-purple btn-sm" ${player.xp<c?'disabled':''} onclick="upgradeResearch('${k}')">ارتقا</button></div>`; } 
+            document.getElementById('researchContent').innerHTML = h+`</div>`; 
         }
-
-        function renderRank() {
+        
+        function renderRank() { 
             let h = "";
             const fStats = getFactionStats();
             h += `<div class="section-title">🛡️ رتبه جناح‌ها</div>`;
             fStats.forEach((f, i) => {
-                const rank = i + 1;
-                let crown = rank <= 3 ? "👑 " : "";
-                let style = rank <= 3 ? "color: #fbbf24; font-weight: bold;" : "";
-                h +=
-                    `<div class="player-row"><span style="${style}">#${rank} ${crown}${f.icon} ${f.name}</span><span>👥 ${f.members} | ⭐ ${f.points}</span></div>`;
+                const rank = i + 1; let crown = rank <= 3 ? "👑 " : ""; let style = rank <= 3 ? "color: #fbbf24; font-weight: bold;" : "";
+                h += `<div class="player-row"><span style="${style}">#${rank} ${crown}${f.icon} ${f.name}</span><span>👥 ${f.members} | ⭐ ${f.points}</span></div>`;
             });
             h += `<div class="section-title">🏆 رتبه بازیکنان</div>`;
-            const sortedPlayers = [...allPlayers].sort((a, b) => (b.xp || 0) - (a.xp || 0));
+            const sortedPlayers = [...allPlayers].sort((a,b)=>(b.xp||0)-(a.xp||0));
             sortedPlayers.forEach((p, i) => {
-                const rank = i + 1;
-                let crown = rank <= 3 ? "👑 " : "";
-                let style = rank <= 3 ? "color: #fbbf24; font-weight: bold;" : "";
-                h +=
-                    `<div class="player-row"><span style="${style}">#${rank} ${crown}${getFormattedName(p)} ${p.id===player.id?'(شما)':''}</span><span>⭐ ${p.xp || 0}</span></div>`;
+                const rank = i + 1; let crown = rank <= 3 ? "👑 " : ""; let style = rank <= 3 ? "color: #fbbf24; font-weight: bold;" : "";
+                h+=`<div class="player-row"><span style="${style}">#${rank} ${crown}${getFormattedName(p)} ${p.id===player.id?'(شما)':''}</span><span>⭐ ${p.xp || 0}</span></div>`;
             });
-            document.getElementById('rankContent').innerHTML = h;
+            document.getElementById('rankContent').innerHTML = h; 
         }
 
-        function renderBattlelog() {
-            let h =
-                `<div class="section-title">📜 گزارش جنگ‌ها (آخرین ۱۵ مورد)</div><div class="battle-log">`;
-            if (battleLogs.length === 0) h += `<div class="empty">جنگی ثبت نشده</div>`;
-            battleLogs.slice().reverse().forEach(l => h +=
-                `<div class="log-entry">${l.text}<br><small>${new Date(l.ts).toLocaleTimeString('fa-IR')}</small></div>`);
-            document.getElementById('battlelogContent').innerHTML = h + `</div>`;
+        function renderBattlelog() { 
+            let h=`<div class="section-title">📜 گزارش جنگ‌ها (آخرین ۱۵ مورد)</div><div class="battle-log">`; 
+            if(battleLogs.length===0) h+=`<div class="empty">جنگی ثبت نشده</div>`; 
+            battleLogs.slice().reverse().forEach(l=>h+=`<div class="log-entry">${l.text}<br><small>${new Date(l.ts).toLocaleTimeString('fa-IR')}</small></div>`); 
+            document.getElementById('battlelogContent').innerHTML = h+`</div>`; 
         }
-
-        // ================================================================
-        //  TAB EVENTS
-        // ================================================================
 
         document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
             document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
             document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
-            t.classList.add('active');
-            const tn = t.dataset.tab;
+            t.classList.add('active'); const tn = t.dataset.tab;
             document.getElementById('panel' + tn.charAt(0).toUpperCase() + tn.slice(1)).classList.add('active');
-            if (tn === 'mine') renderMine();
-            else if (tn === 'military') renderMilitary();
-            else if (tn === 'war') renderWar();
-            else if (tn === 'chat') renderChat();
-            else if (tn === 'factions') renderFactions();
-            else if (tn === 'market') renderMarket();
-            else if (tn === 'research') renderResearch();
-            else if (tn === 'rank') renderRank();
-            else if (tn === 'battlelog') renderBattlelog();
-            else if (tn === 'admin') renderAdmin();
+            if (tn === 'mine') renderMine(); else if (tn === 'military') renderMilitary(); else if (tn === 'war') renderWar(); else if (tn === 'chat') renderChat(); else if (tn === 'factions') renderFactions(); else if (tn === 'market') renderMarket(); else if (tn === 'research') renderResearch(); else if (tn === 'rank') renderRank(); else if (tn === 'battlelog') renderBattlelog(); else if (tn === 'admin') renderAdmin();
         }));
 
-        // ================================================================
-        //  SYNC LOOP
-        // ================================================================
-
-        async function syncLoop() {
-            if (isConnected && !isAttacking) {
-                await loadAll();
-                if (player) {
-                    updateUI();
+        async function syncLoop() { 
+            if (isConnected && !isAttacking) { 
+                await loadAll(); 
+                if (player) { 
+                    updateUI(); 
                     if (document.querySelector('.tab.active')?.dataset.tab === 'chat') renderChat();
-                }
-            }
+                } 
+            } 
         }
-
-        // ================================================================
-        //  INIT
-        // ================================================================
 
         async function init() {
             if (await initSupabase()) {
-                await loadAll();
+                await loadAll(); 
                 document.getElementById('loginBox').style.display = 'flex';
                 setInterval(syncLoop, SYNC_INTERVAL);
             }
