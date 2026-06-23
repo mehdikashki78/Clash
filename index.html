@@ -878,6 +878,7 @@
             <input type="text" id="playerName" placeholder="نام کاربری (حداقل ۳ حرف)...">
             <input type="password" id="playerPassword" placeholder="رمز عبور (حداقل ۴ حرف)...">
             <button onclick="loginRegister()">🏴 ورود / تأسیس حساب</button>
+            <div id="connectionStatus" style="font-size:0.7rem;color:#94a3b8;text-align:center;"></div>
         </div>
 
         <div id="gameUI" style="display:none">
@@ -938,6 +939,7 @@
         let isConnected = false,
             saving = false;
         let isAttacking = false;
+        let usingLocalStorage = false; // fallback flag
 
         const F_DB = {
             "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
@@ -999,18 +1001,25 @@
             if (idx >= 0) allPlayers[idx] = player;
         }
 
+        // ==== SUPABASE HELPERS (unchanged) ====
         async function initSupabase() {
             updateSyncUI("🔌 در حال اتصال به دیتابیس...", "warn");
             try {
-                const { data, error } = await db.from('game_state').select('id').eq('id', 'main_game').maybeSingle();
-                if (error) throw error;
+                // Add a timeout to avoid hanging
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 5000));
+                const queryPromise = db.from('game_state').select('id').eq('id', 'main_game').maybeSingle();
+                const result = await Promise.race([queryPromise, timeoutPromise]);
+                if (result.error) throw result.error;
                 isConnected = true;
+                usingLocalStorage = false;
                 updateSyncUI("✅ متصل به سرور", "online");
                 return true;
             } catch (e) {
-                console.error(e);
-                updateSyncUI("❌ خطا در اتصال به سوپابیس", "error");
-                return false;
+                console.warn("Supabase connection failed, using localStorage fallback.", e);
+                isConnected = false;
+                usingLocalStorage = true;
+                updateSyncUI("⚠️ حالت آفلاین (ذخیره محلی)", "warn");
+                return false; // not connected, but we will fallback
             }
         }
 
@@ -1021,6 +1030,12 @@
             if (status === "error") ob.classList.add("offline");
             else if (status === "warn") ob.classList.add("warn");
             document.getElementById("onlineText").innerText = text;
+            const statusDiv = document.getElementById("connectionStatus");
+            if (statusDiv) {
+                if (status === "error") statusDiv.innerHTML = "❌ اتصال به سرور ممکن نیست، داده‌ها محلی ذخیره می‌شوند.";
+                else if (status === "warn") statusDiv.innerHTML = "⚠️ حالت آفلاین - داده‌ها در مرورگر ذخیره می‌شوند.";
+                else statusDiv.innerHTML = "";
+            }
         }
 
         function compressPlayer(p) {
@@ -1041,13 +1056,27 @@
                 c: chatMessages.slice(-10) };
         }
 
+        // ==== SAVE / LOAD with fallback ====
         async function saveAll(force = false) {
-            if (!isConnected) return false;
             if (saving && !force) return false;
             if (saving) return false;
             saving = true;
             syncPlayerToAllPlayers();
             const dataToSave = packData();
+
+            if (usingLocalStorage || !isConnected) {
+                try {
+                    localStorage.setItem('ironSkyGameData', JSON.stringify(dataToSave));
+                    updateSyncUI("💾 ذخیره محلی", "warn");
+                    return true;
+                } catch (e) {
+                    console.error("Local save error:", e);
+                    return false;
+                } finally {
+                    saving = false;
+                }
+            }
+
             try {
                 const { error } = await db.from('game_state').upsert({ id: 'main_game', data: dataToSave }, { onConflict: 'id' });
                 if (error) throw error;
@@ -1056,6 +1085,11 @@
             } catch (e) {
                 console.error("Save Error:", e);
                 updateSyncUI("❌ خطا در ذخیره", "error");
+                // fallback to localStorage on error
+                try {
+                    localStorage.setItem('ironSkyGameData', JSON.stringify(dataToSave));
+                    toast("ذخیره در سرور ناموفق، اما داده‌ها محلی ذخیره شدند.", true);
+                } catch (e2) {}
                 return false;
             } finally {
                 saving = false;
@@ -1063,12 +1097,34 @@
         }
 
         async function loadAll() {
-            if (!isConnected) if (!await initSupabase()) return false;
+            // Try Supabase first if connected
+            if (isConnected) {
+                try {
+                    const { data, error } = await db.from('game_state').select('data').eq('id', 'main_game').single();
+                    if (error && error.code !== 'PGRST116') throw error;
+                    if (data && data.data && data.data.k === DATA_KEY) {
+                        const j = data.data;
+                        allPlayers = (j.p || []).map(decompressPlayer);
+                        marketOffers = j.m || [];
+                        battleLogs = j.l || [];
+                        chatMessages = j.c || [];
+                        if (player) {
+                            const me = allPlayers.find(p => p.id === player.id);
+                            if (me) player = me;
+                        }
+                        usingLocalStorage = false;
+                        return true;
+                    }
+                } catch (e) {
+                    console.warn("Load from Supabase failed, trying localStorage.", e);
+                }
+            }
+
+            // Fallback to localStorage
             try {
-                const { data, error } = await db.from('game_state').select('data').eq('id', 'main_game').single();
-                if (error && error.code !== 'PGRST116') throw error;
-                if (data && data.data) {
-                    const j = data.data;
+                const raw = localStorage.getItem('ironSkyGameData');
+                if (raw) {
+                    const j = JSON.parse(raw);
                     if (j.k === DATA_KEY) {
                         allPlayers = (j.p || []).map(decompressPlayer);
                         marketOffers = j.m || [];
@@ -1078,12 +1134,25 @@
                             const me = allPlayers.find(p => p.id === player.id);
                             if (me) player = me;
                         }
+                        usingLocalStorage = true;
+                        updateSyncUI("📂 بارگذاری از حافظه محلی", "warn");
                         return true;
+                    }
+                }
+                // if no data, initialize empty
+                allPlayers = [];
+                marketOffers = [];
+                battleLogs = [];
+                chatMessages = [];
+                if (player) {
+                    // if player exists but not in allPlayers, add them
+                    if (!allPlayers.some(p => p.id === player.id)) {
+                        allPlayers.push(player);
                     }
                 }
                 return true;
             } catch (e) {
-                console.error("Load Error:", e);
+                console.error("Local load error:", e);
                 return false;
             }
         }
@@ -1127,6 +1196,7 @@
             return Object.values(stats).sort((a, b) => b.points - a.points);
         }
 
+        // ==== WINDOW FUNCTIONS (unchanged logic, but use saveAll/loadAll with fallback) ====
         window.loginRegister = async function() {
             const name = document.getElementById("playerName").value.trim(),
                 pass = document.getElementById("playerPassword").value.trim();
@@ -1384,7 +1454,7 @@
             await saveAll();
         };
 
-        // --- ADMIN ---
+        // --- ADMIN --- (unchanged)
         window.adminGiveRes = async function() {
             const id = document.getElementById('admSel').value;
             const res = document.getElementById('admRes').value;
@@ -1472,7 +1542,7 @@
             toast("☢️ سرور با موفقیت نابود شد!", false, "war");
         };
 
-        // --- UI RENDERING ---
+        // --- UI RENDERING --- (unchanged)
         function updateUI() {
             if (!player) return;
             if (isAdmin()) {
@@ -1737,7 +1807,7 @@
         }));
 
         async function syncLoop() {
-            if (isConnected && !isAttacking) {
+            if (!isAttacking) {
                 await loadAll();
                 if (player) {
                     updateUI();
@@ -1747,11 +1817,11 @@
         }
 
         async function init() {
-            if (await initSupabase()) {
-                await loadAll();
-                document.getElementById('loginBox').style.display = 'flex';
-                setInterval(syncLoop, SYNC_INTERVAL);
-            }
+            // Try to connect, but always show login box regardless
+            await initSupabase(); // updates flags
+            await loadAll(); // loads data from best source
+            document.getElementById('loginBox').style.display = 'flex';
+            setInterval(syncLoop, SYNC_INTERVAL);
         }
         init();
     </script>
