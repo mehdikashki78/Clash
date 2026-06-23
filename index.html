@@ -1635,7 +1635,7 @@
         .fac-rank-pts-fill.fpo {
             background: linear-gradient(90deg, #1e3a5f, #2563eb, #3b82f6);
         }
-        /* fix: admin buttons in dark mode */
+        /* admin button enhancements */
         .admin-panel-box .btn-sm {
             font-size: 0.55rem;
             padding: 5px 14px;
@@ -1814,7 +1814,10 @@
             syncLoopRunning = false;
         let adminSavedInputs = null;
 
-        /* ===== ذخیره/بازیابی فیلدها ===== */
+        // NEW: to avoid duplicate chat messages
+        let displayedChatCount = 0;
+
+        /* ===== توابع کمکی ===== */
         function saveInputs(containerId) {
             const c = document.getElementById(containerId);
             if (!c) return { v: {}, fid: null, fp: 0 };
@@ -1845,7 +1848,8 @@
             }
             if (s.fid) {
                 const el = document.getElementById(s.fid);
-                if (el) { el.focus(); try { el.setSelectionRange(s.fp, s.fp); } catch (e) {} }
+                if (el) { el.focus({ preventScroll: true });
+                    try { el.setSelectionRange(s.fp, s.fp); } catch (e) {} }
             }
         }
 
@@ -1896,6 +1900,7 @@
             if (i >= 0) allPlayers[i] = { ...player };
         }
 
+        /* ===== Supabase ===== */
         async function initSupabase() {
             updateSyncUI("🔌 اتصال...", "warn");
             try {
@@ -2047,6 +2052,8 @@
             if (isAdmin()) {
                 document.querySelectorAll('.admin-el').forEach(e => e.classList.remove('is-hidden'));
             }
+            // set initial displayedChatCount after loading
+            displayedChatCount = chatMessages.length;
             startMineTimer();
             updateUI();
             renderActiveTab();
@@ -2279,15 +2286,17 @@
             renderResearch();
         };
 
-        /* ===== چت ===== */
+        /* ===== چت (رفع ارسال تکراری و اسکرول) ===== */
         window.sendChat = async function() {
             if (chatLocked && !isAdmin()) return toast("🔒 چت بسته", true);
             const inp = document.getElementById('chatInput');
             if (!inp) return;
             const text = inp.value.trim();
             if (!text || text.length > 100) return;
+            // push to chatMessages
             chatMessages.push({ ts: ts(), n: player.name, t: escapeHtml(text) });
             inp.value = '';
+            // append to DOM immediately
             const box = document.getElementById('chatBox');
             if (box) {
                 const time = new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
@@ -2297,12 +2306,15 @@
                 div.innerHTML =
                     `<div class="${sCls}">${styledName(player.name)} <span class="time">${time}</span></div><div>${escapeHtml(text)}</div>`;
                 box.appendChild(div);
+                // scroll to bottom
                 box.scrollTop = box.scrollHeight;
             }
+            // update displayed count to avoid duplicate in sync
+            displayedChatCount = chatMessages.length;
             await saveAll();
         };
 
-        /* ===== مدیریت (Admin) — همه دکمه‌ها ===== */
+        /* ===== مدیریت ===== */
         window.adminGiveRes = async function() {
             const id = document.getElementById('admSel').value,
                 res = document.getElementById('admRes').value,
@@ -2361,6 +2373,8 @@
             if (!msg) return toast("متن پیام را وارد کنید", true);
             chatMessages.push({ ts: ts(), n: "SYSTEM", t: escapeHtml(msg), sys: true });
             document.getElementById('admBroad').value = '';
+            // update displayed count
+            displayedChatCount = chatMessages.length;
             await saveAll(true);
             if (activeTab === 'chat') renderChat();
             renderAdmin();
@@ -2370,6 +2384,7 @@
         window.adminClearChat = async function() {
             if (!confirm("پاک کردن همه پیام‌های چت؟")) return;
             chatMessages = [];
+            displayedChatCount = 0;
             await saveAll(true);
             if (activeTab === 'chat') renderChat();
             renderAdmin();
@@ -2412,6 +2427,7 @@
             chatMessages = [];
             globalBanner = "";
             chatLocked = false;
+            displayedChatCount = 0;
             player = null;
             await saveAll(true);
             document.getElementById('gameUI').style.display = 'none';
@@ -2496,8 +2512,8 @@
             } else { sb.style.display = 'none'; }
         }
 
-        /* ===== همه توابع رندر ===== */
-        function renderMine() {
+        /* ===== رندرها ===== */
+        function renderMine() { /* همان کد قبلی */ 
             const m = calcMine(player),
                 cap = m.cap;
             const gP = Math.min(100, (m.gold / cap) * 100),
@@ -2556,6 +2572,11 @@
         }
 
         function renderChat() {
+            // store scroll position
+            const box = document.getElementById('chatBox');
+            let scrollTop = 0;
+            if (box) scrollTop = box.scrollTop;
+
             let h = '<div class="chat-container"><div class="chat-box" id="chatBox">';
             chatMessages.forEach(msg => {
                 const isMe = msg.n === player.name;
@@ -2568,12 +2589,19 @@
             h +=
                 `</div><div class="chat-input-area"><input type="text" id="chatInput" placeholder="${chatLocked?'🔒 چت بسته':'پیام خود را بنویسید...'}" maxlength="100" ${chatLocked&&!isAdmin()?'disabled':''} onkeypress="if(event.key==='Enter')sendChat()"><button class="btn btn-gold btn-sm" onclick="sendChat()" ${chatLocked&&!isAdmin()?'disabled':''}>ارسال</button></div></div>`;
             document.getElementById('chatContent').innerHTML = h;
-            const box = document.getElementById('chatBox');
-            if (box) box.scrollTop = box.scrollHeight;
-            if (activeTab === 'chat') {
-                setTimeout(() => { const inp = document.getElementById('chatInput'); if (inp && !inp.disabled) inp
-                        .focus(); }, 50);
+
+            const newBox = document.getElementById('chatBox');
+            if (newBox) {
+                // restore scroll position if possible, otherwise scroll to bottom
+                if (scrollTop > 0 && newBox.scrollHeight > scrollTop) {
+                    newBox.scrollTop = scrollTop;
+                } else {
+                    newBox.scrollTop = newBox.scrollHeight;
+                }
             }
+            // update displayed count to current length (already displayed)
+            displayedChatCount = chatMessages.length;
+            // do not focus input to avoid page scroll
         }
 
         function renderFactions() {
@@ -2721,7 +2749,6 @@
             h +=
                 `<div class="admin-panel-box"><h3>☢️ منطقه خطر</h3><button class="btn btn-red" onclick="adminNuke()">☢️ نابودی کامل</button></div>`;
             document.getElementById('adminContent').innerHTML = h;
-            // restore saved inputs if any
             if (adminSavedInputs) {
                 setTimeout(() => restoreInputs(adminSavedInputs), 10);
                 adminSavedInputs = null;
@@ -2768,13 +2795,11 @@
             if (syncLoopRunning) return;
             syncLoopRunning = true;
             try {
-                // ذخیره فیلدهای فعال
                 const savedChat = saveInputs('panelChat');
                 const savedMkt = saveInputs('panelMarket');
                 const savedAdmin = saveInputs('adminContent');
                 const savedRes = saveInputs('panelResearch');
 
-                // بارگذاری از سرور
                 await loadAll();
                 updateUI();
 
@@ -2782,16 +2807,15 @@
                 const changed = newHash !== lastHash;
                 lastHash = newHash;
 
-                // معدن: فقط آپدیت اعداد
                 if (activeTab === 'mine') updateMineVisuals();
 
-                // چت: اضافه کردن پیام‌های جدید
-                const prevChatLen = savedChat._prevChatLen || 0;
-                if (activeTab === 'chat' && chatMessages.length > prevChatLen) {
-                    const newMsgs = chatMessages.slice(prevChatLen);
+                // Chat: only append if there are new messages beyond displayedChatCount
+                if (activeTab === 'chat' && chatMessages.length > displayedChatCount) {
                     const box = document.getElementById('chatBox');
                     if (box) {
-                        newMsgs.forEach(msg => {
+                        // append only new messages from displayedChatCount to end
+                        for (let i = displayedChatCount; i < chatMessages.length; i++) {
+                            const msg = chatMessages[i];
                             const time = new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit',
                                 minute: '2-digit' });
                             const isSys = msg.sys;
@@ -2801,19 +2825,20 @@
                             div.innerHTML =
                                 `<div class="${sCls}">${isSys?'📢 سیستم':styledName(msg.n)} <span class="time">${time}</span></div><div>${msg.t}</div>`;
                             box.appendChild(div);
-                        });
+                        }
                         box.scrollTop = box.scrollHeight;
                     }
+                    displayedChatCount = chatMessages.length;
                 }
 
-                // بازار: اگر پیشنهاد جدید اومد
+                // Market: if offers changed
                 const prevMktLen = savedMkt._prevMktLen || 0;
                 if (activeTab === 'market' && marketOffers.length !== prevMktLen) {
                     renderMarket();
                     restoreInputs(savedMkt);
                 }
 
-                // تب‌های بدون فیلد ورودی
+                // Tabs without input fields
                 if (changed) {
                     if (activeTab === 'factions') renderFactions();
                     if (activeTab === 'rank') renderRank();
@@ -2821,7 +2846,6 @@
                     if (activeTab === 'battlelog') renderBattlelog();
                 }
 
-                // نظامی و تحقیق
                 if (changed) {
                     if (activeTab === 'military') { renderMilitary();
                         restoreInputs(savedRes); }
@@ -2829,13 +2853,11 @@
                         restoreInputs(savedRes); }
                 }
 
-                // ادمین: رندر و بازیابی
                 if (activeTab === 'admin' && isAdmin()) {
                     adminSavedInputs = savedAdmin;
                     renderAdmin();
                 }
 
-                // ذخیره طول‌ها برای مقایسه بعدی
                 savedChat._prevChatLen = chatMessages.length;
                 savedMkt._prevMktLen = marketOffers.length;
 
@@ -2853,7 +2875,6 @@
                 document.getElementById('panel' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active');
                 activeTab = t;
                 renderActiveTab();
-                // بعد از تغییر تب، سینک سریع
                 setTimeout(syncLoop, 100);
             });
         });
@@ -2862,11 +2883,10 @@
             await initSupabase();
             await loadAll();
             lastHash = dataHash();
+            displayedChatCount = chatMessages.length; // init
             document.getElementById('loginBox').style.display = 'flex';
             updateSyncUI("✅ آماده", "online");
-            // سینک دوره‌ای
             setInterval(syncLoop, SYNC_INTERVAL);
-            // سینک اولیه
             setTimeout(syncLoop, 300);
         })();
     </script>
