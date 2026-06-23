@@ -1782,6 +1782,7 @@
             DATA_KEY = "EMPIRE_DATA_V60_NOJUMP",
             SYNC_INTERVAL = 3000,
             SHIELD_DURATION = 12 * 60 * 60 * 1000;
+        const OFFER_EXPIRY = 60 * 60 * 1000; // 1 ساعت
 
         const F_DB = { "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
             "F-5E": { n: "F-5E Tiger", i: "🇺🇸", p: 20, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
@@ -1821,7 +1822,7 @@
             syncLoopRunning = false;
         let adminSavedInputs = null;
         let displayedChatCount = 0;
-        let adminPlayerHash = ''; // برای جلوگیری از رندر اضافی
+        let adminPlayerHash = '';
 
         // ===== توابع کمکی =====
         function saveInputs(containerId) {
@@ -1993,7 +1994,7 @@
                     aviation: 0 }, fighters: {}, defenses: [], shieldExpiry: 0 };
         }
 
-        // ===== توابع اصلی بازی (معدن، نظامی، جنگ، بازار، تحقیق، چت، جناح، رتبه، گزارش) =====
+        // ===== توابع اصلی بازی =====
         function calcMine(p) {
             const el = Math.min((ts() - (p.lastMineCollect || ts())) / 1000, 600);
             const cap = 300 + (p.mineLevel - 1) * 250;
@@ -2039,6 +2040,31 @@
                 chatLocked;
         }
 
+        // ===== انقضای آگهی‌های بازار =====
+        function expireMarketOffers() {
+            const now = ts();
+            let expired = [];
+            marketOffers = marketOffers.filter(o => {
+                if (now - o.ts > OFFER_EXPIRY) {
+                    expired.push(o);
+                    return false;
+                }
+                return true;
+            });
+            // برگرداندن منابع به فروشنده
+            expired.forEach(o => {
+                const seller = allPlayers.find(p => p.id === o.sid);
+                if (seller) {
+                    seller[o.give] += o.ga;
+                    toast(`⏳ آگهی ${o.seller} منقضی شد و ${o.ga} ${RES_META[o.give]?.name || o.give} برگشت`, false, "peace");
+                }
+            });
+            if (expired.length > 0) {
+                // ذخیره خودکار بعد از تغییر
+                saveAll(true);
+            }
+        }
+
         // ===== توابع ورود و ثبت =====
         window.loginRegister = async function() {
             const n = document.getElementById("playerName").value.trim(),
@@ -2058,7 +2084,7 @@
             document.getElementById("gameUI").style.display = 'block';
             if (isAdmin()) {
                 document.querySelectorAll('.admin-el').forEach(e => e.classList.remove('is-hidden'));
-                adminPlayerHash = ''; // reset to force render
+                adminPlayerHash = '';
             }
             displayedChatCount = chatMessages.length;
             startMineTimer();
@@ -2147,7 +2173,7 @@
             renderRank();
         };
 
-        // ===== جنگ =====
+        // ===== جنگ (فقط قدرت و دفاع خود را نشان بده) =====
         window.launchAttack = async function(tId) {
             if (isAttacking) return;
             isAttacking = true;
@@ -2254,7 +2280,7 @@
                 gt = document.getElementById('mktGet').value;
             const ga = parseInt(document.getElementById('mktGiveAmt').value),
                 gta = parseInt(document.getElementById('mktGetAmt').value);
-            if (ga <= 0 || gta <= 0) return toast("مقدار نامعتبر", true);
+            if (isNaN(ga) || isNaN(gta) || ga <= 0 || gta <= 0) return toast("مقدار نامعتبر (باید بزرگ‌تر از صفر باشد)", true);
             if (gr === gt) return toast("منبع مشابه", true);
             if (player[gr] < ga) return toast("منابع کم", true);
             player[gr] -= ga;
@@ -2317,7 +2343,7 @@
             await saveAll();
         };
 
-        // ===== مدیریت (Admin) با رندر هوشمند =====
+        // ===== مدیریت (Admin) =====
         window.adminGiveRes = async function() {
             const id = document.getElementById('admSel').value,
                 res = document.getElementById('admRes').value,
@@ -2562,20 +2588,19 @@
             document.getElementById('militaryContent').innerHTML = h;
         }
 
-        // ===== جنگ: قدرت و دفاع مهاجم پنهان شد =====
+        // ===== جنگ: فقط قدرت و دفاع خود را نشان بده، قدرت و دفاع هدف مخفی شود =====
         function renderWar() {
             const targets = allPlayers.filter(p => p.id !== player.id && p.name !== ADMIN_NAME);
             if (targets.length === 0) { document.getElementById('warContent').innerHTML =
                     '<div class="empty">هدفی نیست</div>'; return; }
-            // حذف نمایش قدرت و دفاع مهاجم (فقط یک خط خالی یا توضیح)
-            let h = `<div class="info-bar" style="color:#94a3b8;">⚔️ دشمنان را انتخاب کنید</div>`;
+            // نمایش قدرت و دفاع خود
+            let h = `<div class="info-bar">⚔️ قدرت شما: <b>${calcAtt(player)}</b> | 🛡️ دفاع شما: <b>${calcDef(player)}</b></div>`;
             targets.sort((a, b) => b.xp - a.xp);
             targets.forEach(t => {
-                const a = calcAtt(t),
-                    d = calcDef(t);
+                // قدرت و دفاع هدف را نمایش ندهید (فقط XP و نام)
                 const sh = t.shieldExpiry && ts() < t.shieldExpiry;
                 h +=
-                    `<div class="player-row" style="${sh?'opacity:0.5':''}"><div><div style="font-size:0.7rem;font-weight:700;">${fmtName(t)}</div><div style="font-size:0.5rem;color:#94a3b8;">⚔️${a} 🛡️${d} | XP:${t.xp}</div>${sh?'<div style="font-size:0.45rem;color:#93c5fd;">🛡️ سپر فعال</div>':''}</div><button class="btn btn-attack btn-sm" onclick="launchAttack('${t.id}')" ${sh||isAttacking?'disabled':''}>🔥 حمله</button></div>`;
+                    `<div class="player-row" style="${sh?'opacity:0.5':''}"><div><div style="font-size:0.7rem;font-weight:700;">${fmtName(t)}</div><div style="font-size:0.5rem;color:#94a3b8;">XP: ${t.xp}</div>${sh?'<div style="font-size:0.45rem;color:#93c5fd;">🛡️ سپر فعال</div>':''}</div><button class="btn btn-attack btn-sm" onclick="launchAttack('${t.id}')" ${sh||isAttacking?'disabled':''}>🔥 حمله</button></div>`;
             });
             document.getElementById('warContent').innerHTML = h;
         }
@@ -2649,6 +2674,8 @@
         }
 
         function renderMarket() {
+            // ابتدا آگهی‌های منقضی شده را حذف می‌کنیم (قبلاً در syncLoop انجام شده، ولی برای اطمینان دوباره)
+            expireMarketOffers();
             let h = '';
             h +=
                 `<div class="mkt-hero"><div class="mkt-hero-title">🏪 بازار مبادله</div><div class="mkt-balance-row"><div class="mkt-bal-chip mkt-bal-gold">💰 ${Math.floor(player.gold).toLocaleString('fa-IR')}</div><div class="mkt-bal-chip mkt-bal-oil">🛢️ ${Math.floor(player.oil).toLocaleString('fa-IR')}</div><div class="mkt-bal-chip mkt-bal-metal">⛏️ ${Math.floor(player.metal).toLocaleString('fa-IR')}</div></div></div>`;
@@ -2739,10 +2766,9 @@
             document.getElementById('battlelogContent').innerHTML = h;
         }
 
-        // ===== رندر مدیریت (با جلوگیری از رندر اضافی و حفظ ورودی‌ها) =====
+        // ===== رندر مدیریت =====
         function renderAdmin() {
             if (!isAdmin()) return;
-
             const currentHash = allPlayers.map(p => p.id + ':' + p.name + ':' + p.xp).join('|');
             const adminContent = document.getElementById('adminContent');
             if (adminPlayerHash === currentHash && adminContent.innerHTML.trim() !== '') {
@@ -2753,7 +2779,6 @@
                 return;
             }
             adminPlayerHash = currentHash;
-
             let h = '<div class="admin-panel-box"><h3>👥 مدیریت بازیکنان</h3><select id="admSel" style="margin-bottom:8px;">';
             allPlayers.forEach(p => {
                 h += `<option value="${p.id}">${isAdm(p.name)?'🚬 ':''}${escapeHtml(p.name)} (XP:${p.xp})</option>`;
@@ -2767,7 +2792,6 @@
             h +=
                 `<div class="admin-panel-box"><h3>☢️ منطقه خطر</h3><button class="btn btn-red" onclick="adminNuke()">☢️ نابودی کامل</button></div>`;
             adminContent.innerHTML = h;
-
             if (adminSavedInputs) {
                 setTimeout(() => restoreInputs(adminSavedInputs), 10);
                 adminSavedInputs = null;
@@ -2810,7 +2834,7 @@
             }
         }
 
-        // ===== سینک هوشمند (همگام‌سازی بدون گم شدن ورودی‌ها) =====
+        // ===== سینک هوشمند =====
         async function syncLoop() {
             if (syncLoopRunning) return;
             syncLoopRunning = true;
@@ -2821,6 +2845,8 @@
                 const savedRes = saveInputs('panelResearch');
 
                 await loadAll();
+                // انقضای آگهی‌ها
+                expireMarketOffers();
                 updateUI();
 
                 const newHash = dataHash();
@@ -2900,6 +2926,8 @@
             await loadAll();
             lastHash = dataHash();
             displayedChatCount = chatMessages.length;
+            // حذف آگهی‌های منقضی در ابتدا
+            expireMarketOffers();
             document.getElementById('loginBox').style.display = 'flex';
             updateSyncUI("✅ آماده", "online");
             setInterval(syncLoop, SYNC_INTERVAL);
