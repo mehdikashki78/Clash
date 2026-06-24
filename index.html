@@ -70,12 +70,8 @@
             left: 35%;
         }
         @keyframes spinRing {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         .loader-icon {
             position: absolute;
@@ -87,15 +83,8 @@
             filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.4));
         }
         @keyframes pulseIcon {
-            0%,
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.15);
-                opacity: 0.8;
-            }
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.8; }
         }
         .loader-title {
             margin-top: 30px;
@@ -120,23 +109,12 @@
             animation: sparkle 1.4s ease-in-out infinite;
         }
         @keyframes glowTitle {
-            0% {
-                filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.2));
-            }
-            100% {
-                filter: drop-shadow(0 0 30px rgba(245, 158, 11, 0.5));
-            }
+            0% { filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.2)); }
+            100% { filter: drop-shadow(0 0 30px rgba(245, 158, 11, 0.5)); }
         }
         @keyframes sparkle {
-            0%,
-            100% {
-                opacity: 0.3;
-                transform: scale(0.9) rotate(-10deg);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.3) rotate(10deg);
-            }
+            0%, 100% { opacity: 0.3; transform: scale(0.9) rotate(-10deg); }
+            50% { opacity: 1; transform: scale(1.3) rotate(10deg); }
         }
         .loader-sub {
             color: #94a3b8;
@@ -174,32 +152,16 @@
             animation: barShimmer 1.8s linear infinite;
         }
         @keyframes loadProgress {
-            0% {
-                width: 0%;
-            }
-            20% {
-                width: 18%;
-            }
-            40% {
-                width: 42%;
-            }
-            60% {
-                width: 68%;
-            }
-            80% {
-                width: 85%;
-            }
-            100% {
-                width: 100%;
-            }
+            0% { width: 0%; }
+            20% { width: 18%; }
+            40% { width: 42%; }
+            60% { width: 68%; }
+            80% { width: 85%; }
+            100% { width: 100%; }
         }
         @keyframes barShimmer {
-            0% {
-                transform: translateX(-33.33%);
-            }
-            100% {
-                transform: translateX(0%);
-            }
+            0% { transform: translateX(-33.33%); }
+            100% { transform: translateX(0%); }
         }
         .loader-dots {
             margin-top: 18px;
@@ -214,33 +176,13 @@
             background: #f59e0b;
             animation: dotBounce 1.4s ease-in-out infinite;
         }
-        .loader-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-            background: #ef4444;
-        }
-        .loader-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-            background: #3b82f6;
-        }
-        .loader-dots span:nth-child(4) {
-            animation-delay: 0.6s;
-            background: #10b981;
-        }
-        .loader-dots span:nth-child(5) {
-            animation-delay: 0.8s;
-            background: #8b5cf6;
-        }
+        .loader-dots span:nth-child(2) { animation-delay: 0.2s; background: #ef4444; }
+        .loader-dots span:nth-child(3) { animation-delay: 0.4s; background: #3b82f6; }
+        .loader-dots span:nth-child(4) { animation-delay: 0.6s; background: #10b981; }
+        .loader-dots span:nth-child(5) { animation-delay: 0.8s; background: #8b5cf6; }
         @keyframes dotBounce {
-            0%,
-            80%,
-            100% {
-                transform: scale(0.4);
-                opacity: 0.3;
-            }
-            40% {
-                transform: scale(1.2);
-                opacity: 1;
-            }
+            0%, 80%, 100% { transform: scale(0.4); opacity: 0.3; }
+            40% { transform: scale(1.2); opacity: 1; }
         }
         .loader-version {
             position: absolute;
@@ -402,22 +344,12 @@
             animation: bannerSweep 3s linear infinite;
         }
         @keyframes bannerIn {
-            from {
-                transform: translateY(-100%);
-                opacity: 0
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1
-            }
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         @keyframes bannerSweep {
-            0% {
-                transform: translateX(-33%)
-            }
-            100% {
-                transform: translateX(33%)
-            }
+            0% { transform: translateX(-33%); }
+            100% { transform: translateX(33%); }
         }
         .tabs {
             display: flex;
@@ -585,19 +517,9 @@
             color: #4ade80;
         }
         @keyframes fadeOut {
-            0% {
-                opacity: 1;
-                transform: translateY(0)
-            }
-            70% {
-                opacity: 1;
-                transform: translateY(0)
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(20px);
-                visibility: hidden
-            }
+            0% { opacity: 1; transform: translateY(0); }
+            70% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(20px); visibility: hidden; }
         }
         button:disabled {
             opacity: 0.5;
@@ -684,22 +606,12 @@
             filter: drop-shadow(0 0 20px #ef4444);
         }
         @keyframes boom {
-            0% {
-                transform: scale(1);
-                opacity: 1
-            }
-            100% {
-                transform: scale(1.4);
-                opacity: 0.7
-            }
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.4); opacity: 0.7; }
         }
         @keyframes fadeIn {
-            from {
-                opacity: 0
-            }
-            to {
-                opacity: 1
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .battle-text {
             color: #fbbf24;
@@ -710,15 +622,9 @@
             animation: pulse 1s infinite;
         }
         @keyframes pulse {
-            0% {
-                transform: scale(1)
-            }
-            50% {
-                transform: scale(1.05)
-            }
-            100% {
-                transform: scale(1)
-            }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
         .result-text {
             color: white;
@@ -731,23 +637,10 @@
             animation: shake .5s cubic-bezier(.36, .07, .19, .97) both;
         }
         @keyframes shake {
-            10%,
-            90% {
-                transform: translate3d(-1px, 0, 0)
-            }
-            20%,
-            80% {
-                transform: translate3d(2px, 0, 0)
-            }
-            30%,
-            50%,
-            70% {
-                transform: translate3d(-4px, 0, 0)
-            }
-            40%,
-            60% {
-                transform: translate3d(4px, 0, 0)
-            }
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
         .storage-bar {
             height: 10px;
@@ -873,13 +766,8 @@
             filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));
         }
         @keyframes mineSwing {
-            0%,
-            100% {
-                transform: rotate(-12deg) scale(1)
-            }
-            50% {
-                transform: rotate(12deg) scale(1.1)
-            }
+            0%, 100% { transform: rotate(-12deg) scale(1); }
+            50% { transform: rotate(12deg) scale(1.1); }
         }
         .mine-title {
             color: #fbbf24;
@@ -961,13 +849,8 @@
             animation: barGlow 1.2s ease-in-out infinite;
         }
         @keyframes barGlow {
-            0%,
-            100% {
-                filter: brightness(1) saturate(1)
-            }
-            50% {
-                filter: brightness(1.5) saturate(1.3)
-            }
+            0%, 100% { filter: brightness(1) saturate(1); }
+            50% { filter: brightness(1.5) saturate(1.3); }
         }
         .mine-pct {
             position: absolute;
@@ -1008,15 +891,8 @@
             animation: collectBeat 1.5s ease-in-out infinite;
         }
         @keyframes collectBeat {
-            0%,
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 rgba(245, 158, 11, 0)
-            }
-            50% {
-                transform: scale(1.03);
-                box-shadow: 0 0 25px rgba(245, 158, 11, 0.5)
-            }
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(245, 158, 11, 0); }
+            50% { transform: scale(1.03); box-shadow: 0 0 25px rgba(245, 158, 11, 0.5); }
         }
         .mine-upgrade-section {
             display: flex;
@@ -1099,13 +975,8 @@
             z-index: 1;
         }
         @keyframes facFloat {
-            0%,
-            100% {
-                transform: translateY(0) scale(1)
-            }
-            50% {
-                transform: translateY(-6px) scale(1.08)
-            }
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.08); }
         }
         .fac-hero-name {
             font-size: 1.1rem;
@@ -1165,12 +1036,8 @@
             pointer-events: none;
         }
         @keyframes facSweep {
-            0% {
-                transform: translateX(-50%)
-            }
-            100% {
-                transform: translateX(50%)
-            }
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(50%); }
         }
         .fac-card.top3 {
             border-color: rgba(245, 158, 11, 0.5);
@@ -1533,13 +1400,8 @@
             z-index: 1;
         }
         @keyframes swapBounce {
-            0%,
-            100% {
-                transform: translateY(0)
-            }
-            50% {
-                transform: translateY(-4px)
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
         }
         .mkt-submit-row {
             text-align: center;
@@ -1994,24 +1856,24 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            background-image: radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.6), transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.5), transparent),
-                radial-gradient(2px 2px at 80px 20px, rgba(255, 255, 255, 0.7), transparent),
-                radial-gradient(3px 3px at 120px 90px, rgba(255, 255, 255, 0.4), transparent),
-                radial-gradient(2px 2px at 160px 40px, rgba(255, 255, 255, 0.6), transparent),
-                radial-gradient(2px 2px at 200px 110px, rgba(255, 255, 255, 0.5), transparent),
-                radial-gradient(3px 3px at 250px 30px, rgba(255, 255, 255, 0.7), transparent),
-                radial-gradient(2px 2px at 300px 80px, rgba(255, 255, 255, 0.4), transparent),
-                radial-gradient(2px 2px at 350px 50px, rgba(255, 255, 255, 0.6), transparent),
-                radial-gradient(3px 3px at 400px 100px, rgba(255, 255, 255, 0.5), transparent),
-                radial-gradient(2px 2px at 450px 20px, rgba(255, 255, 255, 0.7), transparent),
-                radial-gradient(2px 2px at 500px 70px, rgba(255, 255, 255, 0.4), transparent),
-                radial-gradient(3px 3px at 550px 40px, rgba(255, 255, 255, 0.6), transparent),
-                radial-gradient(2px 2px at 600px 90px, rgba(255, 255, 255, 0.5), transparent),
-                radial-gradient(2px 2px at 650px 30px, rgba(255, 255, 255, 0.7), transparent),
-                radial-gradient(3px 3px at 700px 80px, rgba(255, 255, 255, 0.4), transparent),
-                radial-gradient(2px 2px at 750px 50px, rgba(255, 255, 255, 0.6), transparent),
-                radial-gradient(2px 2px at 800px 110px, rgba(255, 255, 255, 0.5), transparent);
+            background-image: radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.5), transparent),
+                radial-gradient(2px 2px at 80px 20px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(3px 3px at 120px 90px, rgba(255,255,255,0.4), transparent),
+                radial-gradient(2px 2px at 160px 40px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 200px 110px, rgba(255,255,255,0.5), transparent),
+                radial-gradient(3px 3px at 250px 30px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(2px 2px at 300px 80px, rgba(255,255,255,0.4), transparent),
+                radial-gradient(2px 2px at 350px 50px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(3px 3px at 400px 100px, rgba(255,255,255,0.5), transparent),
+                radial-gradient(2px 2px at 450px 20px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(2px 2px at 500px 70px, rgba(255,255,255,0.4), transparent),
+                radial-gradient(3px 3px at 550px 40px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 600px 90px, rgba(255,255,255,0.5), transparent),
+                radial-gradient(2px 2px at 650px 30px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(3px 3px at 700px 80px, rgba(255,255,255,0.4), transparent),
+                radial-gradient(2px 2px at 750px 50px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 800px 110px, rgba(255,255,255,0.5), transparent);
             background-size: 200px 150px;
             background-repeat: repeat;
             opacity: 0.8;
@@ -2025,38 +1887,23 @@
             animation: cloudDrift 25s linear infinite alternate;
         }
         .cloud1 {
-            width: 300px;
-            height: 60px;
-            top: 15%;
-            left: -10%;
-            background: rgba(255, 255, 255, 0.04);
+            width: 300px; height: 60px; top: 15%; left: -10%;
+            background: rgba(255,255,255,0.04);
             animation-duration: 35s;
         }
         .cloud2 {
-            width: 400px;
-            height: 80px;
-            top: 55%;
-            right: -15%;
-            background: rgba(255, 255, 255, 0.025);
-            animation-duration: 45s;
-            animation-delay: -10s;
+            width: 400px; height: 80px; top: 55%; right: -15%;
+            background: rgba(255,255,255,0.025);
+            animation-duration: 45s; animation-delay: -10s;
         }
         .cloud3 {
-            width: 200px;
-            height: 40px;
-            top: 80%;
-            left: 20%;
-            background: rgba(255, 255, 255, 0.03);
-            animation-duration: 30s;
-            animation-delay: -5s;
+            width: 200px; height: 40px; top: 80%; left: 20%;
+            background: rgba(255,255,255,0.03);
+            animation-duration: 30s; animation-delay: -5s;
         }
         @keyframes cloudDrift {
-            0% {
-                transform: translateX(0) scale(1);
-            }
-            100% {
-                transform: translateX(80px) scale(1.1);
-            }
+            0% { transform: translateX(0) scale(1); }
+            100% { transform: translateX(80px) scale(1.1); }
         }
         .sky-player {
             position: absolute;
@@ -2082,11 +1929,11 @@
             font-size: 2.2rem;
             line-height: 1;
             transition: transform 0.3s;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
             transform: rotate(-20deg);
         }
         .sky-player .player-label {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(4px);
             padding: 2px 8px;
             border-radius: 10px;
@@ -2094,7 +1941,7 @@
             color: #e2e8f0;
             white-space: nowrap;
             margin-top: 2px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255,255,255,0.1);
             font-weight: 600;
             pointer-events: none;
             max-width: 70px;
@@ -2106,46 +1953,28 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            border: 3px solid rgba(59, 130, 246, 0.7);
+            border: 3px solid rgba(59,130,246,0.7);
             animation: shieldPulse 1.5s ease-in-out infinite;
             pointer-events: none;
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
-            top: 50%;
-            left: 50%;
+            box-shadow: 0 0 30px rgba(59,130,246,0.3);
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
         }
         @keyframes shieldPulse {
-            0%,
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.7;
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.25);
-                opacity: 1;
-            }
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+            50% { transform: translate(-50%, -50%) scale(1.25); opacity: 1; }
         }
         .sky-player .shield-ring::after {
             content: '';
             position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
+            top: -4px; left: -4px; right: -4px; bottom: -4px;
             border-radius: 50%;
-            border: 2px solid rgba(59, 130, 246, 0.2);
+            border: 2px solid rgba(59,130,246,0.2);
             animation: shieldPulse2 2s ease-in-out infinite;
         }
         @keyframes shieldPulse2 {
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.3;
-            }
-            50% {
-                transform: scale(1.4);
-                opacity: 0.6;
-            }
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.4); opacity: 0.6; }
         }
         .sky-player.me .plane-icon {
             filter: drop-shadow(0 0 20px #fbbf24);
@@ -2157,7 +1986,7 @@
         .sky-player .player-tooltip {
             position: absolute;
             bottom: calc(100% + 12px);
-            background: rgba(10, 10, 26, 0.95);
+            background: rgba(10,10,26,0.95);
             backdrop-filter: blur(8px);
             border: 1px solid #f59e0b44;
             border-radius: 12px;
@@ -2166,7 +1995,7 @@
             display: none;
             flex-direction: column;
             gap: 4px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             pointer-events: none;
             z-index: 100;
         }
@@ -2218,7 +2047,7 @@
             height: 36px;
             border-radius: 50%;
             border: 1px solid #f59e0b44;
-            background: rgba(10, 10, 26, 0.8);
+            background: rgba(10,10,26,0.8);
             backdrop-filter: blur(4px);
             color: #fbbf24;
             font-size: 1.2rem;
@@ -2228,10 +2057,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
         .sky-map-zoom-controls button:hover {
-            background: rgba(245, 158, 11, 0.2);
+            background: rgba(245,158,11,0.2);
             border-color: #f59e0b;
         }
         .sky-map-zoom-level {
@@ -2240,7 +2069,7 @@
             left: 16px;
             font-size: 0.55rem;
             color: #94a3b8;
-            background: rgba(10, 10, 26, 0.7);
+            background: rgba(10,10,26,0.7);
             padding: 4px 12px;
             border-radius: 20px;
             border: 1px solid #1e293b;
@@ -2253,7 +2082,7 @@
             right: 12px;
             font-size: 0.45rem;
             color: #94a3b8;
-            background: rgba(10, 10, 26, 0.6);
+            background: rgba(10,10,26,0.6);
             padding: 6px 10px;
             border-radius: 10px;
             border: 1px solid #1e293b;
@@ -2285,137 +2114,6 @@
             background: #3b82f6;
             box-shadow: 0 0 8px #3b82f6;
             border: 1px solid #93c5fd;
-        }
-
-        /* ===== استایل‌های پروفایل ===== */
-        .profile-card {
-            background: linear-gradient(160deg, #1a1a2e 0%, #0f1729 50%, #1a1025 100%);
-            border: 1px solid #f59e0b55;
-            border-radius: 1.4rem;
-            padding: 18px;
-            position: relative;
-            overflow: hidden;
-        }
-        .profile-card::before {
-            content: '';
-            position: absolute;
-            top: -30%;
-            left: -20%;
-            width: 140%;
-            height: 160%;
-            background: radial-gradient(circle at 30% 40%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-        }
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 1;
-        }
-        .profile-avatar {
-            font-size: 2.8rem;
-            filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3));
-        }
-        .profile-name {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: #fbbf24;
-        }
-        .profile-sub {
-            font-size: 0.6rem;
-            color: #94a3b8;
-        }
-        .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 1;
-        }
-        .profile-stat-item {
-            background: rgba(10, 10, 26, 0.6);
-            border: 1px solid #1e293b;
-            border-radius: 12px;
-            padding: 8px 10px;
-            text-align: center;
-        }
-        .profile-stat-val {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #fbbf24;
-        }
-        .profile-stat-label {
-            font-size: 0.45rem;
-            color: #64748b;
-            margin-top: 2px;
-        }
-        .profile-ref-section {
-            background: rgba(10, 10, 26, 0.6);
-            border: 1px solid #1e293b;
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 10px;
-            position: relative;
-            z-index: 1;
-        }
-        .profile-ref-code {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            justify-content: center;
-            margin: 6px 0 10px;
-        }
-        .profile-ref-code .code {
-            background: #0a0a1a;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-family: monospace;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #fbbf24;
-            border: 1px solid #f59e0b44;
-            letter-spacing: 2px;
-            user-select: all;
-            cursor: pointer;
-        }
-        .profile-ref-status {
-            font-size: 0.55rem;
-            color: #94a3b8;
-            text-align: center;
-        }
-        .profile-ref-status.success {
-            color: #4ade80;
-        }
-        .profile-ref-form {
-            display: flex;
-            gap: 6px;
-            margin-top: 10px;
-            align-items: center;
-        }
-        .profile-ref-form input {
-            flex: 1;
-            margin: 0;
-            font-size: 0.7rem;
-            padding: 8px 12px;
-        }
-        .profile-ref-form button {
-            flex: 0 1 auto;
-        }
-        .copy-btn {
-            background: none;
-            border: 1px solid #f59e0b44;
-            color: #fbbf24;
-            border-radius: 30px;
-            padding: 4px 12px;
-            font-size: 0.6rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .copy-btn:hover {
-            background: rgba(245, 158, 11, 0.1);
         }
     </style>
 </head>
@@ -2457,7 +2155,6 @@
         <div class="login-box" id="loginBox" style="display:none">
             <input type="text" id="playerName" placeholder="نام کاربری (حداقل ۳ حرف)...">
             <input type="password" id="playerPassword" placeholder="رمز عبور (حداقل ۴ حرف)...">
-            <input type="text" id="refCodeInput" placeholder="کد دعوت (اختیاری)..." style="font-size:0.9rem;">
             <button onclick="loginRegister()">🏴 ورود / تأسیس حساب</button>
         </div>
         <div id="gameUI" style="display:none">
@@ -2468,8 +2165,7 @@
                 <div class="res-item">⭐ XP: <span id="rXP">0</span></div>
             </div>
             <div class="tabs">
-                <div class="tab active" data-tab="profile">👤 پروفایل</div>
-                <div class="tab" data-tab="mine">🪙 معدن</div>
+                <div class="tab active" data-tab="mine">🪙 معدن</div>
                 <div class="tab" data-tab="military">⚔️ نظامی</div>
                 <div class="tab" data-tab="war">🔥 جنگ</div>
                 <div class="tab" data-tab="chat">💬 چت</div>
@@ -2480,8 +2176,7 @@
                 <div class="tab" data-tab="battlelog">📜 گزارش</div>
                 <div class="tab admin-tab admin-el is-hidden" data-tab="admin" id="tabAdmin">🛠️ مدیریت</div>
             </div>
-            <div id="panelProfile" class="panel active"><div id="profileContent"></div></div>
-            <div id="panelMine" class="panel"><div id="mineContent"></div></div>
+            <div id="panelMine" class="panel active"><div id="mineContent"></div></div>
             <div id="panelMilitary" class="panel"><div id="militaryContent"></div></div>
             <div id="panelWar" class="panel"><div id="warContent"></div></div>
             <div id="panelChat" class="panel"><div id="chatContent"></div></div>
@@ -2513,7 +2208,8 @@
         const MAX_MINE_LEVEL = 25;
         const MAX_PLAYERS = 1000;
 
-        const F_DB = { "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
+        const F_DB = {
+            "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
             "F-5E": { n: "F-5E Tiger", i: "🇺🇸", p: 20, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
             "MiG-21": { n: "MiG-21", i: "🇷🇺", p: 25, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
             "F-16": { n: "F-16", i: "🇺🇸", p: 130, c: { g: 5500, o: 1600, m: 900 }, r: 3 },
@@ -2522,17 +2218,25 @@
             "Su-57": { n: "Su-57", i: "🇷🇺", p: 400, c: { g: 22000, o: 6000, m: 4500 }, r: 6 },
             "F-22": { n: "F-22", i: "🇺🇸", p: 500, c: { g: 38000, o: 11000, m: 8500 }, r: 8 }
         };
-        const D_DB = { "Patriot": { n: "Patriot", i: "🇺🇸", c: { g: 20000, o: 6000, m: 4000 }, def: 120, hp: 180 },
+        const D_DB = {
+            "Patriot": { n: "Patriot", i: "🇺🇸", c: { g: 20000, o: 6000, m: 4000 }, def: 120, hp: 180 },
             "S-400": { n: "S-400", i: "🇷🇺", c: { g: 25000, o: 8000, m: 6000 }, def: 150, hp: 200 },
             "Khordad": { n: "خرداد-۱۵", i: "🇮🇷", c: { g: 8000, o: 2000, m: 1500 }, def: 60, hp: 100 },
             "Bavar": { n: "باور-۳۷۳", i: "🇮🇷", c: { g: 15000, o: 4500, m: 3000 }, def: 100, hp: 150 }
         };
-        const FACTIONS_DB = { "sky_knights": { name: "شوالیه‌های آسمان", icon: "🛡️" }, "red_baron": { name: "بارون‌های سرخ",
-                icon: "🌹" }, "iron_cross": { name: "صلیب‌های آهنین", icon: "✠" }, "grey_wolves": { name: "گرگ‌های خاکستری",
-                icon: "🐺" }, "desert_falcons": { name: "شاهین‌های صحرا", icon: "🦅" },
-            "sky_phantoms": { name: "شبح‌های آسمان", icon: "👻" } };
-        const RES_META = { gold: { name: "طلا", icon: "💰", theme: "gold-theme" }, oil: { name: "نفت", icon: "🛢️",
-                theme: "oil-theme" }, metal: { name: "فلز", icon: "⛏️", theme: "metal-theme" } };
+        const FACTIONS_DB = {
+            "sky_knights": { name: "شوالیه‌های آسمان", icon: "🛡️" },
+            "red_baron": { name: "بارون‌های سرخ", icon: "🌹" },
+            "iron_cross": { name: "صلیب‌های آهنین", icon: "✠" },
+            "grey_wolves": { name: "گرگ‌های خاکستری", icon: "🐺" },
+            "desert_falcons": { name: "شاهین‌های صحرا", icon: "🦅" },
+            "sky_phantoms": { name: "شبح‌های آسمان", icon: "👻" }
+        };
+        const RES_META = {
+            gold: { name: "طلا", icon: "💰", theme: "gold-theme" },
+            oil: { name: "نفت", icon: "🛢️", theme: "oil-theme" },
+            metal: { name: "فلز", icon: "⛏️", theme: "metal-theme" }
+        };
 
         // ===== متغیرهای سراسری =====
         let player = null,
@@ -2546,7 +2250,7 @@
         let globalBanner = "",
             chatLocked = false,
             mineTimer = null,
-            activeTab = "profile";
+            activeTab = "mine";
         let lastHash = '',
             syncLoopRunning = false;
         let adminSavedInputs = null;
@@ -2641,60 +2345,6 @@
             if (i >= 0) allPlayers[i] = { ...player };
         }
 
-        // ===== توابع کد دعوت =====
-        function generateRefCode() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let code = '';
-            for (let i = 0; i < 6; i++) {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return code;
-        }
-
-        function isRefCodeUnique(code) {
-            return !allPlayers.some(p => p.refCode === code);
-        }
-
-        function createRefCode() {
-            let code;
-            let attempts = 0;
-            do {
-                code = generateRefCode();
-                attempts++;
-            } while (!isRefCodeUnique(code) && attempts < 100);
-            return code;
-        }
-
-        async function applyReferral(refCode, newPlayerId) {
-            const referrer = allPlayers.find(p => p.refCode === refCode);
-            if (!referrer) return { ok: false, msg: "کد دعوت نامعتبر است." };
-            if (referrer.id === newPlayerId) return { ok: false, msg: "نمی‌توانید خودتان را دعوت کنید." };
-            const newbie = allPlayers.find(p => p.id === newPlayerId);
-            if (!newbie) return { ok: false, msg: "کاربر یافت نشد." };
-            if (newbie.referredBy) return { ok: false, msg: "شما قبلاً دعوت شده‌اید." };
-            if (referrer.referredBy === newbie.id) return { ok: false, msg: "دعوت چرخه‌ای مجاز نیست." };
-
-            // اعمال پاداش‌ها
-            referrer.xp += 5;
-            referrer.metal += 500;
-            referrer.referCount = (referrer.referCount || 0) + 1;
-
-            newbie.xp += 3;
-            newbie.metal += 450;
-            newbie.referredBy = referrer.id;
-
-            // پیام سیستم در چت
-            chatMessages.push({
-                ts: ts(),
-                n: "SYSTEM",
-                t: `🎉 کاربر <b>${escapeHtml(newbie.name)}</b> توسط <b>${escapeHtml(referrer.name)}</b> دعوت شد!`,
-                sys: true
-            });
-
-            await saveAll(true);
-            return { ok: true, msg: `✅ دعوت انجام شد! شما ${3} XP و ${450} فلز دریافت کردید.` };
-        }
-
         // ===== Supabase =====
         async function initSupabase() {
             updateSyncUI("🔌 اتصال...", "warn");
@@ -2735,10 +2385,7 @@
                 r: [p.research.military, p.research.economy, p.research.aviation],
                 f: p.fighters,
                 d: p.defenses,
-                sh: p.shieldExpiry,
-                rc: p.refCode,
-                rb: p.referredBy,
-                rcnt: p.referCount || 0
+                sh: p.shieldExpiry
             };
         }
 
@@ -2757,16 +2404,20 @@
                 research: { military: c.r ?.[0] || 0, economy: c.r ?.[1] || 0, aviation: c.r ?.[2] || 0 },
                 fighters: c.f || {},
                 defenses: c.d || [],
-                shieldExpiry: c.sh || 0,
-                refCode: c.rc || null,
-                referredBy: c.rb || null,
-                referCount: c.rcnt || 0
+                shieldExpiry: c.sh || 0
             };
         }
 
         function packData() {
-            return { k: DATA_KEY, p: allPlayers.map(compP), m: marketOffers, l: battleLogs.slice(-15),
-                c: chatMessages.slice(-10), b: globalBanner, cl: chatLocked };
+            return {
+                k: DATA_KEY,
+                p: allPlayers.map(compP),
+                m: marketOffers,
+                l: battleLogs.slice(-15),
+                c: chatMessages.slice(-10),
+                b: globalBanner,
+                cl: chatLocked
+            };
         }
 
         async function saveAll(force = false) {
@@ -2808,7 +2459,6 @@
         }
 
         function createPlayer(n, pw) {
-            const code = createRefCode();
             return {
                 id: n + "_" + ts().toString(36),
                 name: n,
@@ -2823,10 +2473,7 @@
                 research: { military: 0, economy: 0, aviation: 0 },
                 fighters: {},
                 defenses: [],
-                shieldExpiry: 0,
-                refCode: code,
-                referredBy: null,
-                referCount: 0
+                shieldExpiry: 0
             };
         }
 
@@ -2835,9 +2482,15 @@
             const el = Math.min((ts() - (p.lastMineCollect || ts())) / 1000, 600);
             const cap = 300 + (p.mineLevel - 1) * 250;
             const rate = 1.0;
-            return { gold: Math.min(cap, Math.floor(rate * 2.0 * el)), oil: Math.min(cap, Math.floor(rate * 1.5 * el)),
-                metal: Math.min(cap, Math.floor(rate * 1.0 * el)), cap, goldRate: rate * 2.0, oilRate: rate * 1.5,
-                metalRate: rate * 1.0 };
+            return {
+                gold: Math.min(cap, Math.floor(rate * 2.0 * el)),
+                oil: Math.min(cap, Math.floor(rate * 1.5 * el)),
+                metal: Math.min(cap, Math.floor(rate * 1.0 * el)),
+                cap,
+                goldRate: rate * 2.0,
+                oilRate: rate * 1.5,
+                metalRate: rate * 1.0
+            };
         }
 
         function calcAtt(p) {
@@ -2871,8 +2524,7 @@
         }
 
         function dataHash() {
-            return allPlayers.map(p => p.id + ':' + p.xp + ':' + p.gold + ':' + p.oil + ':' + p.metal + ':' + p.referCount)
-                .join('|') + '|' +
+            return allPlayers.map(p => p.id + ':' + p.xp + ':' + p.gold + ':' + p.oil + ':' + p.metal).join('|') + '|' +
                 marketOffers.length + '|' + chatMessages.length + '|' + battleLogs.length + '|' + globalBanner + '|' +
                 chatLocked;
         }
@@ -2902,7 +2554,6 @@
         window.loginRegister = async function() {
             const n = document.getElementById("playerName").value.trim(),
                 pw = document.getElementById("playerPassword").value.trim();
-            const refCodeInput = document.getElementById("refCodeInput").value.trim().toUpperCase();
             if (n.length < 3 || pw.length < 4) return toast("نام و رمز نامعتبر", true);
             const ex = allPlayers.find(p => p.name.toLowerCase() === n.toLowerCase());
             if (ex) {
@@ -2912,16 +2563,6 @@
                 if (allPlayers.length >= MAX_PLAYERS) return toast("سرور پر است (حداکثر " + MAX_PLAYERS + " بازیکن)", true);
                 player = createPlayer(n, pw);
                 allPlayers.push(player);
-                // اگر کد دعوت وارد شده باشد
-                if (refCodeInput) {
-                    const result = await applyReferral(refCodeInput, player.id);
-                    if (!result.ok) {
-                        toast(result.msg, true);
-                        // ادامه بدون دعوت
-                    } else {
-                        toast(result.msg, false, "peace");
-                    }
-                }
                 await saveAll(true);
             }
             document.getElementById("loginBox").style.display = 'none';
@@ -2933,7 +2574,6 @@
             displayedChatCount = chatMessages.length;
             startMineTimer();
             updateUI();
-            // رندر پروفایل پیش‌فرض
             renderActiveTab();
             toast("ورود موفق", false, "peace");
         };
@@ -3551,122 +3191,6 @@
             } else { sb.style.display = 'none'; }
         }
 
-        // ===== رندر پروفایل =====
-        function renderProfile() {
-            if (!player) return;
-            const referredByUser = player.referredBy ? allPlayers.find(p => p.id === player.referredBy) : null;
-            const refStatus = player.referredBy ?
-                `✅ توسط <b>${escapeHtml(referredByUser?referredByUser.name:'کاربر ناشناس')}</b> دعوت شده‌اید` :
-                '❌ هنوز دعوت نشده‌اید';
-            const canUseRef = !player.referredBy;
-
-            let h = `<div class="profile-card">
-                <div class="profile-header">
-                    <div class="profile-avatar">${isAdm(player.name)?'🚬':'👤'}</div>
-                    <div>
-                        <div class="profile-name">${isAdm(player.name)?'🚬 ':''}${escapeHtml(player.name)}</div>
-                        <div class="profile-sub">${player.faction ? '🛡️ '+escapeHtml(getFN(player.faction)) : 'بدون جناح'}</div>
-                    </div>
-                </div>
-                <div class="profile-stats">
-                    <div class="profile-stat-item">
-                        <div class="profile-stat-val">${player.xp}</div>
-                        <div class="profile-stat-label">⭐ XP</div>
-                    </div>
-                    <div class="profile-stat-item">
-                        <div class="profile-stat-val">${player.gold.toLocaleString('fa-IR')}</div>
-                        <div class="profile-stat-label">💰 طلا</div>
-                    </div>
-                    <div class="profile-stat-item">
-                        <div class="profile-stat-val">${player.oil.toLocaleString('fa-IR')}</div>
-                        <div class="profile-stat-label">🛢️ نفت</div>
-                    </div>
-                    <div class="profile-stat-item">
-                        <div class="profile-stat-val">${player.metal.toLocaleString('fa-IR')}</div>
-                        <div class="profile-stat-label">⛏️ فلز</div>
-                    </div>
-                    <div class="profile-stat-item">
-                        <div class="profile-stat-val">${calcAtt(player)}</div>
-                        <div class="profile-stat-label">⚔️ قدرت</div>
-                    </div>
-                    <div class="profile-stat-item">
-                        <div class="profile-stat-val">${calcDef(player)}</div>
-                        <div class="profile-stat-label">🛡️ دفاع</div>
-                    </div>
-                    <div class="profile-stat-item">
-                        <div class="profile-stat-val">${player.mineLevel}</div>
-                        <div class="profile-stat-label">⛏️ سطح معدن</div>
-                    </div>
-                    <div class="profile-stat-item">
-                        <div class="profile-stat-val">${player.referCount||0}</div>
-                        <div class="profile-stat-label">📨 دعوت‌ها</div>
-                    </div>
-                </div>
-                <div class="profile-ref-section">
-                    <div style="text-align:center;font-size:0.7rem;font-weight:700;color:#fbbf24;">🔗 کد دعوت شما</div>
-                    <div class="profile-ref-code">
-                        <span class="code" id="refCodeDisplay" onclick="copyRefCode()">${player.refCode||'---'}</span>
-                        <button class="copy-btn" onclick="copyRefCode()">📋 کپی</button>
-                    </div>
-                    <div class="profile-ref-status ${player.referredBy?'success':''}">${refStatus}</div>
-                    ${canUseRef ? `
-                    <div style="margin-top:10px;font-size:0.6rem;color:#94a3b8;text-align:center;">برای دریافت پاداش دعوت، کد دوست خود را وارد کنید:</div>
-                    <div class="profile-ref-form">
-                        <input type="text" id="profileRefInput" placeholder="کد دعوت (۶ رقمی)" maxlength="6" style="text-transform:uppercase;text-align:center;">
-                        <button class="btn btn-gold btn-sm" onclick="useReferralCode()">✅ ثبت</button>
-                    </div>
-                    ` : ''}
-                </div>
-            </div>`;
-            document.getElementById('profileContent').innerHTML = h;
-        }
-
-        window.copyRefCode = function() {
-            const code = player?.refCode;
-            if (!code) return toast("کد دعوت وجود ندارد", true);
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(code).then(() => {
-                    toast("📋 کد دعوت کپی شد!", false, "peace");
-                }).catch(() => {
-                    fallbackCopy(code);
-                });
-            } else {
-                fallbackCopy(code);
-            }
-        };
-
-        function fallbackCopy(text) {
-            const input = document.createElement('input');
-            input.value = text;
-            document.body.appendChild(input);
-            input.select();
-            try {
-                document.execCommand('copy');
-                toast("📋 کد دعوت کپی شد!", false, "peace");
-            } catch (e) {
-                toast("کپی نشد، کد را دستی انتخاب کنید", true);
-            }
-            document.body.removeChild(input);
-        }
-
-        window.useReferralCode = async function() {
-            if (!player) return;
-            if (player.referredBy) return toast("شما قبلاً دعوت شده‌اید.", true);
-            const input = document.getElementById('profileRefInput');
-            if (!input) return;
-            const code = input.value.trim().toUpperCase();
-            if (code.length !== 6) return toast("کد دعوت باید ۶ کاراکتر باشد.", true);
-            const result = await applyReferral(code, player.id);
-            if (result.ok) {
-                input.value = '';
-                renderProfile();
-                updateUI();
-                toast(result.msg, false, "peace");
-            } else {
-                toast(result.msg, true);
-            }
-        };
-
         // ===== رندرهای تب‌ها =====
         function renderMine() {
             const m = calcMine(player),
@@ -3833,9 +3357,11 @@
         }
 
         function renderResearch() {
-            const br = [{ key: 'military', name: '⚔️ نظامی', desc: 'قدرت حمله', icon: '⚔️' }, { key: 'economy',
-                    name: '💰 اقتصادی', desc: 'بازدهی معدن', icon: '💰' }, { key: 'aviation', name: '✈️ هوانوردی',
-                    desc: 'جنگنده پیشرفته', icon: '✈️' }];
+            const br = [
+                { key: 'military', name: '⚔️ نظامی', desc: 'قدرت حمله', icon: '⚔️' },
+                { key: 'economy', name: '💰 اقتصادی', desc: 'بازدهی معدن', icon: '💰' },
+                { key: 'aviation', name: '✈️ هوانوردی', desc: 'جنگنده پیشرفته', icon: '✈️' }
+            ];
             let h = `<div class="info-bar">⭐ XP: ${player.xp.toLocaleString('fa-IR')}</div>`;
             br.forEach(b => {
                 const lv = player.research[b.key] || 0;
@@ -3865,7 +3391,7 @@
                 const rowCls = (isMe ? 'my-rank ' : '') + (isT3 ? 'top3-row' : '');
                 const xpCls = isT3 ? 'gold-xp' : '';
                 h +=
-                    `<div class="rank-row ${rowCls}"><div class="rank-num ${numCls}">${numIcon}</div><div class="rank-info"><div class="rank-name ${nameCls}">${isA?'🚬 ':''}${escapeHtml(p.name)}${fn?` <span style="color:#ef4444;font-size:0.55rem;">${fi} ${escapeHtml(fn)}</span>`:''}</div><div class="rank-detail">⚔️ ${calcAtt(p)} | 🛡️ ${calcDef(p)} | معدن ${p.mineLevel||1} | دعوت‌ها: ${p.referCount||0}</div></div><div class="rank-xp ${xpCls}">⭐ ${p.xp.toLocaleString('fa-IR')}</div></div>`;
+                    `<div class="rank-row ${rowCls}"><div class="rank-num ${numCls}">${numIcon}</div><div class="rank-info"><div class="rank-name ${nameCls}">${isA?'🚬 ':''}${escapeHtml(p.name)}${fn?` <span style="color:#ef4444;font-size:0.55rem;">${fi} ${escapeHtml(fn)}</span>`:''}</div><div class="rank-detail">⚔️ ${calcAtt(p)} | 🛡️ ${calcDef(p)} | معدن ${p.mineLevel||1}</div></div><div class="rank-xp ${xpCls}">⭐ ${p.xp.toLocaleString('fa-IR')}</div></div>`;
             });
             h += '<div class="rank-sep">🛡️ ۶ جناح برتر</div>';
             const maxFP = Math.max(1, ...facs.map(f => f.points));
@@ -3932,9 +3458,6 @@
         // ===== تابع رندر تب فعال =====
         function renderActiveTab() {
             switch (activeTab) {
-                case 'profile':
-                    renderProfile();
-                    break;
                 case 'mine':
                     renderMine();
                     break;
@@ -3977,7 +3500,6 @@
                 const savedMkt = saveInputs('panelMarket');
                 const savedAdmin = saveInputs('adminContent');
                 const savedRes = saveInputs('panelResearch');
-                const savedProfile = saveInputs('panelProfile');
 
                 await loadAll();
                 expireMarketOffers();
@@ -4020,7 +3542,6 @@
                     if (activeTab === 'rank') renderRank();
                     if (activeTab === 'battlelog') renderBattlelog();
                     if (activeTab === 'war') renderWar();
-                    if (activeTab === 'profile') renderProfile();
                 }
 
                 if (changed) {
