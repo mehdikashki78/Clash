@@ -249,7 +249,7 @@
             --color-shield-text: #1a1a2e;
         }
 
-        /* ===== BASE STYLES (use variables) ===== */
+        /* ===== BASE STYLES ===== */
         * {
             margin: 0;
             padding: 0;
@@ -497,7 +497,7 @@
             display: block;
         }
 
-        /* ===== GRID LAYOUTS – دو ستونه ===== */
+        /* ===== GRID ===== */
         .grid2 {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -509,6 +509,7 @@
             gap: 10px;
         }
 
+        /* ===== CARDS ===== */
         .card {
             background: var(--bg-card);
             border-radius: 1.2rem;
@@ -521,9 +522,11 @@
             align-items: center;
             justify-content: space-between;
             height: 100%;
+            min-height: 160px;
         }
-        .card .icon { font-size: 1.8rem; }
+        .card .icon { font-size: 2rem; }
         .card .cost { font-size: 0.55rem; color: var(--color-accent); margin-top: 4px; }
+        .card .btn { margin-top: 8px; width: 100%; }
         .player-row {
             background: var(--bg-player-row);
             border-radius: 1.2rem;
@@ -549,6 +552,7 @@
             align-items: center;
             gap: 6px;
             margin: 2px;
+            white-space: nowrap;
         }
         .btn:active { transform: scale(0.94); }
         .btn-attack { background: var(--color-btn-attack); color: #fff; }
@@ -963,7 +967,7 @@
         .fac-join-btn.jn:hover { box-shadow: 0 0 12px rgba(16,185,129,0.3); }
         .fac-locked-badge { font-size: 0.5rem; color: var(--color-accent); padding: 3px 14px; background: var(--color-fac-locked-badge); border: 1px solid rgba(245,158,11,0.3); border-radius: 20px; font-weight: 700; }
 
-        /* ===== MARKET ===== */
+        /* ===== MARKET (فشرده و جذاب) ===== */
         .mkt-hero {
             background: var(--bg-fac-hero);
             border: 1px solid var(--color-border);
@@ -990,6 +994,8 @@
         .mkt-bal-gold { background: var(--color-mkt-bal-gold); border-color: rgba(245,158,11,0.3); color: var(--color-accent); }
         .mkt-bal-oil { background: var(--color-mkt-bal-oil); border-color: rgba(59,130,246,0.3); color: var(--color-btn-blue); }
         .mkt-bal-metal { background: var(--color-mkt-bal-metal); border-color: rgba(156,163,175,0.3); color: var(--color-text-dim); }
+
+        /* کارت ایجاد پیشنهاد با دو طرف در یک ردیف فشرده */
         .mkt-create-card {
             background: var(--color-mkt-create-card);
             border: 1px solid var(--color-border);
@@ -1010,26 +1016,74 @@
             background: radial-gradient(circle at 50% 80%, rgba(245,158,11,0.03) 0%, transparent 50%);
             pointer-events: none;
         }
-        .mkt-create-title { font-size: 0.75rem; font-weight: 800; color: var(--color-text); margin-bottom: 14px; text-align: center; position: relative; z-index: 1; }
-        .mkt-swap-area { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; position: relative; z-index: 1; }
-        .mkt-swap-side { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-        .mkt-swap-side label { font-size: 0.5rem; color: var(--color-text-muted); font-weight: 600; text-align: center; }
-        .mkt-swap-side select { margin: 0; font-size: 0.65rem; padding: 10px 8px; border-radius: 14px; border: 1px solid var(--color-border); background: var(--bg-input); color: var(--color-text); cursor: pointer; text-align: center; }
+        .mkt-create-title { font-size: 0.75rem; font-weight: 800; color: var(--color-text); margin-bottom: 12px; text-align: center; position: relative; z-index: 1; }
+        .mkt-swap-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        .mkt-swap-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .mkt-swap-side label {
+            font-size: 0.5rem;
+            color: var(--color-text-muted);
+            font-weight: 600;
+            text-align: center;
+        }
+        .mkt-swap-side select {
+            margin: 0;
+            font-size: 0.65rem;
+            padding: 8px 4px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            background: var(--bg-input);
+            color: var(--color-text);
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+        }
         .mkt-swap-side select:focus { border-color: var(--color-accent-dim); outline: none; }
-        .mkt-swap-side input[type="number"] { margin: 0; font-size: 0.7rem; padding: 10px 8px; border-radius: 14px; border: 1px solid var(--color-border); background: var(--bg-input); color: var(--color-text); text-align: center; font-weight: 700; }
+        .mkt-swap-side input[type="number"] {
+            margin: 0;
+            font-size: 0.7rem;
+            padding: 8px 4px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            background: var(--bg-input);
+            color: var(--color-text);
+            text-align: center;
+            font-weight: 700;
+            width: 100%;
+        }
         .mkt-swap-side input[type="number"]:focus { border-color: var(--color-accent-dim); outline: none; }
-        .mkt-swap-arrow { font-size: 1.4rem; color: var(--color-accent); animation: swapBounce 1.5s ease-in-out infinite; min-width: 28px; text-align: center; position: relative; z-index: 1; }
+        .mkt-swap-arrow {
+            font-size: 1.4rem;
+            color: var(--color-accent);
+            animation: swapBounce 1.5s ease-in-out infinite;
+            min-width: 28px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
         @keyframes swapBounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-4px); }
         }
-        .mkt-submit-row { text-align: center; position: relative; z-index: 1; margin-top: 6px; }
+        .mkt-submit-row { text-align: center; position: relative; z-index: 1; margin-top: 8px; }
+        .mkt-submit-row .btn { padding: 10px 32px; font-size: 0.7rem; }
 
+        /* پیشنهادات دو ستونه */
         .mkt-offer-card {
             background: var(--color-mkt-offer-card);
             border: 1px solid var(--color-border);
             border-radius: 1.2rem;
-            padding: 14px;
+            padding: 12px;
             position: relative;
             overflow: hidden;
             transition: all 0.3s, background 0.3s, border-color 0.3s;
@@ -1040,23 +1094,39 @@
         }
         .mkt-offer-card:hover { border-color: var(--color-accent-dim); box-shadow: 0 4px 16px rgba(245,158,11,0.06); transform: translateY(-1px); }
         .mkt-offer-card.own-offer { border-color: rgba(139,92,246,0.3); background: linear-gradient(160deg, var(--bg-card), #15112a); }
-        .mkt-offer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .mkt-offer-seller { font-size: 0.65rem; font-weight: 700; color: var(--color-text); }
+        .mkt-offer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .mkt-offer-seller { font-size: 0.6rem; font-weight: 700; color: var(--color-text); }
         .mkt-offer-seller.admin-seller { color: var(--color-btn-blue); }
         .mkt-offer-time { font-size: 0.4rem; color: var(--color-text-muted); }
-        .mkt-offer-body { display: flex; align-items: center; gap: 8px; background: var(--color-fac-stat-bg); border-radius: 12px; padding: 10px; border: 1px solid var(--color-border); flex: 1; }
-        .mkt-res-box { flex: 1; text-align: center; padding: 8px 6px; border-radius: 10px; position: relative; overflow: hidden; }
+        .mkt-offer-body {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--color-fac-stat-bg);
+            border-radius: 10px;
+            padding: 8px;
+            border: 1px solid var(--color-border);
+            flex: 1;
+        }
+        .mkt-res-box {
+            flex: 1;
+            text-align: center;
+            padding: 6px 4px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
         .mkt-res-box.give-box { background: var(--color-mkt-res-give); border: 1px solid var(--color-mkt-res-border-give); }
         .mkt-res-box.get-box { background: var(--color-mkt-res-get); border: 1px solid var(--color-mkt-res-border-get); }
-        .mkt-res-icon { font-size: 1.6rem; display: block; margin-bottom: 4px; }
-        .mkt-res-amount { font-size: 0.85rem; font-weight: 900; color: var(--color-accent); display: block; }
-        .mkt-res-label { font-size: 0.4rem; color: var(--color-text-muted); font-weight: 600; }
+        .mkt-res-icon { font-size: 1.4rem; display: block; margin-bottom: 2px; }
+        .mkt-res-amount { font-size: 0.8rem; font-weight: 900; color: var(--color-accent); display: block; }
+        .mkt-res-label { font-size: 0.35rem; color: var(--color-text-muted); font-weight: 600; }
         .mkt-res-box.gold-theme .mkt-res-amount { color: var(--color-res-gold); }
         .mkt-res-box.oil-theme .mkt-res-amount { color: var(--color-res-oil); }
         .mkt-res-box.metal-theme .mkt-res-amount { color: var(--color-res-metal); }
-        .mkt-offer-arrow { font-size: 1.2rem; color: var(--color-accent); min-width: 20px; text-align: center; }
-        .mkt-offer-bottom { display: flex; justify-content: flex-end; margin-top: 10px; }
-        .mkt-own-tag { font-size: 0.45rem; color: var(--color-btn-purple); padding: 2px 10px; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); border-radius: 20px; font-weight: 600; }
+        .mkt-offer-arrow { font-size: 1.1rem; color: var(--color-accent); min-width: 16px; text-align: center; }
+        .mkt-offer-bottom { display: flex; justify-content: flex-end; margin-top: 8px; }
+        .mkt-own-tag { font-size: 0.4rem; color: var(--color-btn-purple); padding: 2px 8px; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); border-radius: 20px; font-weight: 600; }
         .mkt-empty { text-align: center; padding: 30px 16px; color: var(--color-text-muted); font-size: 0.7rem; grid-column: 1 / -1; }
         .mkt-empty-icon { font-size: 2.5rem; display: block; margin-bottom: 8px; opacity: 0.5; }
 
@@ -1391,7 +1461,7 @@
         .sky-map-legend .dot.other-dot { background: var(--color-btn-blue); }
         .sky-map-legend .dot.shield-dot { background: var(--color-btn-blue); box-shadow: 0 0 8px var(--color-btn-blue); border: 1px solid var(--color-shield-text); }
 
-        /* ===== LOADING OVERLAY ===== */
+        /* ===== LOADING ===== */
         #loadingOverlay {
             position: fixed;
             top: 0;
@@ -1559,10 +1629,10 @@
             .theme-toggle { font-size: 0.7rem; padding: 4px 10px; }
             .grid2 { grid-template-columns: 1fr; }
             .mkt-offers-grid { grid-template-columns: 1fr; }
+            .mkt-swap-row { flex-direction: column; }
+            .mkt-swap-arrow { transform: rotate(90deg); }
             .mine-stats-row { flex-wrap: wrap; }
             .mine-stat { margin: 3px; flex: 1 1 40%; }
-            .mkt-swap-area { flex-direction: column; }
-            .mkt-swap-arrow { transform: rotate(90deg); }
             .sky-map-container { height: 350px; }
         }
     </style>
@@ -2808,14 +2878,17 @@
             document.getElementById('factionsContent').innerHTML = h;
         }
 
-        // ===== بازار با رندر دوستونه =====
+        // ===== بازار با رندر دوستونه و فشرده =====
         function renderMarket() {
             expireMarketOffers();
             let h = '';
             h +=
                 `<div class="mkt-hero"><div class="mkt-hero-title">🏪 بازار مبادله</div><div class="mkt-balance-row"><div class="mkt-bal-chip mkt-bal-gold">💰 ${Math.floor(player.gold).toLocaleString('fa-IR')}</div><div class="mkt-bal-chip mkt-bal-oil">🛢️ ${Math.floor(player.oil).toLocaleString('fa-IR')}</div><div class="mkt-bal-chip mkt-bal-metal">⛏️ ${Math.floor(player.metal).toLocaleString('fa-IR')}</div></div></div>`;
+
+            // فرم ایجاد پیشنهاد فشرده
             h +=
-                `<div class="mkt-create-card"><div class="mkt-create-title">✨ ایجاد پیشنهاد</div><div class="mkt-swap-area"><div class="mkt-swap-side"><label>می‌دهید</label><select id="mktGive"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGiveAmt" placeholder="مقدار" min="1"></div><div class="mkt-swap-arrow">⇄</div><div class="mkt-swap-side"><label>می‌گیرید</label><select id="mktGet"><option value="oil">🛢️ نفت</option><option value="gold">💰 طلا</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGetAmt" placeholder="مقدار" min="1"></div></div><div class="mkt-submit-row"><button class="btn btn-gold" onclick="createMarketOffer()" style="padding:10px 32px;font-size:0.7rem;">✨ ثبت</button></div></div>`;
+                `<div class="mkt-create-card"><div class="mkt-create-title">✨ ایجاد پیشنهاد</div><div class="mkt-swap-row"><div class="mkt-swap-side"><label>می‌دهید</label><select id="mktGive"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGiveAmt" placeholder="مقدار" min="1"></div><div class="mkt-swap-arrow">⇄</div><div class="mkt-swap-side"><label>می‌گیرید</label><select id="mktGet"><option value="oil">🛢️ نفت</option><option value="gold">💰 طلا</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGetAmt" placeholder="مقدار" min="1"></div></div><div class="mkt-submit-row"><button class="btn btn-gold" onclick="createMarketOffer()" style="padding:8px 24px;font-size:0.65rem;">✨ ثبت</button></div></div>`;
+
             h += '<div class="section-title">📋 پیشنهادها (' + marketOffers.length + ')</div>';
 
             if (marketOffers.length === 0) {
@@ -2832,7 +2905,7 @@
                     const tStr = ago < 1 ? 'الان' : ago < 60 ? ago + ' دقیقه پیش' : Math.floor(ago / 60) + ' ساعت پیش';
                     const sCls = isAdm(o.seller) ? 'admin-seller' : '';
                     h +=
-                        `<div class="mkt-offer-card ${isOwn?'own-offer':''}"><div class="mkt-offer-top"><div class="mkt-offer-seller ${sCls}">${isAdm(o.seller)?'🚬 ':''}${escapeHtml(o.seller)}</div><div class="mkt-offer-time">${tStr}</div></div><div class="mkt-offer-body"><div class="mkt-res-box give-box ${gM.theme}"><span class="mkt-res-icon">${gM.icon}</span><span class="mkt-res-amount">${o.ga.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gM.name}</span></div><div class="mkt-offer-arrow">←</div><div class="mkt-res-box get-box ${gtM.theme}"><span class="mkt-res-icon">${gtM.icon}</span><span class="mkt-res-amount">${o.gta.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gtM.name}</span></div></div><div class="mkt-offer-bottom">${isOwn?'<span class="mkt-own-tag">پیشنهاد شما</span>':`<button class="btn btn-green btn-sm" onclick="buyMarketOffer('${o.id}')" ${canBuy?'':'disabled'} style="padding:6px 20px;">✅ خرید</button>`}</div></div>`;
+                        `<div class="mkt-offer-card ${isOwn?'own-offer':''}"><div class="mkt-offer-top"><div class="mkt-offer-seller ${sCls}">${isAdm(o.seller)?'🚬 ':''}${escapeHtml(o.seller)}</div><div class="mkt-offer-time">${tStr}</div></div><div class="mkt-offer-body"><div class="mkt-res-box give-box ${gM.theme}"><span class="mkt-res-icon">${gM.icon}</span><span class="mkt-res-amount">${o.ga.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gM.name}</span></div><div class="mkt-offer-arrow">←</div><div class="mkt-res-box get-box ${gtM.theme}"><span class="mkt-res-icon">${gtM.icon}</span><span class="mkt-res-amount">${o.gta.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gtM.name}</span></div></div><div class="mkt-offer-bottom">${isOwn?'<span class="mkt-own-tag">پیشنهاد شما</span>':`<button class="btn btn-green btn-sm" onclick="buyMarketOffer('${o.id}')" ${canBuy?'':'disabled'}>✅ خرید</button>`}</div></div>`;
                 });
                 h += `</div>`;
             }
