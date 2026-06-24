@@ -496,19 +496,31 @@
         .panel.active {
             display: block;
         }
+
+        /* ===== GRID LAYOUTS – دو ستونه ===== */
         .grid2 {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
         }
+        .mkt-offers-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
         .card {
             background: var(--bg-card);
             border-radius: 1.2rem;
             padding: 12px;
             text-align: center;
             border: 1px solid var(--color-border);
-            margin-bottom: 8px;
             transition: background 0.3s, border-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
         }
         .card .icon { font-size: 1.8rem; }
         .card .cost { font-size: 0.55rem; color: var(--color-accent); margin-top: 4px; }
@@ -951,7 +963,7 @@
         .fac-join-btn.jn:hover { box-shadow: 0 0 12px rgba(16,185,129,0.3); }
         .fac-locked-badge { font-size: 0.5rem; color: var(--color-accent); padding: 3px 14px; background: var(--color-fac-locked-badge); border: 1px solid rgba(245,158,11,0.3); border-radius: 20px; font-weight: 700; }
 
-        /* ===== MARKET (now uses grid2) ===== */
+        /* ===== MARKET ===== */
         .mkt-hero {
             background: var(--bg-fac-hero);
             border: 1px solid var(--color-border);
@@ -1013,12 +1025,6 @@
         }
         .mkt-submit-row { text-align: center; position: relative; z-index: 1; margin-top: 6px; }
 
-        /* Market offers in a 2-column grid */
-        .mkt-offers-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
         .mkt-offer-card {
             background: var(--color-mkt-offer-card);
             border: 1px solid var(--color-border);
@@ -1027,6 +1033,10 @@
             position: relative;
             overflow: hidden;
             transition: all 0.3s, background 0.3s, border-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
         }
         .mkt-offer-card:hover { border-color: var(--color-accent-dim); box-shadow: 0 4px 16px rgba(245,158,11,0.06); transform: translateY(-1px); }
         .mkt-offer-card.own-offer { border-color: rgba(139,92,246,0.3); background: linear-gradient(160deg, var(--bg-card), #15112a); }
@@ -1034,7 +1044,7 @@
         .mkt-offer-seller { font-size: 0.65rem; font-weight: 700; color: var(--color-text); }
         .mkt-offer-seller.admin-seller { color: var(--color-btn-blue); }
         .mkt-offer-time { font-size: 0.4rem; color: var(--color-text-muted); }
-        .mkt-offer-body { display: flex; align-items: center; gap: 8px; background: var(--color-fac-stat-bg); border-radius: 12px; padding: 10px; border: 1px solid var(--color-border); }
+        .mkt-offer-body { display: flex; align-items: center; gap: 8px; background: var(--color-fac-stat-bg); border-radius: 12px; padding: 10px; border: 1px solid var(--color-border); flex: 1; }
         .mkt-res-box { flex: 1; text-align: center; padding: 8px 6px; border-radius: 10px; position: relative; overflow: hidden; }
         .mkt-res-box.give-box { background: var(--color-mkt-res-give); border: 1px solid var(--color-mkt-res-border-give); }
         .mkt-res-box.get-box { background: var(--color-mkt-res-get); border: 1px solid var(--color-mkt-res-border-get); }
@@ -2389,7 +2399,7 @@
             } finally { isAttacking = false; }
         };
 
-        // ===== بازار (با رندر دوستونه) =====
+        // ===== بازار =====
         window.createMarketOffer = async function() {
             const gr = document.getElementById('mktGive').value,
                 gt = document.getElementById('mktGet').value;
@@ -2812,7 +2822,6 @@
                 h +=
                     `<div class="mkt-empty"><span class="mkt-empty-icon">📭</span>بازار خالی</div>`;
             } else {
-                // دو ستونه با grid
                 h += `<div class="mkt-offers-grid">`;
                 [...marketOffers].reverse().forEach(o => {
                     const gM = RES_META[o.give] || RES_META.gold;
