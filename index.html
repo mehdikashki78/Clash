@@ -129,6 +129,8 @@
             --color-attacker: #dc3545;
             --color-defender: #0d6efd;
             --color-loot: #198754;
+            --color-research-card: linear-gradient(160deg, #1a1a2e 0%, #0f1729 50%, #1a1025 100%);
+            --color-research-soon: rgba(245, 158, 11, 0.15);
         }
 
         .light-theme {
@@ -252,6 +254,8 @@
             --color-attacker: #dc3545;
             --color-defender: #0d6efd;
             --color-loot: #198754;
+            --color-research-card: linear-gradient(160deg, #ffffff 0%, #f1f3f5 50%, #e9ecef 100%);
+            --color-research-soon: rgba(217, 119, 6, 0.15);
         }
 
         * {
@@ -474,7 +478,7 @@
         }
         .tab:hover {
             color: var(--color-text);
-            background: rgba(255,255,255,0.03);
+            background: rgba(255, 255, 255, 0.03);
         }
         .tab.active {
             color: var(--color-accent);
@@ -579,7 +583,7 @@
             animation: fadeOut 4.5s forwards;
             max-width: 92%;
             font-size: 0.8rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
             transition: background 0.3s, color 0.3s, border-color 0.3s;
         }
         .toast.error { border-right-color: var(--color-toast-error-border); color: var(--color-toast-error-text); }
@@ -2758,6 +2762,166 @@
         .admin-badge .custom-emoji {
             margin-left: 4px;
         }
+
+        /* ===== RESEARCH SECTION - GRAPHICAL ===== */
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .research-card {
+            background: var(--color-research-card);
+            border: 1px solid var(--color-border);
+            border-radius: 1.4rem;
+            padding: 18px 12px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-height: 180px;
+        }
+        .research-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .research-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--color-accent-dim);
+            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.12);
+        }
+        .research-card .res-icon {
+            font-size: 2.8rem;
+            position: relative;
+            z-index: 1;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+        .research-card .res-name {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            position: relative;
+            z-index: 1;
+        }
+        .research-card .res-level {
+            font-size: 0.55rem;
+            color: var(--color-text-dim);
+            position: relative;
+            z-index: 1;
+            background: rgba(10, 10, 26, 0.4);
+            padding: 2px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--color-border);
+        }
+        .research-card .res-desc {
+            font-size: 0.5rem;
+            color: var(--color-text-muted);
+            position: relative;
+            z-index: 1;
+        }
+        .research-card .res-cost {
+            font-size: 0.55rem;
+            color: var(--color-accent);
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            background: rgba(245, 158, 11, 0.08);
+            padding: 2px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(245, 158, 11, 0.15);
+        }
+        .research-card .res-btn {
+            width: 80%;
+            padding: 8px 12px;
+            border-radius: 30px;
+            font-size: 0.55rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.25);
+        }
+        .research-card .res-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.4);
+        }
+        .research-card .res-btn:disabled {
+            background: #334155;
+            color: #94a3b8;
+            box-shadow: none;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .research-card .res-soon-badge {
+            font-size: 0.5rem;
+            color: var(--color-accent);
+            background: var(--color-research-soon);
+            padding: 3px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            animation: pulseSoon 2s ease-in-out infinite;
+        }
+        @keyframes pulseSoon {
+            0%,
+            100% { opacity: 0.7;
+                transform: scale(1); }
+            50% { opacity: 1;
+                transform: scale(1.05); }
+        }
+        .research-card .res-soon-icon {
+            font-size: 1.8rem;
+            opacity: 0.4;
+            position: relative;
+            z-index: 1;
+        }
+        .research-card.research-soon {
+            opacity: 0.7;
+        }
+        .research-card.research-soon:hover {
+            transform: translateY(-2px);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .light-theme .research-card .res-level {
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .light-theme .research-card .res-cost {
+            background: rgba(217, 119, 6, 0.08);
+        }
+        .light-theme .research-card .res-btn:disabled {
+            background: #ced4da;
+            color: #6c757d;
+        }
+        .light-theme .research-card.research-soon {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 700px) {
+            .research-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 450px) {
+            .research-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -3672,8 +3836,14 @@
             toast("✅ معامله شد", false, "peace");
         };
 
-        // ===== تحقیق =====
+        // ===== تحقیق (با گرافیک جدید و غیرفعال کردن نظامی و اقتصادی) =====
         window.upgradeResearch = async function(b) {
+            // نظامی و اقتصادی غیرفعال هستند
+            if (b === 'military' || b === 'economy') {
+                toast("🔜 این بخش به‌زودی فعال می‌شود!", false, "peace");
+                return;
+            }
+            // فقط هوانوردی فعال است
             const c = (player.research[b] + 1) * 15;
             if (player.xp < c) return toast("XP کم", true);
             player.xp -= c;
@@ -3681,6 +3851,7 @@
             await saveAll();
             updateUI();
             renderResearch();
+            toast(`✈️ هوانوردی به سطح ${player.research[b]} ارتقا یافت`, false, "peace");
         };
 
         // ===== چت =====
@@ -4159,20 +4330,41 @@
             document.getElementById('marketContent').innerHTML = h;
         }
 
+        // ===== تحقیق با گرافیک جدید و غیرفعال بودن نظامی و اقتصادی =====
         function renderResearch() {
-            const br = [
-                { key: 'military', name: '⚔️ نظامی', desc: 'قدرت حمله', icon: '⚔️' },
-                { key: 'economy', name: '💰 اقتصادی', desc: 'بازدهی معدن', icon: '💰' },
-                { key: 'aviation', name: '✈️ هوانوردی', desc: 'جنگنده پیشرفته', icon: '✈️' }
+            const researches = [
+                { key: 'military', name: '⚔️ نظامی', desc: 'قدرت حمله', icon: '⚔️', soon: true },
+                { key: 'economy', name: '💰 اقتصادی', desc: 'بازدهی معدن', icon: '💰', soon: true },
+                { key: 'aviation', name: '✈️ هوانوردی', desc: 'جنگنده‌های پیشرفته', icon: '✈️', soon: false }
             ];
-            let h = `<div class="info-bar">⭐ XP: ${player.xp.toLocaleString('fa-IR')}</div>`;
-            br.forEach(b => {
-                const lv = player.research[b.key] || 0;
+
+            let h = `<div class="info-bar" style="margin-bottom:12px;">⭐ XP موجود: <b>${player.xp.toLocaleString('fa-IR')}</b></div>`;
+            h += `<div class="research-grid">`;
+
+            researches.forEach(r => {
+                const lv = player.research[r.key] || 0;
                 const cost = (lv + 1) * 15;
-                const canU = player.xp >= cost;
-                h +=
-                    `<div class="card" style="text-align:right;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><span style="font-size:1.5rem;">${b.icon}</span><div><div style="font-size:0.75rem;font-weight:700;color:var(--color-accent);">${b.name} - سطح ${lv}</div><div style="font-size:0.5rem;color:var(--color-text-dim);">${b.desc}</div></div></div><div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:0.55rem;color:var(--color-text-dim);">⭐ ${cost} XP</span><button class="btn btn-purple btn-sm" onclick="upgradeResearch('${b.key}')" ${canU?'':'disabled'}>⬆️ ارتقا</button></div></div>`;
+                const canU = player.xp >= cost && !r.soon;
+                const isSoon = r.soon;
+
+                h += `
+                    <div class="research-card ${isSoon ? 'research-soon' : ''}" style="${isSoon ? 'cursor:default;' : ''}">
+                        ${isSoon ? `<div class="res-soon-icon">🔜</div>` : `<div class="res-icon">${r.icon}</div>`}
+                        <div class="res-name">${r.name}</div>
+                        <div class="res-level">سطح ${lv}</div>
+                        <div class="res-desc">${r.desc}</div>
+                        ${isSoon ? 
+                            `<div class="res-soon-badge">🔜 به‌زودی</div>` :
+                            `<div class="res-cost">⭐ ${cost} XP</div>
+                             <button class="res-btn" onclick="upgradeResearch('${r.key}')" ${canU ? '' : 'disabled'}>
+                                ${canU ? '⬆️ ارتقا' : '🔒 قفل'}
+                             </button>`
+                        }
+                    </div>
+                `;
             });
+
+            h += `</div>`;
             document.getElementById('researchContent').innerHTML = h;
         }
 
