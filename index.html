@@ -509,7 +509,7 @@
             gap: 10px;
         }
 
-        /* ===== CARDS - Military compact ===== */
+        /* ===== CARD ===== */
         .card {
             background: var(--bg-card);
             border-radius: 1.2rem;
@@ -996,8 +996,6 @@
         .mkt-bal-gold { background: var(--color-mkt-bal-gold); border-color: rgba(245,158,11,0.3); color: var(--color-accent); }
         .mkt-bal-oil { background: var(--color-mkt-bal-oil); border-color: rgba(59,130,246,0.3); color: var(--color-btn-blue); }
         .mkt-bal-metal { background: var(--color-mkt-bal-metal); border-color: rgba(156,163,175,0.3); color: var(--color-text-dim); }
-
-        /* کارت ایجاد پیشنهاد با دو طرف در یک ردیف */
         .mkt-create-card {
             background: var(--color-mkt-create-card);
             border: 1px solid var(--color-border);
@@ -1079,8 +1077,6 @@
         }
         .mkt-submit-row { text-align: center; position: relative; z-index: 1; margin-top: 8px; }
         .mkt-submit-row .btn { padding: 8px 24px; font-size: 0.65rem; }
-
-        /* پیشنهادات دو ستونه */
         .mkt-offers-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -1642,6 +1638,337 @@
             .mine-stat { margin: 3px; flex: 1 1 40%; }
             .sky-map-container { height: 350px; }
         }
+
+        /* ============================================================ */
+        /* ===== MILITARY SECTION - STUNNING GRAPHICS ===== */
+        /* ============================================================ */
+        .mil-fighter-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .mil-fighter-card {
+            background: linear-gradient(160deg, #1a1a2e 0%, #0f1729 50%, #1a1025 100%);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: 1.4rem;
+            padding: 14px 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            min-height: 170px;
+        }
+        .mil-fighter-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(59, 130, 246, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .mil-fighter-card:hover {
+            transform: translateY(-4px);
+            border-color: #f59e0b;
+            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.15), inset 0 0 40px rgba(245, 158, 11, 0.03);
+        }
+        .mil-fighter-card .mil-icon {
+            font-size: 2.4rem;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+            position: relative;
+            z-index: 1;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.05); }
+        }
+        .mil-fighter-card .mil-name {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #fbbf24;
+            text-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+        .mil-fighter-card .mil-detail {
+            font-size: 0.5rem;
+            color: #94a3b8;
+            position: relative;
+            z-index: 1;
+        }
+        .mil-fighter-card .mil-detail strong {
+            color: #fbbf24;
+        }
+        .mil-fighter-card .mil-count-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 30px;
+            padding: 2px 12px;
+            font-size: 0.5rem;
+            font-weight: 700;
+            color: #fbbf24;
+            position: relative;
+            z-index: 1;
+        }
+        .mil-fighter-card .mil-cost {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.5rem;
+            color: #94a3b8;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+        .mil-fighter-card .mil-cost .cost-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            background: rgba(10, 10, 26, 0.5);
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(30, 41, 59, 0.5);
+        }
+        .mil-fighter-card .mil-cost .cost-item.has {
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #4ade80;
+        }
+        .mil-fighter-card .mil-cost .cost-item.missing {
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+        .mil-fighter-card .mil-research-tag {
+            font-size: 0.4rem;
+            color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.12);
+            padding: 2px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+        .mil-fighter-card .mil-btn {
+            width: 90%;
+            padding: 6px 8px;
+            border-radius: 30px;
+            font-size: 0.55rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+        .mil-fighter-card .mil-btn:hover:not(:disabled) {
+            transform: scale(1.03);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.35);
+        }
+        .mil-fighter-card .mil-btn:disabled {
+            background: #334155;
+            color: #94a3b8;
+            box-shadow: none;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Defense cards */
+        .mil-defense-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .mil-defense-card {
+            background: linear-gradient(160deg, #1a1a2e 0%, #0f1729 50%, #1a1025 100%);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: 1.4rem;
+            padding: 14px 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            min-height: 160px;
+        }
+        .mil-defense-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .mil-defense-card:hover {
+            transform: translateY(-4px);
+            border-color: #3b82f6;
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15), inset 0 0 40px rgba(59, 130, 246, 0.03);
+        }
+        .mil-defense-card .mil-icon {
+            font-size: 2.2rem;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+            position: relative;
+            z-index: 1;
+            animation: floatIcon 3s ease-in-out infinite 0.5s;
+        }
+        .mil-defense-card .mil-name {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #60a5fa;
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+        .mil-defense-card .mil-detail {
+            font-size: 0.5rem;
+            color: #94a3b8;
+            position: relative;
+            z-index: 1;
+        }
+        .mil-defense-card .mil-detail strong {
+            color: #60a5fa;
+        }
+        .mil-defense-card .mil-cost {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.5rem;
+            color: #94a3b8;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+        .mil-defense-card .mil-cost .cost-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            background: rgba(10, 10, 26, 0.5);
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(30, 41, 59, 0.5);
+        }
+        .mil-defense-card .mil-cost .cost-item.has {
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #4ade80;
+        }
+        .mil-defense-card .mil-cost .cost-item.missing {
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+        .mil-defense-card .mil-btn {
+            width: 90%;
+            padding: 6px 8px;
+            border-radius: 30px;
+            font-size: 0.55rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+        }
+        .mil-defense-card .mil-btn:hover:not(:disabled) {
+            transform: scale(1.03);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.35);
+        }
+        .mil-defense-card .mil-btn:disabled {
+            background: #334155;
+            color: #94a3b8;
+            box-shadow: none;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Owned defenses list */
+        .mil-owned-defense {
+            background: var(--bg-card);
+            border-radius: 1.2rem;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--color-border);
+            transition: all 0.3s;
+        }
+        .mil-owned-defense:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        .mil-owned-defense .def-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .mil-owned-defense .def-hp-bar {
+            height: 6px;
+            background: #0a0a1a;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 6px;
+            border: 1px solid #1e293b;
+        }
+        .mil-owned-defense .def-hp-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            background: linear-gradient(90deg, #ef4444, #10b981);
+        }
+
+        .light-theme .mil-fighter-card,
+        .light-theme .mil-defense-card {
+            background: linear-gradient(160deg, #ffffff 0%, #f1f3f5 50%, #e9ecef 100%);
+        }
+        .light-theme .mil-fighter-card .mil-name {
+            color: #d97706;
+        }
+        .light-theme .mil-defense-card .mil-name {
+            color: #007bff;
+        }
+        .light-theme .mil-fighter-card .mil-detail,
+        .light-theme .mil-defense-card .mil-detail {
+            color: #495057;
+        }
+        .light-theme .mil-fighter-card .mil-count-badge {
+            background: rgba(217, 119, 6, 0.1);
+            border-color: rgba(217, 119, 6, 0.3);
+            color: #d97706;
+        }
+        .light-theme .mil-fighter-card .mil-cost .cost-item {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: #dee2e6;
+        }
+        .light-theme .mil-defense-card .mil-cost .cost-item {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: #dee2e6;
+        }
+        .light-theme .mil-owned-defense {
+            background: #ffffff;
+            border-color: #dee2e6;
+        }
+        .light-theme .mil-owned-defense .def-hp-bar {
+            background: #e9ecef;
+            border-color: #dee2e6;
+        }
     </style>
 </head>
 <body>
@@ -1741,7 +2068,7 @@
         const OFFER_EXPIRY = 60 * 60 * 1000;
         const MAX_MINE_LEVEL = 25;
         const MAX_PLAYERS = 1000;
-        const MAX_OFFERS_PER_PLAYER = 2; // هر بازیکن حداکثر 2 آگهی
+        const MAX_OFFERS_PER_PLAYER = 2;
 
         const F_DB = {
             "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
@@ -2165,7 +2492,7 @@
             toast(`⛏️ ارتقا به سطح ${player.mineLevel}`, false, "peace");
         };
 
-        // ===== نظامی =====
+        // ===== نظامی (با گرافیک جدید) =====
         window.buildFighter = async function(k) {
             const f = F_DB[k];
             if (player.gold < f.c.g || player.oil < f.c.o || player.metal < f.c.m) return toast("منابع کم", true);
@@ -2178,7 +2505,7 @@
             await saveAll();
             updateUI();
             renderMilitary();
-            toast(`✈️ ${f.n} ساخته`, false, "peace");
+            toast(`✈️ ${f.n} ساخته شد`, false, "peace");
         };
 
         window.buildDefense = async function(k) {
@@ -2192,7 +2519,7 @@
             await saveAll();
             updateUI();
             renderMilitary();
-            toast(`🛡️ ${d.n} ساخته`, false, "peace");
+            toast(`🛡️ ${d.n} ساخته شد`, false, "peace");
         };
 
         window.repairDefense = async function(dId) {
@@ -2477,9 +2804,8 @@
             } finally { isAttacking = false; }
         };
 
-        // ===== بازار با محدودیت 2 آگهی =====
+        // ===== بازار =====
         window.createMarketOffer = async function() {
-            // بررسی تعداد آگهی‌های فعال بازیکن
             const myOffers = marketOffers.filter(o => o.sid === player.id);
             if (myOffers.length >= MAX_OFFERS_PER_PLAYER) {
                 toast(`❌ شما حداکثر ${MAX_OFFERS_PER_PLAYER} آگهی می‌توانید داشته باشید`, true);
@@ -2802,47 +3128,92 @@
                 `<div class="mine-card"><div class="mine-header"><div class="mine-icon-wrap">⛏️</div><div><div class="mine-title">معدن سطح ${player.mineLevel}${isMax?' 🏆':''}</div><div class="mine-subtitle">ظرفیت: ${cap.toLocaleString('fa-IR')} | نرخ: ثابت ${isMax?'| MAX':''}</div></div></div><div class="mine-stats-row"><div class="mine-stat"><div class="mine-stat-val">${m.goldRate.toFixed(1)}/ث</div><div class="mine-stat-label">طلای ثانیه</div></div><div class="mine-stat"><div class="mine-stat-val">${m.oilRate.toFixed(1)}/ث</div><div class="mine-stat-label">نفت ثانیه</div></div><div class="mine-stat"><div class="mine-stat-val">${m.metalRate.toFixed(1)}/ث</div><div class="mine-stat-label">فلز ثانیه</div></div></div><div class="mine-res-section"><div><div class="mine-res-info"><span class="mine-res-name">💰 طلا</span><span class="mine-res-vals"><span id="mineValGold">${m.gold}</span> / ${cap}</span><span class="mine-rate">${m.goldRate.toFixed(1)}/ث</span></div><div class="mine-bar-track"><div id="mineBarGold" class="mine-bar-fill gold-bar" style="width:${gP}%"><span id="minePctGold" class="mine-pct">${Math.floor(gP)}%</span></div></div></div><div><div class="mine-res-info"><span class="mine-res-name">🛢️ نفت</span><span class="mine-res-vals"><span id="mineValOil">${m.oil}</span> / ${cap}</span><span class="mine-rate">${m.oilRate.toFixed(1)}/ث</span></div><div class="mine-bar-track"><div id="mineBarOil" class="mine-bar-fill oil-bar" style="width:${oP}%"><span id="minePctOil" class="mine-pct">${Math.floor(oP)}%</span></div></div></div><div><div class="mine-res-info"><span class="mine-res-name">⛏️ فلز</span><span class="mine-res-vals"><span id="mineValMetal">${m.metal}</span> / ${cap}</span><span class="mine-rate">${m.metalRate.toFixed(1)}/ث</span></div><div class="mine-bar-track"><div id="mineBarMetal" class="mine-bar-fill metal-bar" style="width:${mP}%"><span id="minePctMetal" class="mine-pct">${Math.floor(mP)}%</span></div></div></div></div><div class="mine-time-row" id="mineTimeRow">⏱️ پر شدن: <span style="color:var(--color-accent)">${timeToFull(m.gold,m.goldRate,cap)} طلا</span> | <span style="color:var(--color-btn-blue)">${timeToFull(m.oil,m.oilRate,cap)} نفت</span> | <span style="color:var(--color-text-dim)">${timeToFull(m.metal,m.metalRate,cap)} فلز</span></div><button id="mineCollectBtn" class="btn btn-gold mine-collect-btn ${total>0?'collect-pulse':''}" onclick="collectMine()" ${total<=0?'disabled':''}>💎 ${total>0?'استخراج ('+Math.floor(total).toLocaleString('fa-IR')+' منبع)':'در حال تولید...'}</button>${upgradeHtml}</div>`;
         }
 
+        // ===== بخش نظامی با گرافیک خیره‌کننده =====
         function renderMilitary() {
-            let h = '<div class="section-title">✈️ جنگنده‌ها</div><div class="grid2">';
+            let h = '';
+
+            // جنگنده‌ها
+            h += `<div class="section-title">✈️ ناوگان هوایی</div><div class="mil-fighter-grid">`;
             for (const [k, f] of Object.entries(F_DB)) {
                 const owned = player.fighters[k]?.count || 0;
                 const canB = player.gold >= f.c.g && player.oil >= f.c.o && player.metal >= f.c.m && (player.research
                     ?.aviation || 0) >= f.r;
-                const checkMark = (v) => player[v] >= f.c[v] ? '✅' : '❌';
-                h +=
-                    `<div class="card" style="${canB?'':'opacity:0.6'}">
-                        <div class="icon">${f.i}</div>
-                        <div class="card-name">${f.n}</div>
-                        <div class="card-detail">نیرو: ${f.p} | تعداد: <span style="color:var(--color-accent)">${owned}</span></div>
-                        <div class="cost">💰${f.c.g} ${checkMark('gold')} 🛢️${f.c.o} ${checkMark('oil')} ⛏️${f.c.m} ${checkMark('metal')}</div>
-                        ${f.r>0?`<div style="font-size:0.4rem;color:var(--color-btn-purple);">هوانوردی سطح ${f.r}</div>`:''}
-                        <button class="btn btn-green btn-sm" onclick="buildFighter('${k}')" ${canB?'':'disabled'}>ساخت</button>
-                    </div>`;
+
+                const gStatus = player.gold >= f.c.g ? 'has' : 'missing';
+                const oStatus = player.oil >= f.c.o ? 'has' : 'missing';
+                const mStatus = player.metal >= f.c.m ? 'has' : 'missing';
+
+                h += `
+                    <div class="mil-fighter-card" style="${!canB && owned===0 ? 'opacity:0.6;' : ''}">
+                        <div class="mil-icon">${f.i}</div>
+                        <div class="mil-name">${f.n}</div>
+                        <div class="mil-detail">⚔️ نیرو: <strong>${f.p}</strong></div>
+                        <div class="mil-count-badge">✈️ تعداد: ${owned}</div>
+                        <div class="mil-cost">
+                            <span class="cost-item ${gStatus}">💰 ${f.c.g}</span>
+                            <span class="cost-item ${oStatus}">🛢️ ${f.c.o}</span>
+                            <span class="cost-item ${mStatus}">⛏️ ${f.c.m}</span>
+                        </div>
+                        ${f.r>0 ? `<div class="mil-research-tag">🔬 هوانوردی سطح ${f.r}</div>` : ''}
+                        <button class="mil-btn" onclick="buildFighter('${k}')" ${canB ? '' : 'disabled'}>
+                            ${canB ? '🚀 ساخت' : '🔒 قفل'}
+                        </button>
+                    </div>
+                `;
             }
-            h += '</div><div class="section-title" style="margin-top:16px;">🛡️ پدافند</div>';
-            if (player.defenses.length === 0) h += '<div class="empty">پدافندی نساخته‌اید</div>';
-            player.defenses.forEach(d => {
-                const dd = D_DB[d.type];
-                if (!dd) return;
-                const hp = Math.floor((d.hp / d.maxHp) * 100);
-                const isD = d.hp < d.maxHp;
-                h +=
-                    `<div class="player-row" style="flex-direction:column;align-items:stretch;"><div style="display:flex;justify-content:space-between;align-items:center;"><span>${dd.i} ${dd.n} <span style="font-size:0.5rem;color:var(--color-text-muted)">(دفاع:${dd.def})</span></span>${isD?`<button class="btn btn-gold btn-sm" onclick="repairDefense('${d.id}')">🔧 تعمیر (${(d.maxHp-d.hp)*10} طلا)</button>`:'<span style="color:var(--color-btn-green);font-size:0.5rem;">✅ سالم</span>'}</div><div class="storage-bar" style="height:6px;margin-top:4px;"><div class="storage-fill hp-fill" style="width:${hp}%"></div></div><div style="font-size:0.45rem;color:var(--color-text-muted);">HP: ${d.hp}/${d.maxHp}</div></div>`;
-            });
-            h += '<div class="section-title" style="margin-top:12px;">🏗️ ساخت پدافند</div><div class="grid2">';
+            h += `</div>`;
+
+            // پدافندهای ساخته شده
+            h += `<div class="section-title" style="margin-top:16px;">🛡️ پدافندهای فعال</div>`;
+            if (player.defenses.length === 0) {
+                h += `<div class="empty">⛔ پدافندی ساخته نشده است</div>`;
+            } else {
+                player.defenses.forEach(d => {
+                    const dd = D_DB[d.type];
+                    if (!dd) return;
+                    const hpPct = Math.floor((d.hp / d.maxHp) * 100);
+                    const isDamaged = d.hp < d.maxHp;
+                    h += `
+                        <div class="mil-owned-defense">
+                            <div class="def-header">
+                                <span><span style="font-size:1.2rem;">${dd.i}</span> <strong>${dd.n}</strong> <span style="font-size:0.5rem;color:var(--color-text-muted);">(دفاع: ${dd.def})</span></span>
+                                ${isDamaged ? `<button class="btn btn-gold btn-sm" onclick="repairDefense('${d.id}')">🔧 تعمیر (${(d.maxHp-d.hp)*10} طلا)</button>` : '<span style="color:var(--color-btn-green);font-size:0.6rem;">✅ سالم</span>'}
+                            </div>
+                            <div class="def-hp-bar">
+                                <div class="def-hp-fill" style="width:${hpPct}%;"></div>
+                            </div>
+                            <div style="font-size:0.45rem;color:var(--color-text-muted);">HP: ${d.hp}/${d.maxHp}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            // ساخت پدافند جدید
+            h += `<div class="section-title" style="margin-top:16px;">🏗️ ساخت پدافند</div><div class="mil-defense-grid">`;
             for (const [k, d] of Object.entries(D_DB)) {
                 const canB = player.gold >= d.c.g && player.oil >= d.c.o && player.metal >= d.c.m;
-                const checkMark = (v) => player[v] >= d.c[v] ? '✅' : '❌';
-                h +=
-                    `<div class="card" style="${canB?'':'opacity:0.6'}">
-                        <div class="icon">${d.i}</div>
-                        <div class="card-name">${d.n}</div>
-                        <div class="card-detail">دفاع:${d.def} | HP:${d.hp}</div>
-                        <div class="cost">💰${d.c.g} ${checkMark('gold')} 🛢️${d.c.o} ${checkMark('oil')} ⛏️${d.c.m} ${checkMark('metal')}</div>
-                        <button class="btn btn-blue btn-sm" onclick="buildDefense('${k}')" ${canB?'':'disabled'}>ساخت</button>
-                    </div>`;
+                const gStatus = player.gold >= d.c.g ? 'has' : 'missing';
+                const oStatus = player.oil >= d.c.o ? 'has' : 'missing';
+                const mStatus = player.metal >= d.c.m ? 'has' : 'missing';
+
+                h += `
+                    <div class="mil-defense-card" style="${canB ? '' : 'opacity:0.6;'}">
+                        <div class="mil-icon">${d.i}</div>
+                        <div class="mil-name">${d.n}</div>
+                        <div class="mil-detail">🛡️ دفاع: <strong>${d.def}</strong> | HP: <strong>${d.hp}</strong></div>
+                        <div class="mil-cost">
+                            <span class="cost-item ${gStatus}">💰 ${d.c.g}</span>
+                            <span class="cost-item ${oStatus}">🛢️ ${d.c.o}</span>
+                            <span class="cost-item ${mStatus}">⛏️ ${d.c.m}</span>
+                        </div>
+                        <button class="mil-btn" onclick="buildDefense('${k}')" ${canB ? '' : 'disabled'}>
+                            ${canB ? '🛡️ ساخت' : '🔒 قفل'}
+                        </button>
+                    </div>
+                `;
             }
-            h += '</div>';
+            h += `</div>`;
+
             document.getElementById('militaryContent').innerHTML = h;
         }
 
@@ -2918,14 +3289,13 @@
             document.getElementById('factionsContent').innerHTML = h;
         }
 
-        // ===== بازار با رندر دوستونه و فشرده + محدودیت 2 آگهی =====
+        // ===== بازار =====
         function renderMarket() {
             expireMarketOffers();
             let h = '';
             h +=
                 `<div class="mkt-hero"><div class="mkt-hero-title">🏪 بازار مبادله</div><div class="mkt-balance-row"><div class="mkt-bal-chip mkt-bal-gold">💰 ${Math.floor(player.gold).toLocaleString('fa-IR')}</div><div class="mkt-bal-chip mkt-bal-oil">🛢️ ${Math.floor(player.oil).toLocaleString('fa-IR')}</div><div class="mkt-bal-chip mkt-bal-metal">⛏️ ${Math.floor(player.metal).toLocaleString('fa-IR')}</div></div></div>`;
 
-            // فرم ایجاد پیشنهاد فشرده با دو طرف روبرو
             const myOffersCount = marketOffers.filter(o => o.sid === player.id).length;
             const canCreate = myOffersCount < MAX_OFFERS_PER_PLAYER;
             h +=
