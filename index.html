@@ -509,11 +509,11 @@
             gap: 10px;
         }
 
-        /* ===== CARDS ===== */
+        /* ===== CARDS - Military compact ===== */
         .card {
             background: var(--bg-card);
             border-radius: 1.2rem;
-            padding: 12px;
+            padding: 10px 8px;
             text-align: center;
             border: 1px solid var(--color-border);
             transition: background 0.3s, border-color 0.3s;
@@ -522,11 +522,13 @@
             align-items: center;
             justify-content: space-between;
             height: 100%;
-            min-height: 160px;
+            min-height: 140px;
         }
-        .card .icon { font-size: 2rem; }
-        .card .cost { font-size: 0.55rem; color: var(--color-accent); margin-top: 4px; }
-        .card .btn { margin-top: 8px; width: 100%; }
+        .card .icon { font-size: 1.6rem; }
+        .card .card-name { font-size: 0.65rem; font-weight: 700; margin-top: 2px; color: var(--color-text); }
+        .card .card-detail { font-size: 0.45rem; color: var(--color-text-dim); }
+        .card .cost { font-size: 0.5rem; color: var(--color-accent); margin-top: 3px; }
+        .card .btn { margin-top: 6px; width: 100%; padding: 4px 8px; font-size: 0.5rem; }
         .player-row {
             background: var(--bg-player-row);
             border-radius: 1.2rem;
@@ -967,7 +969,7 @@
         .fac-join-btn.jn:hover { box-shadow: 0 0 12px rgba(16,185,129,0.3); }
         .fac-locked-badge { font-size: 0.5rem; color: var(--color-accent); padding: 3px 14px; background: var(--color-fac-locked-badge); border: 1px solid rgba(245,158,11,0.3); border-radius: 20px; font-weight: 700; }
 
-        /* ===== MARKET (فشرده و جذاب) ===== */
+        /* ===== MARKET ===== */
         .mkt-hero {
             background: var(--bg-fac-hero);
             border: 1px solid var(--color-border);
@@ -995,7 +997,7 @@
         .mkt-bal-oil { background: var(--color-mkt-bal-oil); border-color: rgba(59,130,246,0.3); color: var(--color-btn-blue); }
         .mkt-bal-metal { background: var(--color-mkt-bal-metal); border-color: rgba(156,163,175,0.3); color: var(--color-text-dim); }
 
-        /* کارت ایجاد پیشنهاد با دو طرف در یک ردیف فشرده */
+        /* کارت ایجاد پیشنهاد با دو طرف در یک ردیف */
         .mkt-create-card {
             background: var(--color-mkt-create-card);
             border: 1px solid var(--color-border);
@@ -1076,9 +1078,14 @@
             50% { transform: translateY(-4px); }
         }
         .mkt-submit-row { text-align: center; position: relative; z-index: 1; margin-top: 8px; }
-        .mkt-submit-row .btn { padding: 10px 32px; font-size: 0.7rem; }
+        .mkt-submit-row .btn { padding: 8px 24px; font-size: 0.65rem; }
 
         /* پیشنهادات دو ستونه */
+        .mkt-offers-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
         .mkt-offer-card {
             background: var(--color-mkt-offer-card);
             border: 1px solid var(--color-border);
@@ -1734,6 +1741,7 @@
         const OFFER_EXPIRY = 60 * 60 * 1000;
         const MAX_MINE_LEVEL = 25;
         const MAX_PLAYERS = 1000;
+        const MAX_OFFERS_PER_PLAYER = 2; // هر بازیکن حداکثر 2 آگهی
 
         const F_DB = {
             "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
@@ -2469,8 +2477,15 @@
             } finally { isAttacking = false; }
         };
 
-        // ===== بازار =====
+        // ===== بازار با محدودیت 2 آگهی =====
         window.createMarketOffer = async function() {
+            // بررسی تعداد آگهی‌های فعال بازیکن
+            const myOffers = marketOffers.filter(o => o.sid === player.id);
+            if (myOffers.length >= MAX_OFFERS_PER_PLAYER) {
+                toast(`❌ شما حداکثر ${MAX_OFFERS_PER_PLAYER} آگهی می‌توانید داشته باشید`, true);
+                return;
+            }
+
             const gr = document.getElementById('mktGive').value,
                 gt = document.getElementById('mktGet').value;
             const ga = parseInt(document.getElementById('mktGiveAmt').value),
@@ -2478,13 +2493,22 @@
             if (isNaN(ga) || isNaN(gta) || ga <= 0 || gta <= 0) return toast("مقدار نامعتبر (باید بزرگ‌تر از صفر باشد)", true);
             if (gr === gt) return toast("منبع مشابه", true);
             if (player[gr] < ga) return toast("منابع کم", true);
+
             player[gr] -= ga;
-            marketOffers.push({ id: ts().toString(36), seller: player.name, sid: player.id, give: gr, ga: ga, get: gt,
-                gta: gta, ts: ts() });
+            marketOffers.push({
+                id: ts().toString(36),
+                seller: player.name,
+                sid: player.id,
+                give: gr,
+                ga: ga,
+                get: gt,
+                gta: gta,
+                ts: ts()
+            });
             await saveAll();
             updateUI();
             renderMarket();
-            toast("✅ ثبت شد", false, "peace");
+            toast("✅ آگهی ثبت شد", false, "peace");
         };
 
         window.buyMarketOffer = async function(oid) {
@@ -2492,6 +2516,7 @@
             if (!o) return;
             if (o.sid === player.id) return toast("پیشنهاد خودتان", true);
             if (player[o.get] < o.gta) return toast("منابع کم", true);
+
             player[o.get] -= o.gta;
             player[o.give] += o.ga;
             const s = allPlayers.find(p => p.id === o.sid);
@@ -2783,8 +2808,16 @@
                 const owned = player.fighters[k]?.count || 0;
                 const canB = player.gold >= f.c.g && player.oil >= f.c.o && player.metal >= f.c.m && (player.research
                     ?.aviation || 0) >= f.r;
+                const checkMark = (v) => player[v] >= f.c[v] ? '✅' : '❌';
                 h +=
-                    `<div class="card" style="${canB?'':'opacity:0.5'}"><div class="icon">${f.i}</div><div style="font-size:0.7rem;font-weight:700;margin-top:4px;">${f.n}</div><div style="font-size:0.5rem;color:var(--color-text-dim);">نیرو: ${f.p} | تعداد: <span style="color:var(--color-accent)">${owned}</span></div><div class="cost">💰${f.c.g} 🛢️${f.c.o} ⛏️${f.c.m}</div>${f.r>0?`<div style="font-size:0.45rem;color:var(--color-btn-purple);">هوانوردی سطح ${f.r}</div>`:''}<button class="btn btn-green btn-sm" onclick="buildFighter('${k}')" ${canB?'':'disabled'}>ساخت</button></div>`;
+                    `<div class="card" style="${canB?'':'opacity:0.6'}">
+                        <div class="icon">${f.i}</div>
+                        <div class="card-name">${f.n}</div>
+                        <div class="card-detail">نیرو: ${f.p} | تعداد: <span style="color:var(--color-accent)">${owned}</span></div>
+                        <div class="cost">💰${f.c.g} ${checkMark('gold')} 🛢️${f.c.o} ${checkMark('oil')} ⛏️${f.c.m} ${checkMark('metal')}</div>
+                        ${f.r>0?`<div style="font-size:0.4rem;color:var(--color-btn-purple);">هوانوردی سطح ${f.r}</div>`:''}
+                        <button class="btn btn-green btn-sm" onclick="buildFighter('${k}')" ${canB?'':'disabled'}>ساخت</button>
+                    </div>`;
             }
             h += '</div><div class="section-title" style="margin-top:16px;">🛡️ پدافند</div>';
             if (player.defenses.length === 0) h += '<div class="empty">پدافندی نساخته‌اید</div>';
@@ -2799,8 +2832,15 @@
             h += '<div class="section-title" style="margin-top:12px;">🏗️ ساخت پدافند</div><div class="grid2">';
             for (const [k, d] of Object.entries(D_DB)) {
                 const canB = player.gold >= d.c.g && player.oil >= d.c.o && player.metal >= d.c.m;
+                const checkMark = (v) => player[v] >= d.c[v] ? '✅' : '❌';
                 h +=
-                    `<div class="card" style="${canB?'':'opacity:0.5'}"><div class="icon">${d.i}</div><div style="font-size:0.7rem;font-weight:700;margin-top:4px;">${d.n}</div><div style="font-size:0.5rem;color:var(--color-text-dim);">دفاع:${d.def} | HP:${d.hp}</div><div class="cost">💰${d.c.g} 🛢️${d.c.o} ⛏️${d.c.m}</div><button class="btn btn-blue btn-sm" onclick="buildDefense('${k}')" ${canB?'':'disabled'}>ساخت</button></div>`;
+                    `<div class="card" style="${canB?'':'opacity:0.6'}">
+                        <div class="icon">${d.i}</div>
+                        <div class="card-name">${d.n}</div>
+                        <div class="card-detail">دفاع:${d.def} | HP:${d.hp}</div>
+                        <div class="cost">💰${d.c.g} ${checkMark('gold')} 🛢️${d.c.o} ${checkMark('oil')} ⛏️${d.c.m} ${checkMark('metal')}</div>
+                        <button class="btn btn-blue btn-sm" onclick="buildDefense('${k}')" ${canB?'':'disabled'}>ساخت</button>
+                    </div>`;
             }
             h += '</div>';
             document.getElementById('militaryContent').innerHTML = h;
@@ -2878,16 +2918,18 @@
             document.getElementById('factionsContent').innerHTML = h;
         }
 
-        // ===== بازار با رندر دوستونه و فشرده =====
+        // ===== بازار با رندر دوستونه و فشرده + محدودیت 2 آگهی =====
         function renderMarket() {
             expireMarketOffers();
             let h = '';
             h +=
                 `<div class="mkt-hero"><div class="mkt-hero-title">🏪 بازار مبادله</div><div class="mkt-balance-row"><div class="mkt-bal-chip mkt-bal-gold">💰 ${Math.floor(player.gold).toLocaleString('fa-IR')}</div><div class="mkt-bal-chip mkt-bal-oil">🛢️ ${Math.floor(player.oil).toLocaleString('fa-IR')}</div><div class="mkt-bal-chip mkt-bal-metal">⛏️ ${Math.floor(player.metal).toLocaleString('fa-IR')}</div></div></div>`;
 
-            // فرم ایجاد پیشنهاد فشرده
+            // فرم ایجاد پیشنهاد فشرده با دو طرف روبرو
+            const myOffersCount = marketOffers.filter(o => o.sid === player.id).length;
+            const canCreate = myOffersCount < MAX_OFFERS_PER_PLAYER;
             h +=
-                `<div class="mkt-create-card"><div class="mkt-create-title">✨ ایجاد پیشنهاد</div><div class="mkt-swap-row"><div class="mkt-swap-side"><label>می‌دهید</label><select id="mktGive"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGiveAmt" placeholder="مقدار" min="1"></div><div class="mkt-swap-arrow">⇄</div><div class="mkt-swap-side"><label>می‌گیرید</label><select id="mktGet"><option value="oil">🛢️ نفت</option><option value="gold">💰 طلا</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGetAmt" placeholder="مقدار" min="1"></div></div><div class="mkt-submit-row"><button class="btn btn-gold" onclick="createMarketOffer()" style="padding:8px 24px;font-size:0.65rem;">✨ ثبت</button></div></div>`;
+                `<div class="mkt-create-card"><div class="mkt-create-title">✨ ایجاد پیشنهاد (${myOffersCount}/${MAX_OFFERS_PER_PLAYER})</div><div class="mkt-swap-row"><div class="mkt-swap-side"><label>می‌دهید</label><select id="mktGive"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGiveAmt" placeholder="مقدار" min="1"></div><div class="mkt-swap-arrow">⇄</div><div class="mkt-swap-side"><label>می‌گیرید</label><select id="mktGet"><option value="oil">🛢️ نفت</option><option value="gold">💰 طلا</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGetAmt" placeholder="مقدار" min="1"></div></div><div class="mkt-submit-row"><button class="btn btn-gold" onclick="createMarketOffer()" style="padding:8px 24px;font-size:0.65rem;" ${canCreate?'':'disabled'}>✨ ثبت</button></div></div>`;
 
             h += '<div class="section-title">📋 پیشنهادها (' + marketOffers.length + ')</div>';
 
