@@ -3684,7 +3684,7 @@
             document.addEventListener('touchend', onEnd);
         }
 
-        // ===== جنگ (تابع حمله) =====
+        // ===== جنگ (تابع حمله) با تغییرات XP خواسته شده =====
         window.launchAttack = async function(tId) {
             if (isAttacking) return;
             isAttacking = true;
@@ -3709,6 +3709,7 @@
                     rS = "",
                     isW = false;
                 if (myA > eD) {
+                    // مهاجم پیروز شد
                     isW = true;
                     const ratio = eD / myA;
                     const loot = { g: Math.floor(target.gold * 0.3), o: Math.floor(target.oil * 0.3), m: Math.floor(
@@ -3719,8 +3720,8 @@
                     player.gold += loot.g;
                     player.oil += loot.o;
                     player.metal += loot.m;
-                    player.xp += 15;
-                    target.xp += 3;
+                    player.xp += 15; // مهاجم ۱۵ XP
+                    // به مدافع XP داده نمی‌شود (دفاع ناموفق)
                     target.shieldExpiry = ts() + SHIELD_DURATION;
                     for (const [k, f] of Object.entries(player.fighters)) {
                         f.count = Math.max(0, f.count - Math.ceil(f.count * ratio * 0.5));
@@ -3734,10 +3735,11 @@
                         `🔥 <span class="attacker">${getPlayerDisplayName(player)}</span> به <span class="defender">${getPlayerDisplayName(target)}</span> حمله و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span>`;
                     rS = `🏆 پیروزی!<br>${loot.g} طلا | ${loot.o} نفت | ${loot.m} فلز`;
                 } else {
+                    // مهاجم شکست خورد (دفاع موفق)
                     isW = false;
                     const ratio = myA / eD;
-                    player.xp += 2;
-                    target.xp += 15;
+                    player.xp += 2; // مهاجم ۲ XP
+                    target.xp += 5; // مدافع ۵ XP (دفاع موفق)
                     for (const [k, f] of Object.entries(player.fighters)) {
                         f.count = Math.max(0, f.count - Math.ceil(f.count * 0.9));
                     }
