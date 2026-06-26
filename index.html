@@ -862,13 +862,52 @@
                 radial-gradient(circle at 70% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
             pointer-events: none;
         }
+        .profile-banner {
+            width: 100%;
+            height: 80px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--color-border);
+            transition: all 0.3s;
+        }
+        .profile-banner .banner-color-picker {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            display: flex;
+            gap: 4px;
+            background: rgba(0,0,0,0.6);
+            padding: 4px 8px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .profile-banner .banner-color-picker input[type="color"] {
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            padding: 0;
+            cursor: pointer;
+            background: none;
+        }
+        .profile-banner .banner-color-picker input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        .profile-banner .banner-color-picker input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 50%;
+        }
         .profile-header {
             display: flex;
             align-items: center;
             gap: 16px;
+            margin-top: -30px;
             margin-bottom: 16px;
             position: relative;
-            z-index: 1;
+            z-index: 2;
+            padding: 0 4px;
         }
         .profile-avatar {
             font-size: 3.5rem;
@@ -879,7 +918,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid var(--color-accent-dim);
+            border: 3px solid var(--color-accent-dim);
             box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
             cursor: pointer;
             transition: 0.2s;
@@ -1016,6 +1055,21 @@
             display: inline-block;
             border: 1px solid var(--color-border);
         }
+        .profile-referral .copy-btn {
+            background: var(--color-btn-blue);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.55rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-right: 8px;
+        }
+        .profile-referral .copy-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.8;
+        }
         .profile-referral .info {
             font-size: 0.55rem;
             color: var(--color-text-muted);
@@ -1047,6 +1101,14 @@
         .profile-friends .friend-tag:hover {
             border-color: var(--color-accent);
             color: var(--color-accent);
+        }
+        .profile-friends .friend-tag .online-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+            margin-right: 4px;
         }
         .profile-friends .friend-tag .remove-friend {
             cursor: pointer;
@@ -1108,6 +1170,224 @@
         }
         .profile-close-btn:hover {
             color: var(--color-accent);
+        }
+
+        /* ===== BADGES ===== */
+        .profile-badges {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 12px;
+        }
+        .profile-badges .title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 6px;
+        }
+        .profile-badges .badge-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 20px;
+            padding: 2px 10px;
+            margin: 2px 4px 2px 0;
+            font-size: 0.5rem;
+            color: var(--color-text-dim);
+        }
+        .profile-badges .badge-item .badge-icon {
+            font-size: 1rem;
+        }
+
+        /* ===== XP BAR ===== */
+        .profile-xp-bar {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 12px;
+            background: var(--color-mine-stat-bg);
+            border: 1px solid var(--color-mine-stat-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+        }
+        .profile-xp-bar .xp-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.55rem;
+            color: var(--color-text-dim);
+            margin-bottom: 4px;
+        }
+        .profile-xp-bar .xp-info .level {
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+        .profile-xp-bar .xp-track {
+            height: 8px;
+            background: var(--color-mine-bar-track);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+        }
+        .profile-xp-bar .xp-fill {
+            height: 100%;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b);
+            transition: width 0.6s ease;
+        }
+
+        /* ===== PROFILE THEME ===== */
+        .profile-theme-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-theme-selector .theme-option {
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 2px solid var(--color-border);
+            cursor: pointer;
+            font-size: 0.55rem;
+            transition: 0.2s;
+            background: var(--bg-card);
+            color: var(--color-text);
+        }
+        .profile-theme-selector .theme-option:hover {
+            border-color: var(--color-accent);
+        }
+        .profile-theme-selector .theme-option.active {
+            border-color: var(--color-accent);
+            background: var(--color-accent-dim);
+            color: #fff;
+        }
+
+        /* ===== RECENT ACTIVITIES ===== */
+        .profile-activities {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 12px;
+        }
+        .profile-activities .title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 6px;
+        }
+        .profile-activities .activity-item {
+            background: var(--color-mine-stat-bg);
+            border: 1px solid var(--color-mine-stat-border);
+            border-radius: 8px;
+            padding: 4px 10px;
+            margin-bottom: 4px;
+            font-size: 0.55rem;
+            color: var(--color-text-dim);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .profile-activities .activity-item .act-time {
+            font-size: 0.4rem;
+            color: var(--color-text-muted);
+        }
+
+        /* ===== COMPARE WITH FRIENDS ===== */
+        .profile-compare {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 12px;
+            background: var(--color-mine-stat-bg);
+            border: 1px solid var(--color-mine-stat-border);
+            border-radius: 12px;
+            padding: 10px;
+        }
+        .profile-compare .title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 6px;
+        }
+        .profile-compare .compare-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.55rem;
+            padding: 2px 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .profile-compare .compare-item:last-child {
+            border-bottom: none;
+        }
+        .profile-compare .compare-item .c-name {
+            color: var(--color-text);
+        }
+        .profile-compare .compare-item .c-val {
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        /* ===== RANK GLOBAL ===== */
+        .profile-rank-global {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 12px;
+            background: var(--color-mine-stat-bg);
+            border: 1px solid var(--color-mine-stat-border);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+        }
+        .profile-rank-global .rank-num {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--color-accent);
+        }
+        .profile-rank-global .rank-label {
+            font-size: 0.55rem;
+            color: var(--color-text-muted);
+        }
+
+        /* ===== PROFILE SETTINGS (bio, theme, banner) ===== */
+        .profile-settings {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 12px;
+            background: var(--color-mine-stat-bg);
+            border: 1px solid var(--color-mine-stat-border);
+            border-radius: 12px;
+            padding: 10px;
+        }
+        .profile-settings .title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 6px;
+        }
+        .profile-settings textarea {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 0.6rem;
+            resize: vertical;
+            min-height: 50px;
+            font-family: inherit;
+        }
+        .profile-settings .save-bio-btn {
+            margin-top: 4px;
+            padding: 4px 14px;
+            font-size: 0.55rem;
+            background: var(--color-btn-green);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .profile-settings .save-bio-btn:hover {
+            transform: scale(1.05);
         }
 
         /* ===== MINE ===== */
@@ -3345,7 +3625,6 @@
         .profile-modal .profile-avatar:hover {
             transform: none;
         }
-        /* ===== scrollbar ===== */
         .profile-modal::-webkit-scrollbar {
             width: 4px;
         }
@@ -3542,25 +3821,27 @@
             const isAsst = isAssistant(p.name);
             // آواتار: اگر customEmoji داشته باشد از آن استفاده کن، در غیر این صورت 👤
             const avatar = p.customEmoji || '👤';
+            // برای ادمین همیشه 🚬 نمایش داده شود
+            if (isAdm) {
+                return `<span class="admin-badge">🚬 ${name}</span>`;
+            }
             if (p.customEmoji || p.customColor) {
                 const emoji = p.customEmoji ? `<span class="custom-emoji">${escapeHtml(p.customEmoji)}</span>` : '';
                 const color = p.customColor ? `color:${escapeHtml(p.customColor)};` : '';
                 let cls = 'player-name-custom';
-                if (isAdm) cls += ' admin-badge';
-                else if (isAsst) cls += ' coadmin-badge';
-                return `<span class="${cls}" style="${color}">${avatar} ${name}</span>`;
-            }
-            if (isAdm) {
-                return `<span class="admin-badge">${avatar} ${name}</span>`;
+                if (isAsst) cls += ' coadmin-badge';
+                return `<span class="${cls}" style="${color}">${emoji} ${name}</span>`;
             }
             if (isAsst) {
-                return `<span class="coadmin-badge">${avatar} ${name}</span>`;
+                return `<span class="coadmin-badge">⚡ ${name}</span>`;
             }
             return `<span class="player-name-custom">${avatar} ${name}</span>`;
         }
 
         function getPlayerAvatar(p) {
             if (!p) return '👤';
+            // ادمین همیشه 🚬
+            if (p.name === ADMIN_NAME) return '🚬';
             return p.customEmoji || '👤';
         }
 
@@ -3676,7 +3957,6 @@
             if (!target) return toast("بازیکن یافت نشد", true);
             const overlay = document.getElementById('profileModalOverlay');
             const content = document.getElementById('profileModalContent');
-            // رندر پروفایل هدف داخل مودال
             const joinDate = new Date(target.joinDate);
             const now = new Date();
             const ageYears = now.getFullYear() - joinDate.getFullYear();
@@ -3691,8 +3971,25 @@
             const referrer = target.referredBy ? allPlayers.find(p => p.id === target.referredBy) : null;
             const referralCount = target.referrals ? target.referrals.length : 0;
             const friendList = (target.friends || []).map(fid => allPlayers.find(p => p.id === fid)).filter(Boolean);
+            const totalBattles = (target.successfulAttacks || 0) + (target.successfulDefenses || 0);
+            const winRate = totalBattles > 0 ? Math.round((target.successfulAttacks || 0) / totalBattles * 100) : 0;
+            const level = Math.floor((target.xp || 0) / 100) + 1;
+            const nextLevelXP = level * 100;
+            const xpProgress = Math.min(100, ((target.xp || 0) - (level - 1) * 100) / 100 * 100);
+
+            // نشان‌ها
+            let badges = [];
+            if (target.successfulAttacks >= 10) badges.push({ icon: '🏅', name: 'پیروزی' });
+            if (target.successfulDefenses >= 5) badges.push({ icon: '🛡️', name: 'دفاع' });
+            if (target.faction) badges.push({ icon: getFI(target.faction), name: 'جناح' });
+            if (referralCount >= 5) badges.push({ icon: '📨', name: 'دعوت' });
+            if (target.gold >= 100000) badges.push({ icon: '💰', name: 'ثروت' });
+            if (target.xp >= 500) badges.push({ icon: '⭐', name: 'XP' });
 
             let h = `<div class="profile-card">`;
+            // بنر
+            const bannerColor = target.bannerColor || '#1a1a2e';
+            h += `<div class="profile-banner" style="background:${bannerColor};"></div>`;
             h += `<div class="profile-header">
                 <div class="profile-avatar">${getPlayerAvatar(target)}</div>
                 <div class="profile-name-area">
@@ -3700,21 +3997,42 @@
                     <div class="sub">${target.nameChanged ? 'نام تغییر یافته' : 'نام اصلی'}</div>
                 </div>
             </div>`;
+            // Bio
+            if (target.bio) {
+                h += `<div style="font-size:0.65rem;color:var(--color-text-dim);margin-bottom:12px;padding:4px 12px;background:var(--color-mine-stat-bg);border-radius:8px;border:1px solid var(--color-border);">"${escapeHtml(target.bio)}"</div>`;
+            }
+            // XP Bar
+            h += `<div class="profile-xp-bar">
+                <div class="xp-info"><span class="level">سطح ${level}</span><span>${target.xp||0} / ${nextLevelXP} XP</span></div>
+                <div class="xp-track"><div class="xp-fill" style="width:${xpProgress}%"></div></div>
+            </div>`;
+            // Stats
             h += `<div class="profile-stats-grid">
                 <div class="profile-stat-box"><div class="val">${target.xp}</div><div class="label">⭐ XP</div></div>
-                <div class="profile-stat-box"><div class="val">${target.successfulAttacks||0}</div><div class="label">⚔️ نبرد موفق</div></div>
-                <div class="profile-stat-box"><div class="val">${target.successfulDefenses||0}</div><div class="label">🛡️ دفاع موفق</div></div>
-                <div class="profile-stat-box"><div class="val">${referralCount}</div><div class="label">📨 دعوت‌ها</div></div>
+                <div class="profile-stat-box"><div class="val">${target.successfulAttacks||0}</div><div class="label">⚔️ پیروزی</div></div>
+                <div class="profile-stat-box"><div class="val">${target.successfulDefenses||0}</div><div class="label">🛡️ دفاع</div></div>
+                <div class="profile-stat-box"><div class="val">${winRate}%</div><div class="label">🎯 درصد برد</div></div>
             </div>`;
+            // جزئیات
             h += `<div class="profile-detail-row">
                 <span>📅 عضویت: <strong>${joinDate.toLocaleDateString('fa-IR')}</strong></span>
-                <span>⏳ سن اکانت: <strong>${ageStr}</strong></span>
-                <span>🏷️ کد دعوت: <strong>${target.referralCode}</strong></span>
+                <span>⏳ سن: <strong>${ageStr}</strong></span>
+                <span>🏷️ کد: <strong>${target.referralCode}</strong></span>
                 ${referrer ? `<span>👤 دعوت‌کننده: <strong>${getPlayerDisplayName(referrer)}</strong></span>` : ''}
             </div>`;
+            // کد دعوت
             h += `<div class="profile-referral">
                 <div>کد دعوت: <span class="code">${target.referralCode}</span></div>
             </div>`;
+            // نشان‌ها
+            if (badges.length > 0) {
+                h += `<div class="profile-badges"><div class="title">🏅 دستاوردها</div>`;
+                badges.forEach(b => {
+                    h += `<span class="badge-item"><span class="badge-icon">${b.icon}</span> ${b.name}</span>`;
+                });
+                h += `</div>`;
+            }
+            // دوستان
             h += `<div class="profile-friends"><div class="title">👥 دوستان (${friendList.length})</div>`;
             if (friendList.length === 0) {
                 h += `<span style="font-size:0.55rem;color:var(--color-text-muted);">هیچ دوستی ندارد</span>`;
@@ -3732,7 +4050,6 @@
         function closeProfileModal() {
             document.getElementById('profileModalOverlay').classList.remove('active');
         }
-        // بستن مودال با کلیک روی پس‌زمینه
         document.getElementById('profileModalOverlay').addEventListener('click', function(e) {
             if (e.target === this) closeProfileModal();
         });
@@ -3789,7 +4106,11 @@
                 frq: p.friendRequests || [],
                 sa: p.successfulAttacks || 0,
                 sd: p.successfulDefenses || 0,
-                cn: p.customName || p.name
+                cn: p.customName || p.name,
+                bio: p.bio || '',
+                bannerColor: p.bannerColor || '#1a1a2e',
+                theme: p.theme || 'dark',
+                activities: p.activities || []
             };
         }
 
@@ -3820,7 +4141,11 @@
                 friendRequests: c.frq || [],
                 successfulAttacks: c.sa || 0,
                 successfulDefenses: c.sd || 0,
-                customName: c.cn || c.n || ''
+                customName: c.cn || c.n || '',
+                bio: c.bio || '',
+                bannerColor: c.bannerColor || '#1a1a2e',
+                theme: c.theme || 'dark',
+                activities: c.activities || []
             };
         }
 
@@ -3908,7 +4233,11 @@
                 friendRequests: [],
                 successfulAttacks: 0,
                 successfulDefenses: 0,
-                customName: n
+                customName: n,
+                bio: '',
+                bannerColor: '#1a1a2e',
+                theme: 'dark',
+                activities: []
             };
         }
 
@@ -3961,7 +4290,7 @@
         function dataHash() {
             return allPlayers.map(p => p.id + ':' + p.xp + ':' + p.gold + ':' + p.oil + ':' + p.metal + ':' + (p
                 .customEmoji || '') + ':' + (p.customColor || '') + ':' + p.customName + ':' + p.friends.join(',') +
-                ':' + p.referrals.length).join('|') + '|' +
+                ':' + p.referrals.length + ':' + p.bio + ':' + p.bannerColor + ':' + p.theme).join('|') + '|' +
                 marketOffers.length + '|' + chatMessages.length + '|' + battleLogs.length + '|' + globalBanner + '|' +
                 chatLocked + '|' + assistantNames.join(',');
         }
@@ -4019,6 +4348,9 @@
                     player.gold += 1000;
                     player.oil += 500;
                     player.metal += 500;
+                    // اضافه کردن فعالیت
+                    addActivity(player, `🎉 توسط ${referrer.name} دعوت شد`);
+                    addActivity(referrer, `🎉 ${player.name} را دعوت کرد`);
                     chatMessages.push({
                         ts: ts(),
                         n: "SYSTEM",
@@ -4045,6 +4377,14 @@
             toast("ورود موفق", false, "peace");
         };
 
+        // ===== افزودن فعالیت =====
+        function addActivity(p, text) {
+            if (!p) return;
+            if (!p.activities) p.activities = [];
+            p.activities.unshift({ text: text, time: ts() });
+            if (p.activities.length > 5) p.activities.pop();
+        }
+
         // ===== معدن =====
         window.collectMine = async function() {
             const m = calcMine(player);
@@ -4054,6 +4394,7 @@
             player.oil += m.oil;
             player.metal += m.metal;
             player.lastMineCollect = ts();
+            addActivity(player, `⛏️ استخراج ${m.gold} طلا، ${m.oil} نفت، ${m.metal} فلز`);
             await saveAll();
             updateUI();
             renderMine();
@@ -4069,6 +4410,7 @@
             if (player.gold < c) return toast("طلا کم", true);
             player.gold -= c;
             player.mineLevel++;
+            addActivity(player, `⬆️ معدن به سطح ${player.mineLevel} ارتقا یافت`);
             await saveAll();
             updateUI();
             renderMine();
@@ -4085,6 +4427,7 @@
             player.metal -= f.c.m;
             if (!player.fighters[k]) player.fighters[k] = { count: 0 };
             player.fighters[k].count++;
+            addActivity(player, `✈️ ساخت ${f.n}`);
             await saveAll();
             updateUI();
             renderMilitary();
@@ -4099,6 +4442,7 @@
             player.metal -= d.c.m;
             if (!player.defenses) player.defenses = [];
             player.defenses.push({ id: ts().toString(36), type: k, hp: d.hp, maxHp: d.hp });
+            addActivity(player, `🛡️ ساخت ${d.n}`);
             await saveAll();
             updateUI();
             renderMilitary();
@@ -4113,6 +4457,7 @@
             if (player.gold < cost) return toast("طلا کم", true);
             player.gold -= cost;
             d.hp = d.maxHp;
+            addActivity(player, `🔧 تعمیر پدافند`);
             await saveAll();
             updateUI();
             renderMilitary();
@@ -4122,6 +4467,7 @@
         window.joinFaction = async function(fId) {
             if (player.faction) return toast("🔒 جناح قابل ترک نیست", true);
             player.faction = fId;
+            addActivity(player, `🛡️ پیوستن به ${getFN(fId)}`);
             toast(`به ${getFN(fId)} پیوستید!`, false, "peace");
             await saveAll(true);
             updateUI();
@@ -4354,6 +4700,8 @@
                         `🔥 <span class="attacker">${getPlayerDisplayName(player)}</span> به <span class="defender">${getPlayerDisplayName(target)}</span> حمله و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span>`;
                     rS =
                         `🏆 پیروزی!<br>${loot.g} طلا | ${loot.o} نفت | ${loot.m} فلز<br>🛡️ ${target.name} ${defenderXpLoss} XP از دست داد.`;
+                    addActivity(player, `🏆 پیروزی مقابل ${target.name}`);
+                    addActivity(target, `💔 شکست مقابل ${player.name}`);
                 } else {
                     isW = false;
                     target.successfulDefenses = (target.successfulDefenses || 0) + 1;
@@ -4374,6 +4722,8 @@
                     rM =
                         `🛡️ <span class="attacker">${getPlayerDisplayName(player)}</span> به <span class="defender">${getPlayerDisplayName(target)}</span> حمله کرد اما دفاع شد!`;
                     rS = `💥 شکست سنگین!<br>شما ${attackerXpLoss} XP از دست دادید.`;
+                    addActivity(player, `💔 شکست مقابل ${target.name}`);
+                    addActivity(target, `🛡️ دفاع موفق مقابل ${player.name}`);
                 }
                 player.shieldExpiry = 0;
                 const pi = allPlayers.findIndex(p => p.id === player.id);
@@ -4434,6 +4784,7 @@
                 gta: gta,
                 ts: ts()
             });
+            addActivity(player, `📊 ثبت آگهی بازار (${ga} ${RES_META[gr].name} → ${gta} ${RES_META[gt].name})`);
             await saveAll();
             updateUI();
             renderMarket();
@@ -4450,6 +4801,7 @@
             const s = allPlayers.find(p => p.id === o.sid);
             if (s) s[o.get] += o.gta;
             marketOffers = marketOffers.filter(x => x.id !== oid);
+            addActivity(player, `🛒 خرید آگهی از ${s ? s.name : 'ناشناس'}`);
             await saveAll(true);
             updateUI();
             renderMarket();
@@ -4466,6 +4818,7 @@
             if (player.xp < c) return toast("XP کم", true);
             player.xp -= c;
             player.research[b]++;
+            addActivity(player, `🔬 ارتقا ${b} به سطح ${player.research[b]}`);
             await saveAll();
             updateUI();
             renderResearch();
@@ -4516,9 +4869,39 @@
             const referralCount = player.referrals ? player.referrals.length : 0;
             const friendList = (player.friends || []).map(fid => allPlayers.find(p => p.id === fid)).filter(Boolean);
             const friendRequests = (player.friendRequests || []).map(fid => allPlayers.find(p => p.id === fid)).filter(
-            Boolean);
+                Boolean);
+            const totalBattles = (player.successfulAttacks || 0) + (player.successfulDefenses || 0);
+            const winRate = totalBattles > 0 ? Math.round((player.successfulAttacks || 0) / totalBattles * 100) : 0;
+            const level = Math.floor((player.xp || 0) / 100) + 1;
+            const nextLevelXP = level * 100;
+            const xpProgress = Math.min(100, ((player.xp || 0) - (level - 1) * 100) / 100 * 100);
+
+            // نشان‌ها
+            let badges = [];
+            if (player.successfulAttacks >= 10) badges.push({ icon: '🏅', name: 'پیروزی' });
+            if (player.successfulDefenses >= 5) badges.push({ icon: '🛡️', name: 'دفاع' });
+            if (player.faction) badges.push({ icon: getFI(player.faction), name: 'جناح' });
+            if (referralCount >= 5) badges.push({ icon: '📨', name: 'دعوت' });
+            if (player.gold >= 100000) badges.push({ icon: '💰', name: 'ثروت' });
+            if (player.xp >= 500) badges.push({ icon: '⭐', name: 'XP' });
+
+            // رتبه جهانی
+            const sortedByXP = [...allPlayers].sort((a, b) => b.xp - a.xp);
+            const rank = sortedByXP.findIndex(p => p.id === player.id) + 1;
+
+            // مقایسه با دوستان
+            const friendCompare = friendList.map(f => {
+                return { name: f.name, xp: f.xp, gold: f.gold };
+            }).sort((a, b) => b.xp - a.xp);
 
             let h = `<div class="profile-card">`;
+            // بنر با انتخاب رنگ
+            h += `<div class="profile-banner" style="background:${player.bannerColor || '#1a1a2e'};">
+                <div class="banner-color-picker">
+                    <input type="color" value="${player.bannerColor || '#1a1a2e'}" onchange="changeBannerColor(this.value)">
+                </div>
+            </div>`;
+            // هدر
             h += `<div class="profile-header">
                 <div class="profile-avatar" onclick="toggleAvatarSelector()">${getPlayerAvatar(player)}</div>
                 <div class="profile-name-area">
@@ -4550,36 +4933,111 @@
                 </div>`;
             }
 
-            h += `<div class="profile-stats-grid">
-                <div class="profile-stat-box"><div class="val">${player.xp}</div><div class="label">⭐ XP</div></div>
-                <div class="profile-stat-box"><div class="val">${player.successfulAttacks||0}</div><div class="label">⚔️ نبرد موفق</div></div>
-                <div class="profile-stat-box"><div class="val">${player.successfulDefenses||0}</div><div class="label">🛡️ دفاع موفق</div></div>
-                <div class="profile-stat-box"><div class="val">${referralCount}</div><div class="label">📨 دعوت‌ها</div></div>
+            // بیوگرافی
+            h += `<div class="profile-settings">
+                <div class="title">📝 بیوگرافی</div>
+                <textarea id="bioInput" placeholder="درباره خود بنویسید... (حداکثر 100 کاراکتر)" maxlength="100">${escapeHtml(player.bio || '')}</textarea>
+                <button class="save-bio-btn" onclick="saveBio()">💾 ذخیره</button>
             </div>`;
 
+            // تم پروفایل
+            h += `<div class="profile-settings">
+                <div class="title">🎨 تم پروفایل</div>
+                <div class="profile-theme-selector">
+                    <span class="theme-option ${player.theme === 'dark' ? 'active' : ''}" onclick="setProfileTheme('dark')">🌙 تیره</span>
+                    <span class="theme-option ${player.theme === 'light' ? 'active' : ''}" onclick="setProfileTheme('light')">☀️ روشن</span>
+                    <span class="theme-option ${player.theme === 'gold' ? 'active' : ''}" onclick="setProfileTheme('gold')">✨ طلایی</span>
+                    <span class="theme-option ${player.theme === 'blue' ? 'active' : ''}" onclick="setProfileTheme('blue')">🔵 آبی</span>
+                    <span class="theme-option ${player.theme === 'green' ? 'active' : ''}" onclick="setProfileTheme('green')">🟢 سبز</span>
+                </div>
+            </div>`;
+
+            // رتبه جهانی
+            h += `<div class="profile-rank-global">
+                <div class="rank-num">#${rank}</div>
+                <div class="rank-label">رتبه جهانی (از ${allPlayers.length} بازیکن)</div>
+            </div>`;
+
+            // XP Bar
+            h += `<div class="profile-xp-bar">
+                <div class="xp-info"><span class="level">سطح ${level}</span><span>${player.xp||0} / ${nextLevelXP} XP</span></div>
+                <div class="xp-track"><div class="xp-fill" style="width:${xpProgress}%"></div></div>
+            </div>`;
+
+            // آمار
+            h += `<div class="profile-stats-grid">
+                <div class="profile-stat-box"><div class="val">${player.xp}</div><div class="label">⭐ XP</div></div>
+                <div class="profile-stat-box"><div class="val">${player.successfulAttacks||0}</div><div class="label">⚔️ پیروزی</div></div>
+                <div class="profile-stat-box"><div class="val">${player.successfulDefenses||0}</div><div class="label">🛡️ دفاع</div></div>
+                <div class="profile-stat-box"><div class="val">${winRate}%</div><div class="label">🎯 درصد برد</div></div>
+            </div>`;
+
+            // جزئیات
             h += `<div class="profile-detail-row">
                 <span>📅 عضویت: <strong>${joinDate.toLocaleDateString('fa-IR')}</strong></span>
-                <span>⏳ سن اکانت: <strong>${ageStr}</strong></span>
+                <span>⏳ سن: <strong>${ageStr}</strong></span>
                 <span>🏷️ کد دعوت: <strong>${player.referralCode}</strong></span>
                 ${referrer ? `<span>👤 دعوت‌کننده: <strong>${getPlayerDisplayName(referrer)}</strong></span>` : ''}
             </div>`;
 
+            // کد دعوت با دکمه کپی
             h += `<div class="profile-referral">
-                <div>کد دعوت شما: <span class="code">${player.referralCode}</span></div>
+                <div>کد دعوت شما: <span class="code">${player.referralCode}</span>
+                    <button class="copy-btn" onclick="copyReferralCode()">📋 کپی</button>
+                </div>
                 <div class="info">با اشتراک این کد، هر نفر که ثبت‌نام کند به شما و او پاداش تعلق می‌گیرد!</div>
             </div>`;
 
+            // نشان‌ها
+            if (badges.length > 0) {
+                h += `<div class="profile-badges"><div class="title">🏅 دستاوردها</div>`;
+                badges.forEach(b => {
+                    h += `<span class="badge-item"><span class="badge-icon">${b.icon}</span> ${b.name}</span>`;
+                });
+                h += `</div>`;
+            }
+
+            // مقایسه با دوستان
+            if (friendCompare.length > 0) {
+                h += `<div class="profile-compare">
+                    <div class="title">📊 مقایسه با دوستان</div>`;
+                friendCompare.slice(0, 5).forEach(f => {
+                    h += `<div class="compare-item">
+                        <span class="c-name">${escapeHtml(f.name)}</span>
+                        <span class="c-val">⭐ ${f.xp} | 💰 ${f.gold}</span>
+                    </div>`;
+                });
+                h += `</div>`;
+            }
+
+            // فعالیت‌های اخیر
+            const activities = player.activities || [];
+            h += `<div class="profile-activities">
+                <div class="title">📜 آخرین فعالیت‌ها</div>`;
+            if (activities.length === 0) {
+                h += `<span style="font-size:0.55rem;color:var(--color-text-muted);">هیچ فعالیتی ثبت نشده</span>`;
+            } else {
+                activities.slice(0, 5).forEach(act => {
+                    const time = new Date(act.time).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+                    h += `<div class="activity-item"><span>${escapeHtml(act.text)}</span><span class="act-time">${time}</span></div>`;
+                });
+            }
+            h += `</div>`;
+
+            // دوستان
             h += `<div class="profile-friends"><div class="title">👥 دوستان (${friendList.length})</div>`;
             if (friendList.length === 0) {
                 h += `<span style="font-size:0.55rem;color:var(--color-text-muted);">هیچ دوستی ندارید</span>`;
             } else {
                 friendList.forEach(f => {
+                    const online = true; // همه آنلاین در نظر گرفته می‌شوند
                     h +=
-                        `<span class="friend-tag" onclick="showProfileModal('${f.id}')">${getPlayerDisplayName(f)} <span class="remove-friend" onclick="event.stopPropagation();removeFriend('${f.id}')">✕</span></span>`;
+                        `<span class="friend-tag" onclick="showProfileModal('${f.id}')">${online ? '<span class="online-dot"></span>' : ''}${getPlayerDisplayName(f)} <span class="remove-friend" onclick="event.stopPropagation();removeFriend('${f.id}')">✕</span></span>`;
                 });
             }
             h += `</div>`;
 
+            // درخواست‌های دوستی
             h += `<div class="profile-friend-requests"><div class="title">📩 درخواست‌های دوستی (${friendRequests.length})</div>`;
             if (friendRequests.length === 0) {
                 h += `<span style="font-size:0.55rem;color:var(--color-text-muted);">درخواستی ندارید</span>`;
@@ -4591,6 +5049,7 @@
             }
             h += `</div>`;
 
+            // افزودن دوست
             h += `<div class="profile-add-friend">
                 <input type="text" id="friendAddInput" placeholder="نام یا کد دعوت دوست...">
                 <button class="btn btn-blue btn-sm" onclick="sendFriendRequest()">➕ افزودن دوست</button>
@@ -4598,6 +5057,48 @@
 
             h += `</div>`;
             container.innerHTML = h;
+
+            // اعمال تم
+            applyProfileTheme(player.theme || 'dark');
+        }
+
+        // ===== اعمال تم پروفایل =====
+        function applyProfileTheme(theme) {
+            const card = document.querySelector('.profile-card');
+            if (!card) return;
+            const root = document.documentElement;
+            switch (theme) {
+                case 'light':
+                    card.style.setProperty('--bg-card', '#ffffff');
+                    card.style.setProperty('--color-text', '#1a1a2e');
+                    card.style.setProperty('--color-text-dim', '#495057');
+                    card.style.setProperty('--color-border', '#dee2e6');
+                    break;
+                case 'gold':
+                    card.style.setProperty('--bg-card', '#1a1a0a');
+                    card.style.setProperty('--color-text', '#fbbf24');
+                    card.style.setProperty('--color-text-dim', '#f59e0b');
+                    card.style.setProperty('--color-border', '#f59e0b44');
+                    break;
+                case 'blue':
+                    card.style.setProperty('--bg-card', '#0a1a2e');
+                    card.style.setProperty('--color-text', '#93c5fd');
+                    card.style.setProperty('--color-text-dim', '#60a5fa');
+                    card.style.setProperty('--color-border', '#3b82f644');
+                    break;
+                case 'green':
+                    card.style.setProperty('--bg-card', '#0a1a0a');
+                    card.style.setProperty('--color-text', '#4ade80');
+                    card.style.setProperty('--color-text-dim', '#22c55e');
+                    card.style.setProperty('--color-border', '#22c55e44');
+                    break;
+                default: // dark
+                    card.style.setProperty('--bg-card', '#1a1a2e');
+                    card.style.setProperty('--color-text', '#e2e8f0');
+                    card.style.setProperty('--color-text-dim', '#94a3b8');
+                    card.style.setProperty('--color-border', '#f59e0b44');
+                    break;
+            }
         }
 
         // ===== توابع آواتار =====
@@ -4614,14 +5115,11 @@
         window.selectAvatar = async function(emoji) {
             if (!player) return;
             player.customEmoji = emoji;
-            // به‌روزرسانی انتخاب شده
             document.querySelectorAll('.emoji-option').forEach(el => {
                 el.classList.toggle('selected', el.textContent === emoji);
             });
-            // به‌روزرسانی فیلد ورودی
             const input = document.getElementById('customEmojiInput');
             if (input) input.value = emoji;
-            // ذخیره در دیتابیس
             await saveAll(true);
             updateUI();
             renderProfile();
@@ -4633,7 +5131,6 @@
             if (!player) return;
             const emoji = value.trim() || '👤';
             player.customEmoji = emoji;
-            // به‌روزرسانی انتخاب‌ها
             document.querySelectorAll('.emoji-option').forEach(el => {
                 el.classList.toggle('selected', el.textContent === emoji);
             });
@@ -4643,6 +5140,61 @@
             renderActiveTab();
             toast(`✅ آواتار به ${emoji} تغییر یافت`, false, "peace");
         };
+
+        // ===== توابع پروفایل جدید =====
+        window.changeBannerColor = async function(color) {
+            if (!player) return;
+            player.bannerColor = color;
+            await saveAll(true);
+            renderProfile();
+            toast(`✅ رنگ بنر تغییر یافت`, false, "peace");
+        };
+
+        window.saveBio = async function() {
+            if (!player) return;
+            const bio = document.getElementById('bioInput').value.trim();
+            if (bio.length > 100) return toast("بیوگرافی حداکثر 100 کاراکتر", true);
+            player.bio = bio;
+            await saveAll(true);
+            renderProfile();
+            toast(`✅ بیوگرافی ذخیره شد`, false, "peace");
+        };
+
+        window.setProfileTheme = async function(theme) {
+            if (!player) return;
+            player.theme = theme;
+            await saveAll(true);
+            renderProfile();
+            toast(`✅ تم به ${theme} تغییر یافت`, false, "peace");
+        };
+
+        window.copyReferralCode = function() {
+            if (!player) return;
+            const code = player.referralCode;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(code).then(() => {
+                    toast(`📋 کد ${code} کپی شد!`, false, "peace");
+                }).catch(() => {
+                    fallbackCopy(code);
+                });
+            } else {
+                fallbackCopy(code);
+            }
+        };
+
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                toast(`📋 کد ${text} کپی شد!`, false, "peace");
+            } catch (e) {
+                toast("❌ کپی نشد، لطفاً دستی کپی کنید", true);
+            }
+            document.body.removeChild(ta);
+        }
 
         // ===== توابع دوستان =====
         window.showChangeName = function() {
@@ -4660,6 +5212,7 @@
             player.name = newName;
             player.customName = newName;
             player.nameChanged = true;
+            addActivity(player, `✏️ تغییر نام به ${newName}`);
             await saveAll(true);
             renderProfile();
             updateUI();
@@ -4680,6 +5233,7 @@
             if ((player.friendRequests || []).includes(target.id)) return toast("درخواست قبلاً ارسال شده", true);
             if (!target.friendRequests) target.friendRequests = [];
             target.friendRequests.push(player.id);
+            addActivity(player, `📨 درخواست دوستی برای ${target.name}`);
             await saveAll(true);
             input.value = '';
             renderProfile();
@@ -4700,6 +5254,8 @@
             if (!requester.friends) requester.friends = [];
             if (!player.friends.includes(fid)) player.friends.push(fid);
             if (!requester.friends.includes(player.id)) requester.friends.push(player.id);
+            addActivity(player, `🤝 دوستی با ${requester.name}`);
+            addActivity(requester, `🤝 دوستی با ${player.name}`);
             await saveAll(true);
             renderProfile();
             toast(`✅ ${requester.name} به دوستان شما اضافه شد`, false, "peace");
@@ -4790,6 +5346,10 @@
             t.friends = [];
             t.friendRequests = [];
             t.referrals = [];
+            t.bio = '';
+            t.bannerColor = '#1a1a2e';
+            t.theme = 'dark';
+            t.activities = [];
             await saveAll(true);
             adminPlayerHash = '';
             renderAdmin();
@@ -5219,7 +5779,6 @@
                     name: msg.n });
                 const sCls = isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ? 'sender coadmin-s' :
                     'sender');
-                // برای مشاهده پروفایل در چت، روی نام فرستنده کلیک کنید
                 const nameHtml = isSys ? sender :
                     `<span onclick="showProfileModal('${allPlayers.find(p=>p.name===msg.n)?.id||''}')" style="cursor:pointer;">${sender}</span>`;
                 h +=
