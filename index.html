@@ -666,26 +666,26 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.88);
             z-index: 10000;
             display: none;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            backdrop-filter: blur(4px);
+            animation: fadeIn 0.2s ease;
         }
         .battle-overlay.active {
             display: flex;
-            animation: fadeIn .3s;
         }
         .explosion {
-            font-size: 8rem;
-            animation: boom .8s infinite alternate;
-            filter: drop-shadow(0 0 20px #ef4444);
+            font-size: 6rem;
+            transition: transform 0.2s;
+            animation: boomPop 0.4s ease;
         }
-        @keyframes boom {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(1.4); opacity: 0.7; }
+        @keyframes boomPop {
+            0% { transform: scale(0.3); opacity: 0; }
+            60% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -693,37 +693,46 @@
         }
         .battle-text {
             color: var(--color-accent);
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: bold;
-            margin-top: 20px;
-            text-shadow: 0 0 10px var(--color-accent-dim);
-            animation: pulse 1s infinite;
+            margin-top: 16px;
+            animation: textPop 0.3s ease;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        @keyframes textPop {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
         .result-text {
             color: white;
-            font-size: 1.2rem;
+            font-size: 0.95rem;
             text-align: center;
             margin-top: 10px;
             max-width: 90%;
+            line-height: 1.6;
+            animation: textPop 0.3s ease;
         }
         .screen-shake {
-            animation: shake .5s cubic-bezier(.36, .07, .19, .97) both;
+            animation: shake .3s ease both;
         }
         @keyframes shake {
-            10%,
-            90% { transform: translate3d(-1px, 0, 0); }
-            20%,
-            80% { transform: translate3d(2px, 0, 0); }
-            30%,
-            50%,
-            70% { transform: translate3d(-4px, 0, 0); }
-            40%,
-            60% { transform: translate3d(4px, 0, 0); }
+            25%, 75% { transform: translateX(-3px); }
+            50% { transform: translateX(3px); }
+        }
+        @keyframes continuePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(245, 158, 11, 0); }
+            50% { transform: scale(1.06); box-shadow: 0 0 30px rgba(245, 158, 11, 0.6); }
+        }
+        .missile-fly {
+            position: fixed;
+            font-size: 2rem;
+            z-index: 9999;
+            pointer-events: none;
+            animation: missileArc 0.8s ease-in-out forwards;
+        }
+        @keyframes missileArc {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            50% { transform: translate(50vw, -30vh) rotate(45deg); opacity: 1; }
+            100% { transform: translate(100vw, 0) rotate(90deg); opacity: 0; }
         }
         .storage-bar {
             height: 10px;
@@ -2505,22 +2514,16 @@
             min-height: 32px;
         }
 
-        /* ===== SKY MAP ===== */
+        /* ===== SKY MAP (ULTRA LITE - انیمیشنی سبک) ===== */
         .sky-map-container {
             position: relative;
             width: 100%;
-            height: 500px;
+            height: 380px;
             background: var(--color-sky-bg);
             border-radius: 1.2rem;
             border: 1px solid var(--color-border);
             overflow: hidden;
-            cursor: grab;
-            touch-action: none;
-            box-shadow: inset 0 0 60px rgba(0, 20, 60, 0.6);
             transition: background 0.3s, border-color 0.3s;
-        }
-        .sky-map-container:active {
-            cursor: grabbing;
         }
         .sky-map-inner {
             position: absolute;
@@ -2528,74 +2531,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            transform-origin: center center;
-            transition: transform 0.1s ease-out;
-            will-change: transform;
         }
-        .sky-stars {
+        /* چند تا ستاره ساده بدون radial-gradient های سنگین */
+        .sky-twinkle {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
             pointer-events: none;
-            background-image:
-                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.6), transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.5), transparent),
-                radial-gradient(2px 2px at 80px 20px, rgba(255, 255, 255, 0.7), transparent),
-                radial-gradient(3px 3px at 120px 90px, rgba(255, 255, 255, 0.4), transparent),
-                radial-gradient(2px 2px at 160px 40px, rgba(255, 255, 255, 0.6), transparent),
-                radial-gradient(2px 2px at 200px 110px, rgba(255, 255, 255, 0.5), transparent),
-                radial-gradient(3px 3px at 250px 30px, rgba(255, 255, 255, 0.7), transparent),
-                radial-gradient(2px 2px at 300px 80px, rgba(255, 255, 255, 0.4), transparent),
-                radial-gradient(2px 2px at 350px 50px, rgba(255, 255, 255, 0.6), transparent),
-                radial-gradient(3px 3px at 400px 100px, rgba(255, 255, 255, 0.5), transparent),
-                radial-gradient(2px 2px at 450px 20px, rgba(255, 255, 255, 0.7), transparent),
-                radial-gradient(2px 2px at 500px 70px, rgba(255, 255, 255, 0.4), transparent),
-                radial-gradient(3px 3px at 550px 40px, rgba(255, 255, 255, 0.6), transparent),
-                radial-gradient(2px 2px at 600px 90px, rgba(255, 255, 255, 0.5), transparent),
-                radial-gradient(2px 2px at 650px 30px, rgba(255, 255, 255, 0.7), transparent),
-                radial-gradient(3px 3px at 700px 80px, rgba(255, 255, 255, 0.4), transparent),
-                radial-gradient(2px 2px at 750px 50px, rgba(255, 255, 255, 0.6), transparent),
-                radial-gradient(2px 2px at 800px 110px, rgba(255, 255, 255, 0.5), transparent);
-            background-size: 200px 150px;
-            background-repeat: repeat;
-            opacity: 0.8;
+            opacity: 0.6;
+            animation: twinkle 2s ease-in-out infinite;
         }
-        .cloud {
-            position: absolute;
-            background: var(--color-sky-cloud);
-            border-radius: 1000px;
-            filter: blur(20px);
-            pointer-events: none;
-            animation: cloudDrift 25s linear infinite alternate;
-        }
-        .cloud1 {
-            width: 300px;
-            height: 60px;
-            top: 15%;
-            left: -10%;
-            animation-duration: 35s;
-        }
-        .cloud2 {
-            width: 400px;
-            height: 80px;
-            top: 55%;
-            right: -15%;
-            animation-duration: 45s;
-            animation-delay: -10s;
-        }
-        .cloud3 {
-            width: 200px;
-            height: 40px;
-            top: 80%;
-            left: 20%;
-            animation-duration: 30s;
-            animation-delay: -5s;
-        }
-        @keyframes cloudDrift {
-            0% { transform: translateX(0) scale(1); }
-            100% { transform: translateX(80px) scale(1.1); }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.9; }
         }
         .sky-player {
             position: absolute;
@@ -2606,224 +2556,331 @@
             transform: translate(-50%, -50%);
             cursor: pointer;
             z-index: 10;
-            transition: filter 0.2s, transform 0.2s;
+            transition: transform 0.15s ease;
             user-select: none;
-            touch-action: none;
-            width: 50px;
-            height: 50px;
+            width: 44px;
+            height: 44px;
+            animation: planeFloat 3s ease-in-out infinite;
         }
-        .sky-player:hover {
-            filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.6));
+        @keyframes planeFloat {
+            0%, 100% { margin-top: 0; }
+            50% { margin-top: -4px; }
+        }
+        .sky-player:active {
             transform: translate(-50%, -50%) scale(1.15);
-            z-index: 20;
+            z-index: 30;
         }
         .sky-player .plane-icon {
-            font-size: 2.2rem;
+            font-size: 1.7rem;
             line-height: 1;
-            transition: transform 0.3s;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
-            transform: rotate(-20deg);
+            transition: transform 0.2s;
         }
         .sky-player .player-label {
             background: var(--color-sky-label-bg);
-            backdrop-filter: blur(4px);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.45rem;
+            padding: 1px 6px;
+            border-radius: 6px;
+            font-size: 0.42rem;
             color: var(--color-text);
             white-space: nowrap;
             margin-top: 2px;
             border: 1px solid var(--color-sky-label-border);
             font-weight: 600;
             pointer-events: none;
-            max-width: 70px;
+            max-width: 60px;
             overflow: hidden;
             text-overflow: ellipsis;
         }
         .sky-player .shield-ring {
             position: absolute;
-            width: 60px;
-            height: 60px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            border: 3px solid var(--color-sky-shield-ring);
-            animation: shieldPulse 1.5s ease-in-out infinite;
+            border: 2px solid var(--color-sky-shield-ring);
             pointer-events: none;
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            animation: shieldSpin 4s linear infinite;
         }
-        @keyframes shieldPulse {
-            0%,
-            100% { transform: translate(-50%, -50%) scale(1);
-                opacity: 0.7; }
-            50% { transform: translate(-50%, -50%) scale(1.25);
-                opacity: 1; }
-        }
-        .sky-player .shield-ring::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            border-radius: 50%;
-            border: 2px solid rgba(59, 130, 246, 0.2);
-            animation: shieldPulse2 2s ease-in-out infinite;
-        }
-        @keyframes shieldPulse2 {
-            0%,
-            100% { transform: scale(1);
-                opacity: 0.3; }
-            50% { transform: scale(1.4);
-                opacity: 0.6; }
+        @keyframes shieldSpin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
         .sky-player.me .plane-icon {
-            filter: drop-shadow(0 0 20px var(--color-accent));
+            filter: drop-shadow(0 0 8px var(--color-accent));
         }
         .sky-player.me .player-label {
             border-color: var(--color-accent);
             color: var(--color-accent);
         }
-        .sky-player .player-tooltip .tp-name {
-            cursor: pointer;
+        .sky-player.target .plane-icon {
+            filter: drop-shadow(0 0 12px #ef4444);
         }
-        .sky-player .player-tooltip .tp-name:hover {
-            color: var(--color-accent);
+        .sky-player.target::before {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px dashed #ef4444;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: targetSpin 2s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes targetSpin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
         .sky-player .player-tooltip {
             position: absolute;
-            bottom: calc(100% + 12px);
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
             background: var(--color-sky-tooltip-bg);
-            backdrop-filter: blur(8px);
             border: 1px solid var(--color-sky-tooltip-border);
-            border-radius: 12px;
-            padding: 10px 14px;
-            min-width: 140px;
+            border-radius: 10px;
+            padding: 8px 12px;
+            min-width: 150px;
             display: none;
             flex-direction: column;
             gap: 4px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-            pointer-events: none;
-            z-index: 100;
+            pointer-events: auto;
+            z-index: 200;
             color: var(--color-text);
+            animation: tooltipPop 0.2s ease;
+        }
+        @keyframes tooltipPop {
+            from { transform: translateX(-50%) scale(0.8); opacity: 0; }
+            to { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+        .sky-player .player-tooltip.show {
+            display: flex;
         }
         .sky-player .player-tooltip .tp-name {
             font-size: 0.7rem;
             font-weight: 700;
             color: var(--color-accent);
+            cursor: pointer;
         }
         .sky-player .player-tooltip .tp-detail {
             font-size: 0.5rem;
             color: var(--color-text-dim);
         }
-        .sky-player .player-tooltip .tp-attack {
+        .sky-player .player-tooltip .tp-actions {
+            display: flex;
+            gap: 4px;
             margin-top: 4px;
+            flex-wrap: wrap;
+        }
+        .sky-player .player-tooltip .tp-attack {
             pointer-events: auto;
             padding: 4px 12px;
-            font-size: 0.5rem;
+            font-size: 0.55rem;
             background: var(--color-btn-attack);
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: 14px;
             cursor: pointer;
             font-weight: 700;
-            transition: 0.2s;
+            transition: opacity 0.15s;
         }
-        .sky-player .player-tooltip .tp-attack:hover {
-            background: var(--color-btn-red);
-            transform: scale(1.05);
-        }
+        .sky-player .player-tooltip .tp-attack:active { opacity: 0.7; }
         .sky-player .player-tooltip .tp-attack:disabled {
             opacity: 0.4;
             cursor: not-allowed;
-            transform: none;
         }
-        .sky-player:hover .player-tooltip {
-            display: flex;
-        }
-        .sky-map-zoom-controls {
-            position: absolute;
-            bottom: 16px;
-            right: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            z-index: 30;
-        }
-        .sky-map-zoom-controls button {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 1px solid var(--color-border);
-            background: var(--color-sky-zoom-btn);
-            backdrop-filter: blur(4px);
-            color: var(--color-accent);
-            font-size: 1.2rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        }
-        .sky-map-zoom-controls button:hover {
-            background: var(--color-accent-dim);
-            color: #fff;
-        }
-        .sky-map-zoom-level {
-            position: absolute;
-            bottom: 16px;
-            left: 16px;
-            font-size: 0.55rem;
-            color: var(--color-text-dim);
-            background: var(--color-sky-legend-bg);
+        .sky-player .player-tooltip .tp-pick {
+            pointer-events: auto;
             padding: 4px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--color-border);
-            backdrop-filter: blur(4px);
-            z-index: 30;
+            font-size: 0.55rem;
+            background: var(--color-btn-green);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: opacity 0.15s;
         }
+        .sky-player .player-tooltip .tp-pick:active { opacity: 0.7; }
         .sky-map-legend {
             position: absolute;
-            top: 12px;
-            right: 12px;
+            top: 8px;
+            right: 8px;
             font-size: 0.45rem;
             color: var(--color-text-dim);
             background: var(--color-sky-legend-bg);
-            padding: 6px 10px;
-            border-radius: 10px;
+            padding: 5px 9px;
+            border-radius: 8px;
             border: 1px solid var(--color-border);
-            backdrop-filter: blur(4px);
             z-index: 30;
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 2px;
         }
         .sky-map-legend span {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
         .sky-map-legend .dot {
             display: inline-block;
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
         }
         .sky-map-legend .dot.me-dot {
             background: var(--color-accent);
-            box-shadow: 0 0 8px var(--color-accent);
         }
         .sky-map-legend .dot.other-dot {
             background: var(--color-btn-blue);
         }
         .sky-map-legend .dot.shield-dot {
             background: var(--color-btn-blue);
-            box-shadow: 0 0 8px var(--color-btn-blue);
             border: 1px solid var(--color-shield-text);
         }
+        .sky-map-legend .dot.target-dot {
+            background: var(--color-btn-attack);
+        }
+        /* ===== WAR SEARCH BOX ===== */
+        .war-search-box {
+            background: var(--bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 1rem;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .war-search-box .search-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .war-search-box input {
+            flex: 1;
+            min-width: 130px;
+            font-size: 0.7rem;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+        .war-search-box .btn {
+            font-size: 0.6rem;
+            padding: 6px 14px;
+        }
+        .war-search-result {
+            margin-top: 8px;
+            max-height: 160px;
+            overflow-y: auto;
+            border-radius: 0.8rem;
+            background: var(--bg-tab);
+            padding: 4px;
+        }
+        .war-search-result .result-item {
+            background: var(--bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 0.8rem;
+            padding: 7px 10px;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            animation: slideIn 0.2s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-5px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .war-search-result .result-item:last-child {
+            margin-bottom: 0;
+        }
+        .war-search-result .r-name {
+            font-weight: 700;
+            font-size: 0.65rem;
+            color: var(--color-text);
+            flex: 1;
+            min-width: 80px;
+        }
+        .war-search-result .r-xp {
+            font-size: 0.5rem;
+            color: var(--color-text-dim);
+        }
+        .war-search-result .r-actions {
+            display: flex;
+            gap: 4px;
+        }
+        .war-search-result .r-actions .btn {
+            font-size: 0.5rem;
+            padding: 4px 10px;
+        }
+        .war-target-banner {
+            background: linear-gradient(90deg, var(--color-btn-danger), var(--color-banner-border));
+            color: white;
+            padding: 10px 14px;
+            border-radius: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 0.65rem;
+            animation: bannerSlide 0.3s ease;
+        }
+        @keyframes bannerSlide {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .war-target-banner .t-name {
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+        .war-target-banner .t-xp {
+            font-size: 0.55rem;
+            opacity: 0.9;
+        }
+        .war-target-banner .t-skip {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 5px 14px;
+            border-radius: 14px;
+            font-size: 0.55rem;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background 0.15s;
+        }
+        .war-target-banner .t-skip:active { background: rgba(255, 255, 255, 0.35); }
+        .war-target-banner .t-attack {
+            background: white;
+            color: var(--color-btn-danger);
+            border: none;
+            padding: 5px 16px;
+            border-radius: 14px;
+            font-size: 0.55rem;
+            cursor: pointer;
+            font-weight: 800;
+            transition: transform 0.15s;
+        }
+        .war-target-banner .t-attack:active { transform: scale(0.95); }
+        .war-target-banner .t-attack:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .war-random-btn {
+            background: linear-gradient(135deg, var(--color-btn-purple), var(--color-assistant));
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 18px;
+            font-size: 0.6rem;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform 0.15s;
+        }
+        .war-random-btn:active { transform: scale(0.95); }
 
         /* ===== LOADING ===== */
         #loadingOverlay {
@@ -3199,6 +3256,337 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-top: 8px;
+        }
+        .mil-missile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .mil-missile-card {
+            background: linear-gradient(160deg, #1a1a2e 0%, #2a0f0f 50%, #1a0a0a 100%);
+            border: 1px solid rgba(239, 68, 68, 0.32);
+            border-radius: 1.4rem;
+            padding: 14px 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            min-height: 170px;
+        }
+        .mil-missile-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(239, 68, 68, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .mil-missile-card:hover {
+            transform: translateY(-4px);
+            border-color: #ef4444;
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.18), inset 0 0 40px rgba(239, 68, 68, 0.04);
+        }
+        .mil-missile-card .mil-icon {
+            font-size: 2.2rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+            position: relative;
+            z-index: 1;
+            animation: floatIcon 3s ease-in-out infinite 0.3s;
+        }
+        .mil-missile-card .mil-name {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #fca5a5;
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.25);
+            position: relative;
+            z-index: 1;
+        }
+        .mil-missile-card .mil-detail {
+            font-size: 0.5rem;
+            color: #cbd5e1;
+            position: relative;
+            z-index: 1;
+        }
+        .mil-missile-card .mil-detail strong {
+            color: #fbbf24;
+        }
+        .mil-missile-card .mil-count-badge {
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: #fef3c7;
+            background: rgba(239, 68, 68, 0.18);
+            padding: 3px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            position: relative;
+            z-index: 1;
+        }
+        .mil-missile-card .mil-cost {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.5rem;
+            color: #94a3b8;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+        .mil-missile-card .mil-cost .cost-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            background: rgba(10, 10, 26, 0.5);
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(30, 41, 59, 0.5);
+        }
+        .mil-missile-card .mil-cost .cost-item.has {
+            color: #4ade80;
+            border-color: rgba(74, 222, 128, 0.4);
+        }
+        .mil-missile-card .mil-cost .cost-item.missing {
+            color: #fca5a5;
+            border-color: rgba(252, 165, 165, 0.4);
+        }
+        .mil-missile-card .mil-research-tag {
+            font-size: 0.45rem;
+            color: #c084fc;
+            background: rgba(139, 92, 246, 0.15);
+            padding: 2px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        .mil-missile-card .missile-btn {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            color: #fff;
+            border: 1px solid rgba(239, 68, 68, 0.6);
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);
+        }
+        .mil-missile-card .missile-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            box-shadow: 0 6px 22px rgba(239, 68, 68, 0.4);
+        }
+
+        /* ===== مودال انتخاب نیرو برای حمله ===== */
+        .attack-select-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(6px);
+            z-index: 9000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            overflow-y: auto;
+        }
+        .attack-select-overlay.active {
+            display: flex;
+        }
+        .attack-select-modal {
+            background: linear-gradient(160deg, #1a1a2e 0%, #0f0f23 100%);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 1.4rem;
+            width: 100%;
+            max-width: 540px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 0 60px rgba(239, 68, 68, 0.2);
+        }
+        .attack-select-title {
+            font-size: 1rem;
+            font-weight: 900;
+            color: #fbbf24;
+            text-align: center;
+            margin-bottom: 6px;
+            text-shadow: 0 0 18px rgba(245, 158, 11, 0.3);
+        }
+        .attack-select-target {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #fca5a5;
+            margin-bottom: 14px;
+        }
+        .attack-select-empty {
+            text-align: center;
+            padding: 30px 10px;
+            color: var(--color-text-dim);
+            font-size: 0.75rem;
+        }
+        .attack-select-section {
+            margin-bottom: 14px;
+        }
+        .attack-select-section-title {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #fbbf24;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .attack-select-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            background: rgba(10, 10, 26, 0.55);
+            border: 1px solid rgba(245, 158, 11, 0.18);
+            border-radius: 0.8rem;
+            margin-bottom: 6px;
+        }
+        .attack-select-row .row-icon {
+            font-size: 1.4rem;
+            min-width: 32px;
+            text-align: center;
+        }
+        .attack-select-row .row-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .attack-select-row .row-name {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .attack-select-row .row-power {
+            font-size: 0.5rem;
+            color: #94a3b8;
+        }
+        .attack-select-row .row-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .qty-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            background: rgba(10, 10, 26, 0.7);
+            color: #fbbf24;
+            font-size: 0.9rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        .qty-btn:hover:not(:disabled) {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: #fbbf24;
+        }
+        .qty-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+        .qty-input {
+            width: 44px;
+            text-align: center;
+            background: rgba(10, 10, 26, 0.7);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 0.5rem;
+            color: #fbbf24;
+            font-weight: 800;
+            font-size: 0.7rem;
+            padding: 4px 0;
+            -moz-appearance: textfield;
+        }
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .attack-select-summary {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.12), rgba(239, 68, 68, 0.12));
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 0.8rem;
+            padding: 10px 14px;
+            margin: 12px 0 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+        }
+        .attack-select-summary .sum-label {
+            color: var(--color-text-dim);
+            font-weight: 700;
+        }
+        .attack-select-summary .sum-value {
+            color: #fbbf24;
+            font-weight: 900;
+            font-size: 1rem;
+            text-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+        }
+        .attack-select-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .attack-confirm-btn {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            color: #fff;
+            border: 1px solid rgba(239, 68, 68, 0.6);
+            border-radius: 0.8rem;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(239, 68, 68, 0.35);
+            transition: all 0.2s;
+        }
+        .attack-confirm-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            transform: translateY(-1px);
+        }
+        .attack-confirm-btn:disabled {
+            background: #334155;
+            color: #94a3b8;
+            border-color: #334155;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        .attack-cancel-btn {
+            flex: 0 0 auto;
+            padding: 12px 20px;
+            background: rgba(10, 10, 26, 0.7);
+            color: var(--color-text-dim);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 0.8rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .attack-cancel-btn:hover {
+            color: #fbbf24;
+            border-color: #fbbf24;
+        }
+        .attack-select-warning {
+            background: rgba(127, 29, 29, 0.25);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 0.7rem;
+            padding: 8px 12px;
+            margin-bottom: 12px;
+            font-size: 0.55rem;
+            color: #fca5a5;
+            text-align: center;
         }
         .mil-defense-card {
             background: linear-gradient(160deg, #1a1a2e 0%, #0f1729 50%, #1a1025 100%);
@@ -3726,6 +4114,16 @@
         <div class="result-text" id="battleResultText"></div>
     </div>
 
+    <!-- ===== مودال انتخاب نیروی حمله ===== -->
+    <div class="attack-select-overlay" id="attackSelectOverlay">
+        <div class="attack-select-modal">
+            <div class="attack-select-title">🎯 آماده‌سازی حمله</div>
+            <div class="attack-select-target" id="attackSelectTarget">هدف: ...</div>
+            <div class="attack-select-warning">⚠️ موشک‌ها یکبار مصرف هستند؛ پس از حمله نابود می‌شوند.</div>
+            <div id="attackSelectContent"></div>
+        </div>
+    </div>
+
     <!-- ===== PROFILE MODAL (مشاهده پروفایل دیگران) ===== -->
     <div class="profile-modal-overlay" id="profileModalOverlay">
         <div class="profile-modal">
@@ -3765,6 +4163,15 @@
             "S-400": { n: "S-400", i: "🇷🇺", c: { g: 25000, o: 8000, m: 6000 }, def: 150, hp: 200 },
             "Khordad": { n: "خرداد-۱۵", i: "🇮🇷", c: { g: 8000, o: 2000, m: 1500 }, def: 60, hp: 100 },
             "Bavar": { n: "باور-۳۷۳", i: "🇮🇷", c: { g: 15000, o: 4500, m: 3000 }, def: 100, hp: 150 }
+        };
+        // ===== پایگاه داده موشک‌ها (یکبار مصرف) =====
+        const M_DB = {
+            "Shahab-2": { n: "شهاب-۲", i: "🇮🇷", p: 180, c: { g: 5000, o: 1500, m: 2000 }, r: 3 },
+            "Scud-B": { n: "اسکاد-B", i: "🇷🇺", p: 140, c: { g: 3500, o: 1000, m: 1500 }, r: 2 },
+            "Patriot-M": { n: "پاتریوت موشک", i: "🇺🇸", p: 260, c: { g: 9000, o: 2500, m: 3500 }, r: 5 },
+            "S-300-M": { n: "اس-۳۰۰ موشک", i: "🇷🇺", p: 320, c: { g: 12000, o: 3000, m: 4500 }, r: 6 },
+            "Sejjil": { n: "سجیل", i: "🇮🇷", p: 450, c: { g: 18000, o: 4500, m: 7000 }, r: 7 },
+            "Tomahawk": { n: "توماهاوک", i: "🇺🇸", p: 600, c: { g: 30000, o: 7500, m: 12000 }, r: 8 }
         };
         const FACTIONS_DB = {
             "sky_knights": { name: "شوالیه‌های آسمان", icon: "🛡️" },
@@ -4094,6 +4501,7 @@
                 r: [p.research.military, p.research.economy, p.research.aviation],
                 f: p.fighters,
                 d: p.defenses,
+                mls: p.missiles || {},
                 sh: p.shieldExpiry,
                 ce: p.customEmoji || '',
                 cc: p.customColor || '',
@@ -4129,6 +4537,7 @@
                 research: { military: c.r ?.[0] || 0, economy: c.r ?.[1] || 0, aviation: c.r ?.[2] || 0 },
                 fighters: c.f || {},
                 defenses: c.d || [],
+                missiles: c.mls || {},
                 shieldExpiry: c.sh || 0,
                 customEmoji: c.ce || '',
                 customColor: c.cc || '',
@@ -4221,6 +4630,7 @@
                 research: { military: 0, economy: 0, aviation: 0 },
                 fighters: {},
                 defenses: [],
+                missiles: {},
                 shieldExpiry: 0,
                 customEmoji: '👤',
                 customColor: '',
@@ -4258,10 +4668,17 @@
         }
 
         function calcAtt(p) {
-            if (!p?.fighters) return 0;
+            if (!p) return 0;
             let pw = 0;
-            for (const [n, d] of Object.entries(p.fighters)) {
-                if (F_DB[n] && d.count > 0) pw += F_DB[n].p * d.count;
+            if (p.fighters) {
+                for (const [n, d] of Object.entries(p.fighters)) {
+                    if (F_DB[n] && d.count > 0) pw += F_DB[n].p * d.count;
+                }
+            }
+            if (p.missiles) {
+                for (const [n, d] of Object.entries(p.missiles)) {
+                    if (M_DB[n] && d.count > 0) pw += M_DB[n].p * d.count;
+                }
             }
             return Math.floor(pw);
         }
@@ -4434,6 +4851,23 @@
             toast(`✈️ ${f.n} ساخته شد`, false, "peace");
         };
 
+        window.buildMissile = async function(k) {
+            const m = M_DB[k];
+            if (player.gold < m.c.g || player.oil < m.c.o || player.metal < m.c.m) return toast("منابع کم", true);
+            if ((player.research?.aviation || 0) < m.r) return toast("هوانوردی سطح " + m.r, true);
+            player.gold -= m.c.g;
+            player.oil -= m.c.o;
+            player.metal -= m.c.m;
+            if (!player.missiles) player.missiles = {};
+            if (!player.missiles[k]) player.missiles[k] = { count: 0 };
+            player.missiles[k].count++;
+            addActivity(player, `🚀 ساخت ${m.n}`);
+            await saveAll();
+            updateUI();
+            renderMilitary();
+            toast(`🚀 ${m.n} ساخته شد`, false, "peace");
+        };
+
         window.buildDefense = async function(k) {
             const d = D_DB[k];
             if (player.gold < d.c.g || player.oil < d.c.o || player.metal < d.c.m) return toast("منابع کم", true);
@@ -4476,26 +4910,34 @@
         };
 
         // ===== جنگ (نقشه آسمان) با توزیع یکنواخت =====
+        // ===== state جنگ (کامل رندوم و انیمیشنی سبک) =====
+        let warSearchQuery = '';
+        let warCurrentTargetId = null;
+        let warSkippedSet = new Set();
+        let warRandomSeed = Date.now();
+
+        // تولید موقعیت کاملاً رندوم (هر بار چیدمان فرق داره)
         function computeSkyPositions() {
-            const sorted = [...allPlayers].sort((a, b) => a.id.localeCompare(b.id));
+            const sorted = [...allPlayers].sort(() => Math.random() - 0.5);
             const total = sorted.length;
             if (total === 0) return {};
             const positions = {};
-            const margin = 0.12;
-            const cols = Math.ceil(Math.sqrt(total));
-            const rows = Math.ceil(total / cols);
-            const spacingX = (1 - 2 * margin) / (cols - 1 || 1);
-            const spacingY = (1 - 2 * margin) / (rows - 1 || 1);
-            sorted.forEach((p, idx) => {
-                const col = idx % cols;
-                const row = Math.floor(idx / cols);
-                const x = margin + col * spacingX;
-                const y = margin + row * spacingY;
-                const noise = 0.02;
-                const nx = x + (Math.random() - 0.5) * noise;
-                const ny = y + (Math.random() - 0.5) * noise;
-                positions[p.id] = { x: Math.min(1 - margin, Math.max(margin, nx)), y: Math.min(1 - margin, Math.max(
-                        margin, ny)) };
+            const margin = 0.1;
+            // استفاده از seed برای اینکه در هر لحظه چیدمان ثابت باشه ولی با هر رندر عوض بشه
+            const seed = warRandomSeed;
+            let i = 0;
+            sorted.forEach(p => {
+                // مکان رندوم خالص
+                const rx = ((Math.sin(seed + i * 7.13) * 10000) % 1 + 1) % 1;
+                const ry = ((Math.cos(seed + i * 5.71) * 10000) % 1 + 1) % 1;
+                const x = margin + rx * (1 - 2 * margin);
+                const y = margin + ry * (1 - 2 * margin);
+                positions[p.id] = {
+                    x: Math.min(1 - margin, Math.max(margin, x)),
+                    y: Math.min(1 - margin, Math.max(margin, y)),
+                    delay: (i % 5) * 0.4 // برای stagger انیمیشن
+                };
+                i++;
             });
             return positions;
         }
@@ -4506,7 +4948,137 @@
                 skyPlayerPositions = computeSkyPositions();
                 skyPositionCacheKey = currentIds;
             }
-            return skyPlayerPositions[pId] || { x: 0.5, y: 0.5 };
+            return skyPlayerPositions[pId] || { x: 0.5, y: 0.5, delay: 0 };
+        }
+
+        function pickNextWarTarget() {
+            if (!player || !allPlayers) return null;
+            const meXp = player.xp || 0;
+            const cands = allPlayers.filter(p => {
+                if (p.id === player.id) return false;
+                const hasShield = p.shieldExpiry && ts() < p.shieldExpiry;
+                if (hasShield) return false;
+                return true;
+            });
+            if (cands.length === 0) return null;
+            const fresh = cands.filter(p => !warSkippedSet.has(p.id));
+            const pool = fresh.length > 0 ? fresh : cands;
+            // 70٪ شانس نزدیک به XP، 30٪ شانس کاملاً رندوم
+            if (Math.random() < 0.7) {
+                pool.sort((a, b) => Math.abs((a.xp || 0) - meXp) - Math.abs((b.xp || 0) - meXp));
+                return pool[0];
+            } else {
+                return pool[Math.floor(Math.random() * pool.length)];
+            }
+        }
+
+        function skipCurrentTarget() {
+            if (!warCurrentTargetId) {
+                warRandomSeed = Date.now();
+                warCurrentTargetId = pickNextWarTarget() ? pickNextWarTarget().id : null;
+                renderSkyMap();
+                return;
+            }
+            warSkippedSet.add(warCurrentTargetId);
+            // اگه همه رد شدن، ریست
+            const attackable = allPlayers.filter(p => {
+                if (p.id === player.id) return false;
+                const hasShield = p.shieldExpiry && ts() < p.shieldExpiry;
+                return !hasShield;
+            });
+            if (warSkippedSet.size >= attackable.length) {
+                warSkippedSet.clear();
+                warRandomSeed = Date.now();
+                toast('🔄 چیدمان نقشه ریست شد', false, 'peace');
+            }
+            warRandomSeed = Date.now(); // هر رد کردن، چیدمان رو رندوم کنه
+            skyPositionCacheKey = ''; // مجبور به محاسبه مجدد
+            const next = pickNextWarTarget();
+            if (!next) {
+                warCurrentTargetId = null;
+                toast('بازیکن دیگری برای حمله پیدا نشد', false, 'peace');
+            } else {
+                warCurrentTargetId = next.id;
+                toast(`⏭️ هدف بعدی: ${next.name}`, false, 'peace');
+            }
+            renderSkyMap();
+        }
+
+        function selectWarTarget(pId) {
+            warCurrentTargetId = pId;
+            warSkippedSet.clear();
+            renderSkyMap();
+        }
+
+        function clearWarTarget() {
+            warCurrentTargetId = null;
+            warSkippedSet.clear();
+            warRandomSeed = Date.now();
+            skyPositionCacheKey = '';
+            renderSkyMap();
+        }
+
+        window.warSearch = function() {
+            const inp = document.getElementById('warSearchInput');
+            if (!inp) return;
+            warSearchQuery = (inp.value || '').trim().toLowerCase();
+            renderSkyMap();
+        };
+
+        window.warSearchClear = function() {
+            warSearchQuery = '';
+            const inp = document.getElementById('warSearchInput');
+            if (inp) inp.value = '';
+            renderSkyMap();
+        };
+
+        window.respawnSky = function() {
+            warRandomSeed = Date.now();
+            skyPositionCacheKey = '';
+            warSkippedSet.clear();
+            const next = pickNextWarTarget();
+            warCurrentTargetId = next ? next.id : null;
+            renderSkyMap();
+            toast('🎲 نقشه دوباره چیده شد', false, 'peace');
+        };
+
+        function buildWarSearchResults() {
+            if (!warSearchQuery) return '';
+            const q = warSearchQuery;
+            const results = allPlayers.filter(p => {
+                if (p.id === player.id) return false;
+                return (p.name || '').toLowerCase().includes(q);
+            }).slice(0, 20);
+            if (results.length === 0) {
+                return `<div class="empty" style="padding:10px;">نتیجه‌ای یافت نشد</div>`;
+            }
+            let h = '';
+            results.forEach(p => {
+                const hasShield = p.shieldExpiry && ts() < p.shieldExpiry;
+                const isTarget = warCurrentTargetId === p.id;
+                h += `<div class="result-item">
+                    <div class="r-name">${escapeHtml(p.name)}</div>
+                    <div class="r-xp">XP: ${p.xp || 0}</div>
+                    <div class="r-actions">
+                        ${isTarget ? `<span style="font-size:0.5rem;color:var(--color-accent);">✅ هدف فعلی</span>` :
+                        `<button class="btn btn-green btn-sm" onclick="selectWarTarget('${p.id}')" ${hasShield?'disabled':''}>🎯 انتخاب</button>`}
+                    </div>
+                </div>`;
+            });
+            return h;
+        }
+
+        // چند ستاره ساده
+        function makeTwinkles() {
+            let h = '';
+            for (let i = 0; i < 15; i++) {
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const dly = Math.random() * 2;
+                const dur = 1.5 + Math.random() * 1.5;
+                h += `<div class="sky-twinkle" style="left:${x}%;top:${y}%;animation-delay:${dly}s;animation-duration:${dur}s;"></div>`;
+            }
+            return h;
         }
 
         function renderSkyMap() {
@@ -4519,24 +5091,68 @@
                 skyPlayerPositions = computeSkyPositions();
                 skyPositionCacheKey = currentIds;
             }
+
+            // مدیریت هدف فعلی
+            if (warCurrentTargetId) {
+                const cur = allPlayers.find(p => p.id === warCurrentTargetId);
+                const hasShield = cur && cur.shieldExpiry && ts() < cur.shieldExpiry;
+                if (!cur || hasShield) {
+                    warCurrentTargetId = null;
+                }
+            }
+            if (!warCurrentTargetId) {
+                const next = pickNextWarTarget();
+                if (next) warCurrentTargetId = next.id;
+            }
+
+            const attackable = allPlayers.filter(p => {
+                if (p.id === player.id) return false;
+                const hasShield = p.shieldExpiry && ts() < p.shieldExpiry;
+                return !hasShield;
+            }).length;
+
             let h = '';
-            h +=
-                `<div class="info-bar" style="margin-bottom:8px;">⚔️ قدرت شما: <b>${calcAtt(player)}</b> | 🛡️ دفاع شما: <b>${calcDef(player)}</b> | بازیکنان: ${allTargets.length}</div>`;
+            h += `<div class="info-bar" style="margin-bottom:8px;">⚔️ قدرت شما: <b>${calcAtt(player)}</b> | 🛡️ دفاع شما: <b>${calcDef(player)}</b> | 🎯 اهداف قابل حمله: ${attackable}</div>`;
+
+            // جستجو
+            h += `<div class="war-search-box">
+                <div class="search-row">
+                    <input id="warSearchInput" type="text" placeholder="🔍 جستجوی بازیکن..." value="${escapeHtml(warSearchQuery)}" oninput="warSearch()">
+                    <button class="war-random-btn" onclick="respawnSky()">🎲 چیدمان جدید</button>
+                    <button class="btn btn-blue btn-sm" onclick="warSearchClear()">❌</button>
+                </div>
+                <div class="war-search-result" id="warSearchResult">${buildWarSearchResults()}</div>
+            </div>`;
+
+            // بنر هدف فعلی
+            if (warCurrentTargetId) {
+                const t = allPlayers.find(p => p.id === warCurrentTargetId);
+                if (t) {
+                    const hasShield = t.shieldExpiry && ts() < t.shieldExpiry;
+                    h += `<div class="war-target-banner">
+                        <div>
+                            <div class="t-name">🎯 ${escapeHtml(t.name)}</div>
+                            <div class="t-xp">XP: ${t.xp || 0}${t.faction ? ' | ' + getFI(t.faction) + ' ' + escapeHtml(getFN(t.faction)) : ''}</div>
+                        </div>
+                        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                            <button class="t-skip" onclick="skipCurrentTarget()">⏭️ بعدی</button>
+                            <button class="t-attack" onclick="openAttackSelect('${t.id}')" ${hasShield || isAttacking ? 'disabled' : ''}>🔥 حمله</button>
+                        </div>
+                    </div>`;
+                }
+            }
+
+            // نقشه آسمان با انیمیشن جذاب ولی سبک
             h += `<div class="sky-map-container" id="skyMapContainer">
-                <div class="sky-stars"></div>
-                <div class="cloud cloud1"></div>
-                <div class="cloud cloud2"></div>
-                <div class="cloud cloud3"></div>
-                <div class="sky-map-inner" id="skyMapInner" style="transform: translate(${skyPos.x}px, ${skyPos.y}px) scale(${skyZoom});">`;
+                ${makeTwinkles()}
+                <div class="sky-map-inner" id="skyMapInner">`;
             allTargets.forEach(p => {
                 const pos = getPlayerPosition(p.id);
                 const isMe = p.id === player.id;
                 const hasShield = p.shieldExpiry && ts() < p.shieldExpiry;
                 const isAdmP = isAdm(p.name);
                 const isAsst = isAssistant(p.name);
-                const att = calcAtt(p);
-                const def = calcDef(p);
-                let planeIcon = '🛩️';
+                let planeIcon = '✈️';
                 if (p.faction) {
                     const fi = getFI(p.faction);
                     if (fi === '🛡️') planeIcon = '🛡️';
@@ -4545,115 +5161,128 @@
                     else if (fi === '🐺') planeIcon = '🐺';
                     else if (fi === '🦅') planeIcon = '🦅';
                     else if (fi === '👻') planeIcon = '👻';
-                    else planeIcon = '🛩️';
                 } else {
                     planeIcon = isAdmP ? '🛸' : (isAsst ? '⚡' : '✈️');
                 }
-                const label = p.name;
                 const isMeClass = isMe ? 'me' : '';
+                const isTarget = warCurrentTargetId === p.id;
+                const targetCls = isTarget ? 'target' : '';
                 const shieldHtml = hasShield ? `<div class="shield-ring"></div>` : '';
                 const px = pos.x * 100;
                 const py = pos.y * 100;
+                const delay = pos.delay || 0;
                 const displayName = getPlayerDisplayName(p);
-                h += `<div class="sky-player ${isMeClass}" style="left:${px}%;top:${py}%;" data-player-id="${p.id}">
+                const detailHtml = isMe
+                    ? `<div class="tp-detail">⚔️ ${calcAtt(p)} | 🛡️ ${calcDef(p)} | XP: ${p.xp}</div>`
+                    : `<div class="tp-detail">⭐ XP: ${p.xp || 0}</div>`;
+                const tpShield = hasShield ? '<div class="tp-detail" style="color:#93c5fd;">🛡️ سپر فعال</div>' : '';
+                const tpFaction = p.faction ? `<div class="tp-detail">${getFI(p.faction)} ${escapeHtml(getFN(p.faction))}</div>` : '<div class="tp-detail">بدون جناح</div>';
+                let tpActions = '';
+                if (!isMe) {
+                    tpActions = `<div class="tp-actions">
+                        <button class="tp-attack" onclick="openAttackSelect('${p.id}')" ${hasShield || isAttacking ? 'disabled' : ''} ${hasShield ? 'data-shield-locked="1"' : ''}>🔥 حمله</button>
+                        <button class="tp-pick" onclick="selectWarTarget('${p.id}')">🎯 هدف</button>
+                    </div>`;
+                } else {
+                    tpActions = `<div style="font-size:0.5rem;color:var(--color-accent);">👈 شما اینجایید</div>`;
+                }
+                const targetBadge = isTarget ? `<div class="tp-detail" style="color:#fca5a5;font-weight:700;">🎯 هدف فعلی</div>` : '';
+                // انیمیشن ورود: drop از بالا با تاخیر
+                h += `<div class="sky-player ${isMeClass} ${targetCls}" style="left:${px}%;top:${py}%;animation-delay:${delay}s;" data-player-id="${p.id}" onclick="togglePlayerTooltip(this, event)">
                     ${shieldHtml}
-                    <div class="plane-icon">${planeIcon}</div>
-                    <div class="player-label">${escapeHtml(label)}</div>
-                    <div class="player-tooltip">
-                        <div class="tp-name" onclick="showProfileModal('${p.id}')">👤 ${displayName}</div>
-                        ${isMe ? `<div class="tp-detail">⚔️ ${att} | 🛡️ ${def} | XP: ${p.xp}</div>` : `<div class="tp-detail">XP: ${p.xp}</div>`}
-                        <div class="tp-detail">${p.faction?getFI(p.faction)+' '+escapeHtml(getFN(p.faction)):'بدون جناح'}</div>
-                        ${hasShield?'<div class="tp-detail" style="color:#93c5fd;">🛡️ سپر فعال</div>':''}
-                        ${!isMe ? `<button class="tp-attack" onclick="launchAttack('${p.id}')" ${hasShield||isAttacking?'disabled':''}>🔥 حمله</button>` : `<div style="font-size:0.5rem;color:var(--color-accent);">👈 شما</div>`}
+                    <div class="plane-icon" style="animation: planeDrop 0.5s ease ${delay}s both;">${planeIcon}</div>
+                    <div class="player-label">${escapeHtml(p.name || '')}</div>
+                    <div class="player-tooltip" onclick="event.stopPropagation();">
+                        <div class="tp-name" onclick="showProfileModal('${p.id}');event.stopPropagation();">👤 ${displayName}</div>
+                        ${detailHtml}
+                        ${tpFaction}
+                        ${tpShield}
+                        ${targetBadge}
+                        ${tpActions}
                     </div>
                 </div>`;
             });
             h += `</div>
-                <div class="sky-map-zoom-controls">
-                    <button onclick="skyZoomIn()">+</button>
-                    <button onclick="skyZoomOut()">−</button>
-                </div>
-                <div class="sky-map-zoom-level">🔍 ${Math.round(skyZoom*100)}%</div>
                 <div class="sky-map-legend">
                     <span><span class="dot me-dot"></span> شما</span>
-                    <span><span class="dot other-dot"></span> سایر بازیکنان</span>
-                    <span><span class="dot shield-dot"></span> سپر فعال</span>
+                    <span><span class="dot other-dot"></span> سایرین</span>
+                    <span><span class="dot shield-dot"></span> سپر</span>
+                    <span><span class="dot target-dot"></span> هدف فعلی</span>
                 </div>
             </div>`;
+
+            h += `<div class="empty" style="padding:8px;font-size:0.55rem;">روی هر بازیکن بزن تا منو باز شود. جستجو کن، ⏭️ بعدی بزن، یا 🎲 چیدمان جدید!</div>`;
+
             container.innerHTML = h;
-            setupSkyMapDrag();
-            applySkyTransform();
+
+            // بستن تولتیپ با کلیک بیرون
+            setTimeout(() => {
+                const closeTip = (ev) => {
+                    if (ev.target.closest && ev.target.closest('.sky-player')) return;
+                    document.querySelectorAll('.sky-player .player-tooltip.show').forEach(el => el.classList.remove('show'));
+                };
+                document.removeEventListener('click', closeTip, true);
+                document.addEventListener('click', closeTip, true);
+            }, 0);
         }
 
-        window.skyZoomIn = function() {
-            skyZoom = Math.min(SKY_MAX_ZOOM, skyZoom + 0.15);
-            applySkyTransform();
+        // انیمیشن drop برای ورود هواپیماها
+        (function() {
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes planeDrop {
+                    0% { transform: translateY(-200px) rotate(-180deg); opacity: 0; }
+                    70% { transform: translateY(10px) rotate(10deg); opacity: 1; }
+                    100% { transform: translateY(0) rotate(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+        })();
+
+        window.togglePlayerTooltip = function(el, ev) {
+            if (ev) ev.stopPropagation();
+            const tip = el.querySelector('.player-tooltip');
+            if (!tip) return;
+            const wasShow = tip.classList.contains('show');
+            document.querySelectorAll('.sky-player .player-tooltip.show').forEach(t => t.classList.remove('show'));
+            if (!wasShow) tip.classList.add('show');
         };
-        window.skyZoomOut = function() {
-            skyZoom = Math.max(SKY_MIN_ZOOM, skyZoom - 0.15);
-            applySkyTransform();
-        };
 
-        function applySkyTransform() {
-            const inner = document.getElementById('skyMapInner');
-            if (inner) {
-                inner.style.transform = `translate(${skyPos.x}px, ${skyPos.y}px) scale(${skyZoom})`;
-            }
-            const level = document.querySelector('.sky-map-zoom-level');
-            if (level) {
-                level.textContent = `🔍 ${Math.round(skyZoom*100)}%`;
-            }
-        }
-
-        function setupSkyMapDrag() {
-            const container = document.getElementById('skyMapContainer');
-            if (!container) return;
-            const newContainer = container.cloneNode(true);
-            container.parentNode.replaceChild(newContainer, container);
-            const freshContainer = document.getElementById('skyMapContainer');
-            if (!freshContainer) return;
-            let isDraggingLocal = false,
-                startX, startY, origX, origY;
-            const onStart = (e) => {
-                const ev = e.touches ? e.touches[0] : e;
-                isDraggingLocal = true;
-                startX = ev.clientX;
-                startY = ev.clientY;
-                origX = skyPos.x;
-                origY = skyPos.y;
-                freshContainer.style.cursor = 'grabbing';
-            };
-            const onMove = (e) => {
-                if (!isDraggingLocal) return;
-                e.preventDefault();
-                const ev = e.touches ? e.touches[0] : e;
-                const dx = ev.clientX - startX;
-                const dy = ev.clientY - startY;
-                skyPos.x = origX + dx;
-                skyPos.y = origY + dy;
-                applySkyTransform();
-            };
-            const onEnd = () => {
-                isDraggingLocal = false;
-                freshContainer.style.cursor = 'grab';
-            };
-            freshContainer.addEventListener('mousedown', onStart);
-            document.addEventListener('mousemove', onMove);
-            document.addEventListener('mouseup', onEnd);
-            freshContainer.addEventListener('touchstart', onStart, { passive: false });
-            document.addEventListener('touchmove', onMove, { passive: false });
-            document.addEventListener('touchend', onEnd);
-        }
+        // توابع stub برای سازگاری
+        window.skyZoomIn = function() {};
+        window.skyZoomOut = function() {};
+        function applySkyTransform() {}
+        function setupSkyMapDrag() {}
 
         // ===== جنگ (تابع حمله) با آمار =====
-        window.launchAttack = async function(tId) {
+        // payload: { fighters: { key: count }, missiles: { key: count } }
+        window.launchAttack = async function(tId, payload) {
             if (isAttacking) return;
             isAttacking = true;
             try {
                 const target = allPlayers.find(p => p.id === tId);
                 if (!target) return toast("هدف یافت نشد", true);
-                const myA = calcAtt(player);
-                if (myA <= 0) return toast("جنگنده بسازید!", true, "war");
+
+                // آماده‌سازی payload (اگر از مودال آمده؛ در غیر این صورت استفاده از کل نیرو)
+                payload = payload || { fighters: {}, missiles: {} };
+                const fighterQty = payload.fighters || {};
+                const missileQty = payload.missiles || {};
+
+                // محاسبه نیروی حمله بر اساس انتخاب بازیکن
+                let myA = 0;
+                for (const [k, qty] of Object.entries(fighterQty)) {
+                    const max = player.fighters?.[k]?.count || 0;
+                    const use = Math.min(Math.max(0, parseInt(qty) || 0), max);
+                    if (F_DB[k]) myA += F_DB[k].p * use;
+                }
+                for (const [k, qty] of Object.entries(missileQty)) {
+                    const max = player.missiles?.[k]?.count || 0;
+                    const use = Math.min(Math.max(0, parseInt(qty) || 0), max);
+                    if (M_DB[k]) myA += M_DB[k].p * use;
+                }
+                myA = Math.floor(myA);
+
+                if (myA <= 0) return toast("نیرویی انتخاب نکردید!", true, "war");
                 if (target.shieldExpiry && ts() < target.shieldExpiry) {
                     const rm = target.shieldExpiry - ts();
                     return toast(`🛡️ سپر (${Math.floor(rm/3600000)}س ${Math.floor((rm%3600000)/60000)}د)`, true);
@@ -4672,6 +5301,60 @@
                 let attackerXpLoss = 0,
                     defenderXpLoss = 0;
 
+                // شمارش تعداد واحدهای اعزامی برای محاسبه تلفات متناسب
+                let totalSent = 0;
+                for (const q of Object.values(fighterQty)) totalSent += Math.max(0, parseInt(q) || 0);
+                for (const q of Object.values(missileQty)) totalSent += Math.max(0, parseInt(q) || 0);
+
+                // ===== منطق شانس برگشت جنگنده =====
+                // برای هر نوع جنگنده اعزامی، شانس برگشت بر اساس قدرت آن جنگنده
+                // در مقابل مجموع دفاع + HP پدافند مدافع محاسبه می‌شود.
+                // اگه دفاع مدافع صفر باشد → شانس برگشت ۹۰٪
+                // اگه قدرت جنگنده >= دفاع مدافع → شانس برگشت ۹۰٪
+                // اگه قدرت جنگنده < دفاع مدافع → نسبت p_attack / p_def تعیین‌کننده است
+                //   اگر نسبت = 1 → ۹۰٪ ، اگر نسبت = 0 → ۱۰٪
+                // نکته مهم: هر نوع جنگنده مستقل تست می‌شود (نه تک‌تک واحدها).
+                function resolveFighters(qtyMap, defensePower) {
+                    let returned = 0, destroyed = 0, breakdown = [];
+                    // بررسی: آیا مدافع واقعاً هیچ جنگنده و پدافندی برای دفاع ندارد؟
+                    const targetHasFighters = target.fighters && Object.values(target.fighters).some(f => f && f.count > 0);
+                    const targetHasDefenses = target.defenses && target.defenses.some(d => d && d.hp > 0);
+                    const defenderHasNothing = !targetHasFighters && !targetHasDefenses;
+                    for (const [k, qty] of Object.entries(qtyMap)) {
+                        const max = player.fighters?.[k]?.count || 0;
+                        const use = Math.min(Math.max(0, parseInt(qty) || 0), max);
+                        if (use <= 0 || !F_DB[k]) continue;
+                        const pAtt = F_DB[k].p;
+                        let chance;
+                        if (defenderHasNothing) {
+                            // مدافع هیچ جنگنده و پدافندی ندارد → ۱۰۰٪ سالم برمی‌گردد
+                            chance = 1.0;
+                        } else if (defensePower <= 0) {
+                            chance = 0.9;
+                        } else if (pAtt >= defensePower) {
+                            chance = 0.9;
+                        } else {
+                            const ratio = pAtt / defensePower;
+                            // ratio=0 → 0.1 ، ratio=1 → 0.9
+                            chance = 0.1 + ratio * 0.8;
+                            chance = Math.max(0.1, Math.min(0.9, chance));
+                        }
+                        // تک‌تک واحدها تست می‌شوند (طبق درخواست: "براساس دفاع مدافع و قدرت جنگنده‌ها")
+                        let r = 0, d = 0;
+                        for (let i = 0; i < use; i++) {
+                            if (Math.random() < chance) r++; else d++;
+                        }
+                        if (r > 0) {
+                            if (!player.fighters[k]) player.fighters[k] = { count: 0 };
+                            player.fighters[k].count += r;
+                        }
+                        returned += r;
+                        destroyed += d;
+                        breakdown.push(`${F_DB[k].n}: ${r} برگشت / ${d} نابود (قدرت ${pAtt} vs دفاع ${defensePower} → شانس ${Math.round(chance*100)}%${defenderHasNothing ? ' | مدافع بی‌دفاع' : ''})`);
+                    }
+                    return { returned, destroyed, breakdown };
+                }
+
                 if (myA > eD) {
                     isW = true;
                     player.xp += 15;
@@ -4688,19 +5371,46 @@
                     player.oil += loot.o;
                     player.metal += loot.m;
                     target.shieldExpiry = ts() + SHIELD_DURATION;
-                    for (const [k, f] of Object.entries(player.fighters)) {
-                        f.count = Math.max(0, f.count - Math.ceil(f.count * ratio * 0.5));
+                    // کسر جنگنده‌های اعزامی (سپس resolveFighters برگشت‌ها را اضافه می‌کند)
+                    for (const [k, qty] of Object.entries(fighterQty)) {
+                        if (!player.fighters[k]) continue;
+                        const use = Math.min(Math.max(0, parseInt(qty) || 0), player.fighters[k].count);
+                        player.fighters[k].count = Math.max(0, player.fighters[k].count - use);
                     }
+                    // موشک‌ها همیشه یکبار مصرف
+                    for (const [k, qty] of Object.entries(missileQty)) {
+                        if (!player.missiles[k]) continue;
+                        const use = Math.min(Math.max(0, parseInt(qty) || 0), player.missiles[k].count);
+                        player.missiles[k].count = Math.max(0, player.missiles[k].count - use);
+                    }
+                    // تست برگشت جنگنده‌ها بر اساس قدرت دفاعی مدافع (شامل HP پدافند)
+                    const fResult = resolveFighters(fighterQty, eD);
+                    // پاکسازی آرایه‌های خالی
+                    for (const k of Object.keys(player.fighters)) if (player.fighters[k].count <= 0) delete player.fighters[k];
+                    for (const k of Object.keys(player.missiles)) if (player.missiles[k].count <= 0) delete player.missiles[k];
+                    // تلفات دشمن
                     for (const [k, f] of Object.entries(target.fighters)) {
                         f.count = Math.max(0, f.count - Math.ceil(f.count * 0.8));
                     }
                     if (target.defenses) target.defenses.forEach(d => { d.hp = 0; });
                     target.defenses = target.defenses?.filter(d => d.hp > 0) || [];
+                    const totalUsed = totalSent;
+                    const fighterBreakdown = Object.entries(fighterQty).filter(([,q])=>q>0).map(([k,q])=>`${q}× ${F_DB[k]?.n || k}`).join('، ');
+                    const missileBreakdown = Object.entries(missileQty).filter(([,q])=>q>0).map(([k,q])=>`${q}× ${M_DB[k]?.n || k}`).join('، ');
+                    const sentBreakdown = [fighterBreakdown, missileBreakdown].filter(Boolean).join(' + ') || `${totalUsed} واحد`;
+                    const totalFightersSent = Object.values(fighterQty).reduce((s,q)=>s+(parseInt(q)||0), 0);
+                    const totalMissilesSent = Object.values(missileQty).reduce((s,q)=>s+(parseInt(q)||0), 0);
+                    const fighterNote = totalFightersSent > 0
+                        ? `<br>✈️ جنگنده: ${fResult.returned} برگشت / ${fResult.destroyed} نابود<br><small style="color:#94a3b8;">${fResult.breakdown.join(' | ')}</small>`
+                        : '';
+                    const missileNote = totalMissilesSent > 0
+                        ? `<br>🚀 موشک: ${totalMissilesSent} نابود شد (یکبار مصرف)`
+                        : '';
                     rM =
-                        `🔥 <span class="attacker">${getPlayerDisplayName(player)}</span> به <span class="defender">${getPlayerDisplayName(target)}</span> حمله و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span>`;
+                        `🔥 <span class="attacker">${getPlayerDisplayName(player)}</span> به <span class="defender">${getPlayerDisplayName(target)}</span> حمله و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span><br>🗡️ اعزام: ${sentBreakdown}${fighterNote}${missileNote}`;
                     rS =
-                        `🏆 پیروزی!<br>${loot.g} طلا | ${loot.o} نفت | ${loot.m} فلز<br>🛡️ ${target.name} ${defenderXpLoss} XP از دست داد.`;
-                    addActivity(player, `🏆 پیروزی مقابل ${target.name}`);
+                        `🏆 پیروزی!<br>${loot.g} طلا | ${loot.o} نفت | ${loot.m} فلز<br>🛡️ ${target.name} ${defenderXpLoss} XP از دست داد.${fighterNote}${missileNote}`;
+                    addActivity(player, `🏆 پیروزی مقابل ${target.name} (${sentBreakdown})`);
                     addActivity(target, `💔 شکست مقابل ${player.name}`);
                 } else {
                     isW = false;
@@ -4708,10 +5418,23 @@
                     attackerXpLoss = Math.floor(Math.random() * 9) + 1;
                     player.xp = Math.max(0, player.xp - attackerXpLoss);
                     target.xp += 5;
-                    const ratio = myA / eD;
-                    for (const [k, f] of Object.entries(player.fighters)) {
-                        f.count = Math.max(0, f.count - Math.ceil(f.count * 0.9));
+                    // کسر جنگنده‌های اعزامی
+                    for (const [k, qty] of Object.entries(fighterQty)) {
+                        if (!player.fighters[k]) continue;
+                        const use = Math.min(Math.max(0, parseInt(qty) || 0), player.fighters[k].count);
+                        player.fighters[k].count = Math.max(0, player.fighters[k].count - use);
                     }
+                    // موشک‌ها همیشه یکبار مصرف
+                    for (const [k, qty] of Object.entries(missileQty)) {
+                        if (!player.missiles[k]) continue;
+                        const use = Math.min(Math.max(0, parseInt(qty) || 0), player.missiles[k].count);
+                        player.missiles[k].count = Math.max(0, player.missiles[k].count - use);
+                    }
+                    // تست برگشت جنگنده‌ها بر اساس قدرت دفاعی مدافع (شامل HP پدافند)
+                    const fResult = resolveFighters(fighterQty, eD);
+                    for (const k of Object.keys(player.fighters)) if (player.fighters[k].count <= 0) delete player.fighters[k];
+                    for (const k of Object.keys(player.missiles)) if (player.missiles[k].count <= 0) delete player.missiles[k];
+                    const ratio = myA / eD;
                     for (const [k, f] of Object.entries(target.fighters)) {
                         f.count = Math.max(0, f.count - Math.ceil(f.count * ratio * 0.4));
                     }
@@ -4719,10 +5442,22 @@
                         target.defenses.forEach(d => { d.hp -= 40; if (d.hp < 0) d.hp = 0; });
                         target.defenses = target.defenses.filter(d => d.hp > 0);
                     }
+                    const totalUsed = totalSent;
+                    const fighterBreakdown = Object.entries(fighterQty).filter(([,q])=>q>0).map(([k,q])=>`${q}× ${F_DB[k]?.n || k}`).join('، ');
+                    const missileBreakdown = Object.entries(missileQty).filter(([,q])=>q>0).map(([k,q])=>`${q}× ${M_DB[k]?.n || k}`).join('، ');
+                    const sentBreakdown = [fighterBreakdown, missileBreakdown].filter(Boolean).join(' + ') || `${totalUsed} واحد`;
+                    const totalFightersSent = Object.values(fighterQty).reduce((s,q)=>s+(parseInt(q)||0), 0);
+                    const totalMissilesSent = Object.values(missileQty).reduce((s,q)=>s+(parseInt(q)||0), 0);
+                    const fighterNote = totalFightersSent > 0
+                        ? `<br>✈️ جنگنده: ${fResult.returned} برگشت / ${fResult.destroyed} نابود<br><small style="color:#94a3b8;">${fResult.breakdown.join(' | ')}</small>`
+                        : '';
+                    const missileNote = totalMissilesSent > 0
+                        ? `<br>🚀 موشک: ${totalMissilesSent} نابود شد (یکبار مصرف)`
+                        : '';
                     rM =
-                        `🛡️ <span class="attacker">${getPlayerDisplayName(player)}</span> به <span class="defender">${getPlayerDisplayName(target)}</span> حمله کرد اما دفاع شد!`;
-                    rS = `💥 شکست سنگین!<br>شما ${attackerXpLoss} XP از دست دادید.`;
-                    addActivity(player, `💔 شکست مقابل ${target.name}`);
+                        `🛡️ <span class="attacker">${getPlayerDisplayName(player)}</span> به <span class="defender">${getPlayerDisplayName(target)}</span> حمله کرد اما دفاع شد!<br>🗡️ اعزام: ${sentBreakdown}${fighterNote}${missileNote}`;
+                    rS = `💥 شکست سنگین!<br>شما ${attackerXpLoss} XP از دست دادید.${fighterNote}${missileNote}`;
+                    addActivity(player, `💔 شکست مقابل ${target.name} (${sentBreakdown})`);
                     addActivity(target, `🛡️ دفاع موفق مقابل ${player.name}`);
                 }
                 player.shieldExpiry = 0;
@@ -4730,32 +5465,227 @@
                 if (pi >= 0) allPlayers[pi].shieldExpiry = 0;
                 battleLogs.push({ ts: ts(), text: rM });
                 await saveAll(true);
-                document.getElementById('app').classList.add('screen-shake');
+                // ===== انیمیشن جنگ (سبک و جذاب) =====
                 const ov = document.getElementById('battleOverlay'),
                     st = document.getElementById('battleStatusText'),
                     rt = document.getElementById('battleResultText'),
                     ei = document.getElementById('explosionIcon');
                 ov.classList.add('active');
-                st.innerText = `هدف: ${target.name}`;
+                st.innerText = `🎯 هدف: ${target.name}`;
                 st.style.color = "var(--color-accent)";
                 rt.innerText = "";
                 ei.innerText = "🚀";
-                await new Promise(r => setTimeout(r, 1000));
+                document.getElementById('app').classList.add('screen-shake');
+                await new Promise(r => setTimeout(r, 600));
                 document.getElementById('app').classList.remove('screen-shake');
-                st.innerText = "برخورد!";
+                st.innerText = "💥 برخورد!";
                 ei.innerText = "💥";
                 document.getElementById('app').classList.add('screen-shake');
-                await new Promise(r => setTimeout(r, 1500));
+                await new Promise(r => setTimeout(r, 700));
                 document.getElementById('app').classList.remove('screen-shake');
-                st.innerText = isW ? "پیروزی!" : "شکست!";
+                st.innerText = isW ? "🏆 پیروزی!" : "💔 شکست!";
                 st.style.color = isW ? "var(--color-btn-green)" : "var(--color-banner-text)";
+                // ساخت دکمه ادامه اگر وجود نداشت
+                let continueBtn = document.getElementById('battleContinueBtn');
+                if (!continueBtn) {
+                    continueBtn = document.createElement('button');
+                    continueBtn.id = 'battleContinueBtn';
+                    continueBtn.className = 'btn btn-gold';
+                    continueBtn.style.cssText = 'margin-top:18px;padding:10px 28px;font-size:0.85rem;border-radius:30px;display:inline-block;animation: continuePulse 1.5s ease-in-out infinite;';
+                    continueBtn.innerHTML = '✅ ادامه (5 ثانیه)';
+                    ei.parentNode.appendChild(continueBtn);
+                }
+                continueBtn.style.display = 'inline-block';
+                continueBtn.disabled = true;
+                continueBtn.innerHTML = '⏳ 5 ثانیه...';
+                let timeLeft = 5;
+                const tickInterval = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft > 0) {
+                        continueBtn.innerHTML = `⏳ ${timeLeft} ثانیه...`;
+                    } else {
+                        continueBtn.disabled = false;
+                        continueBtn.innerHTML = '✅ ادامه';
+                        clearInterval(tickInterval);
+                    }
+                }, 1000);
+                const closeBattle = () => {
+                    clearInterval(tickInterval);
+                    continueBtn.style.display = 'none';
+                    ov.classList.remove('active');
+                    warCurrentTargetId = null;
+                    warSkippedSet.clear();
+                    warRandomSeed = Date.now();
+                    skyPositionCacheKey = '';
+                    const nextT = pickNextWarTarget();
+                    if (nextT) warCurrentTargetId = nextT.id;
+                    updateUI();
+                    renderSkyMap();
+                    renderBattlelog();
+                };
+                continueBtn.onclick = closeBattle;
                 rt.innerHTML = rS;
-                await new Promise(r => setTimeout(r, 2500));
-                ov.classList.remove('active');
-                updateUI();
-                if (activeTab === 'war') renderSkyMap();
-                renderBattlelog();
-            } finally { isAttacking = false; }
+                await new Promise(r => setTimeout(r, 5000));
+                if (!continueBtn.disabled) return;
+                closeBattle();
+            } finally {
+                isAttacking = false;
+                // بازفعال‌سازی همه دکمه‌های حمله بدون نیاز به رفتن به تب دیگر و برگشت
+                document.querySelectorAll('.tp-attack').forEach(btn => {
+                    if (btn.dataset && btn.dataset.shieldLocked === '1') return;
+                    btn.disabled = false;
+                });
+            }
+        };
+
+        // ===== مودال انتخاب نیرو قبل از حمله =====
+        let attackSelectState = { fighters: {}, missiles: {} };
+        let attackSelectTargetId = null;
+
+        function openAttackSelect(tId) {
+            if (isAttacking) return;
+            const target = allPlayers.find(p => p.id === tId);
+            if (!target) return toast("هدف یافت نشد", true);
+            if (target.shieldExpiry && ts() < target.shieldExpiry) {
+                const rm = target.shieldExpiry - ts();
+                return toast(`🛡️ سپر (${Math.floor(rm/3600000)}س ${Math.floor((rm%3600000)/60000)}د)`, true);
+            }
+            attackSelectTargetId = tId;
+            attackSelectState = { fighters: {}, missiles: {} };
+            document.getElementById('attackSelectTarget').innerHTML = `🎯 هدف: <strong style="color:#fca5a5;">${escapeHtml(target.name)}</strong>`;
+            renderAttackSelect();
+            document.getElementById('attackSelectOverlay').classList.add('active');
+        }
+
+        function closeAttackSelect() {
+            document.getElementById('attackSelectOverlay').classList.remove('active');
+            attackSelectTargetId = null;
+        }
+
+        function renderAttackSelect() {
+            const content = document.getElementById('attackSelectContent');
+            let h = '';
+
+            // بخش جنگنده‌ها
+            const ownedFighters = Object.entries(player.fighters || {}).filter(([, d]) => d.count > 0 && F_DB[d.type || Object.keys(player.fighters).find(k => player.fighters[k] === d)] !== undefined);
+            const fighterRows = [];
+            for (const [k, d] of Object.entries(player.fighters || {})) {
+                if (!F_DB[k] || d.count <= 0) continue;
+                fighterRows.push({ k, count: d.count });
+            }
+
+            // بخش موشک‌ها
+            const missileRows = [];
+            for (const [k, d] of Object.entries(player.missiles || {})) {
+                if (!M_DB[k] || d.count <= 0) continue;
+                missileRows.push({ k, count: d.count });
+            }
+
+            if (fighterRows.length === 0 && missileRows.length === 0) {
+                content.innerHTML = `
+                    <div class="attack-select-empty">⛔ شما هیچ جنگنده یا موشکی ندارید!<br>ابتدا از بخش نظامی نیرو بسازید.</div>
+                    <div class="attack-select-actions">
+                        <button class="attack-cancel-btn" onclick="closeAttackSelect()">❌ بستن</button>
+                    </div>`;
+                return;
+            }
+
+            if (fighterRows.length > 0) {
+                h += `<div class="attack-select-section">
+                    <div class="attack-select-section-title">✈️ جنگنده‌ها</div>`;
+                for (const row of fighterRows) {
+                    const f = F_DB[row.k];
+                    const cur = attackSelectState.fighters[row.k] || 0;
+                    h += `
+                        <div class="attack-select-row">
+                            <div class="row-icon">${f.i}</div>
+                            <div class="row-info">
+                                <div class="row-name">${f.n}</div>
+                                <div class="row-power">⚔️ قدرت: ${f.p} | موجود: ${row.count}</div>
+                            </div>
+                            <div class="row-controls">
+                                <button class="qty-btn" onclick="adjAttackQty('fighter','${row.k}',-1)" ${cur<=0?'disabled':''}>−</button>
+                                <input type="number" class="qty-input" id="qty-fighter-${row.k}" value="${cur}" min="0" max="${row.count}" onchange="setAttackQty('fighter','${row.k}',this.value,${row.count})">
+                                <button class="qty-btn" onclick="adjAttackQty('fighter','${row.k}',1)" ${cur>=row.count?'disabled':''}>+</button>
+                            </div>
+                        </div>`;
+                }
+                h += `</div>`;
+            }
+
+            if (missileRows.length > 0) {
+                h += `<div class="attack-select-section">
+                    <div class="attack-select-section-title">🚀 موشک‌ها (یکبار مصرف)</div>`;
+                for (const row of missileRows) {
+                    const m = M_DB[row.k];
+                    const cur = attackSelectState.missiles[row.k] || 0;
+                    h += `
+                        <div class="attack-select-row">
+                            <div class="row-icon">${m.i}</div>
+                            <div class="row-info">
+                                <div class="row-name">${m.n}</div>
+                                <div class="row-power">💥 قدرت: ${m.p} | موجود: ${row.count}</div>
+                            </div>
+                            <div class="row-controls">
+                                <button class="qty-btn" onclick="adjAttackQty('missile','${row.k}',-1)" ${cur<=0?'disabled':''}>−</button>
+                                <input type="number" class="qty-input" id="qty-missile-${row.k}" value="${cur}" min="0" max="${row.count}" onchange="setAttackQty('missile','${row.k}',this.value,${row.count})">
+                                <button class="qty-btn" onclick="adjAttackQty('missile','${row.k}',1)" ${cur>=row.count?'disabled':''}>+</button>
+                            </div>
+                        </div>`;
+                }
+                h += `</div>`;
+            }
+
+            // مجموع نیرو
+            let totalPower = 0;
+            for (const [k, q] of Object.entries(attackSelectState.fighters)) {
+                if (F_DB[k]) totalPower += F_DB[k].p * q;
+            }
+            for (const [k, q] of Object.entries(attackSelectState.missiles)) {
+                if (M_DB[k]) totalPower += M_DB[k].p * q;
+            }
+            let totalUnits = 0;
+            for (const q of Object.values(attackSelectState.fighters)) totalUnits += q;
+            for (const q of Object.values(attackSelectState.missiles)) totalUnits += q;
+
+            h += `<div class="attack-select-summary">
+                <span class="sum-label">مجموع نیرو: <strong style="color:#fbbf24;">${totalPower}</strong></span>
+                <span class="sum-value">${totalUnits} واحد</span>
+            </div>`;
+            h += `<div class="attack-select-actions">
+                <button class="attack-cancel-btn" onclick="closeAttackSelect()">❌ انصراف</button>
+                <button class="attack-confirm-btn" onclick="confirmAttackSelect()" ${totalUnits<=0?'disabled':''}>🔥 شلیک!</button>
+            </div>`;
+            content.innerHTML = h;
+        }
+
+        window.adjAttackQty = function(kind, key, delta) {
+            const stateKey = kind === 'fighter' ? 'fighters' : 'missiles';
+            const max = kind === 'fighter' ? (player.fighters[key]?.count || 0) : (player.missiles[key]?.count || 0);
+            const cur = attackSelectState[stateKey][key] || 0;
+            const next = Math.min(max, Math.max(0, cur + delta));
+            if (next <= 0) delete attackSelectState[stateKey][key];
+            else attackSelectState[stateKey][key] = next;
+            renderAttackSelect();
+        };
+
+        window.setAttackQty = function(kind, key, val, max) {
+            const stateKey = kind === 'fighter' ? 'fighters' : 'missiles';
+            const next = Math.min(max, Math.max(0, parseInt(val) || 0));
+            if (next <= 0) delete attackSelectState[stateKey][key];
+            else attackSelectState[stateKey][key] = next;
+            renderAttackSelect();
+        };
+
+        window.confirmAttackSelect = function() {
+            if (!attackSelectTargetId) return;
+            const payload = {
+                fighters: { ...attackSelectState.fighters },
+                missiles: { ...attackSelectState.missiles }
+            };
+            const tId = attackSelectTargetId;
+            closeAttackSelect();
+            launchAttack(tId, payload);
         };
 
         // ===== بازار =====
@@ -5337,6 +6267,7 @@
             t.xp = 0;
             t.fighters = {};
             t.defenses = [];
+            t.missiles = {};
             t.mineLevel = 1;
             t.research = { military: 0, economy: 0, aviation: 0 };
             t.customEmoji = '👤';
@@ -5713,6 +6644,36 @@
                 `;
             }
             h += `</div>`;
+
+            // ===== بخش موشک‌ها (یکبار مصرف) =====
+            h += `<div class="section-title" style="margin-top:18px;">🚀 زرادخانه موشکی <span style="font-size:0.5rem;color:var(--color-banner-text);font-weight:600;">(یکبار مصرف - در حمله نابود می‌شوند)</span></div>`;
+            h += `<div class="mil-missile-grid">`;
+            for (const [k, m] of Object.entries(M_DB)) {
+                const owned = player.missiles?.[k]?.count || 0;
+                const canB = player.gold >= m.c.g && player.oil >= m.c.o && player.metal >= m.c.m && (player.research?.aviation || 0) >= m.r;
+                const gStatus = player.gold >= m.c.g ? 'has' : 'missing';
+                const oStatus = player.oil >= m.c.o ? 'has' : 'missing';
+                const mStatus = player.metal >= m.c.m ? 'has' : 'missing';
+                h += `
+                    <div class="mil-missile-card" style="${!canB && owned===0 ? 'opacity:0.6;' : ''}">
+                        <div class="mil-icon">${m.i}</div>
+                        <div class="mil-name">${m.n}</div>
+                        <div class="mil-detail">💥 قدرت: <strong>${m.p}</strong></div>
+                        <div class="mil-count-badge">🚀 موجودی: ${owned}</div>
+                        <div class="mil-cost">
+                            <span class="cost-item ${gStatus}">💰 ${m.c.g}</span>
+                            <span class="cost-item ${oStatus}">🛢️ ${m.c.o}</span>
+                            <span class="cost-item ${mStatus}">⛏️ ${m.c.m}</span>
+                        </div>
+                        ${m.r>0 ? `<div class="mil-research-tag">🔬 هوانوردی سطح ${m.r}</div>` : ''}
+                        <button class="mil-btn missile-btn" onclick="buildMissile('${k}')" ${canB ? '' : 'disabled'}>
+                            ${canB ? '🚀 ساخت' : '🔒 قفل'}
+                        </button>
+                    </div>
+                `;
+            }
+            h += `</div>`;
+
             h += `<div class="section-title" style="margin-top:16px;">🛡️ پدافندهای فعال</div>`;
             if (player.defenses.length === 0) {
                 h += `<div class="empty">⛔ پدافندی ساخته نشده است</div>`;
