@@ -131,6 +131,8 @@
             --color-loot: #198754;
             --color-research-card: linear-gradient(160deg, #1a1a2e 0%, #0f1729 50%, #1a1025 100%);
             --color-research-soon: rgba(245, 158, 11, 0.15);
+            --color-assistant: #8B5CF6;
+            --color-assistant-glow: rgba(139, 92, 246, 0.5);
         }
 
         .light-theme {
@@ -256,6 +258,8 @@
             --color-loot: #198754;
             --color-research-card: linear-gradient(160deg, #ffffff 0%, #f1f3f5 50%, #e9ecef 100%);
             --color-research-soon: rgba(217, 119, 6, 0.15);
+            --color-assistant: #6f42c1;
+            --color-assistant-glow: rgba(111, 66, 193, 0.4);
         }
 
         * {
@@ -493,6 +497,15 @@
             color: var(--color-banner-text);
             background: var(--color-btn-danger);
             border-bottom-color: var(--color-banner-border);
+        }
+        .tab.coadmin-tab {
+            color: var(--color-assistant);
+            border-color: var(--color-assistant);
+        }
+        .tab.coadmin-tab.active {
+            color: #fff;
+            background: var(--color-assistant);
+            border-bottom-color: var(--color-assistant);
         }
         .panel {
             display: none;
@@ -770,6 +783,10 @@
         .chat-msg .sender.admin-s {
             color: var(--color-btn-blue);
         }
+        .chat-msg .sender.coadmin-s {
+            color: var(--color-assistant);
+            text-shadow: 0 0 10px var(--color-assistant-glow);
+        }
         .chat-msg .time {
             color: var(--color-text-muted);
             font-size: 0.4rem;
@@ -802,6 +819,22 @@
             font-size: 0.75rem;
             margin-bottom: 8px;
             border-bottom: 1px solid var(--color-admin-panel-border);
+            padding-bottom: 4px;
+        }
+        .coadmin-panel-box {
+            background: var(--bg-card);
+            border: 1px solid var(--color-assistant);
+            border-radius: 1rem;
+            padding: 12px;
+            margin-bottom: 12px;
+            min-height: 80px;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .coadmin-panel-box h3 {
+            color: var(--color-assistant);
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--color-assistant);
             padding-bottom: 4px;
         }
         .is-hidden {
@@ -1288,6 +1321,12 @@
             border-color: rgba(59, 130, 246, 0.4);
             background: rgba(59, 130, 246, 0.1);
         }
+        .fac-mem-tag.coadmin-tag {
+            color: var(--color-assistant);
+            border-color: var(--color-assistant);
+            background: rgba(139, 92, 246, 0.15);
+            text-shadow: 0 0 8px var(--color-assistant-glow);
+        }
         .fac-no-mem {
             font-size: 0.45rem;
             color: var(--color-text-muted);
@@ -1549,6 +1588,10 @@
         .mkt-offer-seller.admin-seller {
             color: var(--color-btn-blue);
         }
+        .mkt-offer-seller.coadmin-seller {
+            color: var(--color-assistant);
+            text-shadow: 0 0 8px var(--color-assistant-glow);
+        }
         .mkt-offer-time {
             font-size: 0.4rem;
             color: var(--color-text-muted);
@@ -1725,6 +1768,10 @@
         .rank-name.admin-name {
             color: var(--color-btn-blue);
         }
+        .rank-name.coadmin-name {
+            color: var(--color-assistant);
+            text-shadow: 0 0 12px var(--color-assistant-glow);
+        }
         .rank-detail {
             font-size: 0.45rem;
             color: var(--color-text-muted);
@@ -1859,28 +1906,37 @@
             background: linear-gradient(90deg, #1e3a5f, #2563eb, #3b82f6);
         }
 
-        /* ===== ADMIN ===== */
+        /* ===== ADMIN & COADMIN ===== */
         #panelAdmin {
             min-height: 400px;
         }
-        .admin-panel-box .flex-wrap {
+        #panelCoadmin {
+            min-height: 400px;
+        }
+        .admin-panel-box .flex-wrap,
+        .coadmin-panel-box .flex-wrap {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
             align-items: center;
         }
-        .admin-panel-box .flex-wrap>* {
+        .admin-panel-box .flex-wrap>*,
+        .coadmin-panel-box .flex-wrap>* {
             flex: 1 0 auto;
         }
-        .admin-panel-box .flex-wrap .btn {
+        .admin-panel-box .flex-wrap .btn,
+        .coadmin-panel-box .flex-wrap .btn {
             flex: 0 1 auto;
         }
         .admin-panel-box select,
-        .admin-panel-box input {
+        .admin-panel-box input,
+        .coadmin-panel-box select,
+        .coadmin-panel-box input {
             font-size: 0.65rem;
             padding: 8px 10px;
         }
-        .admin-panel-box .btn-sm {
+        .admin-panel-box .btn-sm,
+        .coadmin-panel-box .btn-sm {
             font-size: 0.55rem;
             padding: 5px 14px;
             min-height: 32px;
@@ -2762,6 +2818,14 @@
         .admin-badge .custom-emoji {
             margin-left: 4px;
         }
+        .coadmin-badge {
+            color: var(--color-assistant) !important;
+            font-weight: 700;
+            text-shadow: 0 0 12px var(--color-assistant-glow);
+        }
+        .coadmin-badge .custom-emoji {
+            margin-left: 4px;
+        }
 
         /* ===== RESEARCH SECTION - GRAPHICAL ===== */
         .research-grid {
@@ -2989,6 +3053,7 @@
                 <div class="tab" data-tab="rank">🏆 رتبه</div>
                 <div class="tab" data-tab="battlelog">📜 گزارش</div>
                 <div class="tab admin-tab admin-el is-hidden" data-tab="admin" id="tabAdmin">🛠️ مدیریت</div>
+                <div class="tab coadmin-tab coadmin-el is-hidden" data-tab="coadmin" id="tabCoadmin">⚡ کوادمین</div>
             </div>
             <div id="panelMine" class="panel active"><div id="mineContent"></div></div>
             <div id="panelMilitary" class="panel"><div id="militaryContent"></div></div>
@@ -3000,6 +3065,7 @@
             <div id="panelRank" class="panel"><div id="rankContent"></div></div>
             <div id="panelBattlelog" class="panel"><div id="battlelogContent"></div></div>
             <div id="panelAdmin" class="panel admin-el is-hidden"><div id="adminContent"></div></div>
+            <div id="panelCoadmin" class="panel coadmin-el is-hidden"><div id="coadminContent"></div></div>
         </div>
     </div>
     <div class="battle-overlay" id="battleOverlay">
@@ -3022,6 +3088,7 @@
         const MAX_MINE_LEVEL = 25;
         const MAX_PLAYERS = 1000;
         const MAX_OFFERS_PER_PLAYER = 2;
+        const MAX_ASSISTANTS = 3;
 
         const F_DB = {
             "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
@@ -3058,7 +3125,8 @@
             allPlayers = [],
             marketOffers = [],
             battleLogs = [],
-            chatMessages = [];
+            chatMessages = [],
+            assistantNames = []; // لیست دستیاران (کوادمین)
         let isConnected = false,
             saving = false,
             isAttacking = false;
@@ -3078,18 +3146,28 @@
         let skyPlayerPositions = {};
 
         // ===== توابع نمایش نام با رنگ و ایموجی سفارشی =====
+        function isAssistant(name) {
+            return assistantNames.includes(name);
+        }
+
         function getPlayerDisplayName(p) {
             if (!p) return '';
             const name = escapeHtml(p.name);
             const isAdm = p.name === ADMIN_NAME;
+            const isAsst = isAssistant(p.name);
             if (p.customEmoji || p.customColor) {
                 const emoji = p.customEmoji ? `<span class="custom-emoji">${escapeHtml(p.customEmoji)}</span>` : '';
                 const color = p.customColor ? `color:${escapeHtml(p.customColor)};` : '';
-                const admClass = isAdm ? 'admin-badge' : '';
-                return `<span class="player-name-custom ${admClass}" style="${color}">${emoji} ${name}</span>`;
+                let cls = 'player-name-custom';
+                if (isAdm) cls += ' admin-badge';
+                else if (isAsst) cls += ' coadmin-badge';
+                return `<span class="${cls}" style="${color}">${emoji} ${name}</span>`;
             }
             if (isAdm) {
                 return `<span class="admin-badge">🚬 ${name}</span>`;
+            }
+            if (isAsst) {
+                return `<span class="coadmin-badge">⚡ ${name}</span>`;
             }
             return `<span class="player-name-custom">${name}</span>`;
         }
@@ -3173,6 +3251,8 @@
         function isAdmin() { return player && player.name === ADMIN_NAME && player.password === ADMIN_PASS; }
 
         function isAdm(n) { return n === ADMIN_NAME; }
+
+        function isCoadmin() { return player && isAssistant(player.name); }
 
         function getFN(fId) { if (!fId) return ''; const f = FACTIONS_DB[fId]; return f ? f.name : fId; }
 
@@ -3273,7 +3353,8 @@
                 l: battleLogs.slice(-15),
                 c: chatMessages.slice(-10),
                 b: globalBanner,
-                cl: chatLocked
+                cl: chatLocked,
+                a: assistantNames // ذخیره لیست دستیاران
             };
         }
 
@@ -3307,6 +3388,10 @@
                     chatMessages = j.c || [];
                     globalBanner = j.b || "";
                     chatLocked = j.cl || false;
+                    // فقط در صورتی که داده‌ها شامل لیست دستیاران باشد، آن را به‌روز کن، در غیر این صورت مقدار قبلی را حفظ کن
+                    if (j.a) {
+                        assistantNames = j.a;
+                    }
                     if (player) {
                         const me = allPlayers.find(p => p.id === player.id);
                         if (me) player = me;
@@ -3387,7 +3472,7 @@
             return allPlayers.map(p => p.id + ':' + p.xp + ':' + p.gold + ':' + p.oil + ':' + p.metal + ':' + (p
                 .customEmoji || '') + ':' + (p.customColor || '')).join('|') + '|' +
                 marketOffers.length + '|' + chatMessages.length + '|' + battleLogs.length + '|' + globalBanner + '|' +
-                chatLocked;
+                chatLocked + '|' + assistantNames.join(',');
         }
 
         // ===== انقضای آگهی‌های بازار =====
@@ -3432,6 +3517,9 @@
             if (isAdmin()) {
                 document.querySelectorAll('.admin-el').forEach(e => e.classList.remove('is-hidden'));
                 adminPlayerHash = '';
+            }
+            if (isCoadmin()) {
+                document.querySelectorAll('.coadmin-el').forEach(e => e.classList.remove('is-hidden'));
             }
             displayedChatCount = chatMessages.length;
             startMineTimer();
@@ -3562,6 +3650,7 @@
                 const isMe = p.id === player.id;
                 const hasShield = p.shieldExpiry && ts() < p.shieldExpiry;
                 const isAdmP = isAdm(p.name);
+                const isAsst = isAssistant(p.name);
                 const att = calcAtt(p);
                 const def = calcDef(p);
 
@@ -3576,7 +3665,7 @@
                     else if (fi === '👻') planeIcon = '👻';
                     else planeIcon = '🛩️';
                 } else {
-                    planeIcon = isAdmP ? '🛸' : '✈️';
+                    planeIcon = isAdmP ? '🛸' : (isAsst ? '⚡' : '✈️');
                 }
 
                 const label = p.name;
@@ -3709,7 +3798,6 @@
                     rS = "",
                     isW = false;
                 if (myA > eD) {
-                    // مهاجم پیروز شد
                     isW = true;
                     const ratio = eD / myA;
                     const loot = { g: Math.floor(target.gold * 0.3), o: Math.floor(target.oil * 0.3), m: Math.floor(
@@ -3720,8 +3808,7 @@
                     player.gold += loot.g;
                     player.oil += loot.o;
                     player.metal += loot.m;
-                    player.xp += 15; // مهاجم ۱۵ XP
-                    // به مدافع XP داده نمی‌شود (دفاع ناموفق)
+                    player.xp += 15;
                     target.shieldExpiry = ts() + SHIELD_DURATION;
                     for (const [k, f] of Object.entries(player.fighters)) {
                         f.count = Math.max(0, f.count - Math.ceil(f.count * ratio * 0.5));
@@ -3735,11 +3822,10 @@
                         `🔥 <span class="attacker">${getPlayerDisplayName(player)}</span> به <span class="defender">${getPlayerDisplayName(target)}</span> حمله و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span>`;
                     rS = `🏆 پیروزی!<br>${loot.g} طلا | ${loot.o} نفت | ${loot.m} فلز`;
                 } else {
-                    // مهاجم شکست خورد (دفاع موفق)
                     isW = false;
                     const ratio = myA / eD;
-                    player.xp += 2; // مهاجم ۲ XP
-                    target.xp += 5; // مدافع ۵ XP (دفاع موفق)
+                    player.xp += 2;
+                    target.xp += 5;
                     for (const [k, f] of Object.entries(player.fighters)) {
                         f.count = Math.max(0, f.count - Math.ceil(f.count * 0.9));
                     }
@@ -3840,12 +3926,10 @@
 
         // ===== تحقیق (با گرافیک جدید و غیرفعال کردن نظامی و اقتصادی) =====
         window.upgradeResearch = async function(b) {
-            // نظامی و اقتصادی غیرفعال هستند
             if (b === 'military' || b === 'economy') {
                 toast("🔜 این بخش به‌زودی فعال می‌شود!", false, "peace");
                 return;
             }
-            // فقط هوانوردی فعال است
             const c = (player.research[b] + 1) * 15;
             if (player.xp < c) return toast("XP کم", true);
             player.xp -= c;
@@ -3858,7 +3942,7 @@
 
         // ===== چت =====
         window.sendChat = async function() {
-            if (chatLocked && !isAdmin()) return toast("🔒 چت بسته", true);
+            if (chatLocked && !isAdmin() && !isCoadmin()) return toast("🔒 چت بسته (فقط مدیران می‌توانند پیام دهند)", true);
             const inp = document.getElementById('chatInput');
             if (!inp) return;
             const text = inp.value.trim();
@@ -3870,7 +3954,8 @@
                 const time = new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
                 const div = document.createElement('div');
                 div.className = 'chat-msg me';
-                const sCls = isAdm(player.name) ? 'sender admin-s' : 'sender';
+                const sCls = isAdm(player.name) ? 'sender admin-s' : (isCoadmin() ? 'sender coadmin-s' :
+                    'sender');
                 div.innerHTML =
                     `<div class="${sCls}">${getPlayerDisplayName(player)} <span class="time">${time}</span></div><div>${escapeHtml(text)}</div>`;
                 box.appendChild(div);
@@ -3881,6 +3966,7 @@
         };
 
         // ===== مدیریت (Admin) =====
+        // توابع مدیریتی اصلی (همانند قبل)
         window.adminGiveRes = async function() {
             const id = document.getElementById('admSel').value,
                 res = document.getElementById('admRes').value,
@@ -3996,6 +4082,7 @@
             await saveAll(true);
             updateUI();
             if (isAdmin()) renderAdmin();
+            if (isCoadmin()) renderCoadmin();
             toast("❌ بنر حذف شد", false, "peace");
         };
 
@@ -4003,8 +4090,9 @@
             chatLocked = !chatLocked;
             await saveAll(true);
             renderAdmin();
+            renderCoadmin();
             if (activeTab === 'chat') renderChat();
-            toast(chatLocked ? "🔒 چت بسته شد" : "🔓 چت باز شد", false, "peace");
+            toast(chatLocked ? "🔒 چت بسته شد (فقط مدیران)" : "🔓 چت باز شد", false, "peace");
         };
 
         window.adminNuke = async function() {
@@ -4016,12 +4104,141 @@
             chatMessages = [];
             globalBanner = "";
             chatLocked = false;
+            assistantNames = [];
             displayedChatCount = 0;
             player = null;
             await saveAll(true);
             document.getElementById('gameUI').style.display = 'none';
             document.getElementById('loginBox').style.display = 'flex';
             toast("☢️ سرور نابود شد", true);
+        };
+
+        // ===== توابع مدیریت دستیاران (فقط ادمین) =====
+        window.adminAddAssistant = async function() {
+            if (!isAdmin()) return;
+            if (assistantNames.length >= MAX_ASSISTANTS) {
+                toast(`❌ حداکثر ${MAX_ASSISTANTS} دستیار مجاز است`, true);
+                return;
+            }
+            const name = document.getElementById('admAddAsst').value.trim();
+            if (!name) return toast("نام دستیار را وارد کنید", true);
+            if (name === ADMIN_NAME) return toast("ادمین اصلی نمی‌تواند دستیار باشد", true);
+            if (assistantNames.includes(name)) return toast("این بازیکن قبلاً دستیار است", true);
+            const p = allPlayers.find(pl => pl.name === name);
+            if (!p) return toast("بازیکنی با این نام یافت نشد", true);
+            assistantNames.push(name);
+            document.getElementById('admAddAsst').value = '';
+            await saveAll(true);
+            adminPlayerHash = '';
+            renderAdmin();
+            renderActiveTab();
+            // اگر کاربر فعلی دستیار شد، تب کوادمین را نشان بده
+            if (isCoadmin()) {
+                document.querySelectorAll('.coadmin-el').forEach(e => e.classList.remove('is-hidden'));
+            }
+            toast(`⚡ ${name} به دستیاران اضافه شد`, false, "peace");
+        };
+
+        window.adminRemoveAssistant = async function() {
+            if (!isAdmin()) return;
+            const name = document.getElementById('admRemoveAsst').value;
+            if (!name) return toast("دستیار را انتخاب کنید", true);
+            if (!assistantNames.includes(name)) return toast("این بازیکن دستیار نیست", true);
+            assistantNames = assistantNames.filter(n => n !== name);
+            await saveAll(true);
+            adminPlayerHash = '';
+            renderAdmin();
+            renderActiveTab();
+            // اگر کاربر فعلی دستیار نبود، تب کوادمین را مخفی کن
+            if (!isCoadmin()) {
+                document.querySelectorAll('.coadmin-el').forEach(e => e.classList.add('is-hidden'));
+            }
+            toast(`❌ ${name} از دستیاران حذف شد`, false, "peace");
+        };
+
+        // ===== پنل کوادمین (دستیار) =====
+        function renderCoadmin() {
+            if (!isCoadmin()) return;
+            const container = document.getElementById('coadminContent');
+            let h = `<div class="coadmin-panel-box"><h3>⚡ مدیریت چت و بنر (کوادمین)</h3>`;
+
+            // ارسال پیام همگانی
+            h +=
+                `<div class="flex-wrap" style="margin-bottom:8px;"><input type="text" id="coadmBroad" placeholder="پیام همگانی..." style="flex:2;min-width:120px;"><button class="btn btn-purple btn-sm" onclick="coadminBroadcast()">📨 ارسال</button></div>`;
+
+            // پاک چت
+            h +=
+                `<div class="flex-wrap" style="margin-bottom:8px;"><button class="btn btn-red btn-sm" onclick="coadminClearChat()">🗑️ پاک چت</button>`;
+
+            // قفل/باز کردن چت
+            h +=
+                `<button class="btn btn-${chatLocked?'green':'red'} btn-sm" onclick="coadminToggleChat()">${chatLocked?'🔓 باز':'🔒 بستن'}</button></div>`;
+
+            // تنظیم بنر
+            h +=
+                `<div class="flex-wrap" style="margin-bottom:8px;"><input type="text" id="coadmBannerText" placeholder="متن بنر..." style="flex:2;min-width:120px;"><button class="btn btn-red btn-sm" onclick="coadminSetBanner()">🏳️ تنظیم</button>`;
+
+            // حذف بنر
+            h +=
+                `<button class="btn btn-danger btn-sm" onclick="coadminRemoveBanner()">❌ حذف</button></div>`;
+
+            h += `<div style="font-size:0.5rem;color:var(--color-text-muted);">شما به عنوان کوادمین فقط می‌توانید چت و بنر را مدیریت کنید.</div></div>`;
+            container.innerHTML = h;
+        }
+
+        // ===== توابع کوادمین (دستیار) =====
+        window.coadminBroadcast = async function() {
+            if (!isCoadmin()) return;
+            const msg = document.getElementById('coadmBroad').value.trim();
+            if (!msg) return toast("متن پیام را وارد کنید", true);
+            chatMessages.push({ ts: ts(), n: "SYSTEM", t: escapeHtml(msg), sys: true });
+            document.getElementById('coadmBroad').value = '';
+            displayedChatCount = chatMessages.length;
+            await saveAll(true);
+            if (activeTab === 'chat') renderChat();
+            renderCoadmin();
+            toast("📢 پیام ارسال شد", false, "peace");
+        };
+
+        window.coadminClearChat = async function() {
+            if (!isCoadmin()) return;
+            if (!confirm("پاک کردن همه پیام‌های چت؟")) return;
+            chatMessages = [];
+            displayedChatCount = 0;
+            await saveAll(true);
+            if (activeTab === 'chat') renderChat();
+            renderCoadmin();
+            toast("🗑️ چت پاک شد", false, "peace");
+        };
+
+        window.coadminToggleChat = async function() {
+            if (!isCoadmin()) return;
+            chatLocked = !chatLocked;
+            await saveAll(true);
+            renderCoadmin();
+            if (activeTab === 'chat') renderChat();
+            toast(chatLocked ? "🔒 چت بسته شد (فقط مدیران)" : "🔓 چت باز شد", false, "peace");
+        };
+
+        window.coadminSetBanner = async function() {
+            if (!isCoadmin()) return;
+            const msg = document.getElementById('coadmBannerText').value.trim();
+            if (!msg) return toast("متن بنر را وارد کنید", true);
+            globalBanner = msg;
+            document.getElementById('coadmBannerText').value = '';
+            await saveAll(true);
+            updateUI();
+            renderCoadmin();
+            toast("🏳️ بنر تنظیم شد", false, "peace");
+        };
+
+        window.coadminRemoveBanner = async function() {
+            if (!isCoadmin()) return;
+            globalBanner = "";
+            await saveAll(true);
+            updateUI();
+            renderCoadmin();
+            toast("❌ بنر حذف شد", false, "peace");
         };
 
         // ===== تایمر معدن =====
@@ -4079,6 +4296,9 @@
                 if (isAdmin()) document.querySelectorAll('.admin-el').forEach(e => e.classList.remove('is-hidden'));
                 window.adminVisSet = true;
             }
+            if (isCoadmin()) {
+                document.querySelectorAll('.coadmin-el').forEach(e => e.classList.remove('is-hidden'));
+            }
             document.getElementById('rGold').innerText = Math.floor(player.gold).toLocaleString('fa-IR');
             document.getElementById('rOil').innerText = Math.floor(player.oil).toLocaleString('fa-IR');
             document.getElementById('rMetal').innerText = Math.floor(player.metal).toLocaleString('fa-IR');
@@ -4089,7 +4309,7 @@
             if (globalBanner && globalBanner.trim()) {
                 bt.innerHTML = "📢 " + escapeHtml(globalBanner);
                 be.classList.remove('is-hidden');
-                if (isAdmin()) bd.classList.remove('is-hidden');
+                if (isAdmin() || isCoadmin()) bd.classList.remove('is-hidden');
                 else bd.classList.add('is-hidden');
             } else { be.classList.add('is-hidden'); }
             const sb = document.getElementById('shieldBar');
@@ -4239,12 +4459,14 @@
                 const time = new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
                 const sender = isSys ? '📢 سیستم' : getPlayerDisplayName(allPlayers.find(p => p.name === msg.n) || {
                     name: msg.n });
-                const sCls = isAdm(msg.n) ? 'sender admin-s' : 'sender';
+                const sCls = isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ? 'sender coadmin-s' :
+                    'sender');
                 h +=
                     `<div class="chat-msg ${isMe?'me':''} ${isSys?'system-msg':''}"><div class="${sCls}">${sender} <span class="time">${time}</span></div><div>${msg.t}</div></div>`;
             });
+            const isChatLocked = chatLocked && !isAdmin() && !isCoadmin();
             h +=
-                `</div><div class="chat-input-area"><input type="text" id="chatInput" placeholder="${chatLocked?'🔒 چت بسته':'پیام خود را بنویسید...'}" maxlength="100" ${chatLocked&&!isAdmin()?'disabled':''} onkeypress="if(event.key==='Enter')sendChat()"><button class="btn btn-gold btn-sm" onclick="sendChat()" ${chatLocked&&!isAdmin()?'disabled':''}>ارسال</button></div></div>`;
+                `</div><div class="chat-input-area"><input type="text" id="chatInput" placeholder="${isChatLocked?'🔒 چت بسته (فقط مدیران)':'پیام خود را بنویسید...'}" maxlength="100" ${isChatLocked?'disabled':''} onkeypress="if(event.key==='Enter')sendChat()"><button class="btn btn-gold btn-sm" onclick="sendChat()" ${isChatLocked?'disabled':''}>ارسال</button></div></div>`;
             document.getElementById('chatContent').innerHTML = h;
 
             const newBox = document.getElementById('chatBox');
@@ -4285,7 +4507,8 @@
                 if (fac.memberList.length > 0) {
                     h += '<div class="fac-members-box">';
                     fac.memberList.forEach(m => {
-                        const tc = (m.id === player.id ? 'me ' : '') + (isAdm(m.name) ? 'admin-tag' : '');
+                        const tc = (m.id === player.id ? 'me ' : '') + (isAdm(m.name) ? 'admin-tag' : '') +
+                            (isAssistant(m.name) ? 'coadmin-tag' : '');
                         h +=
                             `<span class="fac-mem-tag ${tc}">${getPlayerDisplayName(m)}</span>`;
                     });
@@ -4324,15 +4547,17 @@
                     const tStr = ago < 1 ? 'الان' : ago < 60 ? ago + ' دقیقه پیش' : Math.floor(ago / 60) + ' ساعت پیش';
                     const seller = allPlayers.find(p => p.id === o.sid);
                     const sellerName = seller ? getPlayerDisplayName(seller) : escapeHtml(o.seller);
+                    const sellerCls = isAdm(o.seller) ? 'admin-seller' : (isAssistant(o.seller) ? 'coadmin-seller' :
+                        '');
                     h +=
-                        `<div class="mkt-offer-card ${isOwn?'own-offer':''}"><div class="mkt-offer-top"><div class="mkt-offer-seller">${sellerName}</div><div class="mkt-offer-time">${tStr}</div></div><div class="mkt-offer-body"><div class="mkt-res-box give-box ${gM.theme}"><span class="mkt-res-icon">${gM.icon}</span><span class="mkt-res-amount">${o.ga.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gM.name}</span></div><div class="mkt-offer-arrow">←</div><div class="mkt-res-box get-box ${gtM.theme}"><span class="mkt-res-icon">${gtM.icon}</span><span class="mkt-res-amount">${o.gta.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gtM.name}</span></div></div><div class="mkt-offer-bottom">${isOwn?'<span class="mkt-own-tag">پیشنهاد شما</span>':`<button class="btn btn-green btn-sm" onclick="buyMarketOffer('${o.id}')" ${canBuy?'':'disabled'}>✅ خرید</button>`}</div></div>`;
+                        `<div class="mkt-offer-card ${isOwn?'own-offer':''}"><div class="mkt-offer-top"><div class="mkt-offer-seller ${sellerCls}">${sellerName}</div><div class="mkt-offer-time">${tStr}</div></div><div class="mkt-offer-body"><div class="mkt-res-box give-box ${gM.theme}"><span class="mkt-res-icon">${gM.icon}</span><span class="mkt-res-amount">${o.ga.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gM.name}</span></div><div class="mkt-offer-arrow">←</div><div class="mkt-res-box get-box ${gtM.theme}"><span class="mkt-res-icon">${gtM.icon}</span><span class="mkt-res-amount">${o.gta.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gtM.name}</span></div></div><div class="mkt-offer-bottom">${isOwn?'<span class="mkt-own-tag">پیشنهاد شما</span>':`<button class="btn btn-green btn-sm" onclick="buyMarketOffer('${o.id}')" ${canBuy?'':'disabled'}>✅ خرید</button>`}</div></div>`;
                 });
                 h += `</div>`;
             }
             document.getElementById('marketContent').innerHTML = h;
         }
 
-        // ===== تحقیق با گرافیک جدید و غیرفعال بودن نظامی و اقتصادی =====
+        // ===== تحقیق با گرافیک جدید =====
         function renderResearch() {
             const researches = [
                 { key: 'military', name: '⚔️ نظامی', desc: 'قدرت حمله', icon: '⚔️', soon: true },
@@ -4380,11 +4605,13 @@
                 const isMe = p.id === player.id;
                 const isT3 = idx < 3;
                 const isA = isAdm(p.name);
+                const isAsst = isAssistant(p.name);
                 const fn = getFN(p.faction);
                 const fi = getFI(p.faction);
                 const numIcon = isT3 ? '👑' : (idx + 1);
                 const numCls = isT3 ? 'crown' : '';
-                const nameCls = (isT3 ? 'gold-name ' : '') + (isA ? 'admin-name' : '');
+                let nameCls = (isT3 ? 'gold-name ' : '') + (isA ? 'admin-name' : '') + (isAsst ? 'coadmin-name' :
+                '');
                 const rowCls = (isMe ? 'my-rank ' : '') + (isT3 ? 'top3-row' : '');
                 const xpCls = isT3 ? 'gold-xp' : '';
                 h +=
@@ -4426,7 +4653,7 @@
         function renderAdmin() {
             if (!isAdmin()) return;
             const currentHash = allPlayers.map(p => p.id + ':' + p.name + ':' + p.xp + ':' + (p.customEmoji || '') + ':' + (p
-                .customColor || '')).join('|');
+                .customColor || '')).join('|') + '|' + assistantNames.join(',');
             const adminContent = document.getElementById('adminContent');
             if (adminPlayerHash === currentHash && adminContent.innerHTML.trim() !== '') {
                 if (adminSavedInputs) {
@@ -4457,6 +4684,24 @@
                     <button class="btn btn-purple btn-sm" onclick="adminSetPlayerStyle()" style="flex:0.5;">💾 ذخیره</button>
                 </div>
                 <div style="font-size:0.5rem;color:var(--color-text-muted);">نکته: ایموجی و رنگ انتخاب شده در تمام بخش‌ها نمایش داده می‌شود (چت، رتبه، جنگ، بازار و ...)</div>
+            </div>`;
+
+            // بخش مدیریت دستیاران
+            h += `<div class="admin-panel-box"><h3>⚡ مدیریت دستیاران (حداکثر ${MAX_ASSISTANTS})</h3>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px;">
+                    <input type="text" id="admAddAsst" placeholder="نام بازیکن برای اضافه کردن" style="flex:2;min-width:120px;">
+                    <button class="btn btn-green btn-sm" onclick="adminAddAssistant()">➕ اضافه</button>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+                    <select id="admRemoveAsst" style="flex:2;min-width:120px;">
+                        <option value="">-- انتخاب دستیار برای حذف --</option>`;
+            assistantNames.forEach(name => {
+                h += `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`;
+            });
+            h += `</select>
+                    <button class="btn btn-red btn-sm" onclick="adminRemoveAssistant()">❌ حذف</button>
+                </div>
+                <div style="font-size:0.5rem;color:var(--color-text-muted);margin-top:6px;">دستیاران فعلی: ${assistantNames.length ? assistantNames.map(n=>escapeHtml(n)).join('، ') : 'هیچ‌کدام'}</div>
             </div>`;
 
             h +=
@@ -4504,6 +4749,9 @@
                 case 'admin':
                     if (isAdmin()) renderAdmin();
                     break;
+                case 'coadmin':
+                    if (isCoadmin()) renderCoadmin();
+                    break;
             }
         }
 
@@ -4511,11 +4759,13 @@
             if (syncLoopRunning) return;
             syncLoopRunning = true;
             try {
+                // ذخیره ورودی‌های فعلی
                 const savedChat = saveInputs('panelChat');
                 const savedMkt = saveInputs('panelMarket');
                 const savedAdmin = saveInputs('adminContent');
                 const savedRes = saveInputs('panelResearch');
 
+                // بارگذاری داده‌ها از دیتابیس
                 await loadAll();
                 expireMarketOffers();
                 updateUI();
@@ -4526,6 +4776,7 @@
 
                 if (activeTab === 'mine') updateMineVisuals();
 
+                // بروزرسانی چت در صورت وجود پیام جدید
                 if (activeTab === 'chat' && chatMessages.length > displayedChatCount) {
                     const box = document.getElementById('chatBox');
                     if (box) {
@@ -4538,7 +4789,8 @@
                             div.className = 'chat-msg' + (isSys ? ' system-msg' : '');
                             const sender = isSys ? '📢 سیستم' : getPlayerDisplayName(allPlayers.find(p => p.name === msg
                                 .n) || { name: msg.n });
-                            const sCls = isAdm(msg.n) ? 'sender admin-s' : 'sender';
+                            const sCls = isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ?
+                                'sender coadmin-s' : 'sender');
                             div.innerHTML =
                                 `<div class="${sCls}">${sender} <span class="time">${time}</span></div><div>${msg.t}</div>`;
                             box.appendChild(div);
@@ -4572,6 +4824,9 @@
                     adminSavedInputs = savedAdmin;
                     renderAdmin();
                 }
+                if (activeTab === 'coadmin' && isCoadmin()) {
+                    renderCoadmin();
+                }
 
                 savedChat._prevChatLen = chatMessages.length;
                 savedMkt._prevMktLen = marketOffers.length;
@@ -4583,6 +4838,7 @@
             tab.addEventListener('click', function() {
                 const t = this.dataset.tab;
                 if (t === 'admin' && !isAdmin()) return;
+                if (t === 'coadmin' && !isCoadmin()) return;
                 document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
                 document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
                 this.classList.add('active');
