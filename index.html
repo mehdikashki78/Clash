@@ -3635,217 +3635,6 @@
         .profile-modal::-webkit-scrollbar-track {
             background: transparent;
         }
-
-        /* ===== BATTLE SELECTION MODAL ===== */
-        .battle-selection-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            backdrop-filter: blur(4px);
-        }
-        .battle-selection-modal {
-            background: linear-gradient(160deg, #1a1a2e 0%, #0f1729 50%, #1a1025 100%);
-            border: 2px solid rgba(245, 158, 11, 0.4);
-            border-radius: 20px;
-            max-width: 90vw;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 0 60px rgba(245, 158, 11, 0.2);
-            display: flex;
-            flex-direction: column;
-            animation: slideIn 0.4s ease;
-        }
-        @keyframes slideIn {
-            from {
-                transform: scale(0.8) translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1) translateY(0);
-                opacity: 1;
-            }
-        }
-        .battle-modal-header {
-            padding: 20px;
-            border-bottom: 1px solid rgba(245, 158, 11, 0.2);
-            position: relative;
-        }
-        .battle-modal-header h2 {
-            margin: 0 0 10px 0;
-            color: #fbbf24;
-            font-size: 1.4rem;
-        }
-        .battle-modal-header p {
-            margin: 0;
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-        .close-modal-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.5);
-            color: #fca5a5;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-        .close-modal-btn:hover {
-            background: rgba(239, 68, 68, 0.4);
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
-        }
-        .battle-modal-content {
-            padding: 20px;
-            flex: 1;
-            overflow-y: auto;
-        }
-        .selection-section {
-            margin-bottom: 25px;
-        }
-        .selection-section h3 {
-            color: #fbbf24;
-            margin: 0 0 15px 0;
-            font-size: 1.1rem;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(245, 158, 11, 0.2);
-        }
-        .units-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 12px;
-        }
-        .unit-selection-card {
-            background: linear-gradient(160deg, #1a1a2e 0%, #111827 100%);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            transition: all 0.3s;
-            position: relative;
-        }
-        .unit-selection-card:hover {
-            transform: translateY(-4px);
-            border-color: #f59e0b;
-            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.15);
-        }
-        .unit-icon {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            display: block;
-        }
-        .unit-name {
-            color: #fbbf24;
-            font-weight: 700;
-            font-size: 0.8rem;
-            margin-bottom: 4px;
-        }
-        .unit-power {
-            color: #4ade80;
-            font-size: 0.75rem;
-            margin-bottom: 4px;
-        }
-        .unit-owned {
-            color: #94a3b8;
-            font-size: 0.7rem;
-            margin-bottom: 8px;
-        }
-        .unit-selector input {
-            width: 100%;
-            padding: 6px;
-            background: rgba(10, 10, 26, 0.6);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            color: #fbbf24;
-            border-radius: 6px;
-            text-align: center;
-            font-weight: 600;
-        }
-        .unit-selector input:focus {
-            outline: none;
-            border-color: #f59e0b;
-            box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
-        }
-        .battle-modal-footer {
-            padding: 20px;
-            border-top: 1px solid rgba(245, 158, 11, 0.2);
-            background: rgba(0, 0, 0, 0.3);
-        }
-        .power-display {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 15px;
-            padding: 12px;
-            background: rgba(10, 10, 26, 0.6);
-            border-radius: 8px;
-            border: 1px solid rgba(245, 158, 11, 0.2);
-        }
-        .power-display div {
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-        .battle-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        .battle-actions .btn {
-            flex: 1;
-            max-width: 200px;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: 700;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-        }
-        .btn-danger {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.5);
-            color: #fca5a5;
-        }
-        .btn-danger:hover:not(:disabled) {
-            background: rgba(239, 68, 68, 0.4);
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
-        }
-        .btn-attack {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-        }
-        .btn-attack:hover:not(:disabled) {
-            transform: scale(1.05);
-            box-shadow: 0 6px 25px rgba(239, 68, 68, 0.5);
-        }
-        .btn-attack:disabled {
-            background: #334155;
-            color: #94a3b8;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-        @media (max-width: 600px) {
-            .units-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
-            .battle-selection-modal {
-                max-width: 95vw;
-                max-height: 85vh;
-            }
-        }
-
     </style>
 </head>
 <body>
@@ -3977,14 +3766,6 @@
             "Khordad": { n: "خرداد-۱۵", i: "🇮🇷", c: { g: 8000, o: 2000, m: 1500 }, def: 60, hp: 100 },
             "Bavar": { n: "باور-۳۷۳", i: "🇮🇷", c: { g: 15000, o: 4500, m: 3000 }, def: 100, hp: 150 }
         };
-        const M_DB = {
-            "Khorramshahr": { n: "🇮🇷خرمشهر", i: "🇮🇷", p: 250, c: { g: 10000, o: 3000, m: 2000 }, r: 4 },
-            "Fateh": { n: "🇮🇷فاتح", i: "🇮🇷", p: 350, c: { g: 18000, o: 5000, m: 3500 }, r: 6 },
-            "Tomahawk": { n: "Tomahawk🇺🇸", i: "🇺🇸", p: 280, c: { g: 15000, o: 4000, m: 2800 }, r: 5 },
-            "Kalibr": { n: "Kalibr🇷🇺", i: "🇷🇺", p: 300, c: { g: 16000, o: 4500, m: 3000 }, r: 5 },
-            "Brahmos": { n: "Brahmos🇮🇳", i: "🇮🇳", p: 220, c: { g: 12000, o: 3500, m: 2500 }, r: 4 },
-            "StormShadow": { n: "Storm Shadow🇬🇧", i: "🇬🇧", p: 270, c: { g: 14000, o: 3800, m: 2600 }, r: 5 }
-        };
         const FACTIONS_DB = {
             "sky_knights": { name: "شوالیه‌های آسمان", icon: "🛡️" },
             "red_baron": { name: "بارون‌های سرخ", icon: "🌹" },
@@ -4019,8 +3800,6 @@
             syncLoopRunning = false;
         let adminSavedInputs = null;
         let coadminSavedInputs = null;
-        let battleTargetId = null;
-        let selectedUnitsForBattle = {};
         let displayedChatCount = 0;
         let adminPlayerHash = '';
         let skyZoom = 1;
@@ -4172,26 +3951,10 @@
             if (i >= 0) allPlayers[i] = { ...player };
         }
 
-        // ===== توابع کمکی برای امن کردن HTML attribute =====
-        // تبدیل رشته به فرمت امن برای استفاده در attribute value
-        function escapeAttr(str) {
-            if (str == null) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/\\/g, '&#92;');
-        }
-
         // ===== توابع مودال پروفایل =====
         function showProfileModal(playerId) {
-            playerId = String(playerId == null ? '' : playerId).trim();
-            if (!playerId) return toast('شناسه نامعتبر', true);
-            let target = allPlayers.find(p => p && String(p.id) === playerId);
-            if (!target && player && String(player.id) === playerId) target = player;
-            if (!target) return toast('بازیکن یافت نشد', true);
+            const target = allPlayers.find(p => p.id === playerId);
+            if (!target) return toast("بازیکن یافت نشد", true);
             const overlay = document.getElementById('profileModalOverlay');
             const content = document.getElementById('profileModalContent');
             const joinDate = new Date(target.joinDate);
@@ -4275,7 +4038,7 @@
                 h += `<span style="font-size:0.55rem;color:var(--color-text-muted);">هیچ دوستی ندارد</span>`;
             } else {
                 friendList.forEach(f => {
-                    h += `<span class="friend-tag" data-pid="${escapeAttr(f.id)}" onclick="showProfileModal(this.getAttribute('data-pid'))">${getPlayerDisplayName(f)}</span>`;
+                    h += `<span class="friend-tag" onclick="showProfileModal('${f.id}')">${getPlayerDisplayName(f)}</span>`;
                 });
             }
             h += `</div>`;
@@ -4442,9 +4205,7 @@
         }
 
         function createPlayer(n, pw, refCode) {
-            // پاکسازی نام از کاراکترهای خطرناک برای امنیت بیشتر در HTML/JS escaping
-            const safeName = String(n).replace(/[^a-zA-Z0-9_\u0600-\u06FF\-]/g, '_');
-            const id = safeName + "_" + ts().toString(36);
+            const id = n + "_" + ts().toString(36);
             const referralCode = id.slice(0, 8).toUpperCase();
             return {
                 id: id,
@@ -4501,18 +4262,6 @@
             let pw = 0;
             for (const [n, d] of Object.entries(p.fighters)) {
                 if (F_DB[n] && d.count > 0) pw += F_DB[n].p * d.count;
-                if (M_DB[n] && d.count > 0) pw += M_DB[n].p * d.count;
-            }
-            return Math.floor(pw);
-        }
-
-        function calcAttFromSelected(selected) {
-            if (!selected) return 0;
-            let pw = 0;
-            for (const [n, count] of Object.entries(selected)) {
-                if (count <= 0) continue;
-                if (F_DB[n]) pw += F_DB[n].p * count;
-                if (M_DB[n]) pw += M_DB[n].p * count;
             }
             return Math.floor(pw);
         }
@@ -4670,8 +4419,7 @@
 
         // ===== نظامی =====
         window.buildFighter = async function(k) {
-            const f = F_DB[k] || M_DB[k];
-            if (!f) return toast("آیتم نامعلوم", true);
+            const f = F_DB[k];
             if (player.gold < f.c.g || player.oil < f.c.o || player.metal < f.c.m) return toast("منابع کم", true);
             if ((player.research?.aviation || 0) < f.r) return toast("هوانوردی سطح " + f.r, true);
             player.gold -= f.c.g;
@@ -4812,11 +4560,11 @@
                     <div class="plane-icon">${planeIcon}</div>
                     <div class="player-label">${escapeHtml(label)}</div>
                     <div class="player-tooltip">
-                        <div class="tp-name" data-pid="${String(p.id).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}" onclick="showProfileModal(this.getAttribute('data-pid'))">👤 ${displayName}</div>
+                        <div class="tp-name" onclick="showProfileModal('${p.id}')">👤 ${displayName}</div>
                         ${isMe ? `<div class="tp-detail">⚔️ ${att} | 🛡️ ${def} | XP: ${p.xp}</div>` : `<div class="tp-detail">XP: ${p.xp}</div>`}
                         <div class="tp-detail">${p.faction?getFI(p.faction)+' '+escapeHtml(getFN(p.faction)):'بدون جناح'}</div>
                         ${hasShield?'<div class="tp-detail" style="color:#93c5fd;">🛡️ سپر فعال</div>':''}
-                        ${!isMe ? `<button class="tp-attack" data-pid="${String(p.id).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}" onclick="launchAttack(this.getAttribute('data-pid'))" ${hasShield||isAttacking?'disabled':''}>🔥 حمله</button>` : `<div style="font-size:0.5rem;color:var(--color-accent);">👈 شما</div>`}
+                        ${!isMe ? `<button class="tp-attack" onclick="launchAttack('${p.id}')" ${hasShield||isAttacking?'disabled':''}>🔥 حمله</button>` : `<div style="font-size:0.5rem;color:var(--color-accent);">👈 شما</div>`}
                     </div>
                 </div>`;
             });
@@ -4898,190 +4646,14 @@
         }
 
         // ===== جنگ (تابع حمله) با آمار =====
-
-        // ===== تابع نمایش انتخاب واحدهای جنگی =====
-        function showBattleSelectionModal() {
-            // جستجوی هدف در همه منابع ممکن (fallback امن)
-            let target = null;
-            if (battleTargetId != null) {
-                const bid = String(battleTargetId);
-                target = allPlayers.find(p => p && String(p.id) === bid);
-                if (!target && player && String(player.id) === bid) target = player;
-                if (!target && window.allPlayersCache) target = window.allPlayersCache.find(p => p && String(p.id) === bid);
-            }
-            if (!target) {
-                console.warn('launchAttack: target not found. battleTargetId=', battleTargetId, 'allPlayers ids=', allPlayers.map(p => p && p.id));
-                return toast("هدف یافت نشد (ممکن است از بازی خارج شده باشد)", true);
-            }
-            // چک ایمنی: نباید به خودم حمله کنم
-            if (player && String(target.id) === String(player.id)) {
-                return toast('نمی‌توانید به خودتان حمله کنید', true);
-            }
-            battleTargetId = target.id; // normalize
-            
-            let html = `<div class="battle-selection-overlay" onclick="closeBattleSelectionModal(event)">
-                <div class="battle-selection-modal" onclick="event.stopPropagation()">
-                    <div class="battle-modal-header">
-                        <h2>⚔️ انتخاب واحدهای حمله</h2>
-                        <p>هدف: <strong>${target.name}</strong> | نیروی: ${calcDef(target)}</p>
-                        <button class="close-modal-btn" onclick="closeBattleSelectionModal()">✕</button>
-                    </div>
-                    <div class="battle-modal-content">
-                        <div class="units-selection">`;
-            
-            // جنگنده‌ها (پرچم کشور سازنده به‌عنوان آیکون)
-            html += `<div class="selection-section"><h3>✈️ جنگنده‌ها</h3><div class="units-grid">`;
-            for (const [k, f] of Object.entries(F_DB)) {
-                const owned = player.fighters[k]?.count || 0;
-                const selected = selectedUnitsForBattle[k] || 0;
-                if (owned === 0) continue;
-                html += `
-                    <div class="unit-selection-card">
-                        <div class="unit-icon">${f.i}</div>
-                        <div class="unit-name">${f.n}</div>
-                        <div class="unit-power">⚔️ ${f.p}</div>
-                        <div class="unit-owned">موجود: ${owned}</div>
-                        <div class="unit-selector">
-                            <input type="number" min="0" max="${owned}" value="${selected}" 
-                                onchange="updateBattleSelection('${k}', this.value)">
-                        </div>
-                    </div>
-                `;
-            }
-            html += `</div></div>`;
-            
-            // موشک‌ها (پرچم کشور سازنده به‌عنوان آیکون)
-            html += `<div class="selection-section"><h3>🚀 موشک‌های کروز</h3><div class="units-grid">`;
-            for (const [k, m] of Object.entries(M_DB)) {
-                const owned = player.fighters[k]?.count || 0;
-                const selected = selectedUnitsForBattle[k] || 0;
-                if (owned === 0) continue;
-                html += `
-                    <div class="unit-selection-card">
-                        <div class="unit-icon">${m.i || '🚀'}</div>
-                        <div class="unit-name">${m.n}</div>
-                        <div class="unit-power">⚔️ ${m.p}</div>
-                        <div class="unit-owned">موجود: ${owned}</div>
-                        <div class="unit-selector">
-                            <input type="number" min="0" max="${owned}" value="${selected}" 
-                                onchange="updateBattleSelection('${k}', this.value)">
-                        </div>
-                    </div>
-                `;
-            }
-            html += `</div></div>`;
-            
-            const totalPower = calcAttFromSelected(selectedUnitsForBattle);
-            const targetDef = calcDef(target);
-            html += `</div>
-                    <div class="battle-modal-footer">
-                        <div class="power-display">
-                            <div>⚔️ نیروی حمله: <strong style="color: ${totalPower > targetDef ? '#4ade80' : '#fca5a5'}">${totalPower}</strong></div>
-                   
-                        </div>
-                        <div class="battle-actions">
-                            <button class="btn btn-danger" onclick="closeBattleSelectionModal()">❌ انصراف</button>
-                            <button class="btn btn-attack" onclick="executeBattle()" ${totalPower > 0 ? '' : 'disabled'}>🔥 حمله</button>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-            
-            const container = document.createElement('div');
-            container.id = 'battleSelectionContainer';
-            container.innerHTML = html;
-            document.body.appendChild(container);
-        }
-
-        function updateBattleSelection(unitKey, count) {
-            const c = Math.max(0, parseInt(count) || 0);
-            if (c === 0) {
-                delete selectedUnitsForBattle[unitKey];
-            } else {
-                selectedUnitsForBattle[unitKey] = c;
-            }
-            updateBattleSelectionDisplay();
-        }
-
-        function updateBattleSelectionDisplay() {
-            const totalPower = calcAttFromSelected(selectedUnitsForBattle);
-            let target = null;
-            if (battleTargetId != null) {
-                const bid = String(battleTargetId);
-                target = allPlayers.find(p => p && String(p.id) === bid);
-                if (!target && player && String(player.id) === bid) target = player;
-            }
-            const targetDef = target ? calcDef(target) : 0;
-            const powerDisplay = document.querySelector('.power-display');
-            const attackBtn = document.querySelector('.battle-actions .btn-attack');
-            if (powerDisplay) {
-                powerDisplay.innerHTML = `
-                    <div>⚔️ نیروی حمله: <strong style="color: ${totalPower > targetDef ? '#4ade80' : '#fca5a5'}">${totalPower}</strong></div>
-                    <div>🛡️ دفاع هدف: <strong>${targetDef}</strong></div>
-                `;
-            }
-            if (attackBtn) attackBtn.disabled = totalPower <= 0;
-        }
-
-        function closeBattleSelectionModal(e) {
-            // اگر e داده شده، فقط در صورتی close کن که روی خود overlay (نه محتوای modal) کلیک شده باشد
-            if (e) {
-                // اگر روی overlay اصلی کلیک شده (نه modal-content)
-                if (e.target && e.target.classList && e.target.classList.contains('battle-selection-overlay')) {
-                    const container = document.getElementById('battleSelectionContainer');
-                    if (container) container.remove();
-                    battleTargetId = null;
-                    selectedUnitsForBattle = {};
-                }
-                return;
-            }
-            // اگر e داده نشده (مثلاً از دکمه انصراف یا ✕)، حتماً close کن
-            const container = document.getElementById('battleSelectionContainer');
-            if (container) container.remove();
-            battleTargetId = null;
-            selectedUnitsForBattle = {};
-        }
-
-        async function executeBattle() {
+        window.launchAttack = async function(tId) {
             if (isAttacking) return;
-            const totalPower = calcAttFromSelected(selectedUnitsForBattle);
-            if (totalPower <= 0) return toast("حداقل یک واحد انتخاب کنید", true);
-
-            // ابتدا target را پیدا و در متغیر محلی ذخیره کن (چون closeBattleSelectionModal آن را null می‌کند)
-            let savedTarget = null;
-            if (battleTargetId != null) {
-                const bid = String(battleTargetId);
-                savedTarget = allPlayers.find(p => p && String(p.id) === bid);
-                if (!savedTarget && player && String(player.id) === bid) savedTarget = player;
-            }
-            if (!savedTarget) {
-                console.warn('executeBattle: target not found BEFORE close. battleTargetId=', battleTargetId, 'allPlayers ids=', allPlayers.map(p => p && p.id));
-                return toast("هدف یافت نشد (ممکن است از بازی خارج شده باشد)", true);
-            }
-            // چک ایمنی: نباید به خودم حمله کنم
-            if (player && String(savedTarget.id) === String(player.id)) {
-                return toast('نمی‌توانید به خودتان حمله کنید', true);
-            }
-            const targetIdBeforeClose = savedTarget.id;
-
             isAttacking = true;
-            closeBattleSelectionModal();
-
             try {
-                // جستجوی هدف با fallback امن
-                let target = null;
-                if (targetIdBeforeClose != null) {
-                    const tid = String(targetIdBeforeClose);
-                    target = allPlayers.find(p => p && String(p.id) === tid);
-                    if (!target && player && String(player.id) === tid) target = player;
-                }
-                if (!target) {
-                    console.warn('executeBattle: target not found AFTER close. targetIdBeforeClose=', targetIdBeforeClose, 'allPlayers ids=', allPlayers.map(p => p && p.id));
-                    return toast("هدف یافت نشد (ممکن است از بازی خارج شده باشد)", true);
-                }
-                battleTargetId = target.id; // normalize
-                
-                const myA = totalPower;
+                const target = allPlayers.find(p => p.id === tId);
+                if (!target) return toast("هدف یافت نشد", true);
+                const myA = calcAtt(player);
+                if (myA <= 0) return toast("جنگنده بسازید!", true, "war");
                 if (target.shieldExpiry && ts() < target.shieldExpiry) {
                     const rm = target.shieldExpiry - ts();
                     return toast(`🛡️ سپر (${Math.floor(rm/3600000)}س ${Math.floor((rm%3600000)/60000)}د)`, true);
@@ -5107,7 +4679,8 @@
                     defenderXpLoss = Math.floor(Math.random() * 9) + 1;
                     target.xp = Math.max(0, target.xp - defenderXpLoss);
                     const ratio = eD / myA;
-                    const loot = { g: Math.floor(target.gold * 0.3), o: Math.floor(target.oil * 0.3), m: Math.floor(target.metal * 0.3) };
+                    const loot = { g: Math.floor(target.gold * 0.3), o: Math.floor(target.oil * 0.3), m: Math.floor(
+                            target.metal * 0.3) };
                     target.gold -= loot.g;
                     target.oil -= loot.o;
                     target.metal -= loot.m;
@@ -5115,14 +4688,9 @@
                     player.oil += loot.o;
                     player.metal += loot.m;
                     target.shieldExpiry = ts() + SHIELD_DURATION;
-                    
-                    // کاهش واحدهای انتخاب شده از بازیکن
-                    for (const [k, count] of Object.entries(selectedUnitsForBattle)) {
-                        if (player.fighters[k]) {
-                            player.fighters[k].count = Math.max(0, player.fighters[k].count - Math.ceil(count * ratio * 0.5));
-                        }
+                    for (const [k, f] of Object.entries(player.fighters)) {
+                        f.count = Math.max(0, f.count - Math.ceil(f.count * ratio * 0.5));
                     }
-                    // کاهش تمام واحدهای هدف
                     for (const [k, f] of Object.entries(target.fighters)) {
                         f.count = Math.max(0, f.count - Math.ceil(f.count * 0.8));
                     }
@@ -5141,14 +4709,9 @@
                     player.xp = Math.max(0, player.xp - attackerXpLoss);
                     target.xp += 5;
                     const ratio = myA / eD;
-                    
-                    // کاهش واحدهای انتخاب شده از بازیکن
-                    for (const [k, count] of Object.entries(selectedUnitsForBattle)) {
-                        if (player.fighters[k]) {
-                            player.fighters[k].count = Math.max(0, player.fighters[k].count - Math.ceil(count * 0.9));
-                        }
+                    for (const [k, f] of Object.entries(player.fighters)) {
+                        f.count = Math.max(0, f.count - Math.ceil(f.count * 0.9));
                     }
-                    // کاهش واحدهای هدف
                     for (const [k, f] of Object.entries(target.fighters)) {
                         f.count = Math.max(0, f.count - Math.ceil(f.count * ratio * 0.4));
                     }
@@ -5192,36 +4755,8 @@
                 updateUI();
                 if (activeTab === 'war') renderSkyMap();
                 renderBattlelog();
-            } catch (e) {
-                console.error(e);
-                toast("خطا در حمله", true);
-            } finally {
-                isAttacking = false;
-                battleTargetId = null;
-                selectedUnitsForBattle = {};
-            }
-        }
-
-        window.launchAttack = async function(tId) {
-            if (isAttacking) return;
-            // تبدیل امن tId به رشته و حذف فضاهای خالی
-            tId = String(tId == null ? '' : tId).trim();
-            if (!tId) {
-                console.warn('launchAttack: empty target id');
-                return toast('هدف نامعتبر', true);
-            }
-            // بررسی اینکه tId واقعاً یک بازیکن معتبر است
-            let exists = allPlayers.find(p => p && String(p.id) === tId);
-            if (!exists && player && String(player.id) === tId) exists = player;
-            if (!exists) {
-                console.warn('launchAttack: target not found in allPlayers. tId=', tId, 'all ids=', allPlayers.map(p => p && p.id));
-                return toast('بازیکن یافت نشد (ممکن است از بازی خارج شده باشد)', true);
-            }
-            battleTargetId = exists.id;
-            selectedUnitsForBattle = {};
-            showBattleSelectionModal();
+            } finally { isAttacking = false; }
         };
-
 
         // ===== بازار =====
         window.createMarketOffer = async function() {
@@ -5497,7 +5032,7 @@
                 friendList.forEach(f => {
                     const online = true; // همه آنلاین در نظر گرفته می‌شوند
                     h +=
-                        `<span class="friend-tag" data-pid="${escapeAttr(f.id)}" onclick="showProfileModal(this.getAttribute('data-pid'))">${online ? '<span class="online-dot"></span>' : ''}${getPlayerDisplayName(f)} <span class="remove-friend" data-fid="${escapeAttr(f.id)}" onclick="event.stopPropagation();removeFriend(this.getAttribute('data-fid'))">✕</span></span>`;
+                        `<span class="friend-tag" onclick="showProfileModal('${f.id}')">${online ? '<span class="online-dot"></span>' : ''}${getPlayerDisplayName(f)} <span class="remove-friend" onclick="event.stopPropagation();removeFriend('${f.id}')">✕</span></span>`;
                 });
             }
             h += `</div>`;
@@ -5509,7 +5044,7 @@
             } else {
                 friendRequests.forEach(f => {
                     h +=
-                        `<span class="req-item">${getPlayerDisplayName(f)} <button class="btn btn-green btn-sm" data-fid="${escapeAttr(f.id)}" onclick="acceptFriend(this.getAttribute('data-fid'))">✅ قبول</button> <button class="btn btn-red btn-sm" data-fid="${escapeAttr(f.id)}" onclick="rejectFriend(this.getAttribute('data-fid'))">❌ رد</button></span>`;
+                        `<span class="req-item">${getPlayerDisplayName(f)} <button class="btn btn-green btn-sm" onclick="acceptFriend('${f.id}')">✅ قبول</button> <button class="btn btn-red btn-sm" onclick="rejectFriend('${f.id}')">❌ رد</button></span>`;
                 });
             }
             h += `</div>`;
@@ -6224,34 +5759,6 @@
                 `;
             }
             h += `</div>`;
-
-            h += `<div class="section-title" style="margin-top:16px;">🚀 موشک‌های کروز</div><div class="mil-fighter-grid">`;
-            for (const [k, m] of Object.entries(M_DB)) {
-                const owned = player.fighters[k]?.count || 0;
-                const canB = player.gold >= m.c.g && player.oil >= m.c.o && player.metal >= m.c.m && (player.research
-                    ?.aviation || 0) >= m.r;
-                const gStatus = player.gold >= m.c.g ? 'has' : 'missing';
-                const oStatus = player.oil >= m.c.o ? 'has' : 'missing';
-                const mStatus = player.metal >= m.c.m ? 'has' : 'missing';
-                h += `
-                    <div class="mil-fighter-card" style="${!canB && owned===0 ? 'opacity:0.6;' : ''}">
-                        <div class="mil-icon">🚀</div>
-                        <div class="mil-name">${m.n}</div>
-                        <div class="mil-detail">⚔️ نیرو: <strong>${m.p}</strong></div>
-                        <div class="mil-count-badge">🚀 تعداد: ${owned}</div>
-                        <div class="mil-cost">
-                            <span class="cost-item ${gStatus}">💰 ${m.c.g}</span>
-                            <span class="cost-item ${oStatus}">🛢️ ${m.c.o}</span>
-                            <span class="cost-item ${mStatus}">⛏️ ${m.c.m}</span>
-                        </div>
-                        ${m.r>0 ? `<div class="mil-research-tag">🔬 هوانوردی سطح ${m.r}</div>` : ''}
-                        <button class="mil-btn" onclick="buildFighter('${k}')" ${canB ? '' : 'disabled'}>
-                            ${canB ? '🚀 ساخت' : '🔒 قفل'}
-                        </button>
-                    </div>
-                `;
-            }
-            h += `</div>`;
             document.getElementById('militaryContent').innerHTML = h;
         }
 
@@ -6273,7 +5780,7 @@
                 const sCls = isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ? 'sender coadmin-s' :
                     'sender');
                 const nameHtml = isSys ? sender :
-                    `<span data-pid="${escapeAttr(allPlayers.find(p=>p.name===msg.n)?.id||'')}" onclick="showProfileModal(this.getAttribute('data-pid'))" style="cursor:pointer;">${sender}</span>`;
+                    `<span onclick="showProfileModal('${allPlayers.find(p=>p.name===msg.n)?.id||''}')" style="cursor:pointer;">${sender}</span>`;
                 h +=
                     `<div class="chat-msg ${isMe?'me':''} ${isSys?'system-msg':''}"><div class="${sCls}">${nameHtml} <span class="time">${time}</span></div><div>${msg.t}</div></div>`;
             });
@@ -6322,12 +5829,12 @@
                         const tc = (m.id === player.id ? 'me ' : '') + (isAdm(m.name) ? 'admin-tag' : '') +
                             (isAssistant(m.name) ? 'coadmin-tag' : '');
                         h +=
-                            `<span class="fac-mem-tag ${tc}" data-pid="${escapeAttr(m.id)}" onclick="showProfileModal(this.getAttribute('data-pid'))">${getPlayerDisplayName(m)}</span>`;
+                            `<span class="fac-mem-tag ${tc}" onclick="showProfileModal('${m.id}')">${getPlayerDisplayName(m)}</span>`;
                     });
                     h += '</div>';
                 } else { h += '<div class="fac-no-mem">هنوز عضویی ندارد</div>'; }
                 h +=
-                    `<div class="fac-card-bottom"><div class="fac-pwr-tag">⚔️ ${fPow.toLocaleString('fa-IR')}</div>${isMy?'<span class="fac-locked-badge">🔒 عضو دائمی</span>':`<button class="fac-join-btn jn" data-facid="${escapeAttr(fac.id)}" onclick="joinFaction(this.getAttribute('data-facid'))">✋ پیوستن</button>`}</div></div>`;
+                    `<div class="fac-card-bottom"><div class="fac-pwr-tag">⚔️ ${fPow.toLocaleString('fa-IR')}</div>${isMy?'<span class="fac-locked-badge">🔒 عضو دائمی</span>':`<button class="fac-join-btn jn" onclick="joinFaction('${fac.id}')">✋ پیوستن</button>`}</div></div>`;
             });
             document.getElementById('factionsContent').innerHTML = h;
         }
@@ -6359,7 +5866,7 @@
                     const sellerCls = isAdm(o.seller) ? 'admin-seller' : (isAssistant(o.seller) ? 'coadmin-seller' :
                         '');
                     h +=
-                        `<div class="mkt-offer-card ${isOwn?'own-offer':''}"><div class="mkt-offer-top"><div class="mkt-offer-seller ${sellerCls}" data-pid="${escapeAttr(o.sid)}" onclick="showProfileModal(this.getAttribute('data-pid'))">${sellerName}</div><div class="mkt-offer-time">${tStr}</div></div><div class="mkt-offer-body"><div class="mkt-res-box give-box ${gM.theme}"><span class="mkt-res-icon">${gM.icon}</span><span class="mkt-res-amount">${o.ga.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gM.name}</span></div><div class="mkt-offer-arrow">←</div><div class="mkt-res-box get-box ${gtM.theme}"><span class="mkt-res-icon">${gtM.icon}</span><span class="mkt-res-amount">${o.gta.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gtM.name}</span></div></div><div class="mkt-offer-bottom">${isOwn?'<span class="mkt-own-tag">پیشنهاد شما</span>':`<button class="btn btn-green btn-sm" data-oid="${escapeAttr(o.id)}" onclick="buyMarketOffer(this.getAttribute('data-oid'))" ${canBuy?'':'disabled'}>✅ خرید</button>`}</div></div>`;
+                        `<div class="mkt-offer-card ${isOwn?'own-offer':''}"><div class="mkt-offer-top"><div class="mkt-offer-seller ${sellerCls}" onclick="showProfileModal('${o.sid}')">${sellerName}</div><div class="mkt-offer-time">${tStr}</div></div><div class="mkt-offer-body"><div class="mkt-res-box give-box ${gM.theme}"><span class="mkt-res-icon">${gM.icon}</span><span class="mkt-res-amount">${o.ga.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gM.name}</span></div><div class="mkt-offer-arrow">←</div><div class="mkt-res-box get-box ${gtM.theme}"><span class="mkt-res-icon">${gtM.icon}</span><span class="mkt-res-amount">${o.gta.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gtM.name}</span></div></div><div class="mkt-offer-bottom">${isOwn?'<span class="mkt-own-tag">پیشنهاد شما</span>':`<button class="btn btn-green btn-sm" onclick="buyMarketOffer('${o.id}')" ${canBuy?'':'disabled'}>✅ خرید</button>`}</div></div>`;
                 });
                 h += `</div>`;
             }
@@ -6419,7 +5926,7 @@
                 const rowCls = (isMe ? 'my-rank ' : '') + (isT3 ? 'top3-row' : '');
                 const xpCls = isT3 ? 'gold-xp' : '';
                 h +=
-                    `<div class="rank-row ${rowCls}"><div class="rank-num ${numCls}">${numIcon}</div><div class="rank-info"><div class="rank-name ${nameCls}" data-pid="${String(p.id).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}" onclick="showProfileModal(this.getAttribute('data-pid'))">${getPlayerDisplayName(p)}${fn?` <span style="color:#ef4444;font-size:0.55rem;">${fi} ${escapeHtml(fn)}</span>`:''}</div><div class="rank-detail"> معدن ${p.mineLevel||1}</div></div><div class="rank-xp ${xpCls}">⭐ ${p.xp.toLocaleString('fa-IR')}</div></div>`;
+                    `<div class="rank-row ${rowCls}"><div class="rank-num ${numCls}">${numIcon}</div><div class="rank-info"><div class="rank-name ${nameCls}" onclick="showProfileModal('${p.id}')">${getPlayerDisplayName(p)}${fn?` <span style="color:#ef4444;font-size:0.55rem;">${fi} ${escapeHtml(fn)}</span>`:''}</div><div class="rank-detail"> معدن ${p.mineLevel||1}</div></div><div class="rank-xp ${xpCls}">⭐ ${p.xp.toLocaleString('fa-IR')}</div></div>`;
             });
             h += '<div class="rank-sep">🛡️ ۶ جناح برتر</div>';
             const maxFP = Math.max(1, ...facs.map(f => f.points));
