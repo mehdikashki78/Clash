@@ -3366,7 +3366,7 @@
                 const { error } = await db.from('game_state').upsert({ id: 'main_game', data: packData() },
                 { onConflict: 'id' });
                 if (error) throw error;
-                updateSyncUI("✅ ذخیره", "online");
+                updateSyncUI("✅ online", "online");
                 return true;
             } catch (e) {
                 console.error(e);
@@ -4865,7 +4865,7 @@
             }
 
             document.getElementById('loginBox').style.display = 'flex';
-            updateSyncUI("✅ آماده", "online");
+            updateSyncUI("✅ online", "online");
             setInterval(syncLoop, SYNC_INTERVAL);
             setTimeout(syncLoop, 300);
         })();
