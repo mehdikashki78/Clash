@@ -3366,7 +3366,7 @@
                 const { error } = await db.from('game_state').upsert({ id: 'main_game', data: packData() },
                 { onConflict: 'id' });
                 if (error) throw error;
-                updateSyncUI("✅ online", "online");
+                updateSyncUI("✅ ذخیره", "online");
                 return true;
             } catch (e) {
                 console.error(e);
@@ -4615,7 +4615,7 @@
                 const rowCls = (isMe ? 'my-rank ' : '') + (isT3 ? 'top3-row' : '');
                 const xpCls = isT3 ? 'gold-xp' : '';
                 h +=
-                    `<div class="rank-row ${rowCls}"><div class="rank-num ${numCls}">${numIcon}</div><div class="rank-info"><div class="rank-name ${nameCls}">${getPlayerDisplayName(p)}${fn?` <span style="color:#ef4444;font-size:0.55rem;">${fi} ${escapeHtml(fn)}</span>`:''}</div><div class="rank-detail">⚔️ ${calcAtt(p)} | 🛡️ ${calcDef(p)} | معدن ${p.mineLevel||1}</div></div><div class="rank-xp ${xpCls}">⭐ ${p.xp.toLocaleString('fa-IR')}</div></div>`;
+                    `<div class="rank-row ${rowCls}"><div class="rank-num ${numCls}">${numIcon}</div><div class="rank-info"><div class="rank-name ${nameCls}">${getPlayerDisplayName(p)}${fn?` <span style="color:#ef4444;font-size:0.55rem;">${fi} ${escapeHtml(fn)}</span>`:''}</div><div class="rank-detail"> معدن ${p.mineLevel||1}</div></div><div class="rank-xp ${xpCls}">⭐ ${p.xp.toLocaleString('fa-IR')}</div></div>`;
             });
             h += '<div class="rank-sep">🛡️ ۶ جناح برتر</div>';
             const maxFP = Math.max(1, ...facs.map(f => f.points));
@@ -4865,7 +4865,7 @@
             }
 
             document.getElementById('loginBox').style.display = 'flex';
-            updateSyncUI("✅ online", "online");
+            updateSyncUI("✅ آماده", "online");
             setInterval(syncLoop, SYNC_INTERVAL);
             setTimeout(syncLoop, 300);
         })();
