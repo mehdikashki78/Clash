@@ -841,6 +841,275 @@
             display: none !important;
         }
 
+        /* ===== PROFILE ===== */
+        .profile-card {
+            background: var(--color-mine-card);
+            border: 1px solid var(--color-border);
+            border-radius: 1.4rem;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(245, 158, 11, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-avatar {
+            font-size: 3.5rem;
+            background: var(--bg-card);
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--color-accent-dim);
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            border-color: var(--color-accent);
+        }
+        .profile-name-area {
+            flex: 1;
+        }
+        .profile-name-area .name {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--color-accent);
+        }
+        .profile-name-area .name .edit-btn {
+            font-size: 0.6rem;
+            background: none;
+            border: none;
+            color: var(--color-text-dim);
+            cursor: pointer;
+            margin-right: 8px;
+            transition: 0.2s;
+        }
+        .profile-name-area .name .edit-btn:hover {
+            color: var(--color-accent);
+        }
+        .profile-name-area .sub {
+            font-size: 0.6rem;
+            color: var(--color-text-dim);
+            margin-top: 2px;
+        }
+        .profile-avatar-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+            position: relative;
+            z-index: 1;
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+        }
+        .profile-avatar-selector .emoji-option {
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            transition: 0.2s;
+            background: var(--bg-tab);
+            line-height: 1;
+        }
+        .profile-avatar-selector .emoji-option:hover {
+            border-color: var(--color-accent);
+            transform: scale(1.1);
+        }
+        .profile-avatar-selector .emoji-option.selected {
+            border-color: var(--color-accent);
+            background: var(--color-accent-dim);
+            color: #fff;
+        }
+        .profile-avatar-selector .custom-emoji-input {
+            flex: 1;
+            min-width: 100px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-stat-box {
+            background: var(--color-mine-stat-bg);
+            border: 1px solid var(--color-mine-stat-border);
+            border-radius: 12px;
+            padding: 8px 4px;
+            text-align: center;
+        }
+        .profile-stat-box .val {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--color-accent);
+        }
+        .profile-stat-box .label {
+            font-size: 0.45rem;
+            color: var(--color-text-muted);
+            margin-top: 2px;
+        }
+        .profile-detail-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+            font-size: 0.65rem;
+            color: var(--color-text-dim);
+        }
+        .profile-detail-row span {
+            background: var(--color-mine-stat-bg);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--color-mine-stat-border);
+        }
+        .profile-detail-row strong {
+            color: var(--color-text);
+        }
+        .profile-referral {
+            background: var(--color-mine-stat-bg);
+            border: 1px solid var(--color-mine-stat-border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        .profile-referral .code {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--color-accent);
+            letter-spacing: 2px;
+            background: var(--bg-card);
+            padding: 4px 16px;
+            border-radius: 30px;
+            display: inline-block;
+            border: 1px solid var(--color-border);
+        }
+        .profile-referral .info {
+            font-size: 0.55rem;
+            color: var(--color-text-muted);
+            margin-top: 4px;
+        }
+        .profile-friends {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 12px;
+        }
+        .profile-friends .title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 6px;
+        }
+        .profile-friends .friend-tag {
+            display: inline-block;
+            background: var(--bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 20px;
+            padding: 2px 12px;
+            margin: 2px 4px 2px 0;
+            font-size: 0.55rem;
+            color: var(--color-text-dim);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .profile-friends .friend-tag:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+        .profile-friends .friend-tag .remove-friend {
+            cursor: pointer;
+            color: var(--color-btn-red);
+            margin-right: 4px;
+            font-weight: 700;
+        }
+        .profile-friend-requests {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 12px;
+        }
+        .profile-friend-requests .title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--color-btn-green);
+            margin-bottom: 6px;
+        }
+        .profile-friend-requests .req-item {
+            background: var(--bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 20px;
+            padding: 4px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 2px 4px 2px 0;
+            font-size: 0.55rem;
+        }
+        .profile-add-friend {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .profile-add-friend input {
+            flex: 2;
+            min-width: 120px;
+            font-size: 0.6rem;
+            padding: 6px 10px;
+        }
+        .profile-add-friend .btn {
+            font-size: 0.55rem;
+            padding: 6px 14px;
+        }
+        .profile-close-btn {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: none;
+            border: none;
+            color: var(--color-text-dim);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .profile-close-btn:hover {
+            color: var(--color-accent);
+        }
+
         /* ===== MINE ===== */
         .mine-card {
             background: var(--color-mine-card);
@@ -1310,6 +1579,12 @@
             color: var(--color-text-dim);
             border: 1px solid var(--color-border);
             white-space: nowrap;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .fac-mem-tag:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
         }
         .fac-mem-tag.me {
             color: var(--color-accent);
@@ -1584,6 +1859,10 @@
             font-size: 0.6rem;
             font-weight: 700;
             color: var(--color-text);
+            cursor: pointer;
+        }
+        .mkt-offer-seller:hover {
+            color: var(--color-accent);
         }
         .mkt-offer-seller.admin-seller {
             color: var(--color-btn-blue);
@@ -1760,6 +2039,10 @@
             font-size: 0.72rem;
             font-weight: 700;
             color: var(--color-text);
+            cursor: pointer;
+        }
+        .rank-name:hover {
+            color: var(--color-accent);
         }
         .rank-name.gold-name {
             color: var(--color-accent);
@@ -2122,6 +2405,12 @@
             border-color: var(--color-accent);
             color: var(--color-accent);
         }
+        .sky-player .player-tooltip .tp-name {
+            cursor: pointer;
+        }
+        .sky-player .player-tooltip .tp-name:hover {
+            color: var(--color-accent);
+        }
         .sky-player .player-tooltip {
             position: absolute;
             bottom: calc(100% + 12px);
@@ -2479,6 +2768,7 @@
             .mine-stat { margin: 3px;
                 flex: 1 1 40%; }
             .sky-map-container { height: 350px; }
+            .profile-stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         /* ===== MILITARY SECTION ===== */
@@ -2986,6 +3276,86 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ===== PROFILE MODAL (مشاهده پروفایل دیگران) ===== */
+        .profile-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 99999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            padding: 20px;
+        }
+        .profile-modal-overlay.active {
+            display: flex;
+        }
+        .profile-modal {
+            background: var(--bg-card);
+            border: 2px solid var(--color-accent-dim);
+            border-radius: 2rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .profile-modal .modal-close {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: none;
+            border: none;
+            color: var(--color-text-dim);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.2s;
+        }
+        .profile-modal .modal-close:hover {
+            color: var(--color-accent);
+            transform: rotate(90deg);
+        }
+        .profile-modal .profile-card {
+            border: none;
+            padding: 0;
+            background: transparent;
+        }
+        .profile-modal .profile-card::before {
+            display: none;
+        }
+        .profile-modal .profile-avatar {
+            width: 80px;
+            height: 80px;
+            font-size: 4rem;
+            cursor: default;
+        }
+        .profile-modal .profile-avatar:hover {
+            transform: none;
+        }
+        /* ===== scrollbar ===== */
+        .profile-modal::-webkit-scrollbar {
+            width: 4px;
+        }
+        .profile-modal::-webkit-scrollbar-thumb {
+            background: var(--color-accent-dim);
+            border-radius: 4px;
+        }
+        .profile-modal::-webkit-scrollbar-track {
+            background: transparent;
+        }
     </style>
 </head>
 <body>
@@ -3033,6 +3403,7 @@
         <div class="login-box" id="loginBox" style="display:none">
             <input type="text" id="playerName" placeholder="نام کاربری (حداقل ۳ حرف)...">
             <input type="password" id="playerPassword" placeholder="رمز عبور (حداقل ۴ حرف)...">
+            <input type="text" id="referralCode" placeholder="کد دعوت (اختیاری)...">
             <button onclick="loginRegister()">🏴 ورود / تأسیس حساب</button>
         </div>
         <div id="gameUI" style="display:none">
@@ -3043,7 +3414,8 @@
                 <div class="res-item">⭐ XP: <span id="rXP">0</span></div>
             </div>
             <div class="tabs">
-                <div class="tab active" data-tab="mine">🪙 معدن</div>
+                <div class="tab active" data-tab="profile">👤 پروفایل</div>
+                <div class="tab" data-tab="mine">🪙 معدن</div>
                 <div class="tab" data-tab="military">⚔️ نظامی</div>
                 <div class="tab" data-tab="war">🔥 جنگ</div>
                 <div class="tab" data-tab="chat">💬 چت</div>
@@ -3055,7 +3427,8 @@
                 <div class="tab admin-tab admin-el is-hidden" data-tab="admin" id="tabAdmin">🛠️ مدیریت</div>
                 <div class="tab coadmin-tab coadmin-el is-hidden" data-tab="coadmin" id="tabCoadmin">⚡ کوادمین</div>
             </div>
-            <div id="panelMine" class="panel active"><div id="mineContent"></div></div>
+            <div id="panelProfile" class="panel active"><div id="profileContent"></div></div>
+            <div id="panelMine" class="panel"><div id="mineContent"></div></div>
             <div id="panelMilitary" class="panel"><div id="militaryContent"></div></div>
             <div id="panelWar" class="panel"><div id="warContent"></div></div>
             <div id="panelChat" class="panel"><div id="chatContent"></div></div>
@@ -3072,6 +3445,14 @@
         <div class="explosion" id="explosionIcon">💥</div>
         <div class="battle-text" id="battleStatusText">در حال درگیری...</div>
         <div class="result-text" id="battleResultText"></div>
+    </div>
+
+    <!-- ===== PROFILE MODAL (مشاهده پروفایل دیگران) ===== -->
+    <div class="profile-modal-overlay" id="profileModalOverlay">
+        <div class="profile-modal">
+            <button class="modal-close" onclick="closeProfileModal()">✕</button>
+            <div id="profileModalContent"></div>
+        </div>
     </div>
 
     <script>
@@ -3119,6 +3500,8 @@
             oil: { name: "نفت", icon: "🛢️", theme: "oil-theme" },
             metal: { name: "فلز", icon: "⛏️", theme: "metal-theme" }
         };
+        // لیست ایموجی‌های قابل انتخاب برای آواتار
+        const AVATAR_EMOJIS = ['👤', '👨', '👩', '🧑', '👦', '👧', '🧒', '👨‍✈️', '👩‍✈️', '🧑‍✈️', '👨‍🚀', '👩‍🚀', '🧑‍🚀', '🦸', '🦸‍♂️', '🦸‍♀️', '🧙', '🧙‍♂️', '🧙‍♀️', '🧝', '🧝‍♂️', '🧝‍♀️', '🧛', '🧛‍♂️', '🧛‍♀️', '🧟', '🧟‍♂️', '🧟‍♀️', '🧞', '🧞‍♂️', '🧞‍♀️', '🧜', '🧜‍♂️', '🧜‍♀️', '🧚', '🧚‍♂️', '🧚‍♀️', '👼', '🤴', '👸', '👳', '👳‍♂️', '👳‍♀️', '👲', '👰', '👰‍♂️', '👰‍♀️', '🤵', '🤵‍♂️', '🤵‍♀️', '👮', '👮‍♂️', '👮‍♀️', '🕵️', '🕵️‍♂️', '🕵️‍♀️', '💂', '💂‍♂️', '💂‍♀️', '👷', '👷‍♂️', '👷‍♀️', '👨‍🌾', '👩‍🌾', '🧑‍🌾', '👨‍🍳', '👩‍🍳', '🧑‍🍳', '👨‍🔧', '👩‍🔧', '🧑‍🔧', '👨‍🏭', '👩‍🏭', '🧑‍🏭', '👨‍💼', '👩‍💼', '🧑‍💼', '👨‍🔬', '👩‍🔬', '🧑‍🔬', '👨‍💻', '👩‍💻', '🧑‍💻', '👨‍🎤', '👩‍🎤', '🧑‍🎤', '👨‍🎨', '👩‍🎨', '🧑‍🎨', '👨‍✈️', '👩‍✈️', '🧑‍✈️', '👨‍🚀', '👩‍🚀', '🧑‍🚀', '👨‍🚒', '👩‍🚒', '🧑‍🚒', '🦹', '🦹‍♂️', '🦹‍♀️', '🧕', '🤶', '🎅', '🧑‍🎄', '🤴', '👸', '👱', '👱‍♂️', '👱‍♀️', '👨‍🦰', '👩‍🦰', '🧑‍🦰', '👨‍🦱', '👩‍🦱', '🧑‍🦱', '👨‍🦳', '👩‍🦳', '🧑‍🦳', '👨‍🦲', '👩‍🦲', '🧑‍🦲', '🧔', '🧔‍♂️', '🧔‍♀️', '🧑‍🦰', '🧑‍🦱', '🧑‍🦳', '🧑‍🦲'];
 
         // ===== متغیرهای سراسری =====
         let player = null,
@@ -3126,17 +3509,18 @@
             marketOffers = [],
             battleLogs = [],
             chatMessages = [],
-            assistantNames = []; // لیست دستیاران (کوادمین)
+            assistantNames = [];
         let isConnected = false,
             saving = false,
             isAttacking = false;
         let globalBanner = "",
             chatLocked = false,
             mineTimer = null,
-            activeTab = "mine";
+            activeTab = "profile";
         let lastHash = '',
             syncLoopRunning = false;
         let adminSavedInputs = null;
+        let coadminSavedInputs = null;
         let displayedChatCount = 0;
         let adminPlayerHash = '';
         let skyZoom = 1;
@@ -3144,6 +3528,7 @@
             SKY_MAX_ZOOM = 2.5;
         let skyPos = { x: 0, y: 0 };
         let skyPlayerPositions = {};
+        let skyPositionCacheKey = '';
 
         // ===== توابع نمایش نام با رنگ و ایموجی سفارشی =====
         function isAssistant(name) {
@@ -3155,21 +3540,28 @@
             const name = escapeHtml(p.name);
             const isAdm = p.name === ADMIN_NAME;
             const isAsst = isAssistant(p.name);
+            // آواتار: اگر customEmoji داشته باشد از آن استفاده کن، در غیر این صورت 👤
+            const avatar = p.customEmoji || '👤';
             if (p.customEmoji || p.customColor) {
                 const emoji = p.customEmoji ? `<span class="custom-emoji">${escapeHtml(p.customEmoji)}</span>` : '';
                 const color = p.customColor ? `color:${escapeHtml(p.customColor)};` : '';
                 let cls = 'player-name-custom';
                 if (isAdm) cls += ' admin-badge';
                 else if (isAsst) cls += ' coadmin-badge';
-                return `<span class="${cls}" style="${color}">${emoji} ${name}</span>`;
+                return `<span class="${cls}" style="${color}">${avatar} ${name}</span>`;
             }
             if (isAdm) {
-                return `<span class="admin-badge">🚬 ${name}</span>`;
+                return `<span class="admin-badge">${avatar} ${name}</span>`;
             }
             if (isAsst) {
-                return `<span class="coadmin-badge">⚡ ${name}</span>`;
+                return `<span class="coadmin-badge">${avatar} ${name}</span>`;
             }
-            return `<span class="player-name-custom">${name}</span>`;
+            return `<span class="player-name-custom">${avatar} ${name}</span>`;
+        }
+
+        function getPlayerAvatar(p) {
+            if (!p) return '👤';
+            return p.customEmoji || '👤';
         }
 
         function styledName(n) {
@@ -3278,6 +3670,73 @@
             if (i >= 0) allPlayers[i] = { ...player };
         }
 
+        // ===== توابع مودال پروفایل =====
+        function showProfileModal(playerId) {
+            const target = allPlayers.find(p => p.id === playerId);
+            if (!target) return toast("بازیکن یافت نشد", true);
+            const overlay = document.getElementById('profileModalOverlay');
+            const content = document.getElementById('profileModalContent');
+            // رندر پروفایل هدف داخل مودال
+            const joinDate = new Date(target.joinDate);
+            const now = new Date();
+            const ageYears = now.getFullYear() - joinDate.getFullYear();
+            const ageMonths = now.getMonth() - joinDate.getMonth();
+            const ageDays = now.getDate() - joinDate.getDate();
+            let ageStr = '';
+            if (ageYears > 0) ageStr += ageYears + ' سال ';
+            if (ageMonths > 0) ageStr += ageMonths + ' ماه ';
+            if (ageDays > 0) ageStr += ageDays + ' روز ';
+            if (!ageStr) ageStr = 'کمتر از یک روز';
+
+            const referrer = target.referredBy ? allPlayers.find(p => p.id === target.referredBy) : null;
+            const referralCount = target.referrals ? target.referrals.length : 0;
+            const friendList = (target.friends || []).map(fid => allPlayers.find(p => p.id === fid)).filter(Boolean);
+
+            let h = `<div class="profile-card">`;
+            h += `<div class="profile-header">
+                <div class="profile-avatar">${getPlayerAvatar(target)}</div>
+                <div class="profile-name-area">
+                    <div class="name">${escapeHtml(target.customName || target.name)}</div>
+                    <div class="sub">${target.nameChanged ? 'نام تغییر یافته' : 'نام اصلی'}</div>
+                </div>
+            </div>`;
+            h += `<div class="profile-stats-grid">
+                <div class="profile-stat-box"><div class="val">${target.xp}</div><div class="label">⭐ XP</div></div>
+                <div class="profile-stat-box"><div class="val">${target.successfulAttacks||0}</div><div class="label">⚔️ نبرد موفق</div></div>
+                <div class="profile-stat-box"><div class="val">${target.successfulDefenses||0}</div><div class="label">🛡️ دفاع موفق</div></div>
+                <div class="profile-stat-box"><div class="val">${referralCount}</div><div class="label">📨 دعوت‌ها</div></div>
+            </div>`;
+            h += `<div class="profile-detail-row">
+                <span>📅 عضویت: <strong>${joinDate.toLocaleDateString('fa-IR')}</strong></span>
+                <span>⏳ سن اکانت: <strong>${ageStr}</strong></span>
+                <span>🏷️ کد دعوت: <strong>${target.referralCode}</strong></span>
+                ${referrer ? `<span>👤 دعوت‌کننده: <strong>${getPlayerDisplayName(referrer)}</strong></span>` : ''}
+            </div>`;
+            h += `<div class="profile-referral">
+                <div>کد دعوت: <span class="code">${target.referralCode}</span></div>
+            </div>`;
+            h += `<div class="profile-friends"><div class="title">👥 دوستان (${friendList.length})</div>`;
+            if (friendList.length === 0) {
+                h += `<span style="font-size:0.55rem;color:var(--color-text-muted);">هیچ دوستی ندارد</span>`;
+            } else {
+                friendList.forEach(f => {
+                    h += `<span class="friend-tag" onclick="showProfileModal('${f.id}')">${getPlayerDisplayName(f)}</span>`;
+                });
+            }
+            h += `</div>`;
+            h += `</div>`;
+            content.innerHTML = h;
+            overlay.classList.add('active');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModalOverlay').classList.remove('active');
+        }
+        // بستن مودال با کلیک روی پس‌زمینه
+        document.getElementById('profileModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeProfileModal();
+        });
+
         // ===== Supabase =====
         async function initSupabase() {
             updateSyncUI("🔌 اتصال...", "warn");
@@ -3320,7 +3779,17 @@
                 d: p.defenses,
                 sh: p.shieldExpiry,
                 ce: p.customEmoji || '',
-                cc: p.customColor || ''
+                cc: p.customColor || '',
+                jd: p.joinDate || ts(),
+                nc: p.nameChanged || false,
+                rc: p.referralCode || '',
+                rb: p.referredBy || '',
+                refs: p.referrals || [],
+                fr: p.friends || [],
+                frq: p.friendRequests || [],
+                sa: p.successfulAttacks || 0,
+                sd: p.successfulDefenses || 0,
+                cn: p.customName || p.name
             };
         }
 
@@ -3341,7 +3810,17 @@
                 defenses: c.d || [],
                 shieldExpiry: c.sh || 0,
                 customEmoji: c.ce || '',
-                customColor: c.cc || ''
+                customColor: c.cc || '',
+                joinDate: c.jd || ts(),
+                nameChanged: c.nc || false,
+                referralCode: c.rc || '',
+                referredBy: c.rb || '',
+                referrals: c.refs || [],
+                friends: c.fr || [],
+                friendRequests: c.frq || [],
+                successfulAttacks: c.sa || 0,
+                successfulDefenses: c.sd || 0,
+                customName: c.cn || c.n || ''
             };
         }
 
@@ -3354,7 +3833,7 @@
                 c: chatMessages.slice(-10),
                 b: globalBanner,
                 cl: chatLocked,
-                a: assistantNames // ذخیره لیست دستیاران
+                a: assistantNames
             };
         }
 
@@ -3388,7 +3867,6 @@
                     chatMessages = j.c || [];
                     globalBanner = j.b || "";
                     chatLocked = j.cl || false;
-                    // فقط در صورتی که داده‌ها شامل لیست دستیاران باشد، آن را به‌روز کن، در غیر این صورت مقدار قبلی را حفظ کن
                     if (j.a) {
                         assistantNames = j.a;
                     }
@@ -3401,9 +3879,11 @@
             } catch (e) { console.error(e); return false; }
         }
 
-        function createPlayer(n, pw) {
+        function createPlayer(n, pw, refCode) {
+            const id = n + "_" + ts().toString(36);
+            const referralCode = id.slice(0, 8).toUpperCase();
             return {
-                id: n + "_" + ts().toString(36),
+                id: id,
                 name: n,
                 password: pw,
                 gold: 1000,
@@ -3417,8 +3897,18 @@
                 fighters: {},
                 defenses: [],
                 shieldExpiry: 0,
-                customEmoji: '',
-                customColor: ''
+                customEmoji: '👤',
+                customColor: '',
+                joinDate: ts(),
+                nameChanged: false,
+                referralCode: referralCode,
+                referredBy: refCode || '',
+                referrals: [],
+                friends: [],
+                friendRequests: [],
+                successfulAttacks: 0,
+                successfulDefenses: 0,
+                customName: n
             };
         }
 
@@ -3470,7 +3960,8 @@
 
         function dataHash() {
             return allPlayers.map(p => p.id + ':' + p.xp + ':' + p.gold + ':' + p.oil + ':' + p.metal + ':' + (p
-                .customEmoji || '') + ':' + (p.customColor || '')).join('|') + '|' +
+                .customEmoji || '') + ':' + (p.customColor || '') + ':' + p.customName + ':' + p.friends.join(',') +
+                ':' + p.referrals.length).join('|') + '|' +
                 marketOffers.length + '|' + chatMessages.length + '|' + battleLogs.length + '|' + globalBanner + '|' +
                 chatLocked + '|' + assistantNames.join(',');
         }
@@ -3497,10 +3988,11 @@
             if (expired.length > 0) saveAll(true);
         }
 
-        // ===== توابع ورود و ثبت =====
+        // ===== توابع ورود و ثبت با سیستم دعوت =====
         window.loginRegister = async function() {
             const n = document.getElementById("playerName").value.trim(),
                 pw = document.getElementById("playerPassword").value.trim();
+            const refCode = document.getElementById("referralCode").value.trim().toUpperCase();
             if (n.length < 3 || pw.length < 4) return toast("نام و رمز نامعتبر", true);
             const ex = allPlayers.find(p => p.name.toLowerCase() === n.toLowerCase());
             if (ex) {
@@ -3508,8 +4000,33 @@
                 player = ex;
             } else {
                 if (allPlayers.length >= MAX_PLAYERS) return toast("سرور پر است (حداکثر " + MAX_PLAYERS + " بازیکن)", true);
-                player = createPlayer(n, pw);
+                let referrer = null;
+                if (refCode) {
+                    referrer = allPlayers.find(p => p.referralCode === refCode);
+                    if (!referrer) return toast("کد دعوت نامعتبر", true);
+                    if (referrer.id === player?.id) return toast("نمی‌توانید خودتان را دعوت کنید", true);
+                }
+                player = createPlayer(n, pw, refCode);
                 allPlayers.push(player);
+                if (referrer) {
+                    player.referredBy = referrer.id;
+                    referrer.referrals.push(player.id);
+                    referrer.xp += 5;
+                    referrer.gold += 1000;
+                    referrer.oil += 500;
+                    referrer.metal += 500;
+                    player.xp += 5;
+                    player.gold += 1000;
+                    player.oil += 500;
+                    player.metal += 500;
+                    chatMessages.push({
+                        ts: ts(),
+                        n: "SYSTEM",
+                        t: `🎉 ${escapeHtml(player.name)} توسط ${escapeHtml(referrer.name)} دعوت شد و هر دو پاداش گرفتند!`,
+                        sys: true
+                    });
+                    toast(`🎉 شما توسط ${referrer.name} دعوت شدید و پاداش گرفتید!`, false, "peace");
+                }
                 await saveAll(true);
             }
             document.getElementById("loginBox").style.display = 'none';
@@ -3612,39 +4129,59 @@
             renderRank();
         };
 
-        // ===== جنگ (نقشه آسمان) =====
+        // ===== جنگ (نقشه آسمان) با توزیع یکنواخت =====
+        function computeSkyPositions() {
+            const sorted = [...allPlayers].sort((a, b) => a.id.localeCompare(b.id));
+            const total = sorted.length;
+            if (total === 0) return {};
+            const positions = {};
+            const margin = 0.12;
+            const cols = Math.ceil(Math.sqrt(total));
+            const rows = Math.ceil(total / cols);
+            const spacingX = (1 - 2 * margin) / (cols - 1 || 1);
+            const spacingY = (1 - 2 * margin) / (rows - 1 || 1);
+            sorted.forEach((p, idx) => {
+                const col = idx % cols;
+                const row = Math.floor(idx / cols);
+                const x = margin + col * spacingX;
+                const y = margin + row * spacingY;
+                const noise = 0.02;
+                const nx = x + (Math.random() - 0.5) * noise;
+                const ny = y + (Math.random() - 0.5) * noise;
+                positions[p.id] = { x: Math.min(1 - margin, Math.max(margin, nx)), y: Math.min(1 - margin, Math.max(
+                        margin, ny)) };
+            });
+            return positions;
+        }
+
         function getPlayerPosition(pId) {
-            if (skyPlayerPositions[pId]) return skyPlayerPositions[pId];
-            let hash = 0;
-            for (let i = 0; i < pId.length; i++) {
-                hash = (hash << 5) - hash + pId.charCodeAt(i);
-                hash |= 0;
+            const currentIds = allPlayers.map(p => p.id).sort().join(',');
+            if (skyPositionCacheKey !== currentIds) {
+                skyPlayerPositions = computeSkyPositions();
+                skyPositionCacheKey = currentIds;
             }
-            const x = ((Math.abs(hash) % 85) + 5) / 100;
-            const y = ((Math.abs(hash >> 8) % 85) + 5) / 100;
-            const pos = { x, y };
-            skyPlayerPositions[pId] = pos;
-            return pos;
+            return skyPlayerPositions[pId] || { x: 0.5, y: 0.5 };
         }
 
         function renderSkyMap() {
             const container = document.getElementById('warContent');
             if (!container) return;
-
             const targets = allPlayers.filter(p => p.id !== player.id);
             const allTargets = [player, ...targets];
-
+            const currentIds = allTargets.map(p => p.id).sort().join(',');
+            if (skyPositionCacheKey !== currentIds) {
+                skyPlayerPositions = computeSkyPositions();
+                skyPositionCacheKey = currentIds;
+            }
             let h = '';
             h +=
                 `<div class="info-bar" style="margin-bottom:8px;">⚔️ قدرت شما: <b>${calcAtt(player)}</b> | 🛡️ دفاع شما: <b>${calcDef(player)}</b> | بازیکنان: ${allTargets.length}</div>`;
-
             h += `<div class="sky-map-container" id="skyMapContainer">
                 <div class="sky-stars"></div>
                 <div class="cloud cloud1"></div>
                 <div class="cloud cloud2"></div>
                 <div class="cloud cloud3"></div>
                 <div class="sky-map-inner" id="skyMapInner" style="transform: translate(${skyPos.x}px, ${skyPos.y}px) scale(${skyZoom});">`;
-
             allTargets.forEach(p => {
                 const pos = getPlayerPosition(p.id);
                 const isMe = p.id === player.id;
@@ -3653,7 +4190,6 @@
                 const isAsst = isAssistant(p.name);
                 const att = calcAtt(p);
                 const def = calcDef(p);
-
                 let planeIcon = '🛩️';
                 if (p.faction) {
                     const fi = getFI(p.faction);
@@ -3667,21 +4203,18 @@
                 } else {
                     planeIcon = isAdmP ? '🛸' : (isAsst ? '⚡' : '✈️');
                 }
-
                 const label = p.name;
                 const isMeClass = isMe ? 'me' : '';
                 const shieldHtml = hasShield ? `<div class="shield-ring"></div>` : '';
                 const px = pos.x * 100;
                 const py = pos.y * 100;
-
                 const displayName = getPlayerDisplayName(p);
-
                 h += `<div class="sky-player ${isMeClass}" style="left:${px}%;top:${py}%;" data-player-id="${p.id}">
                     ${shieldHtml}
                     <div class="plane-icon">${planeIcon}</div>
                     <div class="player-label">${escapeHtml(label)}</div>
                     <div class="player-tooltip">
-                        <div class="tp-name">${displayName}</div>
+                        <div class="tp-name" onclick="showProfileModal('${p.id}')">👤 ${displayName}</div>
                         ${isMe ? `<div class="tp-detail">⚔️ ${att} | 🛡️ ${def} | XP: ${p.xp}</div>` : `<div class="tp-detail">XP: ${p.xp}</div>`}
                         <div class="tp-detail">${p.faction?getFI(p.faction)+' '+escapeHtml(getFN(p.faction)):'بدون جناح'}</div>
                         ${hasShield?'<div class="tp-detail" style="color:#93c5fd;">🛡️ سپر فعال</div>':''}
@@ -3689,7 +4222,6 @@
                     </div>
                 </div>`;
             });
-
             h += `</div>
                 <div class="sky-map-zoom-controls">
                     <button onclick="skyZoomIn()">+</button>
@@ -3702,7 +4234,6 @@
                     <span><span class="dot shield-dot"></span> سپر فعال</span>
                 </div>
             </div>`;
-
             container.innerHTML = h;
             setupSkyMapDrag();
             applySkyTransform();
@@ -3735,10 +4266,8 @@
             container.parentNode.replaceChild(newContainer, container);
             const freshContainer = document.getElementById('skyMapContainer');
             if (!freshContainer) return;
-
             let isDraggingLocal = false,
                 startX, startY, origX, origY;
-
             const onStart = (e) => {
                 const ev = e.touches ? e.touches[0] : e;
                 isDraggingLocal = true;
@@ -3748,7 +4277,6 @@
                 origY = skyPos.y;
                 freshContainer.style.cursor = 'grabbing';
             };
-
             const onMove = (e) => {
                 if (!isDraggingLocal) return;
                 e.preventDefault();
@@ -3759,12 +4287,10 @@
                 skyPos.y = origY + dy;
                 applySkyTransform();
             };
-
             const onEnd = () => {
                 isDraggingLocal = false;
                 freshContainer.style.cursor = 'grab';
             };
-
             freshContainer.addEventListener('mousedown', onStart);
             document.addEventListener('mousemove', onMove);
             document.addEventListener('mouseup', onEnd);
@@ -3773,7 +4299,7 @@
             document.addEventListener('touchend', onEnd);
         }
 
-        // ===== جنگ (تابع حمله) با تغییرات XP خواسته شده =====
+        // ===== جنگ (تابع حمله) با آمار =====
         window.launchAttack = async function(tId) {
             if (isAttacking) return;
             isAttacking = true;
@@ -3797,8 +4323,15 @@
                 let rM = "",
                     rS = "",
                     isW = false;
+                let attackerXpLoss = 0,
+                    defenderXpLoss = 0;
+
                 if (myA > eD) {
                     isW = true;
+                    player.xp += 15;
+                    player.successfulAttacks = (player.successfulAttacks || 0) + 1;
+                    defenderXpLoss = Math.floor(Math.random() * 9) + 1;
+                    target.xp = Math.max(0, target.xp - defenderXpLoss);
                     const ratio = eD / myA;
                     const loot = { g: Math.floor(target.gold * 0.3), o: Math.floor(target.oil * 0.3), m: Math.floor(
                             target.metal * 0.3) };
@@ -3808,7 +4341,6 @@
                     player.gold += loot.g;
                     player.oil += loot.o;
                     player.metal += loot.m;
-                    player.xp += 15;
                     target.shieldExpiry = ts() + SHIELD_DURATION;
                     for (const [k, f] of Object.entries(player.fighters)) {
                         f.count = Math.max(0, f.count - Math.ceil(f.count * ratio * 0.5));
@@ -3820,12 +4352,15 @@
                     target.defenses = target.defenses?.filter(d => d.hp > 0) || [];
                     rM =
                         `🔥 <span class="attacker">${getPlayerDisplayName(player)}</span> به <span class="defender">${getPlayerDisplayName(target)}</span> حمله و پیروز شد! <span class="loot">${loot.g} طلا، ${loot.o} نفت، ${loot.m} فلز</span>`;
-                    rS = `🏆 پیروزی!<br>${loot.g} طلا | ${loot.o} نفت | ${loot.m} فلز`;
+                    rS =
+                        `🏆 پیروزی!<br>${loot.g} طلا | ${loot.o} نفت | ${loot.m} فلز<br>🛡️ ${target.name} ${defenderXpLoss} XP از دست داد.`;
                 } else {
                     isW = false;
-                    const ratio = myA / eD;
-                    player.xp += 2;
+                    target.successfulDefenses = (target.successfulDefenses || 0) + 1;
+                    attackerXpLoss = Math.floor(Math.random() * 9) + 1;
+                    player.xp = Math.max(0, player.xp - attackerXpLoss);
                     target.xp += 5;
+                    const ratio = myA / eD;
                     for (const [k, f] of Object.entries(player.fighters)) {
                         f.count = Math.max(0, f.count - Math.ceil(f.count * 0.9));
                     }
@@ -3838,7 +4373,7 @@
                     }
                     rM =
                         `🛡️ <span class="attacker">${getPlayerDisplayName(player)}</span> به <span class="defender">${getPlayerDisplayName(target)}</span> حمله کرد اما دفاع شد!`;
-                    rS = `💥 شکست سنگین!`;
+                    rS = `💥 شکست سنگین!<br>شما ${attackerXpLoss} XP از دست دادید.`;
                 }
                 player.shieldExpiry = 0;
                 const pi = allPlayers.findIndex(p => p.id === player.id);
@@ -3880,7 +4415,6 @@
                 toast(`❌ شما حداکثر ${MAX_OFFERS_PER_PLAYER} آگهی می‌توانید داشته باشید`, true);
                 return;
             }
-
             const gr = document.getElementById('mktGive').value,
                 gt = document.getElementById('mktGet').value;
             const ga = parseInt(document.getElementById('mktGiveAmt').value),
@@ -3889,7 +4423,6 @@
                 true);
             if (gr === gt) return toast("منبع مشابه", true);
             if (player[gr] < ga) return toast("منابع کم", true);
-
             player[gr] -= ga;
             marketOffers.push({
                 id: ts().toString(36),
@@ -3912,7 +4445,6 @@
             if (!o) return;
             if (o.sid === player.id) return toast("پیشنهاد خودتان", true);
             if (player[o.get] < o.gta) return toast("منابع کم", true);
-
             player[o.get] -= o.gta;
             player[o.give] += o.ga;
             const s = allPlayers.find(p => p.id === o.sid);
@@ -3924,7 +4456,7 @@
             toast("✅ معامله شد", false, "peace");
         };
 
-        // ===== تحقیق (با گرافیک جدید و غیرفعال کردن نظامی و اقتصادی) =====
+        // ===== تحقیق =====
         window.upgradeResearch = async function(b) {
             if (b === 'military' || b === 'economy') {
                 toast("🔜 این بخش به‌زودی فعال می‌شود!", false, "peace");
@@ -3965,8 +4497,241 @@
             await saveAll();
         };
 
+        // ===== پروفایل =====
+        function renderProfile() {
+            if (!player) return;
+            const container = document.getElementById('profileContent');
+            const joinDate = new Date(player.joinDate);
+            const now = new Date();
+            const ageYears = now.getFullYear() - joinDate.getFullYear();
+            const ageMonths = now.getMonth() - joinDate.getMonth();
+            const ageDays = now.getDate() - joinDate.getDate();
+            let ageStr = '';
+            if (ageYears > 0) ageStr += ageYears + ' سال ';
+            if (ageMonths > 0) ageStr += ageMonths + ' ماه ';
+            if (ageDays > 0) ageStr += ageDays + ' روز ';
+            if (!ageStr) ageStr = 'کمتر از یک روز';
+
+            const referrer = player.referredBy ? allPlayers.find(p => p.id === player.referredBy) : null;
+            const referralCount = player.referrals ? player.referrals.length : 0;
+            const friendList = (player.friends || []).map(fid => allPlayers.find(p => p.id === fid)).filter(Boolean);
+            const friendRequests = (player.friendRequests || []).map(fid => allPlayers.find(p => p.id === fid)).filter(
+            Boolean);
+
+            let h = `<div class="profile-card">`;
+            h += `<div class="profile-header">
+                <div class="profile-avatar" onclick="toggleAvatarSelector()">${getPlayerAvatar(player)}</div>
+                <div class="profile-name-area">
+                    <div class="name">${escapeHtml(player.customName || player.name)}
+                        ${!player.nameChanged ? `<button class="edit-btn" onclick="showChangeName()">✏️</button>` : ''}
+                    </div>
+                    <div class="sub">${player.nameChanged ? 'نام تغییر یافته' : 'نام اصلی'}</div>
+                </div>
+            </div>`;
+
+            // انتخابگر آواتار
+            h += `<div id="avatarSelector" style="display:none;" class="profile-avatar-selector">`;
+            AVATAR_EMOJIS.forEach(emoji => {
+                const selected = emoji === player.customEmoji ? 'selected' : '';
+                h += `<span class="emoji-option ${selected}" onclick="selectAvatar('${emoji}')">${emoji}</span>`;
+            });
+            h +=
+                `<input type="text" class="custom-emoji-input" id="customEmojiInput" placeholder="ایموجی دلخواه" value="${player.customEmoji || ''}" onchange="setCustomEmoji(this.value)">`;
+            h += `</div>`;
+
+            // تغییر نام
+            if (!player.nameChanged) {
+                h += `<div id="changeNameArea" style="display:none;margin-bottom:12px;position:relative;z-index:1;">
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <input type="text" id="newNameInput" placeholder="نام جدید (حداقل 3 حرف)" style="flex:2;min-width:120px;">
+                        <button class="btn btn-gold btn-sm" onclick="changeName()">تغییر نام</button>
+                        <button class="btn btn-red btn-sm" onclick="document.getElementById('changeNameArea').style.display='none'">لغو</button>
+                    </div>
+                </div>`;
+            }
+
+            h += `<div class="profile-stats-grid">
+                <div class="profile-stat-box"><div class="val">${player.xp}</div><div class="label">⭐ XP</div></div>
+                <div class="profile-stat-box"><div class="val">${player.successfulAttacks||0}</div><div class="label">⚔️ نبرد موفق</div></div>
+                <div class="profile-stat-box"><div class="val">${player.successfulDefenses||0}</div><div class="label">🛡️ دفاع موفق</div></div>
+                <div class="profile-stat-box"><div class="val">${referralCount}</div><div class="label">📨 دعوت‌ها</div></div>
+            </div>`;
+
+            h += `<div class="profile-detail-row">
+                <span>📅 عضویت: <strong>${joinDate.toLocaleDateString('fa-IR')}</strong></span>
+                <span>⏳ سن اکانت: <strong>${ageStr}</strong></span>
+                <span>🏷️ کد دعوت: <strong>${player.referralCode}</strong></span>
+                ${referrer ? `<span>👤 دعوت‌کننده: <strong>${getPlayerDisplayName(referrer)}</strong></span>` : ''}
+            </div>`;
+
+            h += `<div class="profile-referral">
+                <div>کد دعوت شما: <span class="code">${player.referralCode}</span></div>
+                <div class="info">با اشتراک این کد، هر نفر که ثبت‌نام کند به شما و او پاداش تعلق می‌گیرد!</div>
+            </div>`;
+
+            h += `<div class="profile-friends"><div class="title">👥 دوستان (${friendList.length})</div>`;
+            if (friendList.length === 0) {
+                h += `<span style="font-size:0.55rem;color:var(--color-text-muted);">هیچ دوستی ندارید</span>`;
+            } else {
+                friendList.forEach(f => {
+                    h +=
+                        `<span class="friend-tag" onclick="showProfileModal('${f.id}')">${getPlayerDisplayName(f)} <span class="remove-friend" onclick="event.stopPropagation();removeFriend('${f.id}')">✕</span></span>`;
+                });
+            }
+            h += `</div>`;
+
+            h += `<div class="profile-friend-requests"><div class="title">📩 درخواست‌های دوستی (${friendRequests.length})</div>`;
+            if (friendRequests.length === 0) {
+                h += `<span style="font-size:0.55rem;color:var(--color-text-muted);">درخواستی ندارید</span>`;
+            } else {
+                friendRequests.forEach(f => {
+                    h +=
+                        `<span class="req-item">${getPlayerDisplayName(f)} <button class="btn btn-green btn-sm" onclick="acceptFriend('${f.id}')">✅ قبول</button> <button class="btn btn-red btn-sm" onclick="rejectFriend('${f.id}')">❌ رد</button></span>`;
+                });
+            }
+            h += `</div>`;
+
+            h += `<div class="profile-add-friend">
+                <input type="text" id="friendAddInput" placeholder="نام یا کد دعوت دوست...">
+                <button class="btn btn-blue btn-sm" onclick="sendFriendRequest()">➕ افزودن دوست</button>
+            </div>`;
+
+            h += `</div>`;
+            container.innerHTML = h;
+        }
+
+        // ===== توابع آواتار =====
+        let avatarSelectorOpen = false;
+
+        function toggleAvatarSelector() {
+            const el = document.getElementById('avatarSelector');
+            if (el) {
+                avatarSelectorOpen = !avatarSelectorOpen;
+                el.style.display = avatarSelectorOpen ? 'flex' : 'none';
+            }
+        }
+
+        window.selectAvatar = async function(emoji) {
+            if (!player) return;
+            player.customEmoji = emoji;
+            // به‌روزرسانی انتخاب شده
+            document.querySelectorAll('.emoji-option').forEach(el => {
+                el.classList.toggle('selected', el.textContent === emoji);
+            });
+            // به‌روزرسانی فیلد ورودی
+            const input = document.getElementById('customEmojiInput');
+            if (input) input.value = emoji;
+            // ذخیره در دیتابیس
+            await saveAll(true);
+            updateUI();
+            renderProfile();
+            renderActiveTab();
+            toast(`✅ آواتار به ${emoji} تغییر یافت`, false, "peace");
+        };
+
+        window.setCustomEmoji = async function(value) {
+            if (!player) return;
+            const emoji = value.trim() || '👤';
+            player.customEmoji = emoji;
+            // به‌روزرسانی انتخاب‌ها
+            document.querySelectorAll('.emoji-option').forEach(el => {
+                el.classList.toggle('selected', el.textContent === emoji);
+            });
+            await saveAll(true);
+            updateUI();
+            renderProfile();
+            renderActiveTab();
+            toast(`✅ آواتار به ${emoji} تغییر یافت`, false, "peace");
+        };
+
+        // ===== توابع دوستان =====
+        window.showChangeName = function() {
+            const area = document.getElementById('changeNameArea');
+            if (area) area.style.display = 'block';
+        };
+
+        window.changeName = async function() {
+            if (player.nameChanged) return toast("نام قبلاً تغییر کرده", true);
+            const newName = document.getElementById('newNameInput').value.trim();
+            if (newName.length < 3) return toast("نام حداقل ۳ حرف", true);
+            if (allPlayers.some(p => p.name.toLowerCase() === newName.toLowerCase() && p.id !== player.id))
+                return toast("این نام قبلاً استفاده شده", true);
+            const oldName = player.name;
+            player.name = newName;
+            player.customName = newName;
+            player.nameChanged = true;
+            await saveAll(true);
+            renderProfile();
+            updateUI();
+            renderActiveTab();
+            toast(`✅ نام شما از ${oldName} به ${newName} تغییر یافت`, false, "peace");
+        };
+
+        window.sendFriendRequest = async function() {
+            const input = document.getElementById('friendAddInput');
+            if (!input) return;
+            const targetIdOrName = input.value.trim();
+            if (!targetIdOrName) return toast("نام یا کد دعوت را وارد کنید", true);
+            let target = allPlayers.find(p => p.name.toLowerCase() === targetIdOrName.toLowerCase());
+            if (!target) target = allPlayers.find(p => p.referralCode === targetIdOrName.toUpperCase());
+            if (!target) return toast("بازیکن یافت نشد", true);
+            if (target.id === player.id) return toast("نمی‌توانید خودتان را اضافه کنید", true);
+            if ((player.friends || []).includes(target.id)) return toast("این بازیکن قبلاً دوست شماست", true);
+            if ((player.friendRequests || []).includes(target.id)) return toast("درخواست قبلاً ارسال شده", true);
+            if (!target.friendRequests) target.friendRequests = [];
+            target.friendRequests.push(player.id);
+            await saveAll(true);
+            input.value = '';
+            renderProfile();
+            toast(`📩 درخواست دوستی برای ${target.name} ارسال شد`, false, "peace");
+            chatMessages.push({
+                ts: ts(),
+                n: "SYSTEM",
+                t: `📨 ${escapeHtml(player.name)} درخواست دوستی برای ${escapeHtml(target.name)} ارسال کرد.`,
+                sys: true
+            });
+        };
+
+        window.acceptFriend = async function(fid) {
+            const requester = allPlayers.find(p => p.id === fid);
+            if (!requester) return;
+            player.friendRequests = (player.friendRequests || []).filter(id => id !== fid);
+            if (!player.friends) player.friends = [];
+            if (!requester.friends) requester.friends = [];
+            if (!player.friends.includes(fid)) player.friends.push(fid);
+            if (!requester.friends.includes(player.id)) requester.friends.push(player.id);
+            await saveAll(true);
+            renderProfile();
+            toast(`✅ ${requester.name} به دوستان شما اضافه شد`, false, "peace");
+            chatMessages.push({
+                ts: ts(),
+                n: "SYSTEM",
+                t: `🤝 ${escapeHtml(player.name)} و ${escapeHtml(requester.name)} اکنون دوست هستند.`,
+                sys: true
+            });
+        };
+
+        window.rejectFriend = async function(fid) {
+            const requester = allPlayers.find(p => p.id === fid);
+            if (!requester) return;
+            player.friendRequests = (player.friendRequests || []).filter(id => id !== fid);
+            await saveAll(true);
+            renderProfile();
+            toast(`❌ درخواست ${requester.name} رد شد`, false, "peace");
+        };
+
+        window.removeFriend = async function(fid) {
+            const friend = allPlayers.find(p => p.id === fid);
+            if (!friend) return;
+            if (!confirm(`آیا از حذف ${friend.name} از دوستان خود اطمینان دارید؟`)) return;
+            player.friends = (player.friends || []).filter(id => id !== fid);
+            friend.friends = (friend.friends || []).filter(id => id !== player.id);
+            await saveAll(true);
+            renderProfile();
+            toast(`❌ ${friend.name} از دوستان شما حذف شد`, false, "peace");
+        };
+
         // ===== مدیریت (Admin) =====
-        // توابع مدیریتی اصلی (همانند قبل)
         window.adminGiveRes = async function() {
             const id = document.getElementById('admSel').value,
                 res = document.getElementById('admRes').value,
@@ -4018,8 +4783,13 @@
             t.defenses = [];
             t.mineLevel = 1;
             t.research = { military: 0, economy: 0, aviation: 0 };
-            t.customEmoji = '';
+            t.customEmoji = '👤';
             t.customColor = '';
+            t.successfulAttacks = 0;
+            t.successfulDefenses = 0;
+            t.friends = [];
+            t.friendRequests = [];
+            t.referrals = [];
             await saveAll(true);
             adminPlayerHash = '';
             renderAdmin();
@@ -4029,12 +4799,11 @@
         window.adminSetPlayerStyle = async function() {
             const id = document.getElementById('admStylePlayer').value;
             if (!id) return toast("بازیکن انتخاب کنید", true);
-            const emoji = document.getElementById('admStyleEmoji').value.trim();
+            const emoji = document.getElementById('admStyleEmoji').value.trim() || '👤';
             const color = document.getElementById('admStyleColor').value;
             const t = allPlayers.find(p => p.id === id);
             if (!t) return toast("بازیکن یافت نشد", true);
-
-            t.customEmoji = emoji || '';
+            t.customEmoji = emoji;
             t.customColor = color || '';
             await saveAll(true);
             adminPlayerHash = '';
@@ -4113,7 +4882,7 @@
             toast("☢️ سرور نابود شد", true);
         };
 
-        // ===== توابع مدیریت دستیاران (فقط ادمین) =====
+        // ===== توابع مدیریت دستیاران =====
         window.adminAddAssistant = async function() {
             if (!isAdmin()) return;
             if (assistantNames.length >= MAX_ASSISTANTS) {
@@ -4132,7 +4901,6 @@
             adminPlayerHash = '';
             renderAdmin();
             renderActiveTab();
-            // اگر کاربر فعلی دستیار شد، تب کوادمین را نشان بده
             if (isCoadmin()) {
                 document.querySelectorAll('.coadmin-el').forEach(e => e.classList.remove('is-hidden'));
             }
@@ -4149,50 +4917,49 @@
             adminPlayerHash = '';
             renderAdmin();
             renderActiveTab();
-            // اگر کاربر فعلی دستیار نبود، تب کوادمین را مخفی کن
             if (!isCoadmin()) {
                 document.querySelectorAll('.coadmin-el').forEach(e => e.classList.add('is-hidden'));
             }
             toast(`❌ ${name} از دستیاران حذف شد`, false, "peace");
         };
 
-        // ===== پنل کوادمین (دستیار) =====
+        // ===== پنل کوادمین =====
         function renderCoadmin() {
             if (!isCoadmin()) return;
             const container = document.getElementById('coadminContent');
+            const currentInputs = saveInputs('coadminContent');
+            const currentHash = chatLocked + '|' + globalBanner + '|' + assistantNames.join(',');
+            if (coadminSavedInputs && container.innerHTML.trim() !== '' && coadminSavedInputs._hash === currentHash) {
+                setTimeout(() => restoreInputs(coadminSavedInputs), 5);
+                return;
+            }
             let h = `<div class="coadmin-panel-box"><h3>⚡ مدیریت چت و بنر (کوادمین)</h3>`;
-
-            // ارسال پیام همگانی
             h +=
                 `<div class="flex-wrap" style="margin-bottom:8px;"><input type="text" id="coadmBroad" placeholder="پیام همگانی..." style="flex:2;min-width:120px;"><button class="btn btn-purple btn-sm" onclick="coadminBroadcast()">📨 ارسال</button></div>`;
-
-            // پاک چت
             h +=
                 `<div class="flex-wrap" style="margin-bottom:8px;"><button class="btn btn-red btn-sm" onclick="coadminClearChat()">🗑️ پاک چت</button>`;
-
-            // قفل/باز کردن چت
             h +=
                 `<button class="btn btn-${chatLocked?'green':'red'} btn-sm" onclick="coadminToggleChat()">${chatLocked?'🔓 باز':'🔒 بستن'}</button></div>`;
-
-            // تنظیم بنر
             h +=
                 `<div class="flex-wrap" style="margin-bottom:8px;"><input type="text" id="coadmBannerText" placeholder="متن بنر..." style="flex:2;min-width:120px;"><button class="btn btn-red btn-sm" onclick="coadminSetBanner()">🏳️ تنظیم</button>`;
-
-            // حذف بنر
             h +=
                 `<button class="btn btn-danger btn-sm" onclick="coadminRemoveBanner()">❌ حذف</button></div>`;
-
             h += `<div style="font-size:0.5rem;color:var(--color-text-muted);">شما به عنوان کوادمین فقط می‌توانید چت و بنر را مدیریت کنید.</div></div>`;
             container.innerHTML = h;
+            const newInputs = saveInputs('coadminContent');
+            newInputs._hash = currentHash;
+            coadminSavedInputs = newInputs;
+            setTimeout(() => restoreInputs(newInputs), 5);
         }
 
-        // ===== توابع کوادمین (دستیار) =====
+        // ===== توابع کوادمین =====
         window.coadminBroadcast = async function() {
             if (!isCoadmin()) return;
             const msg = document.getElementById('coadmBroad').value.trim();
             if (!msg) return toast("متن پیام را وارد کنید", true);
             chatMessages.push({ ts: ts(), n: "SYSTEM", t: escapeHtml(msg), sys: true });
             document.getElementById('coadmBroad').value = '';
+            if (coadminSavedInputs) coadminSavedInputs.v['coadmBroad'] = '';
             displayedChatCount = chatMessages.length;
             await saveAll(true);
             if (activeTab === 'chat') renderChat();
@@ -4226,6 +4993,7 @@
             if (!msg) return toast("متن بنر را وارد کنید", true);
             globalBanner = msg;
             document.getElementById('coadmBannerText').value = '';
+            if (coadminSavedInputs) coadminSavedInputs.v['coadmBannerText'] = '';
             await saveAll(true);
             updateUI();
             renderCoadmin();
@@ -4332,7 +5100,6 @@
             const isMax = player.mineLevel >= MAX_MINE_LEVEL;
             const total = m.gold + m.oil + m.metal;
             const nextCap = isMax ? cap : 300 + (player.mineLevel) * 250;
-
             let upgradeHtml = '';
             if (isMax) {
                 upgradeHtml =
@@ -4353,24 +5120,20 @@
                         <button class="btn btn-purple" onclick="upgradeMine()" ${player.gold<upCost?'disabled':''}>ارتقا</button>
                     </div>`;
             }
-
             document.getElementById('mineContent').innerHTML =
                 `<div class="mine-card"><div class="mine-header"><div class="mine-icon-wrap">⛏️</div><div><div class="mine-title">معدن سطح ${player.mineLevel}${isMax?' 🏆':''}</div><div class="mine-subtitle">ظرفیت: ${cap.toLocaleString('fa-IR')} | نرخ: ثابت ${isMax?'| MAX':''}</div></div></div><div class="mine-stats-row"><div class="mine-stat"><div class="mine-stat-val">${m.goldRate.toFixed(1)}/ث</div><div class="mine-stat-label">طلای ثانیه</div></div><div class="mine-stat"><div class="mine-stat-val">${m.oilRate.toFixed(1)}/ث</div><div class="mine-stat-label">نفت ثانیه</div></div><div class="mine-stat"><div class="mine-stat-val">${m.metalRate.toFixed(1)}/ث</div><div class="mine-stat-label">فلز ثانیه</div></div></div><div class="mine-res-section"><div><div class="mine-res-info"><span class="mine-res-name">💰 طلا</span><span class="mine-res-vals"><span id="mineValGold">${m.gold}</span> / ${cap}</span><span class="mine-rate">${m.goldRate.toFixed(1)}/ث</span></div><div class="mine-bar-track"><div id="mineBarGold" class="mine-bar-fill gold-bar" style="width:${gP}%"><span id="minePctGold" class="mine-pct">${Math.floor(gP)}%</span></div></div></div><div><div class="mine-res-info"><span class="mine-res-name">🛢️ نفت</span><span class="mine-res-vals"><span id="mineValOil">${m.oil}</span> / ${cap}</span><span class="mine-rate">${m.oilRate.toFixed(1)}/ث</span></div><div class="mine-bar-track"><div id="mineBarOil" class="mine-bar-fill oil-bar" style="width:${oP}%"><span id="minePctOil" class="mine-pct">${Math.floor(oP)}%</span></div></div></div><div><div class="mine-res-info"><span class="mine-res-name">⛏️ فلز</span><span class="mine-res-vals"><span id="mineValMetal">${m.metal}</span> / ${cap}</span><span class="mine-rate">${m.metalRate.toFixed(1)}/ث</span></div><div class="mine-bar-track"><div id="mineBarMetal" class="mine-bar-fill metal-bar" style="width:${mP}%"><span id="minePctMetal" class="mine-pct">${Math.floor(mP)}%</span></div></div></div></div><div class="mine-time-row" id="mineTimeRow">⏱️ پر شدن: <span style="color:var(--color-accent)">${timeToFull(m.gold,m.goldRate,cap)} طلا</span> | <span style="color:var(--color-btn-blue)">${timeToFull(m.oil,m.oilRate,cap)} نفت</span> | <span style="color:var(--color-text-dim)">${timeToFull(m.metal,m.metalRate,cap)} فلز</span></div><button id="mineCollectBtn" class="btn btn-gold mine-collect-btn ${total>0?'collect-pulse':''}" onclick="collectMine()" ${total<=0?'disabled':''}>💎 ${total>0?'استخراج ('+Math.floor(total).toLocaleString('fa-IR')+' منبع)':'در حال تولید...'}</button>${upgradeHtml}</div>`;
         }
 
         function renderMilitary() {
             let h = '';
-
             h += `<div class="section-title">✈️ ناوگان هوایی</div><div class="mil-fighter-grid">`;
             for (const [k, f] of Object.entries(F_DB)) {
                 const owned = player.fighters[k]?.count || 0;
                 const canB = player.gold >= f.c.g && player.oil >= f.c.o && player.metal >= f.c.m && (player.research
                     ?.aviation || 0) >= f.r;
-
                 const gStatus = player.gold >= f.c.g ? 'has' : 'missing';
                 const oStatus = player.oil >= f.c.o ? 'has' : 'missing';
                 const mStatus = player.metal >= f.c.m ? 'has' : 'missing';
-
                 h += `
                     <div class="mil-fighter-card" style="${!canB && owned===0 ? 'opacity:0.6;' : ''}">
                         <div class="mil-icon">${f.i}</div>
@@ -4390,7 +5153,6 @@
                 `;
             }
             h += `</div>`;
-
             h += `<div class="section-title" style="margin-top:16px;">🛡️ پدافندهای فعال</div>`;
             if (player.defenses.length === 0) {
                 h += `<div class="empty">⛔ پدافندی ساخته نشده است</div>`;
@@ -4414,14 +5176,12 @@
                     `;
                 });
             }
-
             h += `<div class="section-title" style="margin-top:16px;">🏗️ ساخت پدافند</div><div class="mil-defense-grid">`;
             for (const [k, d] of Object.entries(D_DB)) {
                 const canB = player.gold >= d.c.g && player.oil >= d.c.o && player.metal >= d.c.m;
                 const gStatus = player.gold >= d.c.g ? 'has' : 'missing';
                 const oStatus = player.oil >= d.c.o ? 'has' : 'missing';
                 const mStatus = player.metal >= d.c.m ? 'has' : 'missing';
-
                 h += `
                     <div class="mil-defense-card" style="${canB ? '' : 'opacity:0.6;'}">
                         <div class="mil-icon">${d.i}</div>
@@ -4439,7 +5199,6 @@
                 `;
             }
             h += `</div>`;
-
             document.getElementById('militaryContent').innerHTML = h;
         }
 
@@ -4451,7 +5210,6 @@
             const box = document.getElementById('chatBox');
             let scrollTop = 0;
             if (box) scrollTop = box.scrollTop;
-
             let h = '<div class="chat-container"><div class="chat-box" id="chatBox">';
             chatMessages.forEach(msg => {
                 const isMe = msg.n === player.name;
@@ -4461,14 +5219,16 @@
                     name: msg.n });
                 const sCls = isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ? 'sender coadmin-s' :
                     'sender');
+                // برای مشاهده پروفایل در چت، روی نام فرستنده کلیک کنید
+                const nameHtml = isSys ? sender :
+                    `<span onclick="showProfileModal('${allPlayers.find(p=>p.name===msg.n)?.id||''}')" style="cursor:pointer;">${sender}</span>`;
                 h +=
-                    `<div class="chat-msg ${isMe?'me':''} ${isSys?'system-msg':''}"><div class="${sCls}">${sender} <span class="time">${time}</span></div><div>${msg.t}</div></div>`;
+                    `<div class="chat-msg ${isMe?'me':''} ${isSys?'system-msg':''}"><div class="${sCls}">${nameHtml} <span class="time">${time}</span></div><div>${msg.t}</div></div>`;
             });
             const isChatLocked = chatLocked && !isAdmin() && !isCoadmin();
             h +=
                 `</div><div class="chat-input-area"><input type="text" id="chatInput" placeholder="${isChatLocked?'🔒 چت بسته (فقط مدیران)':'پیام خود را بنویسید...'}" maxlength="100" ${isChatLocked?'disabled':''} onkeypress="if(event.key==='Enter')sendChat()"><button class="btn btn-gold btn-sm" onclick="sendChat()" ${isChatLocked?'disabled':''}>ارسال</button></div></div>`;
             document.getElementById('chatContent').innerHTML = h;
-
             const newBox = document.getElementById('chatBox');
             if (newBox) {
                 if (scrollTop > 0 && newBox.scrollHeight > scrollTop) {
@@ -4510,7 +5270,7 @@
                         const tc = (m.id === player.id ? 'me ' : '') + (isAdm(m.name) ? 'admin-tag' : '') +
                             (isAssistant(m.name) ? 'coadmin-tag' : '');
                         h +=
-                            `<span class="fac-mem-tag ${tc}">${getPlayerDisplayName(m)}</span>`;
+                            `<span class="fac-mem-tag ${tc}" onclick="showProfileModal('${m.id}')">${getPlayerDisplayName(m)}</span>`;
                     });
                     h += '</div>';
                 } else { h += '<div class="fac-no-mem">هنوز عضویی ندارد</div>'; }
@@ -4525,14 +5285,11 @@
             let h = '';
             h +=
                 `<div class="mkt-hero"><div class="mkt-hero-title">🏪 بازار مبادله</div><div class="mkt-balance-row"><div class="mkt-bal-chip mkt-bal-gold">💰 ${Math.floor(player.gold).toLocaleString('fa-IR')}</div><div class="mkt-bal-chip mkt-bal-oil">🛢️ ${Math.floor(player.oil).toLocaleString('fa-IR')}</div><div class="mkt-bal-chip mkt-bal-metal">⛏️ ${Math.floor(player.metal).toLocaleString('fa-IR')}</div></div></div>`;
-
             const myOffersCount = marketOffers.filter(o => o.sid === player.id).length;
             const canCreate = myOffersCount < MAX_OFFERS_PER_PLAYER;
             h +=
                 `<div class="mkt-create-card"><div class="mkt-create-title">✨ ایجاد پیشنهاد (${myOffersCount}/${MAX_OFFERS_PER_PLAYER})</div><div class="mkt-swap-row"><div class="mkt-swap-side"><label>می‌دهید</label><select id="mktGive"><option value="gold">💰 طلا</option><option value="oil">🛢️ نفت</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGiveAmt" placeholder="مقدار" min="1"></div><div class="mkt-swap-arrow">⇄</div><div class="mkt-swap-side"><label>می‌گیرید</label><select id="mktGet"><option value="oil">🛢️ نفت</option><option value="gold">💰 طلا</option><option value="metal">⛏️ فلز</option></select><input type="number" id="mktGetAmt" placeholder="مقدار" min="1"></div></div><div class="mkt-submit-row"><button class="btn btn-gold" onclick="createMarketOffer()" style="padding:8px 24px;font-size:0.65rem;" ${canCreate?'':'disabled'}>✨ ثبت</button></div></div>`;
-
             h += '<div class="section-title">📋 پیشنهادها (' + marketOffers.length + ')</div>';
-
             if (marketOffers.length === 0) {
                 h +=
                     `<div class="mkt-empty"><span class="mkt-empty-icon">📭</span>بازار خالی</div>`;
@@ -4550,30 +5307,26 @@
                     const sellerCls = isAdm(o.seller) ? 'admin-seller' : (isAssistant(o.seller) ? 'coadmin-seller' :
                         '');
                     h +=
-                        `<div class="mkt-offer-card ${isOwn?'own-offer':''}"><div class="mkt-offer-top"><div class="mkt-offer-seller ${sellerCls}">${sellerName}</div><div class="mkt-offer-time">${tStr}</div></div><div class="mkt-offer-body"><div class="mkt-res-box give-box ${gM.theme}"><span class="mkt-res-icon">${gM.icon}</span><span class="mkt-res-amount">${o.ga.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gM.name}</span></div><div class="mkt-offer-arrow">←</div><div class="mkt-res-box get-box ${gtM.theme}"><span class="mkt-res-icon">${gtM.icon}</span><span class="mkt-res-amount">${o.gta.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gtM.name}</span></div></div><div class="mkt-offer-bottom">${isOwn?'<span class="mkt-own-tag">پیشنهاد شما</span>':`<button class="btn btn-green btn-sm" onclick="buyMarketOffer('${o.id}')" ${canBuy?'':'disabled'}>✅ خرید</button>`}</div></div>`;
+                        `<div class="mkt-offer-card ${isOwn?'own-offer':''}"><div class="mkt-offer-top"><div class="mkt-offer-seller ${sellerCls}" onclick="showProfileModal('${o.sid}')">${sellerName}</div><div class="mkt-offer-time">${tStr}</div></div><div class="mkt-offer-body"><div class="mkt-res-box give-box ${gM.theme}"><span class="mkt-res-icon">${gM.icon}</span><span class="mkt-res-amount">${o.ga.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gM.name}</span></div><div class="mkt-offer-arrow">←</div><div class="mkt-res-box get-box ${gtM.theme}"><span class="mkt-res-icon">${gtM.icon}</span><span class="mkt-res-amount">${o.gta.toLocaleString('fa-IR')}</span><span class="mkt-res-label">${gtM.name}</span></div></div><div class="mkt-offer-bottom">${isOwn?'<span class="mkt-own-tag">پیشنهاد شما</span>':`<button class="btn btn-green btn-sm" onclick="buyMarketOffer('${o.id}')" ${canBuy?'':'disabled'}>✅ خرید</button>`}</div></div>`;
                 });
                 h += `</div>`;
             }
             document.getElementById('marketContent').innerHTML = h;
         }
 
-        // ===== تحقیق با گرافیک جدید =====
         function renderResearch() {
             const researches = [
                 { key: 'military', name: '⚔️ نظامی', desc: 'قدرت حمله', icon: '⚔️', soon: true },
                 { key: 'economy', name: '💰 اقتصادی', desc: 'بازدهی معدن', icon: '💰', soon: true },
                 { key: 'aviation', name: '✈️ هوانوردی', desc: 'جنگنده‌های پیشرفته', icon: '✈️', soon: false }
             ];
-
             let h = `<div class="info-bar" style="margin-bottom:12px;">⭐ XP موجود: <b>${player.xp.toLocaleString('fa-IR')}</b></div>`;
             h += `<div class="research-grid">`;
-
             researches.forEach(r => {
                 const lv = player.research[r.key] || 0;
                 const cost = (lv + 1) * 15;
                 const canU = player.xp >= cost && !r.soon;
                 const isSoon = r.soon;
-
                 h += `
                     <div class="research-card ${isSoon ? 'research-soon' : ''}" style="${isSoon ? 'cursor:default;' : ''}">
                         ${isSoon ? `<div class="res-soon-icon">🔜</div>` : `<div class="res-icon">${r.icon}</div>`}
@@ -4590,7 +5343,6 @@
                     </div>
                 `;
             });
-
             h += `</div>`;
             document.getElementById('researchContent').innerHTML = h;
         }
@@ -4615,7 +5367,7 @@
                 const rowCls = (isMe ? 'my-rank ' : '') + (isT3 ? 'top3-row' : '');
                 const xpCls = isT3 ? 'gold-xp' : '';
                 h +=
-                    `<div class="rank-row ${rowCls}"><div class="rank-num ${numCls}">${numIcon}</div><div class="rank-info"><div class="rank-name ${nameCls}">${getPlayerDisplayName(p)}${fn?` <span style="color:#ef4444;font-size:0.55rem;">${fi} ${escapeHtml(fn)}</span>`:''}</div><div class="rank-detail"> معدن ${p.mineLevel||1}</div></div><div class="rank-xp ${xpCls}">⭐ ${p.xp.toLocaleString('fa-IR')}</div></div>`;
+                    `<div class="rank-row ${rowCls}"><div class="rank-num ${numCls}">${numIcon}</div><div class="rank-info"><div class="rank-name ${nameCls}" onclick="showProfileModal('${p.id}')">${getPlayerDisplayName(p)}${fn?` <span style="color:#ef4444;font-size:0.55rem;">${fi} ${escapeHtml(fn)}</span>`:''}</div><div class="rank-detail"> معدن ${p.mineLevel||1}</div></div><div class="rank-xp ${xpCls}">⭐ ${p.xp.toLocaleString('fa-IR')}</div></div>`;
             });
             h += '<div class="rank-sep">🛡️ ۶ جناح برتر</div>';
             const maxFP = Math.max(1, ...facs.map(f => f.points));
@@ -4663,14 +5415,12 @@
                 return;
             }
             adminPlayerHash = currentHash;
-
             let h = '<div class="admin-panel-box"><h3>👥 مدیریت بازیکنان</h3><select id="admSel" style="margin-bottom:8px;">';
             allPlayers.forEach(p => {
                 h += `<option value="${p.id}">${getPlayerDisplayName(p)} (XP:${p.xp})</option>`;
             });
             h +=
                 `</select><div class="flex-wrap" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;"><select id="admRes" style="width:auto;flex:1;min-width:80px;"><option value="gold">طلای</option><option value="oil">نفت</option><option value="metal">فلز</option><option value="xp">XP</option></select><input type="number" id="admAmt" placeholder="مقدار" style="width:80px;flex:none;"><button class="btn btn-gold btn-sm" onclick="adminGiveRes()">➕ اضافه</button></div><div class="flex-wrap" style="display:flex;gap:6px;flex-wrap:wrap;"><button class="btn btn-blue btn-sm" onclick="adminToggleShield()">🛡️ سپر</button><button class="btn btn-purple btn-sm" onclick="adminResetPlayer()">🔄 ریست</button><button class="btn btn-red btn-sm" onclick="adminDeletePlayer()">🗑️ حذف</button></div></div>`;
-
             h += `<div class="admin-panel-box"><h3>🎨 تنظیم ظاهر بازیکنان</h3>
                 <div class="flex-wrap" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
                     <select id="admStylePlayer" style="flex:2;min-width:120px;">
@@ -4679,14 +5429,12 @@
                 h += `<option value="${p.id}">${escapeHtml(p.name)}</option>`;
             });
             h += `</select>
-                    <input type="text" id="admStyleEmoji" placeholder="ایموجی (مثلا ⭐)" style="flex:1;min-width:80px;">
+                    <input type="text" id="admStyleEmoji" placeholder="ایموجی (مثلا ⭐)" style="flex:1;min-width:80px;" value="👤">
                     <input type="color" id="admStyleColor" value="#fbbf24" style="flex:0.5;min-width:50px;padding:2px;height:38px;">
                     <button class="btn btn-purple btn-sm" onclick="adminSetPlayerStyle()" style="flex:0.5;">💾 ذخیره</button>
                 </div>
                 <div style="font-size:0.5rem;color:var(--color-text-muted);">نکته: ایموجی و رنگ انتخاب شده در تمام بخش‌ها نمایش داده می‌شود (چت، رتبه، جنگ، بازار و ...)</div>
             </div>`;
-
-            // بخش مدیریت دستیاران
             h += `<div class="admin-panel-box"><h3>⚡ مدیریت دستیاران (حداکثر ${MAX_ASSISTANTS})</h3>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px;">
                     <input type="text" id="admAddAsst" placeholder="نام بازیکن برای اضافه کردن" style="flex:2;min-width:120px;">
@@ -4703,7 +5451,6 @@
                 </div>
                 <div style="font-size:0.5rem;color:var(--color-text-muted);margin-top:6px;">دستیاران فعلی: ${assistantNames.length ? assistantNames.map(n=>escapeHtml(n)).join('، ') : 'هیچ‌کدام'}</div>
             </div>`;
-
             h +=
                 `<div class="admin-panel-box"><h3>📢 سیستم</h3><input type="text" id="admBroad" placeholder="پیام همگانی..."><div class="flex-wrap" style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;"><button class="btn btn-gold btn-sm" onclick="adminBroadcast()">📨 ارسال</button><button class="btn btn-danger btn-sm" onclick="adminClearChat()">🗑️ پاک چت</button><button class="btn btn-${chatLocked?'green':'red'} btn-sm" onclick="adminToggleChat()">${chatLocked?'🔓 باز':'🔒 بستن'}</button></div></div>`;
             h +=
@@ -4719,6 +5466,9 @@
 
         function renderActiveTab() {
             switch (activeTab) {
+                case 'profile':
+                    renderProfile();
+                    break;
                 case 'mine':
                     renderMine();
                     break;
@@ -4759,13 +5509,13 @@
             if (syncLoopRunning) return;
             syncLoopRunning = true;
             try {
-                // ذخیره ورودی‌های فعلی
                 const savedChat = saveInputs('panelChat');
                 const savedMkt = saveInputs('panelMarket');
                 const savedAdmin = saveInputs('adminContent');
                 const savedRes = saveInputs('panelResearch');
+                const savedProfile = saveInputs('panelProfile');
+                const savedCoadmin = saveInputs('panelCoadmin');
 
-                // بارگذاری داده‌ها از دیتابیس
                 await loadAll();
                 expireMarketOffers();
                 updateUI();
@@ -4776,7 +5526,6 @@
 
                 if (activeTab === 'mine') updateMineVisuals();
 
-                // بروزرسانی چت در صورت وجود پیام جدید
                 if (activeTab === 'chat' && chatMessages.length > displayedChatCount) {
                     const box = document.getElementById('chatBox');
                     if (box) {
@@ -4811,21 +5560,41 @@
                     if (activeTab === 'rank') renderRank();
                     if (activeTab === 'battlelog') renderBattlelog();
                     if (activeTab === 'war') renderWar();
-                }
-
-                if (changed) {
                     if (activeTab === 'military') { renderMilitary();
                         restoreInputs(savedRes); }
                     if (activeTab === 'research') { renderResearch();
                         restoreInputs(savedRes); }
                 }
 
+                if (activeTab === 'profile') {
+                    if (changed || !document.getElementById('profileContent').innerHTML.trim()) {
+                        renderProfile();
+                        if (savedProfile && Object.keys(savedProfile.v).length > 0) {
+                            setTimeout(() => restoreInputs(savedProfile), 10);
+                        }
+                    } else {
+                        if (savedProfile && Object.keys(savedProfile.v).length > 0) {
+                            setTimeout(() => restoreInputs(savedProfile), 10);
+                        }
+                    }
+                }
+
+                if (activeTab === 'coadmin' && isCoadmin()) {
+                    if (changed || !document.getElementById('coadminContent').innerHTML.trim()) {
+                        renderCoadmin();
+                        if (savedCoadmin && Object.keys(savedCoadmin.v).length > 0) {
+                            setTimeout(() => restoreInputs(savedCoadmin), 10);
+                        }
+                    } else {
+                        if (savedCoadmin && Object.keys(savedCoadmin.v).length > 0) {
+                            setTimeout(() => restoreInputs(savedCoadmin), 10);
+                        }
+                    }
+                }
+
                 if (activeTab === 'admin' && isAdmin()) {
                     adminSavedInputs = savedAdmin;
                     renderAdmin();
-                }
-                if (activeTab === 'coadmin' && isCoadmin()) {
-                    renderCoadmin();
                 }
 
                 savedChat._prevChatLen = chatMessages.length;
