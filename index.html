@@ -4070,8 +4070,9 @@
         <div class="login-box" id="loginBox" style="display:none">
             <input type="text" id="playerName" placeholder="نام کاربری (حداقل ۳ حرف)...">
             <input type="password" id="playerPassword" placeholder="رمز عبور (حداقل ۴ حرف)...">
-            <input type="text" id="referralCode" placeholder="کد دعوت (اختیاری)...">
+            <input type="text" id="referralCode" placeholder="کد دعوت (اختیاری - فقط بار اول)...">
             <button onclick="loginRegister()">🏴 ورود / تأسیس حساب</button>
+            <button id="unbindDeviceBtn" onclick="unbindDevice()" style="margin-top:8px;background:linear-gradient(145deg,#7f1d1d,#991b1b);font-size:0.7rem;padding:6px 12px;display:none;">🔓 خروج و تغییر دستگاه (نیاز به رمز اکانت فعلی)</button>
         </div>
         <div id="gameUI" style="display:none">
             <div class="res-bar">
@@ -4613,6 +4614,45 @@
             } catch (e) { console.error(e); return false; }
         }
 
+        // ===== سیستم قفل دستگاه (جلوگیری از تقلب دعوت) =====
+        // هر مرورگر/دستگاه فقط می‌تواند یک اکانت داشته باشد.
+        // پس از اولین ثبت‌نام/ورود موفق، شناسه اکانت در localStorage ذخیره می‌شود
+        // و در بازدیدهای بعدی، همان اکانت به‌صورت خودکار لود می‌شود.
+        const DEVICE_KEY_LS = "IRONSKY_DEVICE_KEY";
+        const BOUND_PLAYER_LS = "IRONSKY_BOUND_PLAYER_ID";
+        // رمز تغییر دستگاه (برای مواقعی که کاربر بخواهد اکانت را در این دستگاه عوض کند).
+        // باید رمز عبور اکانت فعلی را بداند.
+        function getDeviceKey() {
+            let k = localStorage.getItem(DEVICE_KEY_LS);
+            if (!k) {
+                // تولید یک کلید تصادفی ۴۸ بیتی برای این دستگاه
+                const arr = new Uint8Array(6);
+                (window.crypto || window.msCrypto).getRandomValues(arr);
+                k = "DEV-" + Array.from(arr).map(b => b.toString(16).padStart(2, "0")).join("");
+                localStorage.setItem(DEVICE_KEY_LS, k);
+            }
+            return k;
+        }
+        function getBoundPlayerId() {
+            return localStorage.getItem(BOUND_PLAYER_LS) || "";
+        }
+        function setBoundPlayerId(id) {
+            localStorage.setItem(BOUND_PLAYER_LS, id);
+        }
+        function clearDeviceBinding() {
+            localStorage.removeItem(BOUND_PLAYER_LS);
+        }
+        // تلاش برای ورود خودکار به اکانت قفل‌شده روی این دستگاه
+        function tryAutoLogin() {
+            const boundId = getBoundPlayerId();
+            if (!boundId) return null;
+            const found = allPlayers.find(p => p.id === boundId);
+            if (found) return found;
+            // اگر اکانت در سرور یافت نشد (مثلاً پاک شده)، اتصال را قطع کن
+            clearDeviceBinding();
+            return null;
+        }
+
         function createPlayer(n, pw, refCode) {
             const id = n + "_" + ts().toString(36);
             const referralCode = id.slice(0, 8).toUpperCase();
@@ -4734,26 +4774,61 @@
             if (expired.length > 0) saveAll(true);
         }
 
-        // ===== توابع ورود و ثبت با سیستم دعوت =====
+        // ===== توابع ورود و ثبت با سیستم دعوت + قفل دستگاه =====
         window.loginRegister = async function() {
             const n = document.getElementById("playerName").value.trim(),
                 pw = document.getElementById("playerPassword").value.trim();
             const refCode = document.getElementById("referralCode").value.trim().toUpperCase();
             if (n.length < 3 || pw.length < 4) return toast("نام و رمز نامعتبر", true);
+
+            // 🔒 بررسی قفل دستگاه: اگه این دستگاه قبلاً به اکانت دیگری متصل شده،
+            // اجازه ورود به اکانت متفاوت داده نمی‌شود (مگر با تأیید رمز اکانت قبلی).
+            const boundId = getBoundPlayerId();
+            if (boundId) {
+                const boundPlayer = allPlayers.find(p => p.id === boundId);
+                if (boundPlayer) {
+                    if (boundPlayer.name.toLowerCase() !== n.toLowerCase()) {
+                        return toast(`🚫 این دستگاه به اکانت «${boundPlayer.name}» متصل است. برای تعویض، رمز آن اکانت را وارد کنید و از دکمه «خروج و تغییر دستگاه» استفاده کنید.`, true);
+                    }
+                    if (boundPlayer.password !== pw) return toast("رمز اشتباه", true);
+                    player = boundPlayer;
+                    setBoundPlayerId(player.id);
+                    document.getElementById("loginBox").style.display = 'none';
+                    document.getElementById("gameUI").style.display = 'block';
+                    if (isAdmin()) {
+                        document.querySelectorAll('.admin-el').forEach(e => e.classList.remove('is-hidden'));
+                        adminPlayerHash = '';
+                    }
+                    if (isCoadmin()) {
+                        document.querySelectorAll('.coadmin-el').forEach(e => e.classList.remove('is-hidden'));
+                    }
+                    displayedChatCount = chatMessages.length;
+                    startMineTimer();
+                    updateUI();
+                    renderActiveTab();
+                    return toast("خوش آمدید بازگشت!", false, "peace");
+                } else {
+                    clearDeviceBinding();
+                }
+            }
+
             const ex = allPlayers.find(p => p.name.toLowerCase() === n.toLowerCase());
             if (ex) {
                 if (ex.password !== pw) return toast("رمز اشتباه", true);
                 player = ex;
+                setBoundPlayerId(player.id);
             } else {
                 if (allPlayers.length >= MAX_PLAYERS) return toast("سرور پر است (حداکثر " + MAX_PLAYERS + " بازیکن)", true);
                 let referrer = null;
+                // 🔒 کد دعوت فقط در ثبت‌نام (ساخت اکانت جدید) قابل استفاده است
+                // پس از ثبت‌نام، هر تلاش برای ورود مجدد کد دعوت، نادیده گرفته می‌شود
                 if (refCode) {
                     referrer = allPlayers.find(p => p.referralCode === refCode);
                     if (!referrer) return toast("کد دعوت نامعتبر", true);
-                    if (referrer.id === player?.id) return toast("نمی‌توانید خودتان را دعوت کنید", true);
                 }
                 player = createPlayer(n, pw, refCode);
                 allPlayers.push(player);
+                setBoundPlayerId(player.id);
                 if (referrer) {
                     player.referredBy = referrer.id;
                     referrer.referrals.push(player.id);
@@ -4792,6 +4867,33 @@
             updateUI();
             renderActiveTab();
             toast("ورود موفق", false, "peace");
+        };
+
+        // ===== خروج از اکانت (باز کردن قفل دستگاه) =====
+        // نیاز به تأیید رمز اکانت فعلی دارد تا کسی نتواند بدون اجازه، دستگاه را آزاد کند.
+        window.unbindDevice = async function() {
+            const boundId = getBoundPlayerId();
+            if (!boundId) {
+                toast("این دستگاه به اکانتی متصل نیست.", false, "peace");
+                return;
+            }
+            const bound = allPlayers.find(p => p.id === boundId);
+            if (!bound) {
+                clearDeviceBinding();
+                toast("اتصال قدیمی حذف شد.", false, "peace");
+                return;
+            }
+            const confirmPw = prompt(`برای آزادسازی دستگاه و اتصال به اکانت دیگر، رمز اکانت «${bound.name}» را وارد کنید:`);
+            if (confirmPw === null) return;
+            if (confirmPw !== bound.password) return toast("رمز اشتباه. اتصال دستگاه حفظ شد.", true);
+            clearDeviceBinding();
+            player = null;
+            document.getElementById("gameUI").style.display = 'none';
+            document.getElementById("loginBox").style.display = 'flex';
+            document.getElementById("playerName").value = "";
+            document.getElementById("playerPassword").value = "";
+            document.getElementById("referralCode").value = "";
+            toast("دستگاه آزاد شد. می‌توانید وارد اکانت دیگری شوید.", false, "peace");
         };
 
         // ===== افزودن فعالیت =====
@@ -7146,6 +7248,9 @@
             displayedChatCount = chatMessages.length;
             expireMarketOffers();
 
+            // 🔒 اطمینان از ساخته شدن device key برای این مرورگر
+            getDeviceKey();
+
             const overlay = document.getElementById('loadingOverlay');
             if (overlay) {
                 setTimeout(() => {
@@ -7154,7 +7259,31 @@
                 }, 500);
             }
 
-            document.getElementById('loginBox').style.display = 'flex';
+            // 🔒 تلاش برای ورود خودکار به اکانت قفل‌شده روی این دستگاه
+            const auto = tryAutoLogin();
+            if (auto) {
+                player = auto;
+                document.getElementById("loginBox").style.display = 'none';
+                document.getElementById("gameUI").style.display = 'block';
+                if (isAdmin()) {
+                    document.querySelectorAll('.admin-el').forEach(e => e.classList.remove('is-hidden'));
+                    adminPlayerHash = '';
+                }
+                if (isCoadmin()) {
+                    document.querySelectorAll('.coadmin-el').forEach(e => e.classList.remove('is-hidden'));
+                }
+                displayedChatCount = chatMessages.length;
+                startMineTimer();
+                updateUI();
+                renderActiveTab();
+                toast(`🔒 خوش آمدید ${player.name} (ورود خودکار از این دستگاه)`, false, "peace");
+            } else {
+                // نمایش فرم لاگین؛ اگر دستگاه قبلاً به اکانتی متصل بوده و اکانت حذف شده،
+                // دکمه خروج نمایش داده نمی‌شود؛ در غیر این صورت نیز مخفی است.
+                const unbindBtn = document.getElementById('unbindDeviceBtn');
+                if (unbindBtn && getBoundPlayerId()) unbindBtn.style.display = 'block';
+                document.getElementById('loginBox').style.display = 'flex';
+            }
             updateSyncUI("✅ online", "online");
             setInterval(syncLoop, SYNC_INTERVAL);
             setTimeout(syncLoop, 300);
