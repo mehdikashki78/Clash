@@ -5350,7 +5350,8 @@
                         }
                         returned += r;
                         destroyed += d;
-                        breakdown.push(`${F_DB[k].n}: ${r} برگشت / ${d} نابود (قدرت ${pAtt} vs دفاع ${defensePower} → شانس ${Math.round(chance*100)}%${defenderHasNothing ? ' | مدافع بی‌دفاع' : ''})`);
+                        // 🔒 مخفی: عدد دفاع مدافع به مهاجم نشان داده نمی‌شود (فقط درصد شانس برگشت نمایش داده می‌شود)
+                        breakdown.push(`${F_DB[k].n}: ${r} برگشت / ${d} نابود (قدرت حمله ${pAtt} → شانس برگشت ${Math.round(chance*100)}%${defenderHasNothing ? ' | مدافع بی‌دفاع' : ''})`);
                     }
                     return { returned, destroyed, breakdown };
                 }
