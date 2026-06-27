@@ -850,6 +850,49 @@
             display: none !important;
         }
 
+        /* ===== NEW MESSAGE INDICATOR (دکمه شناور پیام جدید) ===== */
+        .new-msg-indicator {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: linear-gradient(135deg, var(--color-btn-blue), var(--color-btn-purple));
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.5);
+            cursor: pointer;
+            z-index: 9998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: newMsgBounce 2s infinite;
+        }
+        .new-msg-indicator.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+        }
+        .new-msg-indicator:hover {
+            transform: translateX(-50%) translateY(-2px) scale(1.05);
+        }
+        .new-msg-indicator #newMsgCount {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-weight: 800;
+        }
+        @keyframes newMsgBounce {
+            0%, 100% { box-shadow: 0 6px 24px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 8px 32px rgba(59, 130, 246, 0.8); }
+        }
+
         /* ===== PROFILE ===== */
         .profile-card {
             background: var(--color-mine-card);
@@ -6845,6 +6888,41 @@
             renderSkyMap();
         }
 
+        // ===== نشانگر پیام جدید (وقتی کاربر در پایین نیست) =====
+        let newMessageIndicator = null;
+        function showNewMessageIndicator(count) {
+            // اگر از قبل نشانگر هست، فقط عدد را آپدیت کن
+            let indicator = document.getElementById('newMsgIndicator');
+            if (!indicator) {
+                indicator = document.createElement('div');
+                indicator.id = 'newMsgIndicator';
+                indicator.className = 'new-msg-indicator';
+                indicator.innerHTML = `<span id="newMsgCount">${count}</span> پیام جدید ↓`;
+                indicator.onclick = () => {
+                    const box = document.getElementById('chatBox');
+                    if (box) box.scrollTop = box.scrollHeight;
+                    hideNewMessageIndicator();
+                };
+                document.body.appendChild(indicator);
+                // یک فریم بعد نمایش بده برای انیمیشن
+                requestAnimationFrame(() => indicator.classList.add('visible'));
+            } else {
+                const countEl = document.getElementById('newMsgCount');
+                if (countEl) {
+                    const current = parseInt(countEl.textContent || '0', 10) || 0;
+                    countEl.textContent = current + count;
+                }
+            }
+        }
+
+        function hideNewMessageIndicator() {
+            const indicator = document.getElementById('newMsgIndicator');
+            if (indicator) {
+                indicator.classList.remove('visible');
+                setTimeout(() => indicator.remove(), 300);
+            }
+        }
+
         function renderChat() {
             const chatContent = document.getElementById('chatContent');
             // ✅ حفظ مقدار input و focus تا تایپ کاربر پاک نشود
@@ -7182,14 +7260,17 @@
 
                 if (activeTab === 'mine') updateMineVisuals();
 
-                if (activeTab === 'chat' && chatMessages.length > displayedChatCount) {
+                if (activeTab === 'chat') {
                     const box = document.getElementById('chatBox');
                     if (box) {
-                        // ✅ تعداد پیام‌های فعلی در DOM را بشمار تا از تکراری جلوگیری کنیم
+                        // ✅ حقیقت زمینی: تعداد div های داخل DOM (نه counter)
                         const existingCount = box.children.length;
-                        const newMessagesToAppend = chatMessages.length - Math.max(displayedChatCount, existingCount);
+                        const newMessagesToAppend = chatMessages.length - existingCount;
                         if (newMessagesToAppend > 0) {
-                            for (let i = chatMessages.length - newMessagesToAppend; i < chatMessages.length; i++) {
+                            // ✅ تشخیص اینکه کاربر نزدیک پایین صفحه هست یا نه (قبل از append)
+                            const wasNearBottom = (box.scrollHeight - box.scrollTop - box.clientHeight) < 100;
+
+                            for (let i = existingCount; i < chatMessages.length; i++) {
                                 const msg = chatMessages[i];
                                 const time = new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit',
                                     minute: '2-digit' });
@@ -7204,10 +7285,21 @@
                                     `<div class="${sCls}">${sender} <span class="time">${time}</span></div><div>${msg.t}</div>`;
                                 box.appendChild(div);
                             }
-                            box.scrollTop = box.scrollHeight;
+                            // ✅ اگر کاربر نزدیک پایین بود، خودکار به آخرین پیام اسکرول کن
+                            if (wasNearBottom) {
+                                // دو فریم صبر کن تا DOM کامل رندر بشه بعد اسکرول کن
+                                requestAnimationFrame(() => {
+                                    requestAnimationFrame(() => {
+                                        box.scrollTop = box.scrollHeight;
+                                    });
+                                });
+                            } else {
+                                // کاربر بالا صفحه است - فقط یک نشانگر پیام جدید نشان بده
+                                showNewMessageIndicator(newMessagesToAppend);
+                            }
                         }
                     }
-                    displayedChatCount = chatMessages.length;
+                    // displayedChatCount دیگر استفاده نمی‌شود - از existingCount استفاده می‌کنیم
                 }
 
                 const prevMktLen = savedMkt._prevMktLen || 0;
