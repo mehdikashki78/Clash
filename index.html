@@ -4851,27 +4851,21 @@
                     });
                     toast(`🎉 شما توسط ${referrer.name} دعوت شدید و پاداش گرفتید!`, false, "peace");
                 }
-                // ===== سه پیام خوش‌آمد گویی سیستم (ژنرال / سرباز / قهرمان) =====
+                // ===== یک پیام خوش‌آمد گویی تصادفی (ژنرال / سرباز / قهرمان) =====
                 const welcomeName = escapeHtml(player.name);
+                const welcomeMessages = [
+                    `🎖️ خوش آمدی ژنرال ${welcomeName}! ارتش آسمان آهنین تو را صدا می‌زند — بیا و فاتح میدان شو!`,
+                    `🪖 خوش آمدی سرباز ${welcomeName}! سخت بجنگ، قوی بساز، و نامت را در تاریخ این آسمان ماندگار کن!`,
+                    `👑 خوش آمدی قهرمان ${welcomeName}! همه منتظر تو بودند — آسمان آهنین از امروز یک فرمانده تازه دارد!`
+                ];
+                const randomWelcome = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
                 chatMessages.push({
                     ts: ts(),
                     n: "SYSTEM",
-                    t: `🎖️ خوش آمدی ژنرال ${welcomeName}! ارتش آسمان آهنین تو را صدا می‌زند — بیا و فاتح میدان شو!`,
+                    t: randomWelcome,
                     sys: true
                 });
-                chatMessages.push({
-                    ts: ts(),
-                    n: "SYSTEM",
-                    t: `🪖 خوش آمدی سرباز ${welcomeName}! سخت بجنگ، قوی بساز، و نامت را در تاریخ این آسمان ماندگار کن!`,
-                    sys: true
-                });
-                chatMessages.push({
-                    ts: ts(),
-                    n: "SYSTEM",
-                    t: `👑 خوش آمدی قهرمان ${welcomeName}! همه منتظر تو بودند — آسمان آهنین از امروز یک فرمانده تازه دارد!`,
-                    sys: true
-                });
-                // ===== پایان پیام‌های خوش‌آمد =====
+                // ===== پایان پیام خوش‌آمد =====
                 await saveAll(true);
             }
             document.getElementById("loginBox").style.display = 'none';
