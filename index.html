@@ -6846,6 +6846,14 @@
         }
 
         function renderChat() {
+            const chatContent = document.getElementById('chatContent');
+            // ✅ حفظ مقدار input و focus تا تایپ کاربر پاک نشود
+            const existingInput = document.getElementById('chatInput');
+            const savedText = existingInput ? existingInput.value : '';
+            const hadFocus = existingInput ? (document.activeElement === existingInput) : false;
+            const selStart = existingInput ? existingInput.selectionStart : 0;
+            const selEnd = existingInput ? existingInput.selectionEnd : 0;
+
             const box = document.getElementById('chatBox');
             let scrollTop = 0;
             if (box) scrollTop = box.scrollTop;
@@ -6866,7 +6874,16 @@
             const isChatLocked = chatLocked && !isAdmin() && !isCoadmin();
             h +=
                 `</div><div class="chat-input-area"><input type="text" id="chatInput" placeholder="${isChatLocked?'🔒 چت بسته (فقط مدیران)':'پیام خود را بنویسید...'}" maxlength="100" ${isChatLocked?'disabled':''} onkeypress="if(event.key==='Enter')sendChat()"><button class="btn btn-gold btn-sm" onclick="sendChat()" ${isChatLocked?'disabled':''}>ارسال</button></div></div>`;
-            document.getElementById('chatContent').innerHTML = h;
+            chatContent.innerHTML = h;
+            // ✅ بازنشانی مقدار input، focus و مکان‌نما پس از رندر
+            const newInput = document.getElementById('chatInput');
+            if (newInput) {
+                newInput.value = savedText;
+                if (hadFocus) {
+                    newInput.focus();
+                    try { newInput.setSelectionRange(selStart, selEnd); } catch(e) {}
+                }
+            }
             const newBox = document.getElementById('chatBox');
             if (newBox) {
                 if (scrollTop > 0 && newBox.scrollHeight > scrollTop) {
@@ -6875,6 +6892,7 @@
                     newBox.scrollTop = newBox.scrollHeight;
                 }
             }
+            // ✅ رندر کامل انجام شد -> sync counter را آپدیت کن
             displayedChatCount = chatMessages.length;
         }
 
@@ -7167,22 +7185,27 @@
                 if (activeTab === 'chat' && chatMessages.length > displayedChatCount) {
                     const box = document.getElementById('chatBox');
                     if (box) {
-                        for (let i = displayedChatCount; i < chatMessages.length; i++) {
-                            const msg = chatMessages[i];
-                            const time = new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit',
-                                minute: '2-digit' });
-                            const isSys = msg.sys;
-                            const div = document.createElement('div');
-                            div.className = 'chat-msg' + (isSys ? ' system-msg' : '');
-                            const sender = isSys ? '📢 سیستم' : getPlayerDisplayName(allPlayers.find(p => p.name === msg
-                                .n) || { name: msg.n });
-                            const sCls = isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ?
-                                'sender coadmin-s' : 'sender');
-                            div.innerHTML =
-                                `<div class="${sCls}">${sender} <span class="time">${time}</span></div><div>${msg.t}</div>`;
-                            box.appendChild(div);
+                        // ✅ تعداد پیام‌های فعلی در DOM را بشمار تا از تکراری جلوگیری کنیم
+                        const existingCount = box.children.length;
+                        const newMessagesToAppend = chatMessages.length - Math.max(displayedChatCount, existingCount);
+                        if (newMessagesToAppend > 0) {
+                            for (let i = chatMessages.length - newMessagesToAppend; i < chatMessages.length; i++) {
+                                const msg = chatMessages[i];
+                                const time = new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit',
+                                    minute: '2-digit' });
+                                const isSys = msg.sys;
+                                const div = document.createElement('div');
+                                div.className = 'chat-msg' + (isSys ? ' system-msg' : '');
+                                const sender = isSys ? '📢 سیستم' : getPlayerDisplayName(allPlayers.find(p => p.name === msg
+                                    .n) || { name: msg.n });
+                                const sCls = isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ?
+                                    'sender coadmin-s' : 'sender');
+                                div.innerHTML =
+                                    `<div class="${sCls}">${sender} <span class="time">${time}</span></div><div>${msg.t}</div>`;
+                                box.appendChild(div);
+                            }
+                            box.scrollTop = box.scrollHeight;
                         }
-                        box.scrollTop = box.scrollHeight;
                     }
                     displayedChatCount = chatMessages.length;
                 }
