@@ -715,8 +715,8 @@
             animation: shake .3s ease both;
         }
         @keyframes shake {
-            25%, 75% { transform: translateX(-3px); }
-            50% { transform: translateX(3px); }
+            25%, 75% { transform: translateX(-2px); }
+            50% { transform: translateX(2px); }
         }
         @keyframes continuePulse {
             0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(245, 158, 11, 0); }
@@ -2587,8 +2587,8 @@
             animation: twinkle 2s ease-in-out infinite;
         }
         @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.9; }
+            0%, 100% { opacity: 0.25; }
+            50% { opacity: 0.7; }
         }
         .sky-player {
             position: absolute;
@@ -2603,12 +2603,8 @@
             user-select: none;
             width: 44px;
             height: 44px;
-            animation: planeFloat 3s ease-in-out infinite;
         }
-        @keyframes planeFloat {
-            0%, 100% { margin-top: 0; }
-            50% { margin-top: -4px; }
-        }
+        /* planeFloat حذف شد برای بهینه‌سازی عملکرد در گوشی */
         .sky-player:active {
             transform: translate(-50%, -50%) scale(1.15);
             z-index: 30;
@@ -2643,21 +2639,22 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            animation: shieldSpin 4s linear infinite;
+            /* shieldSpin به shieldPulse تبدیل شد - چرخش سنگین روی گوشی کند می‌کرد */
+            animation: shieldPulse 2.4s ease-in-out infinite;
         }
-        @keyframes shieldSpin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        @keyframes shieldPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.85; }
+            50% { transform: translate(-50%, -50%) scale(1.12); opacity: 0.55; }
         }
         .sky-player.me .plane-icon {
-            filter: drop-shadow(0 0 8px var(--color-accent));
+            filter: drop-shadow(0 0 4px var(--color-accent));
         }
         .sky-player.me .player-label {
             border-color: var(--color-accent);
             color: var(--color-accent);
         }
         .sky-player.target .plane-icon {
-            filter: drop-shadow(0 0 12px #ef4444);
+            filter: drop-shadow(0 0 6px #ef4444);
         }
         .sky-player.target::before {
             content: '';
@@ -2665,16 +2662,18 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            border: 2px dashed #ef4444;
+            border: 2px solid #ef4444;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            animation: targetSpin 2s linear infinite;
+            /* targetSpin حذف شد - چرخش ممتد روی گوشی سنگین بود */
+            /* حالا یک دایره ساده با پالس نرم */
+            animation: targetPulse 1.8s ease-in-out infinite;
             pointer-events: none;
         }
-        @keyframes targetSpin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        @keyframes targetPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+            50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.5; }
         }
         .sky-player .player-tooltip {
             position: absolute;
@@ -2695,8 +2694,8 @@
             animation: tooltipPop 0.2s ease;
         }
         @keyframes tooltipPop {
-            from { transform: translateX(-50%) scale(0.8); opacity: 0; }
-            to { transform: translateX(-50%) scale(1); opacity: 1; }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .sky-player .player-tooltip.show {
             display: flex;
@@ -5228,14 +5227,14 @@
             return h;
         }
 
-        // چند ستاره ساده
+        // چند ستاره ساده (تعداد کاهش یافت برای عملکرد بهتر در گوشی)
         function makeTwinkles() {
             let h = '';
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 6; i++) {
                 const x = Math.random() * 100;
                 const y = Math.random() * 100;
                 const dly = Math.random() * 2;
-                const dur = 1.5 + Math.random() * 1.5;
+                const dur = 2 + Math.random() * 1.5;
                 h += `<div class="sky-twinkle" style="left:${x}%;top:${y}%;animation-delay:${dly}s;animation-duration:${dur}s;"></div>`;
             }
             return h;
@@ -5386,14 +5385,13 @@
             }, 0);
         }
 
-        // انیمیشن drop برای ورود هواپیماها
+        // انیمیشن drop سبک برای ورود هواپیماها (ساده‌سازی شده برای گوشی)
         (function() {
             const style = document.createElement('style');
             style.textContent = `
                 @keyframes planeDrop {
-                    0% { transform: translateY(-200px) rotate(-180deg); opacity: 0; }
-                    70% { transform: translateY(10px) rotate(10deg); opacity: 1; }
-                    100% { transform: translateY(0) rotate(0); opacity: 1; }
+                    0% { transform: translateY(-60px); opacity: 0; }
+                    100% { transform: translateY(0); opacity: 1; }
                 }
             `;
             document.head.appendChild(style);
@@ -5481,8 +5479,9 @@
                     const targetHasDefenses = target.defenses && target.defenses.some(d => d && d.hp > 0);
                     const defenderHasNothing = !targetHasFighters && !targetHasDefenses;
                     for (const [k, qty] of Object.entries(qtyMap)) {
-                        const max = player.fighters?.[k]?.count || 0;
-                        const use = Math.min(Math.max(0, parseInt(qty) || 0), max);
+                        // 🔧 رفع باگ: قبلاً max از player.fighters[k].count خوانده می‌شد که بعد از کسر، 0 بود
+                        // حالا مستقیماً از qty (تعداد اعزامی) استفاده می‌کنیم تا همه جنگنده‌ها برگردند
+                        const use = Math.max(0, parseInt(qty) || 0);
                         if (use <= 0 || !F_DB[k]) continue;
                         const pAtt = F_DB[k].p;
                         let chance;
