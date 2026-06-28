@@ -4026,7 +4026,217 @@
         .profile-modal::-webkit-scrollbar-track {
             background: transparent;
         }
-    </style>
+    
+        /* ===== FACTION CHAT ===== */
+        .fac-chat-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .fac-chat-tab {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: var(--bg-card);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-dim);
+            transition: all 0.2s;
+        }
+        .fac-chat-tab.active {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #0f172a;
+            border-color: #f59e0b;
+        }
+        .fac-chat-section {
+            display: none;
+        }
+        .fac-chat-section.active {
+            display: block;
+        }
+        /* ===== ELECTION STYLES ===== */
+        .election-card {
+            background: linear-gradient(160deg, #1a1a2e 0%, #0f172a 50%, #1a1025 100%);
+            border: 1px solid rgba(245,158,11,0.35);
+            border-radius: 1.4rem;
+            padding: 18px;
+            margin-bottom: 14px;
+        }
+        .election-phase {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .election-phase .phase-badge {
+            background: rgba(245,158,11,0.15);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 20px;
+            padding: 2px 12px;
+            font-size: 0.55rem;
+        }
+        .candidate-row {
+            background: var(--bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            transition: border-color 0.2s;
+        }
+        .candidate-row:hover {
+            border-color: rgba(245,158,11,0.4);
+        }
+        .candidate-row .cand-name {
+            font-size: 0.65rem;
+            font-weight: 700;
+            flex: 1;
+        }
+        .candidate-row .cand-votes {
+            font-size: 0.55rem;
+            color: var(--color-text-muted);
+        }
+        .vote-bar-track {
+            height: 6px;
+            background: var(--bg-tab);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 4px;
+            width: 100%;
+        }
+        .vote-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f59e0b, #ef4444);
+            border-radius: 6px;
+            transition: width 0.5s;
+        }
+        /* ===== TREASURY ===== */
+        .treasury-card {
+            background: linear-gradient(160deg, #1a1a2e 0%, #0f172a 100%);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 1.4rem;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+        .treasury-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .treasury-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .treasury-chip {
+            background: rgba(245,158,11,0.08);
+            border: 1px solid rgba(245,158,11,0.2);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+        /* ===== FACTION WAR ===== */
+        .facwar-card {
+            background: linear-gradient(160deg, #1a0a0a 0%, #0f0f23 100%);
+            border: 1px solid rgba(239,68,68,0.35);
+            border-radius: 1.4rem;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+        .facwar-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #fca5a5;
+            margin-bottom: 10px;
+        }
+        .facwar-vs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 12px 0;
+            font-size: 0.65rem;
+            font-weight: 800;
+        }
+        .facwar-team {
+            text-align: center;
+            flex: 1;
+        }
+        .facwar-icon {
+            font-size: 2rem;
+        }
+        .facwar-score {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--color-accent);
+        }
+        .facwar-sep {
+            font-size: 1.5rem;
+            color: #ef4444;
+        }
+        .facwar-battle-row {
+            background: var(--bg-card);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 8px 14px;
+            margin-bottom: 6px;
+            font-size: 0.6rem;
+        }
+        .facwar-declare-box {
+            background: rgba(239,68,68,0.08);
+            border: 1px solid rgba(239,68,68,0.25);
+            border-radius: 1rem;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+        .leader-badge {
+            display: inline-block;
+            background: linear-gradient(135deg,#f59e0b,#d97706);
+            color: #0f172a;
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.5rem;
+            font-weight: 800;
+            margin-right: 4px;
+        }
+        .fac-slogan-box {
+            background: rgba(245,158,11,0.06);
+            border: 1px solid rgba(245,158,11,0.2);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            font-size: 0.6rem;
+            color: var(--color-accent);
+            font-style: italic;
+            text-align: center;
+        }
+        .kick-member-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px solid var(--color-border);
+            font-size: 0.55rem;
+        }
+        .kick-member-row:last-child { border-bottom: none; }
+
+        </style>
 </head>
 <body>
 
@@ -4143,7 +4353,7 @@
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         const ADMIN_NAME = "Admin",
             ADMIN_PASS = "admin1313",
-            DATA_KEY = "EMPIRE_DATA_V60_NOJUMP",
+            DATA_KEY = "EMPIRE_DATA_V65_FACWAR",
             SYNC_INTERVAL = 3000,
             SHIELD_DURATION = 12 * 60 * 60 * 1000;
         const OFFER_EXPIRY = 60 * 60 * 1000;
@@ -4213,6 +4423,11 @@
         let coadminSavedInputs = null;
         let displayedChatCount = 0;
         let adminPlayerHash = '';
+        // ===== متغیرهای جناح =====
+        let factionChats = {};      // { facId: [{ts,n,t},...] }
+        let factionData = {};       // { facId: {treasury:{gold,oil,metal}, leader, election, war:{...}} }
+        let facChatCurrentFac = null;
+        let activeFacChatSub = 'general';
         let skyZoom = 1;
         const SKY_MIN_ZOOM = 0.5,
             SKY_MAX_ZOOM = 2.5;
@@ -4563,6 +4778,11 @@
         }
 
         function packData() {
+            // trim faction chats to last 50 per faction
+            const fc = {};
+            for (const fid in factionChats) {
+                fc[fid] = (factionChats[fid] || []).slice(-50);
+            }
             return {
                 k: DATA_KEY,
                 p: allPlayers.map(compP),
@@ -4571,7 +4791,9 @@
                 c: chatMessages.slice(-10),
                 b: globalBanner,
                 cl: chatLocked,
-                a: assistantNames
+                a: assistantNames,
+                fc: fc,
+                fd: factionData
             };
         }
 
@@ -4607,6 +4829,19 @@
                     chatLocked = j.cl || false;
                     if (j.a) {
                         assistantNames = j.a;
+                    }
+                    if (j.fc) {
+                        factionChats = j.fc;
+                        // ensure all factions have arrays
+                        for (const fid in FACTIONS_DB) {
+                            if (!factionChats[fid]) factionChats[fid] = [];
+                        }
+                    }
+                    if (j.fd) factionData = j.fd;
+                    // init missing faction data
+                    for (const fid in FACTIONS_DB) {
+                        if (!factionData[fid]) factionData[fid] = { treasury:{gold:0,oil:0,metal:0}, leader:null, election:null, war:null };
+                        if (!factionChats[fid]) factionChats[fid] = [];
                     }
                     if (player) {
                         const me = allPlayers.find(p => p.id === player.id);
@@ -4752,7 +4987,9 @@
                 .customEmoji || '') + ':' + (p.customColor || '') + ':' + p.customName + ':' + p.friends.join(',') +
                 ':' + p.referrals.length + ':' + p.bio + ':' + p.bannerColor + ':' + p.theme).join('|') + '|' +
                 marketOffers.length + '|' + chatMessages.length + '|' + battleLogs.length + '|' + globalBanner + '|' +
-                chatLocked + '|' + assistantNames.join(',');
+                chatLocked + '|' + assistantNames.join(',') + '|' +
+                JSON.stringify(factionData) + '|' +
+                Object.values(factionChats).map(m=>m.length).join(',');
         }
 
         // ===== انقضای آگهی‌های بازار =====
@@ -6934,7 +7171,278 @@
             displayedChatCount = chatMessages.length;
         }
 
+        // ===== توابع کمکی جناح =====
+        function getFacLeader(fId) {
+            const fd = factionData[fId];
+            if (!fd || !fd.leader) return null;
+            return allPlayers.find(p => p.id === fd.leader) || null;
+        }
+
+        function isFacLeader(fId) {
+            const fd = factionData[fId];
+            if (!fd || !player) return false;
+            return fd.leader === player.id;
+        }
+
+        function getFacTreasury(fId) {
+            if (!factionData[fId]) factionData[fId] = { treasury:{gold:0,oil:0,metal:0}, leader:null, election:null, war:null };
+            return factionData[fId].treasury || {gold:0,oil:0,metal:0};
+        }
+
+        function getFacElection(fId) {
+            if (!factionData[fId]) return null;
+            return factionData[fId].election || null;
+        }
+
+        function getFacWar(fId) {
+            if (!factionData[fId]) return null;
+            return factionData[fId].war || null;
+        }
+
+        function getFacMembers(fId) {
+            return allPlayers.filter(p => p.faction === fId);
+        }
+
+        // ===== رهبر روزانه پاداش ۵۰ طلا از خزانه =====
+        async function collectLeaderReward(fId) {
+            if (!player || !isFacLeader(fId)) return;
+            const fd = factionData[fId];
+            const now = ts();
+            if (fd.lastLeaderReward && now - fd.lastLeaderReward < 86400000) {
+                const rem = 86400000 - (now - fd.lastLeaderReward);
+                const h = Math.floor(rem/3600000), m = Math.floor((rem%3600000)/60000);
+                return toast(`⏳ پاداش رهبری: ${h}س ${m}د دیگر`, false, "peace");
+            }
+            const treas = getFacTreasury(fId);
+            const amt = Math.min(50, treas.gold);
+            if (amt <= 0) return toast("💰 خزانه طلای کافی ندارد", true);
+            treas.gold -= amt;
+            player.gold += amt;
+            fd.lastLeaderReward = now;
+            addActivity(player, `👑 پاداش رهبری ${amt} طلا از خزانه`);
+            await saveAll(true);
+            updateUI();
+            renderFactions();
+            toast(`👑 ${amt} طلا از خزانه جناح دریافت کردید!`, false, "peace");
+        }
+
+        // ===== انتخابات =====
+        async function startElection(fId) {
+            const members = getFacMembers(fId);
+            if (members.length < 3) return toast("❌ حداقل ۳ عضو برای شروع انتخابات نیاز است", true);
+            if (!factionData[fId]) factionData[fId] = { treasury:{gold:0,oil:0,metal:0}, leader:null, election:null, war:null };
+            const el = factionData[fId].election;
+            if (el && el.phase !== 'done') return toast("❌ انتخابات در حال برگزاری است", true);
+            factionData[fId].election = {
+                phase: 'registration',
+                startTs: ts(),
+                regEnd: ts() + 12*3600000,
+                voteEnd: ts() + 36*3600000,
+                candidates: [],
+                votes: {}
+            };
+            factionChats[fId] = factionChats[fId] || [];
+            factionChats[fId].push({ ts: ts(), n: 'SYSTEM', t: `🗳️ انتخابات جناح ${FACTIONS_DB[fId].name} آغاز شد! ثبت‌نام نامزدها تا ۱۲ ساعت دیگر.`, sys: true });
+            await saveAll(true);
+            renderFactions();
+            toast("🗳️ انتخابات آغاز شد!", false, "peace");
+        }
+
+        async function registerCandidate(fId) {
+            if (!player || player.faction !== fId) return;
+            const el = getFacElection(fId);
+            if (!el || el.phase !== 'registration') return toast("❌ ثبت‌نام باز نیست", true);
+            const memberSince = player.joinDate || 0;
+            if (ts() - memberSince < 7*24*3600000) return toast("❌ باید حداقل ۷ روز عضو جناح بوده باشید", true);
+            if (el.candidates.includes(player.id)) return toast("❌ قبلاً ثبت‌نام کرده‌اید", true);
+            el.candidates.push(player.id);
+            factionChats[fId].push({ ts: ts(), n: 'SYSTEM', t: `🙋 ${escapeHtml(player.name)} کاندیدای رهبری شد!`, sys: true });
+            await saveAll(true);
+            renderFactions();
+            toast("✅ کاندیداتوری ثبت شد!", false, "peace");
+        }
+
+        async function castVote(fId, candidateId) {
+            if (!player || player.faction !== fId) return;
+            const el = getFacElection(fId);
+            if (!el || el.phase !== 'voting') return toast("❌ رأی‌گیری باز نیست", true);
+            if (el.votes[player.id] !== undefined) return toast("❌ قبلاً رأی داده‌اید", true);
+            const voteWeight = 1 + Math.floor((player.xp||0) / 100);
+            el.votes[player.id] = { for: candidateId, weight: voteWeight };
+            factionChats[fId].push({ ts: ts(), n: 'SYSTEM', t: `🗳️ یک رأی ثبت شد (مجموع آرا: ${Object.keys(el.votes).length})`, sys: true });
+            await saveAll(true);
+            renderFactions();
+            toast("✅ رأی شما ثبت شد (مخفیانه)!", false, "peace");
+        }
+
+        async function checkElectionPhase(fId) {
+            const el = getFacElection(fId);
+            if (!el || el.phase === 'done') return;
+            const now = ts();
+            let changed = false;
+            if (el.phase === 'registration' && now > el.regEnd) {
+                if (el.candidates.length === 0) {
+                    el.phase = 'done';
+                    factionChats[fId].push({ ts: ts(), n: 'SYSTEM', t: '❌ انتخابات لغو شد - هیچ نامزدی ثبت‌نام نکرد', sys: true });
+                } else {
+                    el.phase = 'voting';
+                    factionChats[fId].push({ ts: ts(), n: 'SYSTEM', t: `🗳️ مرحله رأی‌گیری آغاز شد! ${el.candidates.length} نامزد. ۲۴ ساعت وقت رأی‌گیری.`, sys: true });
+                }
+                changed = true;
+            }
+            if (el.phase === 'voting' && now > el.voteEnd) {
+                // count votes
+                const totals = {};
+                for (const cid of el.candidates) totals[cid] = 0;
+                for (const vid in el.votes) {
+                    const v = el.votes[vid];
+                    if (totals[v.for] !== undefined) totals[v.for] += v.weight;
+                }
+                let winner = null, maxV = -1;
+                for (const cid in totals) { if (totals[cid] > maxV) { maxV = totals[cid]; winner = cid; } }
+                if (winner) {
+                    factionData[fId].leader = winner;
+                    const wp = allPlayers.find(p => p.id === winner);
+                    factionChats[fId].push({ ts: ts(), n: 'SYSTEM', t: `🤴 ${escapeHtml(wp ? wp.name : 'ناشناس')} رهبر جدید جناح شد! (${maxV} رأی)`, sys: true });
+                }
+                el.phase = 'done';
+                el.nextElection = ts() + 7*24*3600000;
+                changed = true;
+            }
+            if (changed) await saveAll(true);
+        }
+
+        // ===== اعلان جنگ جناحی =====
+        async function declareFactWar(fId, targetFId) {
+            if (!player || !isFacLeader(fId)) return toast("❌ فقط رهبر جناح می‌تواند اعلان جنگ کند", true);
+            if (fId === targetFId) return toast("❌ نمی‌توان به خود جنگ اعلام کرد", true);
+            if (!factionData[fId]) factionData[fId] = { treasury:{gold:0,oil:0,metal:0}, leader:null, election:null, war:null };
+            if (factionData[fId].war && factionData[fId].war.active) return toast("❌ هم‌اکنون در جنگ هستید", true);
+            factionData[fId].war = {
+                active: true,
+                opponent: targetFId,
+                startTs: ts(),
+                score: { [fId]: 0, [targetFId]: 0 },
+                battles: [],
+                attacks3: [],
+                attacks5: [],
+                mode: '3v3'
+            };
+            if (!factionData[targetFId]) factionData[targetFId] = { treasury:{gold:0,oil:0,metal:0}, leader:null, election:null, war:null };
+            factionData[targetFId].war = {
+                active: true,
+                opponent: fId,
+                startTs: ts(),
+                score: factionData[fId].war.score,
+                battles: factionData[fId].war.battles,
+                attacks3: factionData[fId].war.attacks3,
+                attacks5: factionData[fId].war.attacks5,
+                mode: '3v3'
+            };
+            factionChats[fId] = factionChats[fId] || [];
+            factionChats[fId].push({ ts: ts(), n: 'SYSTEM', t: `⚔️ جناح ${FACTIONS_DB[fId].name} به ${FACTIONS_DB[targetFId].name} اعلان جنگ داد!`, sys: true });
+            factionChats[targetFId] = factionChats[targetFId] || [];
+            factionChats[targetFId].push({ ts: ts(), n: 'SYSTEM', t: `⚔️ جناح ${FACTIONS_DB[fId].name} به شما اعلان جنگ داد!`, sys: true });
+            chatMessages.push({ ts: ts(), n: 'SYSTEM', t: `⚔️ ${FACTIONS_DB[fId].icon} ${FACTIONS_DB[fId].name} به ${FACTIONS_DB[targetFId].icon} ${FACTIONS_DB[targetFId].name} اعلان جنگ داد!`, sys: true });
+            await saveAll(true);
+            renderFactions();
+            toast(`⚔️ اعلان جنگ به ${FACTIONS_DB[targetFId].name} ارسال شد!`, false, "peace");
+        }
+
+        // ===== جنگ جناحی - انتخاب سرباز توسط رهبر =====
+        async function addFacWarFighter(fId, playerId, mode) {
+            if (!isFacLeader(fId)) return toast("❌ فقط رهبر می‌تواند سرباز انتخاب کند", true);
+            const war = getFacWar(fId);
+            if (!war || !war.active) return toast("❌ جنگ جناحی فعال نیست", true);
+            const limit = mode === '3v3' ? 3 : 5;
+            const key = mode === '3v3' ? 'attacks3' : 'attacks5';
+            if (!war[key]) war[key] = [];
+            if (war[key].includes(playerId)) return toast("❌ این بازیکن قبلاً انتخاب شده", true);
+            if (war[key].length >= limit) return toast(`❌ حداکثر ${limit} سرباز`, true);
+            war[key].push(playerId);
+            // also update opponent's war object reference
+            const oppFId = war.opponent;
+            if (factionData[oppFId] && factionData[oppFId].war) {
+                factionData[oppFId].war.score = war.score;
+            }
+            await saveAll(true);
+            renderFactions();
+            const p2 = allPlayers.find(p => p.id === playerId);
+            toast(`✅ ${p2 ? p2.name : ''} به تیم ${limit}v${limit} اضافه شد`, false, "peace");
+        }
+
+        // ===== اخراج عضو توسط رهبر (با رأی‌گیری) =====
+        async function kickMemberVote(fId, targetId) {
+            if (!isFacLeader(fId)) return toast("❌ فقط رهبر می‌تواند اخراج کند", true);
+            if (targetId === player.id) return toast("❌ نمی‌توانید خودتان را اخراج کنید", true);
+            const target = allPlayers.find(p => p.id === targetId);
+            if (!target || target.faction !== fId) return toast("❌ عضو یافت نشد", true);
+            if (!confirm(`آیا از اخراج ${target.name} اطمینان دارید؟ این عمل نیاز به تأیید رهبر دارد.`)) return;
+            target.faction = null;
+            factionChats[fId].push({ ts: ts(), n: 'SYSTEM', t: `🚫 ${escapeHtml(target.name)} توسط رهبر از جناح اخراج شد.`, sys: true });
+            await saveAll(true);
+            renderFactions();
+            toast(`🚫 ${target.name} اخراج شد`, false, "peace");
+        }
+
+        // ===== شعار جناح =====
+        async function setFacSlogan(fId) {
+            if (!isFacLeader(fId)) return toast("❌ فقط رهبر می‌تواند شعار تنظیم کند", true);
+            const inp = document.getElementById('fac-slogan-input-' + fId);
+            if (!inp) return;
+            const slogan = inp.value.trim();
+            if (!slogan || slogan.length > 80) return toast("❌ شعار باید ۱-۸۰ کاراکتر باشد", true);
+            if (!factionData[fId]) factionData[fId] = { treasury:{gold:0,oil:0,metal:0}, leader:null, election:null, war:null };
+            factionData[fId].slogan = slogan;
+            factionChats[fId] = factionChats[fId] || [];
+            factionChats[fId].push({ ts: ts(), n: 'SYSTEM', t: `📢 شعار جدید جناح: "${escapeHtml(slogan)}"`, sys: true });
+            await saveAll(true);
+            renderFactions();
+            toast("✅ شعار جناح تنظیم شد!", false, "peace");
+        }
+
+        // ===== ارسال پیام چت جناح =====
+        window.sendFacChat = async function(fId) {
+            if (!player || player.faction !== fId) {
+                // ادمین می‌تواند به همه چت‌های جناح دسترسی داشته باشد
+                if (!isAdmin()) return toast("❌ فقط اعضای جناح می‌توانند پیام دهند", true);
+            }
+            const inp = document.getElementById('fac-chat-input-' + fId);
+            if (!inp) return;
+            const text = inp.value.trim();
+            if (!text || text.length > 120) return toast("❌ پیام نامعتبر", true);
+            factionChats[fId] = factionChats[fId] || [];
+            factionChats[fId].push({ ts: ts(), n: player.name, t: escapeHtml(text) });
+            inp.value = '';
+            await saveAll(true);
+            renderFacChatBox(fId);
+            toast("✅ پیام ارسال شد", false, "peace");
+        };
+
+        function renderFacChatBox(fId) {
+            const box = document.getElementById('fac-chat-box-' + fId);
+            if (!box) return;
+            const msgs = (factionChats[fId] || []);
+            let h = '';
+            msgs.slice(-30).forEach(msg => {
+                const isMe = msg.n === (player ? player.name : '');
+                const isSys = msg.sys;
+                const time = new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+                const p2 = allPlayers.find(p => p.name === msg.n);
+                const sender = isSys ? '📢 سیستم' : getPlayerDisplayName(p2 || { name: msg.n });
+                const sCls = isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ? 'sender coadmin-s' : 'sender');
+                h += `<div class="chat-msg ${isMe?'me':''} ${isSys?'system-msg':''}">
+                    <div class="${sCls}">${sender} <span class="time">${time}</span></div>
+                    <div>${msg.t}</div>
+                </div>`;
+            });
+            box.innerHTML = h;
+            box.scrollTop = box.scrollHeight;
+        }
+
         function renderFactions() {
+            checkElectionPhaseAll();
+            checkWeeklyElections();
             const facs = getFacStats().slice(0, 6);
             const myF = player.faction;
             const myFN = getFN(myF);
@@ -6942,11 +7450,22 @@
             let h = '<div class="fac-hero">';
             h += `<div class="fac-hero-icon">${myFI||'🏴'}</div>`;
             if (myF && FACTIONS_DB[myF]) {
-                h += `<div class="fac-hero-name">${myFI} ${myFN}</div><div class="fac-hero-badge">🔒 عضو دائمی</div>`;
+                const leader = getFacLeader(myF);
+                const leaderName = leader ? getPlayerDisplayName(leader) : 'بدون رهبر';
+                h += `<div class="fac-hero-name">${myFI} ${myFN}</div>`;
+                h += `<div class="fac-hero-badge">👑 رهبر: ${leaderName}</div>`;
             } else {
                 h += `<div class="fac-hero-name">بدون جناح</div><div class="fac-hero-badge no-fac">یک جناح انتخاب کنید</div>`;
             }
             h += '</div>';
+
+            // نمایش کارت جناح خودم با همه قابلیت‌ها
+            if (myF && FACTIONS_DB[myF]) {
+                h += renderMyFactionPanel(myF);
+            }
+
+            // لیست همه جناح‌ها
+            h += `<div class="section-title">🛡️ تمام جناح‌ها</div>`;
             const maxP = Math.max(1, ...facs.map(f => f.points));
             facs.forEach((fac, idx) => {
                 const isMy = fac.id === myF;
@@ -6956,25 +7475,409 @@
                 const bClass = idx === 0 ? 'pr1' : idx === 1 ? 'pr2' : idx === 2 ? 'pr3' : 'pro';
                 let fPow = 0;
                 fac.memberList.forEach(m => { fPow += calcAtt(m) + calcDef(m); });
-                h +=
-                    `<div class="fac-card ${isMy?'my-fac':''} ${isT3?'top3':''}"><div class="fac-card-top"><div class="fac-card-icon">${fac.icon}</div><div class="fac-card-info"><div class="fac-card-name ${isT3?'gold-name':''}">${isT3?'👑 ':''}${fac.icon} ${escapeHtml(fac.name)}</div><div class="fac-card-rank ${rClass}">رتبه ${idx+1}${isT3?' - برتر':''}</div></div></div><div class="fac-stats-row"><div class="fac-stat-box"><div class="fac-stat-val">${fac.members}</div><div class="fac-stat-label">اعضا</div></div><div class="fac-stat-box"><div class="fac-stat-val">${fac.points.toLocaleString('fa-IR')}</div><div class="fac-stat-label">امتیاز</div></div><div class="fac-stat-box"><div class="fac-stat-val">${fPow.toLocaleString('fa-IR')}</div><div class="fac-stat-label">قدرت</div></div></div><div class="fac-pts-bar"><div class="fac-pts-fill ${bClass}" style="width:${pct}%"></div></div>`;
+                const leader = getFacLeader(fac.id);
+                h += `<div class="fac-card ${isMy?'my-fac':''} ${isT3?'top3':''}">
+                    <div class="fac-card-top">
+                        <div class="fac-card-icon">${fac.icon}</div>
+                        <div class="fac-card-info">
+                            <div class="fac-card-name ${isT3?'gold-name':''}">${isT3?'👑 ':''}${fac.icon} ${escapeHtml(fac.name)}</div>
+                            <div class="fac-card-rank ${rClass}">رتبه ${idx+1}${isT3?' - برتر':''}</div>
+                            ${leader ? `<div style="font-size:0.5rem;color:var(--color-accent);margin-top:2px;">🤴 رهبر: ${escapeHtml(leader.name)}</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="fac-stats-row">
+                        <div class="fac-stat-box"><div class="fac-stat-val">${fac.members}</div><div class="fac-stat-label">اعضا</div></div>
+                        <div class="fac-stat-box"><div class="fac-stat-val">${fac.points.toLocaleString('fa-IR')}</div><div class="fac-stat-label">امتیاز</div></div>
+                        <div class="fac-stat-box"><div class="fac-stat-val">${fPow.toLocaleString('fa-IR')}</div><div class="fac-stat-label">قدرت</div></div>
+                    </div>
+                    <div class="fac-pts-bar"><div class="fac-pts-fill ${bClass}" style="width:${pct}%"></div></div>`;
                 if (fac.memberList.length > 0) {
                     h += '<div class="fac-members-box">';
                     fac.memberList.forEach(m => {
-                        const tc = (m.id === player.id ? 'me ' : '') + (isAdm(m.name) ? 'admin-tag' : '') +
-                            (isAssistant(m.name) ? 'coadmin-tag' : '');
-                        h +=
-                            `<span class="fac-mem-tag ${tc}" onclick="showProfileModal('${m.id}')">${getPlayerDisplayName(m)}</span>`;
+                        const isLeader = factionData[fac.id] && factionData[fac.id].leader === m.id;
+                        const tc = (m.id === player.id ? 'me ' : '') + (isAdm(m.name) ? 'admin-tag' : '') + (isAssistant(m.name) ? 'coadmin-tag' : '');
+                        h += `<span class="fac-mem-tag ${tc}" onclick="showProfileModal('${m.id}')">${isLeader ? '🤴 ' : ''}${getPlayerDisplayName(m)}</span>`;
                     });
                     h += '</div>';
                 } else { h += '<div class="fac-no-mem">هنوز عضویی ندارد</div>'; }
-                h +=
-                    `<div class="fac-card-bottom"><div class="fac-pwr-tag">⚔️ ${fPow.toLocaleString('fa-IR')}</div>${isMy?'<span class="fac-locked-badge">🔒 عضو دائمی</span>':`<button class="fac-join-btn jn" onclick="joinFaction('${fac.id}')">✋ پیوستن</button>`}</div></div>`;
+                h += `<div class="fac-card-bottom">
+                    <div class="fac-pwr-tag">⚔️ ${fPow.toLocaleString('fa-IR')}</div>
+                    ${isMy ? '<span class="fac-locked-badge">🔒 عضو دائمی</span>' : `<button class="fac-join-btn jn" onclick="joinFaction('${fac.id}')">✋ پیوستن</button>`}
+                </div></div>`;
             });
             document.getElementById('factionsContent').innerHTML = h;
+
+            // render faction chats after html is set
+            if (myF) renderFacChatBox(myF);
+            // admin can see all chats
+            if (isAdmin()) {
+                for (const fid in FACTIONS_DB) renderFacChatBox(fid);
+            }
         }
 
-        function renderMarket() {
+        function checkElectionPhaseAll() {
+            for (const fid in FACTIONS_DB) checkElectionPhase(fid);
+        }
+
+        function checkWeeklyElections() {
+            for (const fid in FACTIONS_DB) {
+                const fd = factionData[fid];
+                if (!fd) continue;
+                const el = fd.election;
+                const members = getFacMembers(fid);
+                if (members.length < 3) continue;
+                // 7-day auto election
+                if (!el || (el.phase === 'done' && el.nextElection && ts() > el.nextElection)) {
+                    // auto trigger
+                    factionData[fid].election = {
+                        phase: 'registration',
+                        startTs: ts(),
+                        regEnd: ts() + 12*3600000,
+                        voteEnd: ts() + 36*3600000,
+                        candidates: [],
+                        votes: {},
+                        auto: true
+                    };
+                    factionChats[fid] = factionChats[fid] || [];
+                    factionChats[fid].push({ ts: ts(), n: 'SYSTEM', t: `🔔 انتخابات هفتگی جناح ${FACTIONS_DB[fid].name} به‌صورت خودکار آغاز شد!`, sys: true });
+                }
+            }
+        }
+
+        function renderMyFactionPanel(fId) {
+            const fd = factionData[fId] || {};
+            const treasury = fd.treasury || {gold:0,oil:0,metal:0};
+            const el = fd.election;
+            const war = fd.war;
+            const slogan = fd.slogan || '';
+            const amLeader = isFacLeader(fId);
+            const members = getFacMembers(fId);
+            const leader = getFacLeader(fId);
+            let h = '';
+
+            // ===== شعار =====
+            if (slogan) {
+                h += `<div class="fac-slogan-box">📣 "${escapeHtml(slogan)}"</div>`;
+            }
+
+            // ===== چت‌های جناح + ادمین =====
+            h += `<div class="section-title">💬 چت‌های جناح</div>`;
+
+            if (isAdmin()) {
+                // ادمین به همه 6 چت دسترسی دارد
+                h += `<div class="fac-chat-tabs" id="fac-admin-tabs">`;
+                for (const fid2 in FACTIONS_DB) {
+                    h += `<div class="fac-chat-tab ${fid2===fId?'active':''}" onclick="switchAdminFacChat('${fid2}')">${FACTIONS_DB[fid2].icon} ${FACTIONS_DB[fid2].name}</div>`;
+                }
+                h += `</div>`;
+                for (const fid2 in FACTIONS_DB) {
+                    h += `<div id="fac-admin-section-${fid2}" class="fac-chat-section ${fid2===fId?'active':''}">
+                        <div class="chat-container" style="height:280px;margin-bottom:8px;">
+                            <div class="chat-box" id="fac-chat-box-${fid2}"></div>
+                            <div class="chat-input-area">
+                                <input type="text" id="fac-chat-input-${fid2}" placeholder="پیام (ادمین)..." maxlength="120" onkeypress="if(event.key==='Enter')sendFacChat('${fid2}')">
+                                <button class="btn btn-gold btn-sm" onclick="sendFacChat('${fid2}')">ارسال</button>
+                            </div>
+                        </div>
+                    </div>`;
+                }
+            } else {
+                // کاربر عادی فقط چت جناح خود را می‌بیند
+                h += `<div class="chat-container" style="height:280px;margin-bottom:8px;">
+                    <div class="chat-box" id="fac-chat-box-${fId}"></div>
+                    <div class="chat-input-area">
+                        <input type="text" id="fac-chat-input-${fId}" placeholder="پیام در چت جناح..." maxlength="120" onkeypress="if(event.key==='Enter')sendFacChat('${fId}')">
+                        <button class="btn btn-gold btn-sm" onclick="sendFacChat('${fId}')">ارسال</button>
+                    </div>
+                </div>`;
+            }
+
+            // ===== خزانه =====
+            h += `<div class="treasury-card">
+                <div class="treasury-title">🏦 خزانه جناح</div>
+                <div class="treasury-row">
+                    <div class="treasury-chip">💰 ${treasury.gold.toLocaleString('fa-IR')} طلا</div>
+                    <div class="treasury-chip">🛢️ ${treasury.oil.toLocaleString('fa-IR')} نفت</div>
+                    <div class="treasury-chip">⛏️ ${treasury.metal.toLocaleString('fa-IR')} فلز</div>
+                </div>`;
+            if (amLeader) {
+                h += `<button class="btn btn-gold btn-sm" style="margin-top:8px;" onclick="collectLeaderReward('${fId}')">👑 دریافت پاداش رهبری (۵۰ طلا)</button>`;
+            }
+            h += '</div>';
+
+            // ===== انتخابات =====
+            h += renderElectionPanel(fId, el, members, amLeader);
+
+            // ===== اختیارات رهبر =====
+            if (amLeader) {
+                h += `<div class="section-title">👑 اختیارات رهبر</div>`;
+                // شعار
+                h += `<div class="admin-panel-box">
+                    <h3>📣 تنظیم شعار جناح</h3>
+                    <input type="text" id="fac-slogan-input-${fId}" placeholder="شعار جناح..." maxlength="80" value="${escapeHtml(slogan)}">
+                    <button class="btn btn-gold btn-sm" style="margin-top:6px;" onclick="setFacSlogan('${fId}')">✅ ذخیره شعار</button>
+                </div>`;
+                // اخراج عضو
+                h += `<div class="admin-panel-box">
+                    <h3>🚫 اخراج عضو</h3>`;
+                members.filter(m => m.id !== player.id).forEach(m => {
+                    h += `<div class="kick-member-row">
+                        <span>${getPlayerDisplayName(m)}</span>
+                        <button class="btn btn-danger btn-sm" onclick="kickMemberVote('${fId}','${m.id}')">اخراج</button>
+                    </div>`;
+                });
+                h += `</div>`;
+                // اعلان جنگ
+                h += renderFacWarDeclarePanel(fId);
+                // انتخاب سرباز برای جنگ جناحی
+                if (war && war.active) {
+                    h += renderFacWarFighterPanel(fId, war, members);
+                }
+            }
+
+            // ===== نبرد جناحی =====
+            if (war && war.active) {
+                h += renderFacWarPanel(fId, war);
+            }
+
+            return h;
+        }
+
+        function renderElectionPanel(fId, el, members, amLeader) {
+            let h = `<div class="election-card">`;
+            h += `<div class="section-title">🗳️ انتخابات جناح</div>`;
+
+            if (!el || el.phase === 'done') {
+                const canStart = members.length >= 3;
+                h += `<div style="font-size:0.6rem;color:var(--color-text-dim);margin-bottom:8px;">
+                    ${canStart ? '✅ شرایط انتخابات برقرار است (۳+ عضو)' : '❌ حداقل ۳ عضو برای انتخابات نیاز است'}
+                </div>`;
+                if (el && el.nextElection) {
+                    const rem = el.nextElection - ts();
+                    if (rem > 0) {
+                        const d = Math.floor(rem/86400000), hh = Math.floor((rem%86400000)/3600000);
+                        h += `<div style="font-size:0.55rem;color:var(--color-text-muted);">⏳ انتخابات خودکار بعدی: ${d} روز ${hh} ساعت دیگر</div>`;
+                    }
+                }
+                if (canStart) {
+                    h += `<button class="btn btn-gold btn-sm" style="margin-top:8px;" onclick="startElection('${fId}')">🗳️ شروع انتخابات</button>`;
+                }
+            } else if (el.phase === 'registration') {
+                const rem = el.regEnd - ts();
+                const hh = Math.max(0, Math.floor(rem/3600000)), mm = Math.max(0, Math.floor((rem%3600000)/60000));
+                h += `<div class="election-phase">📋 مرحله ثبت‌نام <span class="phase-badge">⏳ ${hh}س ${mm}د</span></div>`;
+                h += `<div style="font-size:0.55rem;color:var(--color-text-dim);margin-bottom:8px;">نامزدها: ${el.candidates.length}</div>`;
+                const isCandidate = el.candidates.includes(player.id);
+                const isEligible = player.faction === fId && ts() - (player.joinDate||0) >= 7*24*3600000;
+                if (!isCandidate && isEligible) {
+                    h += `<button class="btn btn-green btn-sm" onclick="registerCandidate('${fId}')">🙋 ثبت‌نام به عنوان نامزد</button>`;
+                } else if (isCandidate) {
+                    h += `<div style="color:var(--color-btn-green);font-size:0.6rem;">✅ شما ثبت‌نام کرده‌اید</div>`;
+                } else if (player.faction === fId) {
+                    h += `<div style="color:var(--color-text-muted);font-size:0.55rem;">❌ باید ۷ روز عضو باشید</div>`;
+                }
+                el.candidates.forEach(cid => {
+                    const cp = allPlayers.find(p => p.id === cid);
+                    h += `<div class="candidate-row"><span class="cand-name">${cp ? getPlayerDisplayName(cp) : cid}</span><span class="cand-votes">نامزد</span></div>`;
+                });
+            } else if (el.phase === 'voting') {
+                const rem = el.voteEnd - ts();
+                const hh = Math.max(0, Math.floor(rem/3600000)), mm = Math.max(0, Math.floor((rem%3600000)/60000));
+                h += `<div class="election-phase">🗳️ مرحله رأی‌گیری <span class="phase-badge">⏳ ${hh}س ${mm}د</span></div>`;
+                const myVote = el.votes[player.id];
+                if (myVote) {
+                    h += `<div style="color:var(--color-btn-green);font-size:0.6rem;margin-bottom:8px;">✅ رأی شما ثبت شد (مجموع: ${Object.keys(el.votes).length} رأی)</div>`;
+                }
+                el.candidates.forEach(cid => {
+                    const cp = allPlayers.find(p => p.id === cid);
+                    const totalVotes = Object.values(el.votes).reduce((s,v) => s + (v.for===cid ? v.weight : 0), 0);
+                    const totalAll = Object.values(el.votes).reduce((s,v) => s + v.weight, 0);
+                    const pct = totalAll > 0 ? Math.round(totalVotes/totalAll*100) : 0;
+                    h += `<div class="candidate-row">
+                        <span class="cand-name">${cp ? getPlayerDisplayName(cp) : cid}</span>
+                        <span class="cand-votes">${totalAll > 0 ? pct + '%' : '?'}</span>
+                        ${player.faction===fId && !myVote ? `<button class="btn btn-gold btn-sm" onclick="castVote('${fId}','${cid}')">رأی</button>` : ''}
+                    </div>
+                    ${totalAll > 0 ? `<div class="vote-bar-track"><div class="vote-bar-fill" style="width:${pct}%"></div></div>` : ''}`;
+                });
+            }
+            h += '</div>';
+            return h;
+        }
+
+        function renderFacWarDeclarePanel(fId) {
+            let h = `<div class="admin-panel-box">
+                <h3>⚔️ اعلان جنگ جناحی</h3>
+                <select id="fac-war-target-${fId}" style="margin-bottom:8px;">`;
+            for (const fid2 in FACTIONS_DB) {
+                if (fid2 !== fId) {
+                    const members2 = getFacMembers(fid2);
+                    h += `<option value="${fid2}">${FACTIONS_DB[fid2].icon} ${FACTIONS_DB[fid2].name} (${members2.length} عضو)</option>`;
+                }
+            }
+            h += `</select>
+                <button class="btn btn-danger btn-sm" onclick="declareFactWarUI('${fId}')">⚔️ اعلان جنگ</button>
+            </div>`;
+            return h;
+        }
+
+        window.declareFactWarUI = function(fId) {
+            const sel = document.getElementById('fac-war-target-' + fId);
+            if (!sel) return;
+            declareFactWar(fId, sel.value);
+        };
+
+        function renderFacWarFighterPanel(fId, war, members) {
+            let h = `<div class="admin-panel-box">
+                <h3>🎖️ انتخاب سرباز برای جنگ جناحی</h3>
+                <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
+                    <button class="btn btn-gold btn-sm" onclick="setFacWarMode('${fId}','3v3')">⚔️ ۳ نفره</button>
+                    <button class="btn btn-purple btn-sm" onclick="setFacWarMode('${fId}','5v5')">⚔️ ۵ نفره</button>
+                </div>
+                <div style="font-size:0.55rem;color:var(--color-text-dim);margin-bottom:6px;">تیم ۳ نفره: ${(war.attacks3||[]).length}/3 | تیم ۵ نفره: ${(war.attacks5||[]).length}/5</div>`;
+            members.forEach(m => {
+                const in3 = (war.attacks3||[]).includes(m.id);
+                const in5 = (war.attacks5||[]).includes(m.id);
+                h += `<div class="kick-member-row">
+                    <span>${getPlayerDisplayName(m)}</span>
+                    <div style="display:flex;gap:4px;">
+                        <button class="btn btn-sm ${in3?'btn-green':'btn-gold'}" onclick="addFacWarFighter('${fId}','${m.id}','3v3')">${in3?'✅':'+'} ۳v۳</button>
+                        <button class="btn btn-sm ${in5?'btn-green':'btn-purple'}" onclick="addFacWarFighter('${fId}','${m.id}','5v5')">${in5?'✅':'+'} ۵v۵</button>
+                    </div>
+                </div>`;
+            });
+            h += '</div>';
+            return h;
+        }
+
+        window.setFacWarMode = async function(fId, mode) {
+            const war = getFacWar(fId);
+            if (!war) return;
+            war.mode = mode;
+            await saveAll(true);
+            renderFactions();
+            toast(`⚔️ حالت جنگ: ${mode}`, false, "peace");
+        };
+
+        function renderFacWarPanel(fId, war) {
+            const oppFId = war.opponent;
+            if (!oppFId || !FACTIONS_DB[oppFId]) return '';
+            const score = war.score || {};
+            const myScore = score[fId] || 0;
+            const oppScore = score[oppFId] || 0;
+            const battles = war.battles || [];
+            let h = `<div class="facwar-card">
+                <div class="facwar-title">⚔️ نبرد جناحی - ${FACTIONS_DB[fId].name} vs ${FACTIONS_DB[oppFId].name}</div>
+                <div class="facwar-vs">
+                    <div class="facwar-team">
+                        <div class="facwar-icon">${FACTIONS_DB[fId].icon}</div>
+                        <div style="font-size:0.6rem;">${FACTIONS_DB[fId].name}</div>
+                        <div class="facwar-score">${myScore} ⭐</div>
+                    </div>
+                    <div class="facwar-sep">⚔️</div>
+                    <div class="facwar-team">
+                        <div class="facwar-icon">${FACTIONS_DB[oppFId].icon}</div>
+                        <div style="font-size:0.6rem;">${FACTIONS_DB[oppFId].name}</div>
+                        <div class="facwar-score">${oppScore} ⭐</div>
+                    </div>
+                </div>
+                <div style="font-size:0.55rem;color:var(--color-text-muted);text-align:center;margin-bottom:10px;">
+                    حالت جنگ: ${war.mode || '3v3'} | تیم حمله ۳ نفره: ${(war.attacks3||[]).length}/3 | تیم ۵ نفره: ${(war.attacks5||[]).length}/5
+                </div>`;
+
+            // دکمه حمله امروز
+            const isInTeam3 = (war.attacks3||[]).includes(player ? player.id : '');
+            const isInTeam5 = (war.attacks5||[]).includes(player ? player.id : '');
+            if (isInTeam3 || isInTeam5) {
+                const today = new Date().toDateString();
+                const todayBattle = battles.find(b => b.attId === (player?player.id:'') && new Date(b.ts).toDateString() === today);
+                if (!todayBattle) {
+                    h += `<button class="btn btn-danger" style="width:100%;margin-bottom:8px;" onclick="launchFacWarBattle('${fId}')">⚔️ حمله امروز به جناح مقابل</button>`;
+                } else {
+                    h += `<div style="font-size:0.55rem;color:var(--color-text-muted);text-align:center;margin-bottom:8px;">✅ حمله امروز شما انجام شد</div>`;
+                }
+            }
+
+            // تاریخچه نبردها
+            if (battles.length > 0) {
+                h += `<div class="section-title">📜 تاریخچه نبردها</div>`;
+                battles.slice(-10).reverse().forEach(b => {
+                    const att = allPlayers.find(p => p.id === b.attId);
+                    const def = allPlayers.find(p => p.id === b.defId);
+                    h += `<div class="facwar-battle-row">
+                        <span class="attacker">${att ? escapeHtml(att.name) : '?'}</span> ⚔️ 
+                        <span class="defender">${def ? escapeHtml(def.name) : '?'}</span> → 
+                        ${b.win ? '<span class="loot">⭐ پیروزی حمله</span>' : '<span style="color:#ef4444;">🛡️ دفاع موفق</span>'}
+                        <span style="float:left;color:var(--color-text-muted);">${new Date(b.ts).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}</span>
+                    </div>`;
+                });
+            }
+            h += '</div>';
+            return h;
+        }
+
+        // ===== حمله در جنگ جناحی =====
+        window.launchFacWarBattle = async function(fId) {
+            if (!player) return;
+            const war = getFacWar(fId);
+            if (!war || !war.active) return toast("❌ جنگ جناحی فعال نیست", true);
+            const oppFId = war.opponent;
+            if (!oppFId) return toast("❌ حریف مشخص نیست", true);
+            const oppMembers = getFacMembers(oppFId);
+            if (oppMembers.length === 0) return toast("❌ جناح حریف عضو ندارد", true);
+            // انتخاب مدافع رندوم از جناح مقابل
+            const today = new Date().toDateString();
+            const todayDefsIds = (war.battles||[]).filter(b => new Date(b.ts).toDateString() === today).map(b => b.defId);
+            const availDefs = oppMembers.filter(m => !todayDefsIds.includes(m.id));
+            const defP = availDefs.length > 0 ? availDefs[Math.floor(Math.random()*availDefs.length)] : oppMembers[Math.floor(Math.random()*oppMembers.length)];
+            // محاسبه نتیجه
+            const myAtt = calcAtt(player);
+            const defPow = calcDef(defP);
+            const win = myAtt >= defPow * 0.6 || Math.random() < 0.35;
+            const stars = win ? (myAtt > defPow * 2 ? 3 : myAtt > defPow ? 2 : 1) : 0;
+            if (!war.score) war.score = {};
+            if (win) {
+                war.score[fId] = (war.score[fId] || 0) + stars;
+            } else {
+                war.score[oppFId] = (war.score[oppFId] || 0) + 1;
+            }
+            war.battles = war.battles || [];
+            war.battles.push({ ts: ts(), attId: player.id, defId: defP.id, win, stars, attFac: fId, defFac: oppFId });
+            // sync to opponent
+            if (factionData[oppFId] && factionData[oppFId].war) {
+                factionData[oppFId].war.score = war.score;
+                factionData[oppFId].war.battles = war.battles;
+            }
+            // اضافه کردن XP
+            if (win) {
+                player.xp += stars * 3;
+                addActivity(player, `⚔️ نبرد جناحی: ${stars}⭐ برای ${FACTIONS_DB[fId].name}`);
+            } else {
+                defP.xp += 2;
+                addActivity(defP, `🛡️ دفاع موفق در نبرد جناحی`);
+                addActivity(player, `⚔️ نبرد جناحی: شکست مقابل ${FACTIONS_DB[oppFId].name}`);
+            }
+            // اطلاع‌رسانی در چت جناح
+            factionChats[fId].push({ ts: ts(), n: 'SYSTEM', t: `⚔️ ${escapeHtml(player.name)} به ${escapeHtml(defP.name)} حمله کرد - ${win ? '⭐'.repeat(stars)+' پیروزی!' : '❌ شکست!'}`, sys: true });
+            factionChats[oppFId].push({ ts: ts(), n: 'SYSTEM', t: `🛡️ ${escapeHtml(defP.name)} از حمله ${escapeHtml(player.name)} ${win ? 'شکست خورد' : 'دفاع کرد'}!`, sys: true });
+            await saveAll(true);
+            updateUI();
+            renderFactions();
+            toast(win ? `⭐ ${stars} ستاره برای جناح شما!` : '❌ شکست در نبرد جناحی', !win, win ? "peace" : "");
+        };
+
+        window.switchAdminFacChat = function(fid) {
+            document.querySelectorAll('[id^="fac-admin-section-"]').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.fac-chat-tab').forEach(el => el.classList.remove('active'));
+            const sec = document.getElementById('fac-admin-section-' + fid);
+            if (sec) sec.classList.add('active');
+            document.querySelectorAll('.fac-chat-tab').forEach(el => {
+                if (el.textContent.includes(FACTIONS_DB[fid] && FACTIONS_DB[fid].name)) el.classList.add('active');
+            });
+            renderFacChatBox(fid);
+        };
+
+                function renderMarket() {
             expireMarketOffers();
             let h = '';
             h +=
@@ -7268,6 +8171,17 @@
                     restoreInputs(savedMkt);
                 }
 
+                // Always update faction chat boxes live (like public chat)
+                if (player && player.faction) {
+                    const facbox = document.getElementById('fac-chat-box-' + player.faction);
+                    if (facbox) renderFacChatBox(player.faction);
+                }
+                if (isAdmin()) {
+                    for (const fid in FACTIONS_DB) {
+                        const facbox = document.getElementById('fac-chat-box-' + fid);
+                        if (facbox) renderFacChatBox(fid);
+                    }
+                }
                 if (changed) {
                     if (activeTab === 'factions') renderFactions();
                     if (activeTab === 'rank') renderRank();
