@@ -4141,8 +4141,8 @@
         const SUPABASE_URL = 'https://rxugexswtpvuotijdlzn.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_gsgiccX5kQMLrXnSqbAPwQ_ZoRRsYT3';
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const ADMIN_NAME = "Admin",
-            ADMIN_PASS = "admin1313",
+        const ADMIN_NAME = "Admin";
+        let ADMIN_PASS = "admin1313";
             DATA_KEY = "EMPIRE_DATA_V60_NOJUMP",
             SYNC_INTERVAL = 3000,
             SHIELD_DURATION = 12 * 60 * 60 * 1000;
@@ -6494,6 +6494,56 @@
             toast("☢️ سرور نابود شد", true);
         };
 
+        // ===== مدیریت رمز عبور توسط ادمین =====
+        window.adminViewPassword = function() {
+            if (!isAdmin()) return toast("⛔ فقط ادمین اصلی دسترسی دارد", true);
+            const id = document.getElementById('admPwSel').value;
+            if (!id) return toast("بازیکن را انتخاب کنید", true);
+            const t = allPlayers.find(p => p.id === id);
+            if (!t) return toast("بازیکن یافت نشد", true);
+            const pwField = document.getElementById('admPwShow');
+            if (pwField) {
+                pwField.value = t.password || '(خالی)';
+                pwField.type = 'text';
+                pwField.select();
+            }
+            toast(`🔑 رمز ${t.name}: ${t.password || '(خالی)'}`, false, "peace");
+        };
+
+        window.adminHidePassword = function() {
+            const pwField = document.getElementById('admPwShow');
+            if (pwField) {
+                pwField.value = '';
+                pwField.type = 'password';
+            }
+        };
+
+        window.adminChangePassword = async function() {
+            if (!isAdmin()) return toast("⛔ فقط ادمین اصلی دسترسی دارد", true);
+            const id = document.getElementById('admPwSel').value;
+            const newPw = document.getElementById('admPwNew').value.trim();
+            if (!id) return toast("بازیکن را انتخاب کنید", true);
+            if (!newPw) return toast("رمز جدید را وارد کنید", true);
+            if (newPw.length < 4) return toast("رمز باید حداقل ۴ حرف باشد", true);
+            const t = allPlayers.find(p => p.id === id);
+            if (!t) return toast("بازیکن یافت نشد", true);
+            const oldPw = t.password;
+            t.password = newPw;
+            // اگر رمز ادمین اصلی عوض شد، ثابت ADMIN_PASS را هم به‌روز کن
+            if (t.name === ADMIN_NAME) {
+                ADMIN_PASS = newPw;
+            }
+            addActivity(t, `🔐 رمز عبور توسط ادمین تغییر یافت`);
+            await saveAll(true);
+            document.getElementById('admPwNew').value = '';
+            document.getElementById('admPwShow').value = '';
+            document.getElementById('admPwShow').type = 'password';
+            adminPlayerHash = '';
+            renderAdmin();
+            renderActiveTab();
+            toast(`✅ رمز ${t.name} از «${oldPw}» به «${newPw}» تغییر یافت`, false, "peace");
+        };
+
         // ===== توابع مدیریت دستیاران =====
         window.adminAddAssistant = async function() {
             if (!isAdmin()) return;
@@ -7128,6 +7178,25 @@
                     <button class="btn btn-purple btn-sm" onclick="adminSetPlayerStyle()" style="flex:0.5;">💾 ذخیره</button>
                 </div>
                 <div style="font-size:0.5rem;color:var(--color-text-muted);">نکته: ایموجی و رنگ انتخاب شده در تمام بخش‌ها نمایش داده می‌شود (چت، رتبه، جنگ، بازار و ...)</div>
+            </div>`;
+            h += `<div class="admin-panel-box"><h3>🔐 مدیریت رمز عبور (فقط ادمین)</h3>
+                <div style="font-size:0.5rem;color:var(--color-text-muted);margin-bottom:8px;">ادمین می‌تواند رمز هر بازیکن (شامل خودش) را مشاهده یا تغییر دهد.</div>
+                <div class="flex-wrap" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+                    <select id="admPwSel" style="flex:2;min-width:140px;">
+                        <option value="">-- انتخاب بازیکن --</option>`;
+            allPlayers.forEach(p => {
+                h += `<option value="${p.id}">${escapeHtml(p.name)}</option>`;
+            });
+            h += `</select>
+                    <input type="text" id="admPwShow" placeholder="(رمز فعلی اینجا نمایش داده می‌شود)" readonly style="flex:2;min-width:140px;background:var(--bg-tab);font-family:monospace;letter-spacing:1px;">
+                    <button class="btn btn-blue btn-sm" onclick="adminViewPassword()" style="flex:0.5;">👁️ نمایش</button>
+                    <button class="btn btn-purple btn-sm" onclick="adminHidePassword()" style="flex:0.5;">🙈 مخفی</button>
+                </div>
+                <div class="flex-wrap" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+                    <input type="text" id="admPwNew" placeholder="رمز جدید (حداقل ۴ حرف)..." style="flex:2;min-width:140px;">
+                    <button class="btn btn-gold btn-sm" onclick="adminChangePassword()" style="flex:0.5;">🔑 تغییر رمز</button>
+                </div>
+                <div style="font-size:0.5rem;color:var(--color-text-muted);">⚠️ تغییر رمز بلافاصله در سرور ذخیره می‌شود. اگر رمز خودتان (Admin) را عوض کنید، در ورود بعدی باید از رمز جدید استفاده کنید.</div>
             </div>`;
             h += `<div class="admin-panel-box"><h3>⚡ مدیریت دستیاران (حداکثر ${MAX_ASSISTANTS})</h3>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px;">
