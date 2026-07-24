@@ -4332,7 +4332,21 @@
 
         function escapeHtml(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
-        function isAdmin() { return player && player.name === ADMIN_NAME && player.password === ADMIN_PASS; }
+        function isAdmin() {
+            if (!player || player.name !== ADMIN_NAME) return false;
+            // ✅ همگام‌سازی خودکار: اگه player.password با ADMIN_PASS فرق داشت،
+            // یعنی یک race condition باعث overwrite شده. ADMIN_PASS رو با player هماهنگ کن.
+            if (player.password && player.password !== ADMIN_PASS) {
+                ADMIN_PASS = player.password;
+            }
+            return player.password === ADMIN_PASS;
+        }
+        // ✅ ریست مطمئن ADMIN_PASS از روی player (برای استفاده بعد از save)
+        function syncAdminPassFromPlayer() {
+            if (player && player.name === ADMIN_NAME && player.password) {
+                ADMIN_PASS = player.password;
+            }
+        }
 
         function isAdm(n) { return n === ADMIN_NAME; }
 
@@ -4611,6 +4625,11 @@
                     if (player) {
                         const me = allPlayers.find(p => p.id === player.id);
                         if (me) player = me;
+                    }
+                    // ✅ بعد از لود از سرور، ADMIN_PASS رو با player همگام کن
+                    // (اگه ادمین باشه و رمزش رو خودش عوض کرده باشه)
+                    if (player && player.name === ADMIN_NAME && player.password) {
+                        ADMIN_PASS = player.password;
                     }
                 }
                 return true;
@@ -6528,19 +6547,36 @@
             const t = allPlayers.find(p => p.id === id);
             if (!t) return toast("بازیکن یافت نشد", true);
             const oldPw = t.password;
-            t.password = newPw;
-            // اگر رمز ادمین اصلی عوض شد، ثابت ADMIN_PASS را هم به‌روز کن
+            // ✅ آپدیت atomic: ابتدا ADMIN_PASS (اگه خود ادمینه)، بعد t.password
             if (t.name === ADMIN_NAME) {
                 ADMIN_PASS = newPw;
             }
+            t.password = newPw;
+            // اگه خود ادمینه، player.password رو هم sync کن (چون player و t یکی هستن
+            // ولی برای اطمینان explicit می‌کنیم)
+            if (player && player.id === t.id) {
+                player.password = newPw;
+            }
             addActivity(t, `🔐 رمز عبور توسط ادمین تغییر یافت`);
+            // ✅ ابتدا ذخیره کن (تا سرور آپدیت بشه)
             await saveAll(true);
+            // ✅ بعد از ذخیره، ADMIN_PASS رو از player دوباره sync کن
+            // (محافظت در برابر race condition با syncLoop)
+            syncAdminPassFromPlayer();
             document.getElementById('admPwNew').value = '';
             document.getElementById('admPwShow').value = '';
             document.getElementById('admPwShow').type = 'password';
             adminPlayerHash = '';
             renderAdmin();
             renderActiveTab();
+            // ✅ چک نهایی: اگه هنوز ادمین نیست، یه بار force sync کن
+            if (!isAdmin()) {
+                const me = allPlayers.find(p => p.id === player.id);
+                if (me) {
+                    player = me;
+                    ADMIN_PASS = me.password;
+                }
+            }
             toast(`✅ رمز ${t.name} از «${oldPw}» به «${newPw}» تغییر یافت`, false, "peace");
         };
 
