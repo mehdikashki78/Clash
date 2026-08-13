@@ -752,42 +752,104 @@
         .chat-container {
             display: flex;
             flex-direction: column;
-            height: 400px;
+            height: 460px;
             background: var(--bg-chat);
-            border-radius: 1rem;
+            background-image:
+                radial-gradient(circle at 15% 8%, rgba(245, 158, 11, 0.05), transparent 40%),
+                radial-gradient(circle at 85% 92%, rgba(139, 92, 246, 0.05), transparent 40%);
+            border-radius: 1.1rem;
             border: 1px solid var(--color-border);
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 0 40px rgba(245, 158, 11, 0.02);
             transition: background 0.3s, border-color 0.3s;
+            position: relative;
         }
         .chat-box {
             flex: 1;
-            padding: 10px;
+            padding: 12px 10px;
             overflow-y: auto;
             font-size: 0.65rem;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 3px;
+            scroll-behavior: smooth;
         }
+        .chat-box::-webkit-scrollbar { width: 5px; }
+        .chat-box::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 10px; }
+        .chat-msg-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            margin: 5px 0;
+            position: relative;
+            animation: chatMsgIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes chatMsgIn {
+            from { opacity: 0; transform: translateY(8px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .chat-msg-row.system-msg { justify-content: center; }
+        .chat-avatar {
+            flex-shrink: 0;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.5rem;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35), 0 0 0 2px rgba(255, 255, 255, 0.06);
+            letter-spacing: -0.5px;
+        }
+        .chat-avatar.sys-avatar {
+            background: linear-gradient(135deg, #7f1d1d, #991b1b);
+            font-size: 0.65rem;
+        }
+        .chat-bubble-wrap {
+            display: flex;
+            flex-direction: column;
+            max-width: 78%;
+            min-width: 0;
+        }
+        .chat-msg-row.me { flex-direction: row-reverse; }
+        .chat-msg-row.me .chat-bubble-wrap { align-items: flex-end; }
+        .chat-msg-row:not(.me):not(.system-msg) .chat-bubble-wrap { align-items: flex-start; }
         .chat-msg {
             background: var(--bg-chat-msg);
-            padding: 8px 12px;
-            border-radius: 12px;
+            padding: 7px 11px 6px;
+            border-radius: 14px 14px 14px 4px;
             border: 1px solid var(--color-border);
-            transition: background 0.3s, border-color 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+            transition: background 0.3s, border-color 0.3s, transform 0.15s;
+            position: relative;
+            word-break: break-word;
         }
+        .chat-msg-row.me .chat-msg {
+            border-radius: 14px 14px 4px 14px;
+        }
+        .chat-msg:active { transform: scale(0.98); }
         .chat-msg.me {
             border-color: var(--color-accent-dim);
-            background: var(--bg-chat-msg-me);
+            background: linear-gradient(155deg, var(--bg-chat-msg-me), var(--bg-chat-msg));
         }
         .chat-msg.system-msg {
             border-color: var(--color-banner-border);
             background: var(--color-btn-danger);
             color: var(--color-banner-text);
+            border-radius: 12px;
+            text-align: center;
+            font-size: 0.6rem;
         }
         .chat-msg .sender {
             color: var(--color-accent);
             font-weight: bold;
-            font-size: 0.6rem;
+            font-size: 0.58rem;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
         }
         .chat-msg .sender.admin-s {
             color: var(--color-btn-blue);
@@ -799,9 +861,161 @@
         .chat-msg .time {
             color: var(--color-text-muted);
             font-size: 0.4rem;
-            float: left;
-            margin-top: 2px;
+            font-weight: 400;
+            margin-right: auto;
         }
+        .chat-msg .chat-text {
+            margin-top: 2px;
+            line-height: 1.5;
+        }
+        .chat-reply-quote {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            background: rgba(0, 0, 0, 0.18);
+            border-right: 3px solid var(--color-accent-dim);
+            border-radius: 6px;
+            padding: 3px 8px;
+            margin: 3px 0 2px;
+            font-size: 0.55rem;
+            max-height: 34px;
+            overflow: hidden;
+            opacity: 0.85;
+        }
+        .chat-reply-quote .chat-reply-name {
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+        .chat-reply-quote .chat-reply-text {
+            color: var(--color-text-dim);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+        .chat-msg-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            opacity: 0.35;
+            transition: opacity 0.2s;
+            align-self: center;
+        }
+        .chat-msg-row:hover .chat-msg-actions { opacity: 1; }
+        .chat-act-btn {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-chat-msg);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-dim);
+            font-size: 0.55rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            transition: transform 0.15s, background 0.15s;
+        }
+        .chat-act-btn:hover {
+            transform: scale(1.15);
+            background: var(--bg-chat-msg-me);
+        }
+        .chat-reactions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            margin-top: 3px;
+        }
+        .reaction-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            background: var(--bg-chat-msg);
+            border: 1px solid var(--color-border);
+            border-radius: 20px;
+            padding: 1px 7px;
+            font-size: 0.52rem;
+            cursor: pointer;
+            transition: transform 0.15s, background 0.15s, border-color 0.15s;
+        }
+        .reaction-pill:hover { transform: translateY(-1px); }
+        .reaction-pill b { font-weight: 800; color: var(--color-text-dim); font-size: 0.5rem; }
+        .reaction-pill.mine {
+            border-color: var(--color-accent);
+            background: rgba(245, 158, 11, 0.12);
+        }
+        .reaction-pill.mine b { color: var(--color-accent); }
+        .reaction-picker {
+            position: fixed;
+            display: flex;
+            gap: 4px;
+            background: var(--bg-container);
+            border: 1px solid var(--color-border);
+            border-radius: 20px;
+            padding: 5px 7px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(6px) scale(0.9);
+            transition: opacity 0.15s, transform 0.15s;
+            pointer-events: none;
+        }
+        .reaction-picker.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .reaction-picker span {
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.15s;
+            padding: 1px;
+        }
+        .reaction-picker span:hover { transform: scale(1.35); }
+        .chat-reply-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-chat-input);
+            border-top: 1px solid var(--color-border);
+            padding: 6px 10px;
+            animation: chatMsgIn 0.2s ease;
+        }
+        .chat-reply-bar-line {
+            width: 3px;
+            align-self: stretch;
+            background: var(--color-accent);
+            border-radius: 3px;
+        }
+        .chat-reply-bar-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            font-size: 0.55rem;
+        }
+        .chat-reply-bar-name {
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+        .chat-reply-bar-text {
+            color: var(--color-text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-reply-cancel {
+            background: none;
+            border: none;
+            color: var(--color-text-muted);
+            font-size: 0.75rem;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .chat-reply-cancel:hover { color: var(--color-btn-red); }
         .chat-input-area {
             padding: 10px;
             background: var(--bg-chat-input);
@@ -813,6 +1027,7 @@
         .chat-input-area input {
             margin: 0;
             flex: 1;
+            border-radius: 20px !important;
         }
         .admin-panel-box {
             background: var(--color-admin-panel-bg);
@@ -4212,6 +4427,8 @@
         let adminSavedInputs = null;
         let coadminSavedInputs = null;
         let displayedChatCount = 0;
+        let replyingTo = null, lastChatContentHash = '', lastChatMsgLen = 0;
+        const REACTION_EMOJIS = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
         let adminPlayerHash = '';
         let skyZoom = 1;
         const SKY_MIN_ZOOM = 0.5,
@@ -4219,6 +4436,19 @@
         let skyPos = { x: 0, y: 0 };
         let skyPlayerPositions = {};
         let skyPositionCacheKey = '';
+
+        // ===== توابع کمکی چت (شناسه پیام، رنگ آواتار، حروف اول) =====
+        function chatUid() { return 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+        function nameHue(name) {
+            let h = 0;
+            const s = String(name || '');
+            for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+            return h % 360;
+        }
+        function chatInitials(name) {
+            const s = String(name || '؟').trim();
+            return s.slice(0, 2);
+        }
 
         // ===== توابع نمایش نام با رنگ و ایموجی سفارشی =====
         function isAssistant(name) {
@@ -5895,28 +6125,135 @@
             toast(`✈️ هوانوردی به سطح ${player.research[b]} ارتقا یافت`, false, "peace");
         };
 
-        // ===== چت =====
+        // ===== چت (حباب پیام، پاسخ، واکنش) =====
+        function buildChatMsgHTML(msg) {
+            if (!msg.mid) msg.mid = chatUid();
+            const isMe = player && msg.n === player.name;
+            const isSys = msg.sys;
+            const time = new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+            const sender = isSys ? '📢 سیستم' : getPlayerDisplayName(allPlayers.find(p => p.name === msg.n) || { name: msg.n });
+            const sCls = isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ? 'sender coadmin-s' : 'sender');
+            const nameHtml = isSys ? sender :
+                `<span onclick="showProfileModal('${allPlayers.find(p=>p.name===msg.n)?.id||''}')" style="cursor:pointer;">${sender}</span>`;
+            const hue = nameHue(msg.n);
+            const avatarHtml = isSys ? `<div class="chat-avatar sys-avatar">📢</div>` :
+                `<div class="chat-avatar" style="background:linear-gradient(135deg, hsl(${hue},70%,45%), hsl(${(hue+40)%360},70%,35%));">${escapeHtml(chatInitials(msg.n))}</div>`;
+            let replyHtml = '';
+            if (msg.re) {
+                replyHtml = `<div class="chat-reply-quote"><span class="chat-reply-name">↩️ ${msg.re.n}</span><span class="chat-reply-text">${msg.re.t}</span></div>`;
+            }
+            let reactionsHtml = '';
+            if (msg.rx) {
+                const parts = [];
+                Object.keys(msg.rx).forEach(emo => {
+                    const arr = msg.rx[emo] || [];
+                    if (!arr.length) return;
+                    const mine = player && arr.includes(player.name);
+                    const who = arr.map(n => escapeHtml(n)).join('، ');
+                    parts.push(`<span class="reaction-pill${mine?' mine':''}" onclick="reactToMsg('${msg.mid}','${emo}')" title="${who}">${emo} <b>${arr.length}</b></span>`);
+                });
+                if (parts.length) reactionsHtml = `<div class="chat-reactions">${parts.join('')}</div>`;
+            }
+            const actionsHtml = isSys ? '' :
+                `<div class="chat-msg-actions">
+                    <button class="chat-act-btn" onclick="setReplyTo('${msg.mid}')" title="پاسخ">↩️</button>
+                    <button class="chat-act-btn" onclick="toggleReactionPicker(event,'${msg.mid}')" title="واکنش">😊</button>
+                </div>`;
+            return `<div class="chat-msg-row ${isMe?'me':''} ${isSys?'system-msg':''}" data-mid="${msg.mid}">` +
+                (!isSys && !isMe ? avatarHtml : '') +
+                `<div class="chat-bubble-wrap">` +
+                    `<div class="chat-msg ${isMe?'me':''} ${isSys?'system-msg':''}">` +
+                        `<div class="${sCls}">${nameHtml} <span class="time">${time}</span></div>` +
+                        replyHtml +
+                        `<div class="chat-text">${msg.t}</div>` +
+                    `</div>` +
+                    reactionsHtml +
+                `</div>` +
+                (!isSys && isMe ? avatarHtml : '') +
+                actionsHtml +
+                `</div>`;
+        }
+        window.setReplyTo = function(mid) {
+            const msg = chatMessages.find(m => m.mid === mid);
+            if (!msg || !player) return;
+            const dispName = msg.n === player.name ? 'شما' : getPlayerDisplayName(allPlayers.find(p => p.name === msg.n) || { name: msg.n });
+            replyingTo = { mid: msg.mid, n: dispName, t: msg.t };
+            if (activeTab === 'chat') renderChat();
+            const inp = document.getElementById('chatInput');
+            if (inp) inp.focus();
+        };
+        window.cancelReply = function() {
+            replyingTo = null;
+            if (activeTab === 'chat') renderChat();
+        };
+        window.toggleReactionPicker = function(ev, mid) {
+            ev.stopPropagation();
+            const existing = document.getElementById('reactionPicker');
+            if (existing) {
+                const wasFor = existing.dataset.mid;
+                existing.remove();
+                if (wasFor === mid) return;
+            }
+            const picker = document.createElement('div');
+            picker.id = 'reactionPicker';
+            picker.className = 'reaction-picker';
+            picker.dataset.mid = mid;
+            picker.innerHTML = REACTION_EMOJIS.map(e => `<span onclick="reactToMsg('${mid}','${e}')">${e}</span>`).join('');
+            document.body.appendChild(picker);
+            const rect = ev.currentTarget.getBoundingClientRect();
+            let left = rect.left - 90;
+            if (left < 6) left = 6;
+            if (left + 190 > window.innerWidth) left = window.innerWidth - 196;
+            picker.style.top = Math.max(6, rect.top - 46) + 'px';
+            picker.style.left = left + 'px';
+            requestAnimationFrame(() => picker.classList.add('visible'));
+        };
+        document.addEventListener('click', function(e) {
+            const picker = document.getElementById('reactionPicker');
+            if (picker && !picker.contains(e.target)) picker.remove();
+        });
+        window.reactToMsg = async function(mid, emoji) {
+            const picker = document.getElementById('reactionPicker');
+            if (picker) picker.remove();
+            const msg = chatMessages.find(m => m.mid === mid);
+            if (!msg || !player) return;
+            if (!msg.rx) msg.rx = {};
+            if (!msg.rx[emoji]) msg.rx[emoji] = [];
+            const i = msg.rx[emoji].indexOf(player.name);
+            if (i >= 0) {
+                msg.rx[emoji].splice(i, 1);
+            } else {
+                REACTION_EMOJIS.forEach(e => {
+                    if (e !== emoji && msg.rx[e]) {
+                        const j = msg.rx[e].indexOf(player.name);
+                        if (j >= 0) msg.rx[e].splice(j, 1);
+                    }
+                });
+                msg.rx[emoji].push(player.name);
+            }
+            if (activeTab === 'chat') renderChat();
+            lastChatContentHash = chatMessages.map(m => (m.mid || m.ts) + ':' + (m.rx ? JSON.stringify(m.rx) : '')).join('|');
+            await saveAll();
+        };
         window.sendChat = async function() {
             if (chatLocked && !isAdmin() && !isCoadmin()) return toast("🔒 چت بسته (فقط مدیران می‌توانند پیام دهند)", true);
             const inp = document.getElementById('chatInput');
             if (!inp) return;
             const text = inp.value.trim();
             if (!text || text.length > 100) return;
-            chatMessages.push({ ts: ts(), n: player.name, t: escapeHtml(text) });
-            inp.value = '';
-            const box = document.getElementById('chatBox');
-            if (box) {
-                const time = new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
-                const div = document.createElement('div');
-                div.className = 'chat-msg me';
-                const sCls = isAdm(player.name) ? 'sender admin-s' : (isCoadmin() ? 'sender coadmin-s' :
-                    'sender');
-                div.innerHTML =
-                    `<div class="${sCls}">${getPlayerDisplayName(player)} <span class="time">${time}</span></div><div>${escapeHtml(text)}</div>`;
-                box.appendChild(div);
-                box.scrollTop = box.scrollHeight;
+            const newMsg = { ts: ts(), n: player.name, t: escapeHtml(text), mid: chatUid() };
+            if (replyingTo) {
+                newMsg.re = { n: replyingTo.n, t: replyingTo.t, mid: replyingTo.mid };
+                replyingTo = null;
             }
+            chatMessages.push(newMsg);
+            inp.value = '';
+            if (activeTab === 'chat') renderChat();
+            const box = document.getElementById('chatBox');
+            if (box) box.scrollTop = box.scrollHeight;
             displayedChatCount = chatMessages.length;
+            lastChatMsgLen = chatMessages.length;
+            lastChatContentHash = chatMessages.map(m => (m.mid || m.ts) + ':' + (m.rx ? JSON.stringify(m.rx) : '')).join('|');
             await saveAll();
         };
 
@@ -7061,22 +7398,14 @@
             let scrollTop = 0;
             if (box) scrollTop = box.scrollTop;
             let h = '<div class="chat-container"><div class="chat-box" id="chatBox">';
-            chatMessages.forEach(msg => {
-                const isMe = msg.n === player.name;
-                const isSys = msg.sys;
-                const time = new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
-                const sender = isSys ? '📢 سیستم' : getPlayerDisplayName(allPlayers.find(p => p.name === msg.n) || {
-                    name: msg.n });
-                const sCls = isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ? 'sender coadmin-s' :
-                    'sender');
-                const nameHtml = isSys ? sender :
-                    `<span onclick="showProfileModal('${allPlayers.find(p=>p.name===msg.n)?.id||''}')" style="cursor:pointer;">${sender}</span>`;
-                h +=
-                    `<div class="chat-msg ${isMe?'me':''} ${isSys?'system-msg':''}"><div class="${sCls}">${nameHtml} <span class="time">${time}</span></div><div>${msg.t}</div></div>`;
-            });
+            chatMessages.forEach(msg => { h += buildChatMsgHTML(msg); });
+            h += '</div>';
+            if (replyingTo) {
+                h += `<div class="chat-reply-bar"><div class="chat-reply-bar-line"></div><div class="chat-reply-bar-info"><span class="chat-reply-bar-name">پاسخ به ${replyingTo.n}</span><span class="chat-reply-bar-text">${replyingTo.t}</span></div><button class="chat-reply-cancel" onclick="cancelReply()" title="لغو پاسخ">✕</button></div>`;
+            }
             const isChatLocked = chatLocked && !isAdmin() && !isCoadmin();
             h +=
-                `</div><div class="chat-input-area"><input type="text" id="chatInput" placeholder="${isChatLocked?'🔒 چت بسته (فقط مدیران)':'پیام خود را بنویسید...'}" maxlength="100" ${isChatLocked?'disabled':''} onkeypress="if(event.key==='Enter')sendChat()"><button class="btn btn-gold btn-sm" onclick="sendChat()" ${isChatLocked?'disabled':''}>ارسال</button></div></div>`;
+                `<div class="chat-input-area"><input type="text" id="chatInput" placeholder="${isChatLocked?'🔒 چت بسته (فقط مدیران)':'پیام خود را بنویسید...'}" maxlength="100" ${isChatLocked?'disabled':''} onkeypress="if(event.key==='Enter')sendChat()"><button class="btn btn-gold btn-sm" onclick="sendChat()" ${isChatLocked?'disabled':''}>ارسال</button></div></div>`;
             chatContent.innerHTML = h;
             // ✅ بازنشانی مقدار input، focus و مکان‌نما پس از رندر
             const newInput = document.getElementById('chatInput');
@@ -7430,44 +7759,25 @@
 
                 if (activeTab === 'chat') {
                     const box = document.getElementById('chatBox');
-                    if (box) {
-                        // ✅ حقیقت زمینی: تعداد div های داخل DOM (نه counter)
-                        const existingCount = box.children.length;
-                        const newMessagesToAppend = chatMessages.length - existingCount;
-                        if (newMessagesToAppend > 0) {
-                            // ✅ تشخیص اینکه کاربر نزدیک پایین صفحه هست یا نه (قبل از append)
-                            const wasNearBottom = (box.scrollHeight - box.scrollTop - box.clientHeight) < 100;
-
-                            for (let i = existingCount; i < chatMessages.length; i++) {
-                                const msg = chatMessages[i];
-                                const time = new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit',
-                                    minute: '2-digit' });
-                                const isSys = msg.sys;
-                                const div = document.createElement('div');
-                                div.className = 'chat-msg' + (isSys ? ' system-msg' : '');
-                                const sender = isSys ? '📢 سیستم' : getPlayerDisplayName(allPlayers.find(p => p.name === msg
-                                    .n) || { name: msg.n });
-                                const sCls = isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ?
-                                    'sender coadmin-s' : 'sender');
-                                div.innerHTML =
-                                    `<div class="${sCls}">${sender} <span class="time">${time}</span></div><div>${msg.t}</div>`;
-                                box.appendChild(div);
-                            }
-                            // ✅ اگر کاربر نزدیک پایین بود، خودکار به آخرین پیام اسکرول کن
-                            if (wasNearBottom) {
-                                // دو فریم صبر کن تا DOM کامل رندر بشه بعد اسکرول کن
-                                requestAnimationFrame(() => {
-                                    requestAnimationFrame(() => {
-                                        box.scrollTop = box.scrollHeight;
-                                    });
-                                });
+                    const newChatHash = chatMessages.map(m => (m.mid || m.ts) + ':' + (m.rx ? JSON.stringify(m.rx) : '')).join('|');
+                    if (box && newChatHash !== lastChatContentHash) {
+                        const prevLen = lastChatMsgLen;
+                        const added = chatMessages.length - prevLen;
+                        const wasNearBottom = (box.scrollHeight - box.scrollTop - box.clientHeight) < 100;
+                        renderChat();
+                        const newBox = document.getElementById('chatBox');
+                        if (newBox) {
+                            if (added > 0 && !wasNearBottom) {
+                                showNewMessageIndicator(added);
                             } else {
-                                // کاربر بالا صفحه است - فقط یک نشانگر پیام جدید نشان بده
-                                showNewMessageIndicator(newMessagesToAppend);
+                                requestAnimationFrame(() => {
+                                    requestAnimationFrame(() => { newBox.scrollTop = newBox.scrollHeight; });
+                                });
                             }
                         }
                     }
-                    // displayedChatCount دیگر استفاده نمی‌شود - از existingCount استفاده می‌کنیم
+                    lastChatContentHash = newChatHash;
+                    lastChatMsgLen = chatMessages.length;
                 }
 
                 const prevMktLen = savedMkt._prevMktLen || 0;
@@ -7544,6 +7854,8 @@
             await loadAll();
             lastHash = dataHash();
             displayedChatCount = chatMessages.length;
+            lastChatContentHash = chatMessages.map(m => (m.mid || m.ts) + ':' + (m.rx ? JSON.stringify(m.rx) : '')).join('|');
+            lastChatMsgLen = chatMessages.length;
             expireMarketOffers();
 
             // 🔒 اطمینان از ساخته شدن device key برای این مرورگر
