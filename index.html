@@ -2479,6 +2479,82 @@
             min-width: 16px;
             text-align: center;
         }
+        /* ===== کارت زیبای معامله بازار در چت ===== */
+        .mkt-trade-msg {
+            margin: -7px -11px -6px;
+            padding: 8px 8px 9px;
+            background: linear-gradient(160deg, rgba(16,185,129,0.16), rgba(15,23,42,0.55));
+            border: 1px solid rgba(16,185,129,0.35);
+            border-radius: 12px;
+            text-align: center;
+            width: 100%;
+            max-width: 190px;
+            box-sizing: border-box;
+            animation: tradeGlow 1.6s ease-out;
+        }
+        @keyframes tradeGlow {
+            0% { box-shadow: 0 0 0 rgba(16,185,129,0); }
+            30% { box-shadow: 0 0 18px rgba(16,185,129,0.45); }
+            100% { box-shadow: 0 0 0 rgba(16,185,129,0); }
+        }
+        .mkt-trade-title {
+            font-size: 0.58rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 6px;
+            color: #34d399;
+            letter-spacing: 0.2px;
+        }
+        .mkt-trade-parties {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.4rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .mkt-trade-buyer { color: #34d399; }
+        .mkt-trade-seller { color: #f87171; }
+        .mkt-trade-body {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 9px;
+            padding: 5px 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .mkt-trade-arrow {
+            font-size: 0.7rem;
+            color: #facc15;
+            min-width: 11px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .mkt-trade-msg .mkt-res-box {
+            flex: 1 1 0;
+            min-width: 0;
+            max-width: none;
+            padding: 4px 2px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .mkt-trade-msg .mkt-res-icon { font-size: 0.85rem; margin-bottom: 1px; line-height: 1; }
+        .mkt-trade-msg .mkt-res-amount { font-size: 0.5rem; white-space: nowrap; }
+        .mkt-trade-msg .mkt-res-label {
+            font-size: 0.28rem;
+            opacity: 0.85;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
         .mkt-offer-bottom {
             display: flex;
             justify-content: flex-end;
@@ -6102,9 +6178,43 @@
             if (s) s[o.get] += o.gta;
             marketOffers = marketOffers.filter(x => x.id !== oid);
             addActivity(player, `🛒 خرید آگهی از ${s ? s.name : 'ناشناس'}`);
+
+            // ===== پیام سیستمی زیبا و کامل معامله در چت =====
+            const payM = RES_META[o.get] || RES_META.gold;
+            const recvM = RES_META[o.give] || RES_META.gold;
+            const buyerName = getPlayerDisplayName(player);
+            const sellerName = s ? getPlayerDisplayName(s) : escapeHtml(o.seller || 'ناشناس');
+            chatMessages.push({
+                ts: ts(),
+                n: "SYSTEM",
+                t: `<div class="mkt-trade-msg">` +
+                        `<div class="mkt-trade-title">🛒 معامله بازار با موفقیت انجام شد</div>` +
+                        `<div class="mkt-trade-parties">` +
+                            `<span class="mkt-trade-buyer">🟢 خریدار: ${buyerName}</span>` +
+                            `<span class="mkt-trade-seller">🔴 فروشنده: ${sellerName}</span>` +
+                        `</div>` +
+                        `<div class="mkt-trade-body">` +
+                            `<div class="mkt-res-box give-box ${payM.theme}">` +
+                                `<span class="mkt-res-icon">${payM.icon}</span>` +
+                                `<span class="mkt-res-amount">${o.gta.toLocaleString('fa-IR')}</span>` +
+                                `<span class="mkt-res-label">${payM.name} پرداخت شد</span>` +
+                            `</div>` +
+                            `<div class="mkt-trade-arrow">⇄</div>` +
+                            `<div class="mkt-res-box get-box ${recvM.theme}">` +
+                                `<span class="mkt-res-icon">${recvM.icon}</span>` +
+                                `<span class="mkt-res-amount">${o.ga.toLocaleString('fa-IR')}</span>` +
+                                `<span class="mkt-res-label">${recvM.name} دریافت شد</span>` +
+                            `</div>` +
+                        `</div>` +
+                    `</div>`,
+                sys: true
+            });
+            displayedChatCount = chatMessages.length;
+
             await saveAll(true);
             updateUI();
             renderMarket();
+            if (activeTab === 'chat') renderChat();
             toast("✅ معامله شد", false, "peace");
         };
 
