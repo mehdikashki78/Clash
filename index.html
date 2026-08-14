@@ -853,6 +853,7 @@
         }
         .chat-msg .sender.admin-s {
             color: var(--color-btn-blue);
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.65);
         }
         .chat-msg .sender.coadmin-s {
             color: var(--color-assistant);
@@ -2140,8 +2141,10 @@
         }
         .fac-mem-tag.admin-tag {
             color: var(--color-btn-blue);
-            border-color: rgba(59, 130, 246, 0.4);
-            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.6);
+            background: rgba(59, 130, 246, 0.14);
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
         }
         .fac-mem-tag.coadmin-tag {
             color: var(--color-assistant);
@@ -2413,6 +2416,7 @@
         }
         .mkt-offer-seller.admin-seller {
             color: var(--color-btn-blue);
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.65);
         }
         .mkt-offer-seller.coadmin-seller {
             color: var(--color-assistant);
@@ -2673,6 +2677,7 @@
         }
         .rank-name.admin-name {
             color: var(--color-btn-blue);
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.65);
         }
         .rank-name.coadmin-name {
             color: var(--color-assistant);
@@ -4072,10 +4077,31 @@
         .player-name-custom .custom-emoji {
             margin-left: 4px;
         }
-        .admin-badge {
-            color: #3b82f6 !important;
-            font-weight: 700;
+        @keyframes adminAura {
+            0%, 100% { background-position: 0% 50%; filter: brightness(1); }
+            50% { background-position: 100% 50%; filter: brightness(1.4); }
         }
+        @keyframes adminPulseGlow {
+            0%, 100% { box-shadow: 0 0 6px rgba(96,165,250,0.55), 0 0 14px rgba(139,92,246,0.35), inset 0 0 6px rgba(255,255,255,0.08); }
+            50% { box-shadow: 0 0 16px rgba(96,165,250,1), 0 0 30px rgba(139,92,246,0.7), inset 0 0 10px rgba(255,255,255,0.15); }
+        }
+        .admin-badge {
+            display: inline-flex !important;
+            align-items: center;
+            gap: 3px;
+            font-weight: 900 !important;
+            padding: 1px 9px 1px 7px;
+            border-radius: 999px;
+            border: 1px solid #bfdbfe;
+            background: linear-gradient(90deg, #1d4ed8, #3b82f6, #a855f7, #3b82f6, #1d4ed8);
+            background-size: 300% auto;
+            color: #ffffff !important;
+            letter-spacing: 0.2px;
+            animation: adminAura 2.6s ease-in-out infinite, adminPulseGlow 2.2s ease-in-out infinite;
+            text-shadow: 0 0 6px rgba(255,255,255,0.6);
+            white-space: nowrap;
+        }
+        .admin-badge::before { content: "👑"; filter: drop-shadow(0 0 3px #fde68a); }
         .admin-badge .custom-emoji {
             margin-left: 4px;
         }
