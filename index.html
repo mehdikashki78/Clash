@@ -35,7 +35,7 @@
             --color-border: #f59e0b44;
             --color-accent: #fbbf24;
             --color-accent-dim: #f59e0b;
-            --color-shadow: 0 0 60px rgba(245, 158, 11, 0.15);
+            --color-shadow: 0 0 18px rgba(245, 158, 11, 0.15);
             --color-shield-bar-bg: #0a1a2e;
             --color-shield-text: #93c5fd;
             --color-banner-bg: linear-gradient(90deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
@@ -162,7 +162,7 @@
             --color-border: #dee2e6;
             --color-accent: #d97706;
             --color-accent-dim: #b45309;
-            --color-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+            --color-shadow: 0 0 18px rgba(0, 0, 0, 0.1);
             --color-shield-bar-bg: #e9ecef;
             --color-shield-text: #1a1a2e;
             --color-banner-bg: linear-gradient(90deg, #dc3545 0%, #c82333 50%, #dc3545 100%);
@@ -284,7 +284,6 @@
             overflow: hidden;
             border: 2px solid var(--color-accent-dim);
             box-shadow: var(--color-shadow);
-            backdrop-filter: blur(4px);
             transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .header {
@@ -299,7 +298,7 @@
         }
         .header h1 {
             color: var(--color-accent);
-            text-shadow: 0 0 40px rgba(245, 158, 11, 0.3);
+            text-shadow: 0 0 18px rgba(245, 158, 11, 0.3);
             font-size: 1.6rem;
             margin: 0;
         }
@@ -596,7 +595,7 @@
             animation: fadeOut 4.5s forwards;
             max-width: 92%;
             font-size: 0.8rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.8);
             transition: background 0.3s, color 0.3s, border-color 0.3s;
         }
         .toast.error { border-right-color: var(--color-toast-error-border); color: var(--color-toast-error-text); }
@@ -720,7 +719,7 @@
         }
         @keyframes continuePulse {
             0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(245, 158, 11, 0); }
-            50% { transform: scale(1.06); box-shadow: 0 0 30px rgba(245, 158, 11, 0.6); }
+            50% { transform: scale(1.06); box-shadow: 0 0 18px rgba(245, 158, 11, 0.6); }
         }
         .missile-fly {
             position: fixed;
@@ -760,7 +759,7 @@
             border-radius: 1.1rem;
             border: 1px solid var(--color-border);
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 0 40px rgba(245, 158, 11, 0.02);
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.25), inset 0 0 18px rgba(245, 158, 11, 0.02);
             transition: background 0.3s, border-color 0.3s;
             position: relative;
         }
@@ -979,7 +978,7 @@
             border: 1px solid var(--color-border);
             border-radius: 20px;
             padding: 5px 7px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
             z-index: 9999;
             opacity: 0;
             transform: translateY(6px) scale(0.9);
@@ -1100,7 +1099,7 @@
             border-radius: 30px;
             font-size: 0.7rem;
             font-weight: 700;
-            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.5);
+            box-shadow: 0 6px 18px rgba(59, 130, 246, 0.5);
             cursor: pointer;
             z-index: 9998;
             opacity: 0;
@@ -1127,8 +1126,8 @@
             font-weight: 800;
         }
         @keyframes newMsgBounce {
-            0%, 100% { box-shadow: 0 6px 24px rgba(59, 130, 246, 0.5); }
-            50% { box-shadow: 0 8px 32px rgba(59, 130, 246, 0.8); }
+            0%, 100% { box-shadow: 0 6px 18px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 8px 18px rgba(59, 130, 246, 0.8); }
         }
 
         /* ===== PROFILE ===== */
@@ -1160,7 +1159,7 @@
             position: relative;
             z-index: 1;
             border: 1px solid var(--color-border);
-            transition: all 0.3s;
+            transition: transform 0.3s, background 0.3s, border-color 0.3s, box-shadow 0.3s, opacity 0.3s;
         }
         .profile-banner .banner-color-picker {
             position: absolute;
@@ -1171,7 +1170,6 @@
             background: rgba(0,0,0,0.6);
             padding: 4px 8px;
             border-radius: 20px;
-            backdrop-filter: blur(4px);
         }
         .profile-banner .banner-color-picker input[type="color"] {
             width: 24px;
@@ -1209,7 +1207,7 @@
             align-items: center;
             justify-content: center;
             border: 3px solid var(--color-accent-dim);
-            box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
+            box-shadow: 0 0 18px rgba(245, 158, 11, 0.2);
             cursor: pointer;
             transition: 0.2s;
             flex-shrink: 0;
@@ -1848,7 +1846,7 @@
             100% { transform: scale(1);
                 box-shadow: 0 0 0 rgba(245, 158, 11, 0); }
             50% { transform: scale(1.03);
-                box-shadow: 0 0 25px rgba(245, 158, 11, 0.5); }
+                box-shadow: 0 0 18px rgba(245, 158, 11, 0.5); }
         }
         .mine-upgrade-section {
             display: flex;
@@ -1943,7 +1941,7 @@
             font-size: 1.1rem;
             font-weight: 900;
             color: var(--color-accent);
-            text-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+            text-shadow: 0 0 18px rgba(245, 158, 11, 0.2);
             position: relative;
             z-index: 1;
         }
@@ -1977,13 +1975,13 @@
         }
         .fac-card:hover {
             border-color: var(--color-accent-dim);
-            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.08);
+            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.08);
             transform: translateY(-1px);
         }
         .fac-card.my-fac {
             border-color: var(--color-accent-dim);
             background: var(--color-fac-my-bg);
-            box-shadow: 0 0 25px rgba(245, 158, 11, 0.1), inset 0 0 30px rgba(245, 158, 11, 0.03);
+            box-shadow: 0 0 18px rgba(245, 158, 11, 0.1), inset 0 0 18px rgba(245, 158, 11, 0.03);
         }
         .fac-card.my-fac::after {
             content: '';
@@ -2002,7 +2000,7 @@
         }
         .fac-card.top3 {
             border-color: rgba(245, 158, 11, 0.5);
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.08);
+            box-shadow: 0 0 18px rgba(245, 158, 11, 0.08);
         }
         .fac-card-top {
             display: flex;
@@ -2273,7 +2271,6 @@
             font-size: 0.6rem;
             font-weight: 700;
             border: 1px solid;
-            backdrop-filter: blur(4px);
         }
         .mkt-bal-gold {
             background: var(--color-mkt-bal-gold);
@@ -3315,7 +3312,7 @@
             transform: translate(-50%, -50%);
             font-size: 2.8rem;
             animation: pulseIcon 1.2s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.4));
+            filter: drop-shadow(0 0 18px rgba(245, 158, 11, 0.4));
         }
         @keyframes pulseIcon {
             0%,
@@ -3348,7 +3345,7 @@
         }
         @keyframes glowTitle {
             0% { filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.2)); }
-            100% { filter: drop-shadow(0 0 30px rgba(245, 158, 11, 0.5)); }
+            100% { filter: drop-shadow(0 0 18px rgba(245, 158, 11, 0.5)); }
         }
         @keyframes sparkle {
             0%,
@@ -3715,7 +3712,7 @@
         }
         .mil-missile-card .missile-btn:hover:not(:disabled) {
             background: linear-gradient(135deg, #ef4444, #b91c1c);
-            box-shadow: 0 6px 22px rgba(239, 68, 68, 0.4);
+            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.4);
         }
 
         /* ===== مودال انتخاب نیرو برای حمله ===== */
@@ -3723,7 +3720,6 @@
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.78);
-            backdrop-filter: blur(6px);
             z-index: 9000;
             display: none;
             align-items: center;
@@ -3744,7 +3740,7 @@
             overflow-y: auto;
             padding: 20px;
             position: relative;
-            box-shadow: 0 0 60px rgba(239, 68, 68, 0.2);
+            box-shadow: 0 0 18px rgba(239, 68, 68, 0.2);
         }
         .attack-select-title {
             font-size: 1rem;
@@ -3827,7 +3823,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.15s;
+            transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
         }
         .qty-btn:hover:not(:disabled) {
             background: rgba(245, 158, 11, 0.2);
@@ -3891,7 +3887,7 @@
             font-size: 0.85rem;
             cursor: pointer;
             box-shadow: 0 4px 18px rgba(239, 68, 68, 0.35);
-            transition: all 0.2s;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
         }
         .attack-confirm-btn:hover:not(:disabled) {
             background: linear-gradient(135deg, #ef4444, #b91c1c);
@@ -4105,7 +4101,7 @@
         }
         @keyframes adminPulseGlow {
             0%, 100% { box-shadow: 0 0 6px rgba(96,165,250,0.55), 0 0 14px rgba(139,92,246,0.35), inset 0 0 6px rgba(255,255,255,0.08); }
-            50% { box-shadow: 0 0 16px rgba(96,165,250,1), 0 0 30px rgba(139,92,246,0.7), inset 0 0 10px rgba(255,255,255,0.15); }
+            50% { box-shadow: 0 0 16px rgba(96,165,250,1), 0 0 18px rgba(139,92,246,0.7), inset 0 0 10px rgba(255,255,255,0.15); }
         }
         .admin-badge {
             display: inline-flex !important;
@@ -4211,7 +4207,7 @@
             font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: transform 0.3s, background 0.3s, border-color 0.3s, box-shadow 0.3s, opacity 0.3s;
             position: relative;
             z-index: 1;
             background: linear-gradient(135deg, #8b5cf6, #7c3aed);
@@ -4220,7 +4216,7 @@
         }
         .research-card .res-btn:hover:not(:disabled) {
             transform: scale(1.05);
-            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 6px 18px rgba(139, 92, 246, 0.4);
         }
         .research-card .res-btn:disabled {
             background: #334155;
@@ -4299,7 +4295,6 @@
             display: none;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(4px);
             padding: 20px;
         }
         .profile-modal-overlay.active {
@@ -4315,7 +4310,7 @@
             overflow-y: auto;
             padding: 24px;
             position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 20px 18px rgba(0, 0, 0, 0.9);
             animation: modalIn 0.3s ease;
         }
         @keyframes modalIn {
