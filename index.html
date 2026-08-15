@@ -6629,6 +6629,62 @@
             chatMessages.push(aiMsg);
         }
 
+        // ===== 🤖 دستیار هوش مصنوعی چت (ساعت و تاریخ ایران) =====
+        // با نوشتن هر کدام از کلمات/عبارات زیر در چت، سیستم به‌صورت خودکار
+        // فقط ساعت و تاریخ فعلی را به وقت ایران (تهران) در چت اعلام می‌کند.
+        const AI_TIME_TRIGGERS = [
+            // فارسی
+            'ساعت', 'تایم', 'ساعت چنده', 'ساعت چند است', 'ساعت چند شد', 'ساعت چنده؟', 'ساعت چند است؟',
+            'ساعت الان', 'الان ساعت چنده', 'تاریخ', 'تاریخ امروز', 'امروز چندمه', 'امروز چندم است',
+            'تاریخ و ساعت', 'ساعت و تاریخ', '/ساعت', '!ساعت', '/تایم', '!تایم', '/تاریخ', '!تاریخ',
+            // انگلیسی
+            'time', '/time', '!time', 'what time', 'what time is it', 'date', '/date', '!date',
+            'time and date', 'date and time'
+        ];
+
+        function isAITimeCommand(text) {
+            if (!text) return false;
+            const t = text.trim().toLowerCase().replace(/ي/g, 'ی').replace(/ك/g, 'ک');
+            return AI_TIME_TRIGGERS.some(k => t === k.toLowerCase().replace(/ي/g, 'ی').replace(/ك/g, 'ک'));
+        }
+
+        function buildIranTimeReport() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('fa-IR', {
+                timeZone: 'Asia/Tehran',
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const timeStr = now.toLocaleTimeString('fa-IR', {
+                timeZone: 'Asia/Tehran',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            const lines = [];
+            lines.push('🕐 ساعت و تاریخ به وقت ایران');
+            lines.push('━━━━━━━━━━━━━━━');
+            lines.push('📅 تاریخ: ' + dateStr);
+            lines.push('⏰ ساعت: ' + timeStr);
+            return lines.join('\n');
+        }
+
+        async function sendAITimeReply() {
+            if (!player) return;
+            const report = buildIranTimeReport();
+            const aiMsg = {
+                ts: ts(),
+                n: '🤖 هوش مصنوعی',
+                t: escapeHtml(report).replace(/\n/g, '<br>'),
+                mid: chatUid(),
+                ai: true
+            };
+            chatMessages.push(aiMsg);
+        }
+
         window.sendChat = async function() {
             if (chatLocked && !isAdmin() && !isCoadmin()) return toast("🔒 چت بسته (فقط مدیران می‌توانند پیام دهند)", true);
             const inp = document.getElementById('chatInput');
@@ -6644,6 +6700,10 @@
             // 🤖 اگر پیام یک دستور آمار باشد، پاسخ هوش مصنوعی را کنار پیام سیستم اضافه کن
             if (isAIStatsCommand(text)) {
                 await sendAIStatsReply();
+            }
+            // 🤖 اگر پیام یک دستور ساعت/تایم باشد، پاسخ ساعت و تاریخ ایران را اضافه کن
+            if (isAITimeCommand(text)) {
+                await sendAITimeReply();
             }
             inp.value = '';
             if (activeTab === 'chat') renderChat();
