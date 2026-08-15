@@ -789,6 +789,28 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .chat-msg-row.system-msg { justify-content: center; }
+        .chat-msg-row.ai-msg { justify-content: center; }
+        .chat-avatar.ai-avatar {
+            background: linear-gradient(135deg, var(--color-assistant), #6d28d9);
+            font-size: 0.65rem;
+            box-shadow: 0 2px 10px var(--color-assistant-glow), 0 0 0 2px rgba(255, 255, 255, 0.06);
+        }
+        .chat-msg.ai-msg {
+            border-color: var(--color-assistant);
+            background: linear-gradient(160deg, rgba(139, 92, 246, 0.16), var(--bg-chat-msg));
+            color: var(--color-text);
+            border-radius: 12px;
+            text-align: right;
+            font-size: 0.62rem;
+            box-shadow: 0 0 16px var(--color-assistant-glow);
+        }
+        .chat-msg .sender.ai-s {
+            color: var(--color-assistant);
+            text-shadow: 0 0 10px var(--color-assistant-glow);
+        }
+        .chat-msg.ai-msg .chat-text {
+            line-height: 1.9;
+        }
         .chat-avatar {
             flex-shrink: 0;
             width: 26px;
@@ -6417,14 +6439,15 @@
             if (!msg.mid) msg.mid = chatUid();
             const isMe = player && msg.n === player.name;
             const isSys = msg.sys;
+            const isAI = msg.ai;
             const time = new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
-            const sender = isSys ? '📢 سیستم' : getPlayerDisplayName(allPlayers.find(p => p.name === msg.n) || { name: msg.n });
-            const sCls = isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ? 'sender coadmin-s' : 'sender');
-            const nameHtml = isSys ? sender :
+            const sender = isAI ? '🤖 هوش مصنوعی' : (isSys ? '📢 سیستم' : getPlayerDisplayName(allPlayers.find(p => p.name === msg.n) || { name: msg.n }));
+            const sCls = isAI ? 'sender ai-s' : (isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ? 'sender coadmin-s' : 'sender'));
+            const nameHtml = (isSys || isAI) ? sender :
                 `<span onclick="showProfileModal('${allPlayers.find(p=>p.name===msg.n)?.id||''}')" style="cursor:pointer;">${sender}</span>`;
             const hue = nameHue(msg.n);
-            const avatarHtml = isSys ? `<div class="chat-avatar sys-avatar">📢</div>` :
-                `<div class="chat-avatar" style="background:linear-gradient(135deg, hsl(${hue},70%,45%), hsl(${(hue+40)%360},70%,35%));">${escapeHtml(chatInitials(msg.n))}</div>`;
+            const avatarHtml = isAI ? `<div class="chat-avatar ai-avatar">🤖</div>` : (isSys ? `<div class="chat-avatar sys-avatar">📢</div>` :
+                `<div class="chat-avatar" style="background:linear-gradient(135deg, hsl(${hue},70%,45%), hsl(${(hue+40)%360},70%,35%));">${escapeHtml(chatInitials(msg.n))}</div>`);
             let replyHtml = '';
             if (msg.re) {
                 replyHtml = `<div class="chat-reply-quote"><span class="chat-reply-name">↩️ ${msg.re.n}</span><span class="chat-reply-text">${msg.re.t}</span></div>`;
@@ -6441,22 +6464,24 @@
                 });
                 if (parts.length) reactionsHtml = `<div class="chat-reactions">${parts.join('')}</div>`;
             }
-            const actionsHtml = isSys ? '' :
+            const actionsHtml = (isSys || isAI) ? '' :
                 `<div class="chat-msg-actions">
                     <button class="chat-act-btn" onclick="setReplyTo('${msg.mid}')" title="پاسخ">↩️</button>
                     <button class="chat-act-btn" onclick="toggleReactionPicker(event,'${msg.mid}')" title="واکنش">😊</button>
                 </div>`;
-            return `<div class="chat-msg-row ${isMe?'me':''} ${isSys?'system-msg':''}" data-mid="${msg.mid}">` +
-                (!isSys && !isMe ? avatarHtml : '') +
+            const rowExtraCls = isAI ? 'ai-msg' : (isSys ? 'system-msg' : '');
+            return `<div class="chat-msg-row ${isMe?'me':''} ${rowExtraCls}" data-mid="${msg.mid}">` +
+                ((!isSys && !isAI) && !isMe ? avatarHtml : '') +
+                (isAI ? avatarHtml : '') +
                 `<div class="chat-bubble-wrap">` +
-                    `<div class="chat-msg ${isMe?'me':''} ${isSys?'system-msg':''}">` +
+                    `<div class="chat-msg ${isMe?'me':''} ${rowExtraCls}">` +
                         `<div class="${sCls}">${nameHtml} <span class="time">${time}</span></div>` +
                         replyHtml +
                         `<div class="chat-text">${msg.t}</div>` +
                     `</div>` +
                     reactionsHtml +
                 `</div>` +
-                (!isSys && isMe ? avatarHtml : '') +
+                ((!isSys && !isAI) && isMe ? avatarHtml : '') +
                 actionsHtml +
                 `</div>`;
         }
@@ -6522,6 +6547,88 @@
             lastChatContentHash = chatMessages.map(m => (m.mid || m.ts) + ':' + (m.rx ? JSON.stringify(m.rx) : '')).join('|');
             await saveAll();
         };
+        // ===== 🤖 دستیار هوش مصنوعی چت (گزارش آمار بازیکن) =====
+        // با نوشتن هر کدام از کلمات/عبارات زیر در چت، سیستم به‌صورت خودکار یک پیام
+        // شامل آمار کامل بازیکن (حمله، دفاع، XP، منابع، جناح، سپر و ...) در کنار
+        // پیام سیستم ارسال می‌کند. هیچ داده‌ای از بازیکنان پاک یا تغییر داده نمی‌شود.
+        const AI_STATS_TRIGGERS = [
+            // فارسی - پایه
+            'آمار', 'امار', '/آمار', '!آمار', 'آمار من', 'امار من', 'آمارم', 'امارم', 'آمار بازیکن', 'آمار بده',
+            'نمایش آمار', 'چک آمار', 'استعلام آمار', 'استعلام',
+            // فارسی - وضعیت / پروفایل / اطلاعات / گزارش
+            'وضعیت', 'وضعیت من', 'وضعیتم', 'پروفایل', 'پروفایل من', 'پروفایلم', 'مشخصات', 'مشخصات من',
+            'مشخصاتم', 'اطلاعات', 'اطلاعات من', 'اطلاعاتم', 'گزارش', 'گزارش من', 'گزارشم', 'گزارش بده',
+            // فارسی - قدرت / منابع
+            'قدرت من', 'قدرتم', 'قدرت نظامی', 'منابع من', 'منابعم', 'موجودی من', 'موجودیم',
+            // فارسی - خطاب به هوش مصنوعی
+            'هوش مصنوعی', 'ربات آمار', 'ai آمار',
+            // انگلیسی
+            'stats', '/stats', '!stats', 'my stats', 'mystats', 'profile', '/profile', 'my profile',
+            'report', '/report', 'status', '/status', 'info', '/info', 'ai stats'
+        ];
+
+        function isAIStatsCommand(text) {
+            if (!text) return false;
+            const t = text.trim().toLowerCase().replace(/ي/g, 'ی').replace(/ك/g, 'ک');
+            return AI_STATS_TRIGGERS.some(k => t === k.toLowerCase().replace(/ي/g, 'ی').replace(/ك/g, 'ک'));
+        }
+
+        function buildPlayerStatsReport(p) {
+            if (!p) return '';
+            const level = Math.floor((p.xp || 0) / 100) + 1;
+            const nextXP = level * 100;
+            const atk = calcAtt(p);
+            const def = calcDef(p);
+            const totalBattles = (p.successfulAttacks || 0) + (p.successfulDefenses || 0);
+            const winRate = totalBattles > 0 ? Math.round((p.successfulAttacks || 0) / totalBattles * 100) : 0;
+            const facName = p.faction ? (getFI(p.faction) + ' ' + getFN(p.faction)) : 'بدون جناح';
+            const shieldActive = p.shieldExpiry && ts() < p.shieldExpiry;
+            const shieldStr = shieldActive ?
+                ('🟢 فعال (' + Math.max(1, Math.ceil((p.shieldExpiry - ts()) / 60000)) + ' دقیقه باقی‌مانده)') :
+                '🔴 غیرفعال';
+            const sortedByXP = [...allPlayers].sort((a, b) => (b.xp || 0) - (a.xp || 0));
+            const rank = sortedByXP.findIndex(x => x.id === p.id) + 1;
+            let fCount = 0,
+                mCount = 0;
+            if (p.fighters) Object.values(p.fighters).forEach(d => { fCount += d.count || 0; });
+            if (p.missiles) Object.values(p.missiles).forEach(d => { mCount += d.count || 0; });
+            const dCount = (p.defenses || []).filter(d => d.hp > 0).length;
+            const milLv = p.research?.military || 0;
+
+            const lines = [];
+            lines.push('📊 گزارش آمار بازیکن « ' + (p.customName || p.name) + ' »');
+            lines.push('━━━━━━━━━━━━━━━');
+            lines.push('⭐ سطح: ' + level + '  |  XP: ' + (p.xp || 0).toLocaleString('fa-IR') + ' / ' + nextXP
+                .toLocaleString('fa-IR'));
+            lines.push('⚔️ قدرت حمله: ' + atk.toLocaleString('fa-IR'));
+            lines.push('🛡️ قدرت دفاع: ' + def.toLocaleString('fa-IR'));
+            lines.push('🏆 رتبه جهانی: #' + rank + ' از ' + allPlayers.length + ' بازیکن');
+            lines.push('✅ حملات موفق: ' + (p.successfulAttacks || 0) + '  |  🛡️ دفاع موفق: ' + (p
+                .successfulDefenses || 0) + '  |  🎯 درصد برد: ' + winRate + '%');
+            lines.push('💰 طلا: ' + Math.floor(p.gold || 0).toLocaleString('fa-IR') + '  |  🛢️ نفت: ' + Math.floor(p
+                .oil || 0).toLocaleString('fa-IR') + '  |  ⛏️ فلز: ' + Math.floor(p.metal || 0).toLocaleString(
+                'fa-IR'));
+            lines.push('✈️ جنگنده‌ها: ' + fCount.toLocaleString('fa-IR') + '  |  🚀 موشک‌ها: ' + mCount
+                .toLocaleString('fa-IR') + '  |  🏰 پدافند فعال: ' + dCount.toLocaleString('fa-IR'));
+            lines.push('🔬 تحقیقات نظامی: سطح ' + milLv);
+            lines.push('🏴 جناح: ' + facName);
+            lines.push('🔰 سپر محافظ: ' + shieldStr);
+            return lines.join('\n');
+        }
+
+        async function sendAIStatsReply() {
+            if (!player) return;
+            const report = buildPlayerStatsReport(player);
+            const aiMsg = {
+                ts: ts(),
+                n: '🤖 هوش مصنوعی',
+                t: escapeHtml(report).replace(/\n/g, '<br>'),
+                mid: chatUid(),
+                ai: true
+            };
+            chatMessages.push(aiMsg);
+        }
+
         window.sendChat = async function() {
             if (chatLocked && !isAdmin() && !isCoadmin()) return toast("🔒 چت بسته (فقط مدیران می‌توانند پیام دهند)", true);
             const inp = document.getElementById('chatInput');
@@ -6534,6 +6641,10 @@
                 replyingTo = null;
             }
             chatMessages.push(newMsg);
+            // 🤖 اگر پیام یک دستور آمار باشد، پاسخ هوش مصنوعی را کنار پیام سیستم اضافه کن
+            if (isAIStatsCommand(text)) {
+                await sendAIStatsReply();
+            }
             inp.value = '';
             if (activeTab === 'chat') renderChat();
             const box = document.getElementById('chatBox');
