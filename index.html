@@ -4468,6 +4468,10 @@
         const MAX_PLAYERS = 1000;
         const MAX_OFFERS_PER_PLAYER = 2;
         const MAX_ASSISTANTS = 3;
+        const MAX_MILITARY_RESEARCH = 3;
+        const WAREHOUSE_BASE_CAP = 20;
+        const MAX_WAREHOUSE_LEVEL = 10;
+        const WAREHOUSE_UPGRADE_BASE_COST = 500;
 
         const F_DB = {
             "A-4": { n: "Qaher-313", i: "🇮🇷", p: 15, c: { g: 1000, o: 1000, m: 1000 }, r: 0 },
@@ -4852,6 +4856,7 @@
                 f: p.fighters,
                 d: p.defenses,
                 mls: p.missiles || {},
+                wh: p.warehouse || { level: 0, cap: WAREHOUSE_BASE_CAP, fighters: {}, missiles: {} },
                 sh: p.shieldExpiry,
                 ce: p.customEmoji || '',
                 cc: p.customColor || '',
@@ -4888,6 +4893,7 @@
                 fighters: c.f || {},
                 defenses: c.d || [],
                 missiles: c.mls || {},
+                warehouse: c.wh || { level: 0, cap: WAREHOUSE_BASE_CAP, fighters: {}, missiles: {} },
                 shieldExpiry: c.sh || 0,
                 customEmoji: c.ce || '',
                 customColor: c.cc || '',
@@ -5025,6 +5031,7 @@
                 fighters: {},
                 defenses: [],
                 missiles: {},
+                warehouse: { level: 0, cap: WAREHOUSE_BASE_CAP, fighters: {}, missiles: {} },
                 shieldExpiry: 0,
                 customEmoji: '👤',
                 customColor: '',
@@ -5074,17 +5081,143 @@
                     if (M_DB[n] && d.count > 0) pw += M_DB[n].p * d.count;
                 }
             }
+            // 🔬 تحقیق نظامی: هر سطح ۲٪ به قدرت حمله اضافه می‌کند (حداکثر سطح ۳ = ۶٪)
+            const milLv = Math.min(p.research?.military || 0, MAX_MILITARY_RESEARCH);
+            pw *= (1 + milLv * 0.02);
             return Math.floor(pw);
         }
 
         function calcDef(p) {
             if (!p) return 0;
-            let pw = calcAtt(p) * 0.5;
+            let fighterPw = 0;
+            if (p.fighters) {
+                for (const [n, d] of Object.entries(p.fighters)) {
+                    if (F_DB[n] && d.count > 0) fighterPw += F_DB[n].p * d.count;
+                }
+            }
+            let missilePw = 0;
+            if (p.missiles) {
+                for (const [n, d] of Object.entries(p.missiles)) {
+                    if (M_DB[n] && d.count > 0) missilePw += M_DB[n].p * d.count;
+                }
+            }
+            // 🔬 تحقیق نظامی: هر سطح ۲٪ به قدرت حمله/دفاع جنگنده و موشک اضافه می‌کند (حداکثر سطح ۳ = ۶٪)
+            const milLv = Math.min(p.research?.military || 0, MAX_MILITARY_RESEARCH);
+            const milMult = 1 + milLv * 0.02;
+            let pw = (fighterPw * 0.5 + missilePw * 0.03) * milMult;
             if (p.defenses) p.defenses.forEach(d => {
-                if (D_DB[d.type] && d.hp > 0) pw += D_DB[d.type].def * (d.hp / d.maxHp);
+                // پدافند غیرفعال نه در دفاع محاسبه می‌شود و نه هدف حمله قرار می‌گیرد
+                if (D_DB[d.type] && d.hp > 0 && d.active !== false) pw += D_DB[d.type].def * (d.hp / d.maxHp);
             });
             return Math.floor(pw);
         }
+
+        // ===== اعمال آسیب به پدافندها به‌صورت متوالی (یک پدافند در هر لحظه درگیر می‌شود) =====
+        // فقط پدافندهای «فعال» درگیر می‌شوند. وقتی پدافند اول نابود شد (hp=0)،
+        // باقیمانده‌ی آسیب به پدافند فعال بعدی منتقل می‌شود. پدافند غیرفعال هرگز آسیب نمی‌بیند و نابود نمی‌شود.
+        function applyDefenseDamage(target, totalDmg) {
+            if (!target.defenses || totalDmg <= 0) return;
+            let remaining = totalDmg;
+            for (const d of target.defenses) {
+                if (remaining <= 0) break;
+                if (!D_DB[d.type]) continue;
+                if (d.active === false) continue; // پدافند غیرفعال درگیر نمی‌شود و نابود نمی‌شود
+                if (d.hp <= 0) continue;
+                const dealt = Math.min(d.hp, remaining);
+                d.hp -= dealt;
+                remaining -= dealt;
+            }
+            // پدافندهای نابود شده حذف می‌شوند، اما غیرفعال‌ها (حتی با hp>0) دست‌نخورده باقی می‌مانند
+            target.defenses = target.defenses.filter(d => d.active === false || d.hp > 0);
+        }
+
+        // ===== انبار مهمات =====
+        // واحدهای داخل انبار از حمله در امان می‌مانند (تلفات به آن‌ها اعمال نمی‌شود)
+        // اما در محاسبه دفاع (calcDef) شرکت نمی‌کنند و برای حمله هم قابل استفاده نیستند
+        // (چون از player.fighters / player.missiles حذف و به player.warehouse منتقل شده‌اند).
+        // ظرفیت انبار پلکانی است: سطح ۰ (پایه) = ۲۰ فروند، هر سطح ارتقا +۱ فروند، تا سطح ۱۰ = ۳۰ فروند.
+        function ensureWarehouse(p) {
+            if (!p) return;
+            if (!p.warehouse) p.warehouse = { level: 0, cap: WAREHOUSE_BASE_CAP, fighters: {}, missiles: {} };
+            if (!p.warehouse.fighters) p.warehouse.fighters = {};
+            if (!p.warehouse.missiles) p.warehouse.missiles = {};
+            if (typeof p.warehouse.level !== 'number' || p.warehouse.level < 0) p.warehouse.level = 0;
+            if (p.warehouse.level > MAX_WAREHOUSE_LEVEL) p.warehouse.level = MAX_WAREHOUSE_LEVEL;
+            // ظرفیت همیشه از روی سطح محاسبه می‌شود تا با داده‌های قدیمی هم سازگار بماند
+            p.warehouse.cap = WAREHOUSE_BASE_CAP + p.warehouse.level;
+        }
+
+        function warehouseUsed(p) {
+            if (!p || !p.warehouse) return 0;
+            let used = 0;
+            for (const c of Object.values(p.warehouse.fighters || {})) used += Math.max(0, c || 0);
+            for (const c of Object.values(p.warehouse.missiles || {})) used += Math.max(0, c || 0);
+            return used;
+        }
+
+        function warehouseUpgradeCost(p) {
+            ensureWarehouse(p);
+            return WAREHOUSE_UPGRADE_BASE_COST * (p.warehouse.level + 1);
+        }
+
+        window.upgradeWarehouse = async function() {
+            ensureWarehouse(player);
+            if (player.warehouse.level >= MAX_WAREHOUSE_LEVEL) return toast("🏬 انبار در حداکثر سطح است", true);
+            const cost = warehouseUpgradeCost(player);
+            if (player.gold < cost) return toast("طلا کم", true);
+            player.gold -= cost;
+            player.warehouse.level++;
+            player.warehouse.cap = WAREHOUSE_BASE_CAP + player.warehouse.level;
+            addActivity(player, `🏬 ارتقا انبار مهمات به سطح ${player.warehouse.level} (ظرفیت ${player.warehouse.cap})`);
+            await saveAll();
+            updateUI();
+            renderMilitary();
+            toast(`🏬 انبار به سطح ${player.warehouse.level} ارتقا یافت (ظرفیت ${player.warehouse.cap})`, false, "peace");
+        };
+
+        window.storeInWarehouse = async function(kind, key, qtyRaw) {
+            ensureWarehouse(player);
+            const qty = Math.max(0, parseInt(qtyRaw) || 0);
+            if (qty <= 0) return toast("تعداد نامعتبر است", true);
+            const db = kind === 'fighter' ? F_DB : M_DB;
+            const srcMap = kind === 'fighter' ? player.fighters : player.missiles;
+            if (!db[key] || !srcMap || !srcMap[key] || srcMap[key].count <= 0) return toast("موجودی کافی نیست", true);
+            const available = srcMap[key].count;
+            const freeSpace = player.warehouse.cap - warehouseUsed(player);
+            if (freeSpace <= 0) return toast("🏬 ظرفیت انبار پر است", true);
+            const moveQty = Math.min(qty, available, freeSpace);
+            if (moveQty <= 0) return toast("🏬 ظرفیت انبار پر است", true);
+            srcMap[key].count -= moveQty;
+            if (srcMap[key].count <= 0) delete srcMap[key];
+            const whMap = kind === 'fighter' ? player.warehouse.fighters : player.warehouse.missiles;
+            whMap[key] = (whMap[key] || 0) + moveQty;
+            addActivity(player, `📥 انتقال ${moveQty}× ${db[key].n} به انبار مهمات`);
+            await saveAll();
+            updateUI();
+            renderMilitary();
+            toast(`📥 ${moveQty}× ${db[key].n} به انبار منتقل شد`, false, "peace");
+        };
+
+        window.withdrawFromWarehouse = async function(kind, key, qtyRaw) {
+            ensureWarehouse(player);
+            const qty = Math.max(0, parseInt(qtyRaw) || 0);
+            if (qty <= 0) return toast("تعداد نامعتبر است", true);
+            const db = kind === 'fighter' ? F_DB : M_DB;
+            const whMap = kind === 'fighter' ? player.warehouse.fighters : player.warehouse.missiles;
+            if (!db[key] || !whMap || !whMap[key] || whMap[key] <= 0) return toast("موجودی انبار کافی نیست", true);
+            const moveQty = Math.min(qty, whMap[key]);
+            if (moveQty <= 0) return;
+            whMap[key] -= moveQty;
+            if (whMap[key] <= 0) delete whMap[key];
+            const dstMap = kind === 'fighter' ? player.fighters : player.missiles;
+            if (!dstMap[key]) dstMap[key] = { count: 0 };
+            dstMap[key].count += moveQty;
+            addActivity(player, `📤 خروج ${moveQty}× ${db[key].n} از انبار مهمات`);
+            await saveAll();
+            updateUI();
+            renderMilitary();
+            toast(`📤 ${moveQty}× ${db[key].n} از انبار خارج شد`, false, "peace");
+        };
 
         function getFacStats() {
             const s = {};
@@ -5346,12 +5479,25 @@
             player.oil -= d.c.o;
             player.metal -= d.c.m;
             if (!player.defenses) player.defenses = [];
-            player.defenses.push({ id: ts().toString(36), type: k, hp: d.hp, maxHp: d.hp });
+            player.defenses.push({ id: ts().toString(36), type: k, hp: d.hp, maxHp: d.hp, active: true });
             addActivity(player, `🛡️ ساخت ${d.n}`);
             await saveAll();
             updateUI();
             renderMilitary();
             toast(`🛡️ ${d.n} ساخته شد`, false, "peace");
+        };
+
+        window.toggleDefense = async function(dId) {
+            const d = player.defenses.find(x => x.id === dId);
+            if (!d) return;
+            // اگر فیلد active تعریف نشده باشد (داده‌های قدیمی)، پیش‌فرض فعال در نظر گرفته می‌شود
+            const prevActive = d.active !== false;
+            d.active = !prevActive;
+            addActivity(player, d.active ? `🟢 فعال‌سازی پدافند` : `🔴 غیرفعال‌سازی پدافند`);
+            await saveAll();
+            updateUI();
+            renderMilitary();
+            toast(d.active ? "🟢 پدافند فعال شد" : "🔴 پدافند غیرفعال شد", false, "peace");
         };
 
         window.repairDefense = async function(dId) {
@@ -5788,7 +5934,7 @@
                     let returned = 0, destroyed = 0, breakdown = [];
                     // بررسی: آیا مدافع واقعاً هیچ جنگنده و پدافندی برای دفاع ندارد؟
                     const targetHasFighters = target.fighters && Object.values(target.fighters).some(f => f && f.count > 0);
-                    const targetHasDefenses = target.defenses && target.defenses.some(d => d && d.hp > 0);
+                    const targetHasDefenses = target.defenses && target.defenses.some(d => d && d.hp > 0 && d.active !== false);
                     const defenderHasNothing = !targetHasFighters && !targetHasDefenses;
                     for (const [k, qty] of Object.entries(qtyMap)) {
                         // 🔧 رفع باگ: قبلاً max از player.fighters[k].count خوانده می‌شد که بعد از کسر، 0 بود
@@ -5864,8 +6010,8 @@
                     for (const [k, f] of Object.entries(target.fighters)) {
                         f.count = Math.max(0, f.count - Math.ceil(f.count * 0.8));
                     }
-                    if (target.defenses) target.defenses.forEach(d => { d.hp = 0; });
-                    target.defenses = target.defenses?.filter(d => d.hp > 0) || [];
+                    // پیروزی کامل مهاجم: فقط پدافندهای فعال درگیر و نابود می‌شوند (به‌ترتیب، یکی‌یکی)
+                    if (target.defenses) applyDefenseDamage(target, Infinity);
                     const totalUsed = totalSent;
                     const fighterBreakdown = Object.entries(fighterQty).filter(([,q])=>q>0).map(([k,q])=>`${q}× ${F_DB[k]?.n || k}`).join('، ');
                     const missileBreakdown = Object.entries(missileQty).filter(([,q])=>q>0).map(([k,q])=>`${q}× ${M_DB[k]?.n || k}`).join('، ');
@@ -5910,10 +6056,9 @@
                     for (const [k, f] of Object.entries(target.fighters)) {
                         f.count = Math.max(0, f.count - Math.ceil(f.count * ratio * 0.4));
                     }
-                    if (target.defenses) {
-                        target.defenses.forEach(d => { d.hp -= 40; if (d.hp < 0) d.hp = 0; });
-                        target.defenses = target.defenses.filter(d => d.hp > 0);
-                    }
+                    // دفاع موفق: فقط یک پدافند فعال در هر لحظه درگیر می‌شود؛ اگر نابود شود
+                    // باقیمانده‌ی آسیب به پدافند فعال بعدی می‌رسد. پدافند غیرفعال آسیب نمی‌بیند.
+                    if (target.defenses) applyDefenseDamage(target, 40);
                     const totalUsed = totalSent;
                     const fighterBreakdown = Object.entries(fighterQty).filter(([,q])=>q>0).map(([k,q])=>`${q}× ${F_DB[k]?.n || k}`).join('، ');
                     const missileBreakdown = Object.entries(missileQty).filter(([,q])=>q>0).map(([k,q])=>`${q}× ${M_DB[k]?.n || k}`).join('، ');
@@ -6246,8 +6391,12 @@
 
         // ===== تحقیق =====
         window.upgradeResearch = async function(b) {
-            if (b === 'military' || b === 'economy') {
+            if (b === 'economy') {
                 toast("🔜 این بخش به‌زودی فعال می‌شود!", false, "peace");
+                return;
+            }
+            if (b === 'military' && (player.research[b] || 0) >= MAX_MILITARY_RESEARCH) {
+                toast("🔒 نظامی در حداکثر سطح است", true);
                 return;
             }
             const c = (player.research[b] + 1) * 15;
@@ -6258,7 +6407,9 @@
             await saveAll();
             updateUI();
             renderResearch();
-            toast(`✈️ هوانوردی به سطح ${player.research[b]} ارتقا یافت`, false, "peace");
+            renderMilitary();
+            const label = b === 'military' ? '⚔️ نظامی' : '✈️ هوانوردی';
+            toast(`${label} به سطح ${player.research[b]} ارتقا یافت`, false, "peace");
         };
 
         // ===== چت (حباب پیام، پاسخ، واکنش) =====
@@ -6881,6 +7032,7 @@
             t.fighters = {};
             t.defenses = [];
             t.missiles = {};
+            t.warehouse = { level: 0, cap: WAREHOUSE_BASE_CAP, fighters: {}, missiles: {} };
             t.mineLevel = 1;
             t.research = { military: 0, economy: 0, aviation: 0 };
             t.customEmoji = '👤';
@@ -7375,6 +7527,7 @@
         }
 
         function renderMilitary() {
+            ensureWarehouse(player);
             let h = '';
             h += `<div class="section-title">✈️ ناوگان هوایی</div><div class="mil-fighter-grid">`;
             for (const [k, f] of Object.entries(F_DB)) {
@@ -7442,20 +7595,133 @@
                     if (!dd) return;
                     const hpPct = Math.floor((d.hp / d.maxHp) * 100);
                     const isDamaged = d.hp < d.maxHp;
+                    const isActive = d.active !== false; // داده‌های قدیمی بدون فیلد active = فعال
                     h += `
-                        <div class="mil-owned-defense">
+                        <div class="mil-owned-defense" style="${isActive ? '' : 'opacity:0.55;'}">
                             <div class="def-header">
-                                <span><span style="font-size:1.2rem;">${dd.i}</span> <strong>${dd.n}</strong> <span style="font-size:0.5rem;color:var(--color-text-muted);">(دفاع: ${dd.def})</span></span>
-                                ${isDamaged ? `<button class="btn btn-gold btn-sm" onclick="repairDefense('${d.id}')">🔧 تعمیر (${(d.maxHp-d.hp)*10} طلا)</button>` : '<span style="color:var(--color-btn-green);font-size:0.6rem;">✅ سالم</span>'}
+                                <span><span style="font-size:1.2rem;">${dd.i}</span> <strong>${dd.n}</strong> <span style="font-size:0.5rem;color:var(--color-text-muted);">(دفاع: ${dd.def})</span> ${isActive ? '<span style="font-size:0.5rem;color:var(--color-btn-green);">🟢 فعال</span>' : '<span style="font-size:0.5rem;color:var(--color-btn-danger);">🔴 غیرفعال</span>'}</span>
+                                <span style="display:flex;gap:4px;">
+                                    <button class="btn btn-sm ${isActive ? 'btn-danger' : 'btn-green'}" onclick="toggleDefense('${d.id}')">${isActive ? '🔴 غیرفعال کن' : '🟢 فعال کن'}</button>
+                                    ${isDamaged ? `<button class="btn btn-gold btn-sm" onclick="repairDefense('${d.id}')">🔧 تعمیر (${(d.maxHp-d.hp)*10} طلا)</button>` : '<span style="color:var(--color-btn-green);font-size:0.6rem;">✅ سالم</span>'}
+                                </span>
                             </div>
                             <div class="def-hp-bar">
                                 <div class="def-hp-fill" style="width:${hpPct}%;"></div>
                             </div>
-                            <div style="font-size:0.45rem;color:var(--color-text-muted);">HP: ${d.hp}/${d.maxHp}</div>
+                            <div style="font-size:0.45rem;color:var(--color-text-muted);">HP: ${d.hp}/${d.maxHp}${isActive ? '' : ' — غیرفعال: نه دفاع می‌کند نه هدف حمله قرار می‌گیرد'}</div>
                         </div>
                     `;
                 });
             }
+            h += `<div class="section-title" style="margin-top:16px;">🏬 انبار مهمات</div>`;
+            const whUsed = warehouseUsed(player);
+            const whCap = player.warehouse.cap;
+            const whPct = Math.min(100, Math.floor((whUsed / whCap) * 100));
+            const whLevel = player.warehouse.level;
+            const isWhMaxed = whLevel >= MAX_WAREHOUSE_LEVEL;
+            const whCost = warehouseUpgradeCost(player);
+            const whUpgradeHtml = isWhMaxed ?
+                `<div class="mine-upgrade-section" style="border-color:var(--color-btn-green);background:rgba(16,185,129,0.05);">
+                    <div class="mine-upgrade-info">
+                        <span style="color:var(--color-btn-green);font-weight:800;font-size:0.8rem;">🏆 سطح MAX (${MAX_WAREHOUSE_LEVEL})</span>
+                        <span class="mine-upgrade-cost max-level">✅ بالاترین ظرفیت انبار (${whCap} فروند)</span>
+                    </div>
+                    <button class="btn btn-max" disabled>🔒 ارتقا کامل</button>
+                </div>` :
+                `<div class="mine-upgrade-section">
+                    <div class="mine-upgrade-info">
+                        ⬆️ سطح ${whLevel+1}: ${whCap} ← ${whCap + 1} <span style="color:var(--color-btn-green);font-size:0.5rem;">(+1)</span>
+                        <span class="mine-upgrade-cost">💰 ${whCost.toLocaleString('fa-IR')} طلا</span>
+                    </div>
+                    <button class="btn btn-purple" onclick="upgradeWarehouse()" ${player.gold<whCost?'disabled':''}>ارتقا</button>
+                </div>`;
+            h += `
+                <div class="mine-card" style="margin-bottom:14px;">
+                    <div class="mine-header">
+                        <div class="mine-icon-wrap">🏬</div>
+                        <div>
+                            <div class="mine-title">انبار مهمات (سطح ${whLevel}/${MAX_WAREHOUSE_LEVEL}${isWhMaxed?' 🏆':''})</div>
+                            <div class="mine-subtitle">ظرفیت پر شده: ${whUsed}/${whCap} فروند</div>
+                        </div>
+                    </div>
+                    <div class="mine-bar-track">
+                        <div class="mine-bar-fill gold-bar" style="width:${whPct}%;"><span class="mine-pct">${whPct}%</span></div>
+                    </div>
+                    <div style="font-size:0.5rem;color:var(--color-text-muted);margin:8px 0 10px;line-height:1.6;">📦 جنگنده و موشکِ داخل انبار از حمله دشمن در امان می‌مانند، اما در محاسبه‌ی قدرت دفاعی شما نقشی ندارند و برای حمله باید ابتدا از انبار خارج شوند.</div>
+                    ${whUpgradeHtml}
+                </div>
+            `;
+            const whActiveFighters = Object.entries(player.fighters || {}).filter(([, d]) => d && d.count > 0);
+            const whActiveMissiles = Object.entries(player.missiles || {}).filter(([, d]) => d && d.count > 0);
+            const whStoredFighters = Object.entries(player.warehouse.fighters || {}).filter(([, c]) => c > 0);
+            const whStoredMissiles = Object.entries(player.warehouse.missiles || {}).filter(([, c]) => c > 0);
+            if (whActiveFighters.length || whActiveMissiles.length) {
+                h += `<div style="font-size:0.55rem;color:var(--color-text-dim);font-weight:700;margin:8px 0 4px;">📥 انتقال به انبار (خارج از دسترس حمله دشمن)</div>`;
+                whActiveFighters.forEach(([k, d]) => {
+                    const f = F_DB[k];
+                    if (!f) return;
+                    h += `
+                        <div class="attack-select-row">
+                            <div class="row-icon">${f.i}</div>
+                            <div class="row-info"><div class="row-name">${f.n}</div><div class="row-power">موجود (فعال): ${d.count}</div></div>
+                            <div class="row-controls">
+                                <input type="number" class="qty-input" id="wh-in-fighter-${k}" value="${d.count}" min="1" max="${d.count}">
+                                <button class="qty-btn" style="width:auto;border-radius:0.5rem;padding:0 10px;font-size:0.55rem;" onclick="storeInWarehouse('fighter','${k}', document.getElementById('wh-in-fighter-${k}').value)">📥 انبار</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                whActiveMissiles.forEach(([k, d]) => {
+                    const m = M_DB[k];
+                    if (!m) return;
+                    h += `
+                        <div class="attack-select-row">
+                            <div class="row-icon">${m.i}</div>
+                            <div class="row-info"><div class="row-name">${m.n}</div><div class="row-power">موجود (فعال): ${d.count}</div></div>
+                            <div class="row-controls">
+                                <input type="number" class="qty-input" id="wh-in-missile-${k}" value="${d.count}" min="1" max="${d.count}">
+                                <button class="qty-btn" style="width:auto;border-radius:0.5rem;padding:0 10px;font-size:0.55rem;" onclick="storeInWarehouse('missile','${k}', document.getElementById('wh-in-missile-${k}').value)">📥 انبار</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            if (whStoredFighters.length || whStoredMissiles.length) {
+                h += `<div style="font-size:0.55rem;color:var(--color-text-dim);font-weight:700;margin:10px 0 4px;">📤 خروج از انبار (برای استفاده در حمله/دفاع)</div>`;
+                whStoredFighters.forEach(([k, c]) => {
+                    const f = F_DB[k];
+                    if (!f) return;
+                    h += `
+                        <div class="attack-select-row" style="border-color:rgba(16,185,129,0.3);">
+                            <div class="row-icon">${f.i}</div>
+                            <div class="row-info"><div class="row-name">${f.n}</div><div class="row-power">در انبار: ${c}</div></div>
+                            <div class="row-controls">
+                                <input type="number" class="qty-input" id="wh-out-fighter-${k}" value="${c}" min="1" max="${c}">
+                                <button class="qty-btn" style="width:auto;border-radius:0.5rem;padding:0 10px;font-size:0.55rem;" onclick="withdrawFromWarehouse('fighter','${k}', document.getElementById('wh-out-fighter-${k}').value)">📤 خروج</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                whStoredMissiles.forEach(([k, c]) => {
+                    const m = M_DB[k];
+                    if (!m) return;
+                    h += `
+                        <div class="attack-select-row" style="border-color:rgba(16,185,129,0.3);">
+                            <div class="row-icon">${m.i}</div>
+                            <div class="row-info"><div class="row-name">${m.n}</div><div class="row-power">در انبار: ${c}</div></div>
+                            <div class="row-controls">
+                                <input type="number" class="qty-input" id="wh-out-missile-${k}" value="${c}" min="1" max="${c}">
+                                <button class="qty-btn" style="width:auto;border-radius:0.5rem;padding:0 10px;font-size:0.55rem;" onclick="withdrawFromWarehouse('missile','${k}', document.getElementById('wh-out-missile-${k}').value)">📤 خروج</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            if (!whActiveFighters.length && !whActiveMissiles.length && !whStoredFighters.length && !whStoredMissiles
+                .length) {
+                h += `<div class="empty">⛔ هیچ جنگنده یا موشکی برای انتقال به/از انبار موجود نیست</div>`;
+            }
+
             h += `<div class="section-title" style="margin-top:16px;">🏗️ ساخت پدافند</div><div class="mil-defense-grid">`;
             for (const [k, d] of Object.entries(D_DB)) {
                 const canB = player.gold >= d.c.g && player.oil >= d.c.o && player.metal >= d.c.m;
@@ -7640,7 +7906,7 @@
 
         function renderResearch() {
             const researches = [
-                { key: 'military', name: '⚔️ نظامی', desc: 'قدرت حمله', icon: '⚔️', soon: true },
+                { key: 'military', name: '⚔️ نظامی', desc: 'قدرت حمله و دفاع جنگنده/موشک', icon: '⚔️', soon: false, maxLv: MAX_MILITARY_RESEARCH },
                 { key: 'economy', name: '💰 اقتصادی', desc: 'بازدهی معدن', icon: '💰', soon: true },
                 { key: 'aviation', name: '✈️ هوانوردی', desc: 'جنگنده‌های پیشرفته', icon: '✈️', soon: false }
             ];
@@ -7649,16 +7915,20 @@
             researches.forEach(r => {
                 const lv = player.research[r.key] || 0;
                 const cost = (lv + 1) * 15;
-                const canU = player.xp >= cost && !r.soon;
+                const isMaxed = r.maxLv != null && lv >= r.maxLv;
+                const canU = player.xp >= cost && !r.soon && !isMaxed;
                 const isSoon = r.soon;
                 h += `
                     <div class="research-card ${isSoon ? 'research-soon' : ''}" style="${isSoon ? 'cursor:default;' : ''}">
                         ${isSoon ? `<div class="res-soon-icon">🔜</div>` : `<div class="res-icon">${r.icon}</div>`}
                         <div class="res-name">${r.name}</div>
-                        <div class="res-level">سطح ${lv}</div>
+                        <div class="res-level">سطح ${lv}${r.maxLv != null ? ' / ' + r.maxLv : ''}</div>
                         <div class="res-desc">${r.desc}</div>
                         ${isSoon ? 
                             `<div class="res-soon-badge">🔜 به‌زودی</div>` :
+                            isMaxed ?
+                            `<div class="res-cost" style="color:var(--color-btn-green);">✅ حداکثر سطح</div>
+                             <button class="res-btn" disabled>🏆 تکمیل شده</button>` :
                             `<div class="res-cost">⭐ ${cost} XP</div>
                              <button class="res-btn" onclick="upgradeResearch('${r.key}')" ${canU ? '' : 'disabled'}>
                                 ${canU ? '⬆️ ارتقا' : '🔒 قفل'}
