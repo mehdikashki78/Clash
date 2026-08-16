@@ -2418,6 +2418,163 @@
             border-color: rgba(139, 92, 246, 0.3);
             background: linear-gradient(160deg, var(--bg-card), #15112a);
         }
+
+        /* ===== نوار خرید VIP در بازار (فشرده) ===== */
+        .vip-shop-hero {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            padding: 8px 10px;
+            margin-bottom: 10px;
+            background: linear-gradient(160deg, #0c1a3a 0%, #0a1030 55%, #1a1030 100%);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            box-shadow: 0 0 14px rgba(37, 99, 235, 0.12), inset 0 0 18px rgba(56, 189, 248, 0.04);
+        }
+        .vip-shop-glow {
+            position: absolute;
+            top: -60%;
+            left: -20%;
+            width: 160%;
+            height: 220%;
+            background: radial-gradient(circle at 30% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 55%),
+                        radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 55%);
+            pointer-events: none;
+            animation: vipGlowShift 6s ease-in-out infinite;
+        }
+        @keyframes vipGlowShift {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        .vip-shop-top {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .vip-shop-title {
+            font-size: 0.68rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #38bdf8, #a855f7, #38bdf8);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: vipTitleShine 3s linear infinite;
+        }
+        @keyframes vipTitleShine {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        .vip-shop-status {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            font-size: 0.52rem;
+            font-weight: 700;
+            padding: 5px 8px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .vip-shop-status.active {
+            background: rgba(37, 99, 235, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #7dd3fc;
+        }
+        .vip-shop-status.pending {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            color: var(--color-accent);
+        }
+        .vip-cancel-btn {
+            background: transparent;
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            color: #f87171;
+            border-radius: 8px;
+            font-size: 0.48rem;
+            padding: 1px 6px;
+            cursor: pointer;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+        .vip-cancel-btn:hover { background: rgba(239, 68, 68, 0.15); }
+        .vip-plans-row {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+        .vip-plan-card {
+            position: relative;
+            background: linear-gradient(160deg, rgba(30,41,59,0.9), rgba(15,15,35,0.9));
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 0.7rem;
+            padding: 6px 4px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .vip-plan-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(56, 189, 248, 0.6);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+        .vip-plan-card.best {
+            border-color: rgba(251, 191, 36, 0.5);
+            background: linear-gradient(160deg, rgba(69,44,10,0.5), rgba(15,15,35,0.9));
+        }
+        .vip-plan-card.best:hover {
+            border-color: var(--color-accent);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+        .vip-plan-tag {
+            position: absolute;
+            top: -7px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            color: #1a1a2e;
+            font-size: 0.36rem;
+            font-weight: 900;
+            padding: 1px 6px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+        .vip-plan-icon {
+            font-size: 0.85rem;
+            line-height: 1;
+        }
+        .vip-plan-days {
+            font-size: 0.55rem;
+            font-weight: 800;
+            color: var(--color-text);
+            white-space: nowrap;
+        }
+
+        /* ===== پروفایل VIP ===== */
+        .vip-profile-card {
+            border: 1px solid rgba(56, 189, 248, 0.4) !important;
+            box-shadow: 0 0 26px rgba(37, 99, 235, 0.2);
+        }
+        .vip-profile-strip {
+            text-align: center;
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: #7dd3fc;
+            background: rgba(37, 99, 235, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 10px;
+            padding: 6px 8px;
+            margin: -6px 0 12px;
+        }
         .mkt-offer-top {
             display: flex;
             justify-content: space-between;
@@ -4132,6 +4289,31 @@
             margin-left: 4px;
         }
 
+        /* ===== تیک آبی VIP ===== */
+        .vip-tick {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 13px;
+            height: 13px;
+            margin-right: 2px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #38bdf8, #2563eb);
+            color: #fff;
+            font-size: 8px;
+            font-weight: 900;
+            line-height: 1;
+            box-shadow: 0 0 6px rgba(56, 189, 248, 0.8), 0 0 2px rgba(255,255,255,0.6);
+            vertical-align: middle;
+            animation: vipTickPulse 2.4s ease-in-out infinite;
+            position: relative;
+            top: -1px;
+        }
+        @keyframes vipTickPulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(56, 189, 248, 0.7), 0 0 2px rgba(255,255,255,0.5); transform: scale(1); }
+            50% { box-shadow: 0 0 10px rgba(56, 189, 248, 1), 0 0 4px rgba(255,255,255,0.8); transform: scale(1.12); }
+        }
+
         /* ===== RESEARCH SECTION - GRAPHICAL ===== */
         .research-grid {
             display: grid;
@@ -4360,6 +4542,182 @@
         .profile-modal::-webkit-scrollbar-track {
             background: transparent;
         }
+
+        /* ===== دکمه شناور گردونه شانس (FAB) ===== */
+        .wheel-fab {
+            position: fixed;
+            bottom: 78px;
+            left: 14px;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 2px solid #fbbf24;
+            background: radial-gradient(circle at 35% 30%, #2563eb, #0a1030 75%);
+            box-shadow: 0 0 16px rgba(37, 99, 235, 0.5), 0 4px 10px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 9998;
+            animation: wheelFabFloat 2.6s ease-in-out infinite;
+        }
+        @keyframes wheelFabFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(-6deg); }
+        }
+        .wheel-fab-icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.6));
+        }
+        .wheel-fab-dot {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #22c55e;
+            border: 2px solid #0a0a1a;
+            box-shadow: 0 0 6px #22c55e;
+            display: none;
+            animation: wheelDotPulse 1.4s ease-in-out infinite;
+        }
+        @keyframes wheelDotPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* ===== مودال گردونه شانس ===== */
+        .wheel-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 99999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .wheel-modal-overlay.active { display: flex; }
+        .wheel-modal {
+            background: linear-gradient(160deg, #0c1a3a 0%, #0a0a1a 60%, #1a1030 100%);
+            border: 2px solid rgba(251, 191, 36, 0.4);
+            border-radius: 1.6rem;
+            max-width: 380px;
+            width: 100%;
+            max-height: 92vh;
+            overflow-y: auto;
+            padding: 20px 16px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+            animation: modalIn 0.3s ease;
+        }
+        .wheel-modal .modal-close {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: none;
+            border: none;
+            color: var(--color-text-dim);
+            font-size: 1.4rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .wheel-modal .modal-close:hover { color: var(--color-accent); transform: rotate(90deg); }
+        .wheel-title {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #38bdf8, #fbbf24, #38bdf8);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: vipTitleShine 3s linear infinite;
+        }
+        .wheel-sub {
+            text-align: center;
+            font-size: 0.55rem;
+            color: var(--color-text-dim);
+            margin-bottom: 12px;
+        }
+        .wheel-wrap {
+            position: relative;
+            width: 240px;
+            height: 240px;
+            margin: 0 auto 16px;
+        }
+        .wheel-pointer {
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.6rem;
+            color: #fbbf24;
+            filter: drop-shadow(0 0 4px rgba(251,191,36,0.7));
+            z-index: 3;
+        }
+        .wheel-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px #1a1a2e, 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+        .wheel-svg { width: 100%; height: 100%; }
+        .wheel-spin-btn {
+            display: block;
+            margin: 0 auto 12px;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            color: #1a1a2e;
+            font-weight: 900;
+            font-size: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+        }
+        .wheel-spin-btn:disabled { opacity: 0.6; cursor: default; }
+        .wheel-cooldown {
+            text-align: center;
+            font-size: 0.6rem;
+            color: var(--color-text-dim);
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 10px;
+            padding: 8px;
+            margin-bottom: 12px;
+        }
+        .wheel-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .wheel-legend-item {
+            font-size: 0.48rem;
+            color: var(--color-text-muted);
+            background: var(--bg-tab);
+            border: 1px solid var(--color-border);
+            border-radius: 999px;
+            padding: 3px 8px;
+        }
+        .wheel-result {
+            text-align: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: #7dd3fc;
+            background: rgba(37, 99, 235, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 6px;
+            animation: modalIn 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -4470,6 +4828,20 @@
         </div>
     </div>
 
+    <!-- ===== دکمه شناور گردونه شانس ===== -->
+    <button id="wheelFabBtn" class="wheel-fab" style="display:none;" onclick="openWheelModal()" title="گردونه شانس">
+        <span class="wheel-fab-icon">🎡</span>
+        <span class="wheel-fab-dot" id="wheelFabDot"></span>
+    </button>
+
+    <!-- ===== مودال گردونه شانس ===== -->
+    <div class="wheel-modal-overlay" id="wheelModalOverlay">
+        <div class="wheel-modal">
+            <button class="modal-close" onclick="closeWheelModal()">✕</button>
+            <div id="wheelModalContent"></div>
+        </div>
+    </div>
+
     <script>
         // ===== تنظیمات اولیه =====
         const SUPABASE_URL = 'https://rxugexswtpvuotijdlzn.supabase.co';
@@ -4537,10 +4909,34 @@
             marketOffers = [],
             battleLogs = [],
             chatMessages = [],
-            assistantNames = [];
+            assistantNames = [],
+            vipRequests = [];
+        // ===== پلن‌های VIP =====
+        const VIP_PLANS = [
+            { days: 30, key: '30', icon: '⭐', label: '۳۰ روزه', tag: 'برنزی' },
+            { days: 60, key: '60', icon: '🌟', label: '۶۰ روزه', tag: 'نقره‌ای' },
+            { days: 90, key: '90', icon: '💎', label: '۹۰ روزه', tag: 'طلایی' }
+        ];
+        // ===== گردونه شانس =====
+        const SPIN_COOLDOWN = 24 * 3600 * 1000; // هر ۲۴ ساعت یکبار
+        const SPIN_SEGMENTS = [
+            { type: 'res', amount: 100, weight: 30, icon: '✨', color1: '#166534', color2: '#22c55e' },
+            { type: 'res', amount: 400, weight: 20, icon: '🎯', color1: '#065f46', color2: '#10b981' },
+            { type: 'res', amount: 1000, weight: 12, icon: '🔥', color1: '#92400e', color2: '#f59e0b' },
+            { type: 'vip', days: 3, weight: 3, icon: '💎', color1: '#1e3a8a', color2: '#38bdf8' },
+            { type: 'res', amount: 2500, weight: 6, icon: '💥', color1: '#9a3412', color2: '#fb923c' },
+            { type: 'res', amount: 5000, weight: 2, icon: '👑', color1: '#7f1d1d', color2: '#ef4444' }
+        ];
         let isConnected = false,
             saving = false,
             isAttacking = false;
+        // 🔒 رفع باگ: جلوگیری از تداخل بین ذخیره (saveAll) و دریافت اطلاعات (loadAll) از سرور.
+        // قبل از این رفع باگ، ممکن بود همزمان با ثبت جایزه گردونه یا فعال شدن VIP،
+        // یک syncLoop در حال اجرا داده‌ی قدیمی را جایگزین اطلاعات محلی کند و
+        // تغییر تازه (زمان چرخش گردونه یا انقضای VIP) از بین برود.
+        // این متغیر نگه می‌دارد که آیا یک درخواست loadAll در حال اجراست یا نه،
+        // تا بقیه‌ی توابع بتوانند قبل از تغییر داده‌ی حیاتی، منتظر پایان آن بمانند.
+        let loadInFlight = null;
         let globalBanner = "",
             chatLocked = false,
             mineTimer = null,
@@ -4585,6 +4981,8 @@
             const isAsst = isAssistant(p.name);
             // آواتار: اگر customEmoji داشته باشد از آن استفاده کن، در غیر این صورت 👤
             const avatar = p.customEmoji || '👤';
+            // تیک آبی VIP (ادمین نیازی به آن ندارد چون خودش نشان مخصوص دارد)
+            const vipTag = (!isAdm && isVip(p)) ? vipTickHtml() : '';
             // برای ادمین همیشه 🚬 نمایش داده شود
             if (isAdm) {
                 return `<span class="admin-badge">🚬 ${name}</span>`;
@@ -4594,12 +4992,12 @@
                 const color = p.customColor ? `color:${escapeHtml(p.customColor)};` : '';
                 let cls = 'player-name-custom';
                 if (isAsst) cls += ' coadmin-badge';
-                return `<span class="${cls}" style="${color}">${emoji} ${name}</span>`;
+                return `<span class="${cls}" style="${color}">${emoji} ${name}${vipTag}</span>`;
             }
             if (isAsst) {
-                return `<span class="coadmin-badge">⚡ ${name}</span>`;
+                return `<span class="coadmin-badge">⚡ ${name}${vipTag}</span>`;
             }
-            return `<span class="player-name-custom">${avatar} ${name}</span>`;
+            return `<span class="player-name-custom">${avatar} ${name}${vipTag}</span>`;
         }
 
         function getPlayerAvatar(p) {
@@ -4705,6 +5103,20 @@
 
         function isCoadmin() { return player && isAssistant(player.name); }
 
+        // ===== سیستم VIP =====
+        function isVip(p) {
+            return !!(p && p.vip && p.vipExpiry && ts() < p.vipExpiry);
+        }
+
+        function vipDaysLeft(p) {
+            if (!isVip(p)) return 0;
+            return Math.max(0, Math.ceil((p.vipExpiry - ts()) / 86400000));
+        }
+
+        function vipTickHtml() {
+            return '<span class="vip-tick" title="کاربر ویژه VIP">✓</span>';
+        }
+
         function getFN(fId) { if (!fId) return ''; const f = FACTIONS_DB[fId]; return f ? f.name : fId; }
 
         function getFI(fId) { if (!fId) return ''; const f = FACTIONS_DB[fId]; return f ? f.icon : '🏴'; }
@@ -4754,6 +5166,7 @@
             const level = Math.floor((target.xp || 0) / 100) + 1;
             const nextLevelXP = level * 100;
             const xpProgress = Math.min(100, ((target.xp || 0) - (level - 1) * 100) / 100 * 100);
+            const targetIsVip = isVip(target);
 
             // نشان‌ها
             let badges = [];
@@ -4763,18 +5176,22 @@
             if (referralCount >= 5) badges.push({ icon: '📨', name: 'دعوت' });
             if (target.gold >= 100000) badges.push({ icon: '💰', name: 'ثروت' });
             if (target.xp >= 500) badges.push({ icon: '⭐', name: 'XP' });
+            if (targetIsVip) badges.push({ icon: '💎', name: 'VIP' });
 
-            let h = `<div class="profile-card">`;
+            let h = `<div class="profile-card ${targetIsVip ? 'vip-profile-card' : ''}">`;
             // بنر
             const bannerColor = target.bannerColor || '#1a1a2e';
             h += `<div class="profile-banner" style="background:${bannerColor};"></div>`;
             h += `<div class="profile-header">
                 <div class="profile-avatar">${getPlayerAvatar(target)}</div>
                 <div class="profile-name-area">
-                    <div class="name">${escapeHtml(target.customName || target.name)}</div>
+                    <div class="name">${escapeHtml(target.customName || target.name)}${(!isAdm(target.name) && targetIsVip) ? vipTickHtml() : ''}</div>
                     <div class="sub">${target.nameChanged ? 'نام تغییر یافته' : 'نام اصلی'}</div>
                 </div>
             </div>`;
+            if (!isAdm(target.name) && targetIsVip) {
+                h += `<div class="vip-profile-strip">💎 عضو ویژه VIP · ${vipDaysLeft(target).toLocaleString('fa-IR')} روز باقی‌مانده</div>`;
+            }
             // Bio
             if (target.bio) {
                 h += `<div style="font-size:0.65rem;color:var(--color-text-dim);margin-bottom:12px;padding:4px 12px;background:var(--color-mine-stat-bg);border-radius:8px;border:1px solid var(--color-border);">"${escapeHtml(target.bio)}"</div>`;
@@ -4831,6 +5248,158 @@
         document.getElementById('profileModalOverlay').addEventListener('click', function(e) {
             if (e.target === this) closeProfileModal();
         });
+
+        // ===== گردونه شانس =====
+        let wheelSpinning = false;
+
+        function pickSpinSegment() {
+            const total = SPIN_SEGMENTS.reduce((s, seg) => s + seg.weight, 0);
+            let r = Math.random() * total;
+            for (const seg of SPIN_SEGMENTS) {
+                if (r < seg.weight) return seg;
+                r -= seg.weight;
+            }
+            return SPIN_SEGMENTS[SPIN_SEGMENTS.length - 1];
+        }
+
+        function buildWheelSvgHtml() {
+            const n = SPIN_SEGMENTS.length;
+            const sliceAngle = 360 / n;
+            const R = 130,
+                cx = 150,
+                cy = 150;
+            let svg = `<svg viewBox="0 0 300 300" class="wheel-svg" id="wheelSvg">`;
+            SPIN_SEGMENTS.forEach((seg, i) => {
+                const startA = i * sliceAngle - 90;
+                const endA = startA + sliceAngle;
+                const x1 = cx + R * Math.cos(startA * Math.PI / 180);
+                const y1 = cy + R * Math.sin(startA * Math.PI / 180);
+                const x2 = cx + R * Math.cos(endA * Math.PI / 180);
+                const y2 = cy + R * Math.sin(endA * Math.PI / 180);
+                const midA = startA + sliceAngle / 2;
+                const lx = cx + (R * 0.66) * Math.cos(midA * Math.PI / 180);
+                const ly = cy + (R * 0.66) * Math.sin(midA * Math.PI / 180);
+                const gid = 'wg' + i;
+                svg += `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="${seg.color1}"/><stop offset="1" stop-color="${seg.color2}"/>
+                    </linearGradient></defs>`;
+                svg += `<path d="M${cx},${cy} L${x1.toFixed(2)},${y1.toFixed(2)} A${R},${R} 0 0,1 ${x2.toFixed(2)},${y2.toFixed(2)} Z" fill="url(#${gid})" stroke="#0a0a1a" stroke-width="2"/>`;
+                const label = seg.type === 'vip' ? `${seg.days}روز` : seg.amount.toLocaleString('fa-IR');
+                svg += `<text x="${lx.toFixed(2)}" y="${(ly-8).toFixed(2)}" text-anchor="middle" font-size="20" transform="rotate(${midA+90},${lx.toFixed(2)},${(ly-8).toFixed(2)})">${seg.icon}</text>`;
+                svg += `<text x="${lx.toFixed(2)}" y="${(ly+14).toFixed(2)}" text-anchor="middle" font-size="11" font-weight="900" fill="#fff" transform="rotate(${midA+90},${lx.toFixed(2)},${(ly+14).toFixed(2)})">${label}</text>`;
+            });
+            svg += `<circle cx="${cx}" cy="${cy}" r="22" fill="#0a0a1a" stroke="#fbbf24" stroke-width="3"/>`;
+            svg += `<text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="18">🎡</text>`;
+            svg += `</svg>`;
+            return svg;
+        }
+
+        function renderWheelModalContent() {
+            const content = document.getElementById('wheelModalContent');
+            if (!player) { content.innerHTML = ''; return; }
+            const able = canSpin(player);
+            let h = `<div class="wheel-modal-inner">`;
+            h += `<div class="wheel-title">🎡 گردونه شانس روزانه</div>`;
+            h += `<div class="wheel-sub">هر ۲۴ ساعت یک‌بار بچرخان و جایزه ببر!</div>`;
+            h += `<div class="wheel-wrap">`;
+            h += `<div class="wheel-pointer">▼</div>`;
+            h += `<div class="wheel-circle" id="wheelCircle">${buildWheelSvgHtml()}</div>`;
+            h += `</div>`;
+            if (able) {
+                h += `<button class="wheel-spin-btn" id="wheelSpinBtn" onclick="spinWheel()">🎯 چرخوندن گردونه</button>`;
+            } else {
+                h += `<div class="wheel-cooldown">⏳ گردونه بعدی تا <b>${spinTimeLeftStr(player)}</b> دیگر آماده می‌شود</div>`;
+            }
+            h += `<div class="wheel-legend">`;
+            SPIN_SEGMENTS.forEach(seg => {
+                const label = seg.type === 'vip' ? `${seg.days} روز VIP` : `${seg.amount.toLocaleString('fa-IR')} طلا/نفت/فلز`;
+                h += `<span class="wheel-legend-item">${seg.icon} ${label}</span>`;
+            });
+            h += `</div>`;
+            h += `<div id="wheelResultBox"></div>`;
+            h += `</div>`;
+            content.innerHTML = h;
+        }
+
+        window.openWheelModal = function() {
+            if (!player) return;
+            document.getElementById('wheelModalOverlay').classList.add('active');
+            renderWheelModalContent();
+        };
+
+        window.closeWheelModal = function() {
+            document.getElementById('wheelModalOverlay').classList.remove('active');
+        };
+        document.getElementById('wheelModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeWheelModal();
+        });
+
+        window.spinWheel = async function() {
+            if (!player || wheelSpinning) return;
+            if (!canSpin(player)) return toast("⏳ فردا دوباره تلاش کنید!", true);
+            wheelSpinning = true;
+            const btn = document.getElementById('wheelSpinBtn');
+            if (btn) { btn.disabled = true; btn.textContent = '🎡 در حال چرخش...'; }
+
+            const winner = pickSpinSegment();
+            const winIndex = SPIN_SEGMENTS.indexOf(winner);
+            const n = SPIN_SEGMENTS.length;
+            const sliceAngle = 360 / n;
+            const center = winIndex * sliceAngle + sliceAngle / 2;
+            const extraSpins = 6;
+            const targetDeg = extraSpins * 360 + (360 - center);
+
+            const wheelCircle = document.getElementById('wheelCircle');
+            if (wheelCircle) {
+                wheelCircle.style.transition = 'transform 4.2s cubic-bezier(0.17,0.67,0.16,0.99)';
+                requestAnimationFrame(() => {
+                    wheelCircle.style.transform = `rotate(${targetDeg}deg)`;
+                });
+            }
+
+            setTimeout(async () => {
+                // 🔒 رفع باگ «چرخش دوبار»: قبل از ثبت جایزه، اگر یک sync (loadAll) در حال
+                // اجراست صبر می‌کنیم تا تمام شود، سپس دوباره با آخرین وضعیت player بررسی
+                // می‌کنیم که واقعاً هنوز مجاز به چرخش هست یا نه. این از حالتی جلوگیری می‌کند
+                // که یک sync قدیمی، وضعیتِ «قبل از چرخش» را دوباره جایگزین کند و امکان
+                // چرخش دوباره‌ی گردونه در همان ۲۴ ساعت فراهم شود.
+                if (loadInFlight) await loadInFlight;
+                if (!canSpin(player)) {
+                    wheelSpinning = false;
+                    toast("⏳ فردا دوباره تلاش کنید!", true);
+                    renderWheelModalContent();
+                    return;
+                }
+                let resultText = '';
+                if (winner.type === 'vip') {
+                    const base = (player.vip && player.vipExpiry && ts() < player.vipExpiry) ? player.vipExpiry : ts();
+                    player.vip = true;
+                    player.vipExpiry = base + winner.days * 86400000;
+                    addActivity(player, `🎡 جایزه گردونه: ${winner.days} روز عضویت VIP`);
+                    resultText = `🎉 تبریک! شما <b>${winner.days} روز VIP</b> برنده شدید!`;
+                } else {
+                    const resTypes = ['gold', 'oil', 'metal'];
+                    const resType = resTypes[Math.floor(Math.random() * resTypes.length)];
+                    player[resType] += winner.amount;
+                    addActivity(player, `🎡 جایزه گردونه: ${winner.amount.toLocaleString('fa-IR')} ${RES_META[resType].name}`);
+                    resultText = `🎉 تبریک! شما <b>${winner.amount.toLocaleString('fa-IR')} ${RES_META[resType].icon} ${RES_META[resType].name}</b> برنده شدید!`;
+                }
+                player.lastSpinTime = ts();
+                syncP();
+                await saveAll(true);
+                updateUI();
+                wheelSpinning = false;
+                const resultBox = document.getElementById('wheelResultBox');
+                if (resultBox) resultBox.innerHTML = `<div class="wheel-result">${resultText}</div>`;
+                const btn2 = document.getElementById('wheelSpinBtn');
+                if (btn2) {
+                    btn2.disabled = true;
+                    btn2.style.display = 'none';
+                }
+                toast(resultText.replace(/<\/?b>/g, ''), false, "peace");
+                setTimeout(() => { renderWheelModalContent(); }, 1200);
+            }, 4300);
+        };
 
         // ===== Supabase =====
         async function initSupabase() {
@@ -4890,7 +5459,10 @@
                 bio: p.bio || '',
                 bannerColor: p.bannerColor || '#1a1a2e',
                 theme: p.theme || 'dark',
-                activities: p.activities || []
+                activities: p.activities || [],
+                vip: p.vip || false,
+                vipExp: p.vipExpiry || 0,
+                ls: p.lastSpinTime || 0
             };
         }
 
@@ -4927,7 +5499,10 @@
                 bio: c.bio || '',
                 bannerColor: c.bannerColor || '#1a1a2e',
                 theme: c.theme || 'dark',
-                activities: c.activities || []
+                activities: c.activities || [],
+                vip: c.vip || false,
+                vipExpiry: c.vipExp || 0,
+                lastSpinTime: c.ls || 0
             };
         }
 
@@ -4940,7 +5515,8 @@
                 c: chatMessages.slice(-10),
                 b: globalBanner,
                 cl: chatLocked,
-                a: assistantNames
+                a: assistantNames,
+                vr: vipRequests
             };
         }
 
@@ -4962,33 +5538,53 @@
         }
 
         async function loadAll() {
-            if (!isConnected) if (!await initSupabase()) return false;
+            // 🔒 اگر همین الان یک درخواست loadAll دیگر در حال اجراست، همان را برگردان
+            // به‌جای اینکه یک درخواست موازی جدید بفرستیم (که می‌توانست باعث بازنویسی
+            // ناخواسته‌ی داده‌ی تازه‌ی محلی شود).
+            if (loadInFlight) return loadInFlight;
+            // 🔒 اگر همین الان یک ذخیره (saveAll) در حال انجام است، این چرخه‌ی sync را
+            // رد کن. دلیل: داده‌ای که saveAll می‌فرستد از داده‌ی فعلی سرور جدیدتر است،
+            // پس لود کردن اطلاعات سرور در همین لحظه فقط باعث می‌شود تغییر تازه‌ای
+            // مثل «زمان چرخش گردونه» یا «تاریخ انقضای VIP» با نسخه‌ی قدیمی جایگزین شود.
+            // چرخه‌ی sync بعدی (چند ثانیه دیگر) به‌طور طبیعی داده‌ی درست را می‌گیرد.
+            if (saving) return true;
+
+            loadInFlight = (async () => {
+                if (!isConnected) if (!await initSupabase()) return false;
+                try {
+                    const { data, error } = await db.from('game_state').select('data').eq('id', 'main_game').single();
+                    if (error && error.code !== 'PGRST116') throw error;
+                    if (data?.data?.k === DATA_KEY) {
+                        const j = data.data;
+                        allPlayers = (j.p || []).map(decompP);
+                        marketOffers = j.m || [];
+                        battleLogs = j.l || [];
+                        chatMessages = j.c || [];
+                        globalBanner = j.b || "";
+                        chatLocked = j.cl || false;
+                        if (j.a) {
+                            assistantNames = j.a;
+                        }
+                        vipRequests = j.vr || [];
+                        if (player) {
+                            const me = allPlayers.find(p => p.id === player.id);
+                            if (me) player = me;
+                        }
+                        // ✅ بعد از لود از سرور، ADMIN_PASS رو با player همگام کن
+                        // (اگه ادمین باشه و رمزش رو خودش عوض کرده باشه)
+                        if (player && player.name === ADMIN_NAME && player.password) {
+                            ADMIN_PASS = player.password;
+                        }
+                    }
+                    return true;
+                } catch (e) { console.error(e); return false; }
+            })();
+
             try {
-                const { data, error } = await db.from('game_state').select('data').eq('id', 'main_game').single();
-                if (error && error.code !== 'PGRST116') throw error;
-                if (data?.data?.k === DATA_KEY) {
-                    const j = data.data;
-                    allPlayers = (j.p || []).map(decompP);
-                    marketOffers = j.m || [];
-                    battleLogs = j.l || [];
-                    chatMessages = j.c || [];
-                    globalBanner = j.b || "";
-                    chatLocked = j.cl || false;
-                    if (j.a) {
-                        assistantNames = j.a;
-                    }
-                    if (player) {
-                        const me = allPlayers.find(p => p.id === player.id);
-                        if (me) player = me;
-                    }
-                    // ✅ بعد از لود از سرور، ADMIN_PASS رو با player همگام کن
-                    // (اگه ادمین باشه و رمزش رو خودش عوض کرده باشه)
-                    if (player && player.name === ADMIN_NAME && player.password) {
-                        ADMIN_PASS = player.password;
-                    }
-                }
-                return true;
-            } catch (e) { console.error(e); return false; }
+                return await loadInFlight;
+            } finally {
+                loadInFlight = null;
+            }
         }
 
         // ===== سیستم قفل دستگاه (جلوگیری از تقلب دعوت) =====
@@ -5251,9 +5847,10 @@
         function dataHash() {
             return allPlayers.map(p => p.id + ':' + p.xp + ':' + p.gold + ':' + p.oil + ':' + p.metal + ':' + (p
                 .customEmoji || '') + ':' + (p.customColor || '') + ':' + p.customName + ':' + p.friends.join(',') +
-                ':' + p.referrals.length + ':' + p.bio + ':' + p.bannerColor + ':' + p.theme).join('|') + '|' +
+                ':' + p.referrals.length + ':' + p.bio + ':' + p.bannerColor + ':' + p.theme + ':' + (p.vip ? '1' :
+                '0') + ':' + (p.vipExpiry || 0)).join('|') + '|' +
                 marketOffers.length + '|' + chatMessages.length + '|' + battleLogs.length + '|' + globalBanner + '|' +
-                chatLocked + '|' + assistantNames.join(',');
+                chatLocked + '|' + assistantNames.join(',') + '|' + vipRequests.map(r => r.id).join(',');
         }
 
         // ===== انقضای آگهی‌های بازار =====
@@ -5412,6 +6009,8 @@
             document.getElementById("playerName").value = "";
             document.getElementById("playerPassword").value = "";
             document.getElementById("referralCode").value = "";
+            const wfb = document.getElementById('wheelFabBtn');
+            if (wfb) wfb.style.display = 'none';
             toast("دستگاه آزاد شد. می‌توانید وارد اکانت دیگری شوید.", false, "peace");
         };
 
@@ -6589,12 +7188,18 @@
             if (p.missiles) Object.values(p.missiles).forEach(d => { mCount += d.count || 0; });
             const dCount = (p.defenses || []).filter(d => d.hp > 0).length;
             const milLv = p.research?.military || 0;
+            // 🆕 وضعیت VIP بازیکن، دقیقاً مثل تیک آبی که در چت بازی کنار نام دیده می‌شود
+            const vipActive = isVip(p);
+            const vipStr = vipActive ?
+                ('💎 عضو ویژه (' + vipDaysLeft(p).toLocaleString('fa-IR') + ' روز باقی‌مانده)') :
+                '▫️ عادی (بدون VIP)';
 
             const lines = [];
             lines.push('📊 گزارش آمار بازیکن « ' + (p.customName || p.name) + ' »');
             lines.push('━━━━━━━━━━━━━━━');
             lines.push('⭐ سطح: ' + level + '  |  XP: ' + (p.xp || 0).toLocaleString('fa-IR') + ' / ' + nextXP
                 .toLocaleString('fa-IR'));
+            lines.push('💎 وضعیت VIP: ' + vipStr);
             lines.push('⚔️ قدرت حمله: ' + atk.toLocaleString('fa-IR'));
             lines.push('🛡️ قدرت دفاع: ' + def.toLocaleString('fa-IR'));
             lines.push('🏆 رتبه جهانی: #' + rank + ' از ' + allPlayers.length + ' بازیکن');
@@ -7380,6 +7985,8 @@
             await saveAll(true);
             document.getElementById('gameUI').style.display = 'none';
             document.getElementById('loginBox').style.display = 'flex';
+            const wfb2 = document.getElementById('wheelFabBtn');
+            if (wfb2) wfb2.style.display = 'none';
             toast("☢️ سرور نابود شد", true);
         };
 
@@ -7655,6 +8262,32 @@
                     `🛡️ سپر: <b>${Math.floor(rm/3600000)}س ${Math.floor((rm%3600000)/60000)}د</b>`;
                 sb.style.display = 'block';
             } else { sb.style.display = 'none'; }
+            updateWheelFabState();
+        }
+
+        // ===== گردونه شانس: توابع کمکی =====
+        function canSpin(p) {
+            return !!p && (ts() - (p.lastSpinTime || 0)) >= SPIN_COOLDOWN;
+        }
+
+        function spinTimeLeftStr(p) {
+            const rem = SPIN_COOLDOWN - (ts() - (p.lastSpinTime || 0));
+            if (rem <= 0) return '';
+            const h = Math.floor(rem / 3600000);
+            const m = Math.floor((rem % 3600000) / 60000);
+            return `${h}س ${m}د`;
+        }
+
+        function updateWheelFabState() {
+            const btn = document.getElementById('wheelFabBtn');
+            const dot = document.getElementById('wheelFabDot');
+            if (!btn) return;
+            if (player) {
+                btn.style.display = 'flex';
+                if (dot) dot.style.display = canSpin(player) ? 'block' : 'none';
+            } else {
+                btn.style.display = 'none';
+            }
         }
 
         // ===== رندرهای تب‌ها =====
@@ -8036,9 +8669,71 @@
             document.getElementById('factionsContent').innerHTML = h;
         }
 
+        function buildVipShopHtml() {
+            const myReq = vipRequests.find(r => r.pid === player.id);
+            const amVip = isVip(player);
+            let h = '<div class="vip-shop-hero">';
+            h += '<div class="vip-shop-glow"></div>';
+            h += '<div class="vip-shop-top">';
+            h += '<div class="vip-shop-title">💎 عضویت VIP</div>';
+            h += '</div>';
+            if (amVip) {
+                h += `<div class="vip-shop-status active">✅ عضو VIP — ${vipDaysLeft(player).toLocaleString('fa-IR')} روز باقی‌مانده</div>`;
+            } else if (myReq) {
+                h += `<div class="vip-shop-status pending">⏳ درخواست ${myReq.days.toLocaleString('fa-IR')} روزه در انتظار تایید
+                    <button class="vip-cancel-btn" onclick="cancelVipRequest()">✖</button>
+                </div>`;
+            } else {
+                h += '<div class="vip-plans-row">';
+                VIP_PLANS.forEach((plan, idx) => {
+                    h += `<div class="vip-plan-card ${idx===2?'best':''}" onclick="requestVip(${plan.days})">
+                        ${idx===2?'<div class="vip-plan-tag">پیشنهادی</div>':''}
+                        <div class="vip-plan-icon">${plan.icon}</div>
+                        <div class="vip-plan-days">${plan.label}</div>
+                    </div>`;
+                });
+                h += '</div>';
+            }
+            h += '</div>';
+            return h;
+        }
+
+        window.requestVip = async function(days) {
+            if (loadInFlight) await loadInFlight;
+            if (!player) return;
+            if (isAdm(player.name)) return toast("ادمین نیازی به VIP ندارد 😉", true);
+            if (vipRequests.find(r => r.pid === player.id)) {
+                return toast("شما یک درخواست VIP در انتظار تایید دارید", true);
+            }
+            const plan = VIP_PLANS.find(pl => pl.days === days);
+            if (!plan) return toast("پلن نامعتبر", true);
+            vipRequests.push({
+                id: 'vr' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+                pid: player.id,
+                pname: player.name,
+                days: days,
+                ts: ts()
+            });
+            addActivity(player, `💎 درخواست خرید VIP ${days} روزه ثبت شد`);
+            await saveAll(true);
+            renderMarket();
+            toast(`💎 درخواست VIP ${days} روزه برای ادمین ارسال شد`, false, "peace");
+        };
+
+        window.cancelVipRequest = async function() {
+            if (!player) return;
+            const idx = vipRequests.findIndex(r => r.pid === player.id);
+            if (idx < 0) return;
+            vipRequests.splice(idx, 1);
+            await saveAll(true);
+            renderMarket();
+            toast("درخواست VIP لغو شد", false, "peace");
+        };
+
         function renderMarket() {
             expireMarketOffers();
             let h = '';
+            h += buildVipShopHtml();
             h +=
                 `<div class="mkt-hero"><div class="mkt-hero-title">🏪 بازار مبادله</div><div class="mkt-balance-row"><div class="mkt-bal-chip mkt-bal-gold">💰 ${Math.floor(player.gold).toLocaleString('fa-IR')}</div><div class="mkt-bal-chip mkt-bal-oil">🛢️ ${Math.floor(player.oil).toLocaleString('fa-IR')}</div><div class="mkt-bal-chip mkt-bal-metal">⛏️ ${Math.floor(player.metal).toLocaleString('fa-IR')}</div></div></div>`;
             const myOffersCount = marketOffers.filter(o => o.sid === player.id).length;
@@ -8162,10 +8857,134 @@
             document.getElementById('battlelogContent').innerHTML = h;
         }
 
+        // ===== پنل مدیریت VIP (ادمین) =====
+        function buildAdminVipHtml() {
+            let h = `<div class="admin-panel-box"><h3>⭐ درخواست‌های VIP (${vipRequests.length})</h3>`;
+            if (vipRequests.length === 0) {
+                h += `<div style="font-size:0.55rem;color:var(--color-text-muted);">درخواست جدیدی وجود ندارد</div>`;
+            } else {
+                h += `<div style="display:flex;flex-direction:column;gap:8px;">`;
+                vipRequests.forEach(r => {
+                    const p = allPlayers.find(pl => pl.id === r.pid);
+                    const pName = p ? escapeHtml(p.name) : escapeHtml(r.pname);
+                    const ago = Math.floor((ts() - r.ts) / 60000);
+                    const tStr = ago < 1 ? 'الان' : ago < 60 ? ago + ' دقیقه پیش' : Math.floor(ago / 60) + ' ساعت پیش';
+                    h += `<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;background:var(--bg-tab);border:1px solid var(--color-border);border-radius:10px;padding:8px 10px;">
+                        <div style="font-size:0.6rem;">💎 <b>${pName}</b> — ${r.days.toLocaleString('fa-IR')} روزه <span style="color:var(--color-text-muted);font-size:0.5rem;">(${tStr})</span></div>
+                        <div style="display:flex;gap:6px;">
+                            <button class="btn btn-green btn-sm" onclick="adminApproveVip('${r.id}')">✅ تایید</button>
+                            <button class="btn btn-red btn-sm" onclick="adminRejectVip('${r.id}')">❌ رد</button>
+                        </div>
+                    </div>`;
+                });
+                h += `</div>`;
+            }
+            h += `<div style="font-size:0.5rem;color:var(--color-text-muted);margin-top:10px;">با تایید، تیک آبی VIP بلافاصله کنار نام بازیکن در همه‌جا (چت، بازار، پروفایل و ...) نمایش داده می‌شود.</div>`;
+            h += `</div>`;
+
+            // اعطا/لغو دستی VIP
+            h += `<div class="admin-panel-box"><h3>💎 اعطا/لغو دستی VIP</h3>
+                <div class="flex-wrap" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+                    <select id="admVipSel" style="flex:2;min-width:140px;">
+                        <option value="">-- انتخاب بازیکن --</option>`;
+            allPlayers.forEach(p => {
+                if (isAdm(p.name)) return;
+                const vipTag = isVip(p) ? ` (VIP - ${vipDaysLeft(p)} روز)` : '';
+                h += `<option value="${p.id}">${escapeHtml(p.name)}${vipTag}</option>`;
+            });
+            h += `</select>
+                    <select id="admVipDays" style="flex:1;min-width:90px;">
+                        <option value="30">۳۰ روزه</option>
+                        <option value="60">۶۰ روزه</option>
+                        <option value="90">۹۰ روزه</option>
+                    </select>
+                    <button class="btn btn-blue btn-sm" onclick="adminGrantVip()">➕ اعطا</button>
+                    <button class="btn btn-red btn-sm" onclick="adminRevokeVip()">🗑️ لغو VIP</button>
+                </div>
+                <div style="font-size:0.5rem;color:var(--color-text-muted);">اعطای دستی، بدون نیاز به درخواست بازیکن، VIP را مستقیم فعال می‌کند و به روزهای باقیمانده (در صورت وجود) اضافه می‌شود.</div>
+            </div>`;
+            return h;
+        }
+
+        window.adminApproveVip = async function(reqId) {
+            // 🔒 قبل از تغییر VIP، مطمئن شو یک sync در حال اجرا داده‌ی قدیمی را
+            // جایگزین نکرده (رفع باگ لغو شدن ناخواسته VIP).
+            if (loadInFlight) await loadInFlight;
+            const idx = vipRequests.findIndex(r => r.id === reqId);
+            if (idx < 0) return;
+            const req = vipRequests[idx];
+            const t = allPlayers.find(p => p.id === req.pid);
+            if (!t) { vipRequests.splice(idx, 1); await saveAll(true); adminPlayerHash = ''; renderAdmin(); return toast("بازیکن یافت نشد", true); }
+            const base = (t.vip && t.vipExpiry && ts() < t.vipExpiry) ? t.vipExpiry : ts();
+            t.vip = true;
+            t.vipExpiry = base + req.days * 86400000;
+            vipRequests.splice(idx, 1);
+            addActivity(t, `💎 عضویت VIP ${req.days} روزه تایید شد`);
+            if (player && player.id === t.id) player = t;
+            await saveAll(true);
+            adminPlayerHash = '';
+            renderAdmin();
+            renderActiveTab();
+            toast(`✅ VIP برای ${t.name} فعال شد`, false, "peace");
+        };
+
+        window.adminRejectVip = async function(reqId) {
+            const idx = vipRequests.findIndex(r => r.id === reqId);
+            if (idx < 0) return;
+            const req = vipRequests[idx];
+            vipRequests.splice(idx, 1);
+            await saveAll(true);
+            adminPlayerHash = '';
+            renderAdmin();
+            toast(`❌ درخواست VIP ${req.pname} رد شد`, false, "peace");
+        };
+
+        window.adminGrantVip = async function() {
+            // 🔒 قبل از تغییر VIP، مطمئن شو یک sync در حال اجرا داده‌ی قدیمی را
+            // جایگزین نکرده (رفع باگ لغو شدن ناخواسته VIP).
+            if (loadInFlight) await loadInFlight;
+            const id = document.getElementById('admVipSel').value;
+            const days = parseInt(document.getElementById('admVipDays').value);
+            if (!id) return toast("بازیکن انتخاب کنید", true);
+            const t = allPlayers.find(p => p.id === id);
+            if (!t) return toast("بازیکن یافت نشد", true);
+            const base = (t.vip && t.vipExpiry && ts() < t.vipExpiry) ? t.vipExpiry : ts();
+            t.vip = true;
+            t.vipExpiry = base + days * 86400000;
+            addActivity(t, `💎 عضویت VIP ${days} روزه توسط ادمین اعطا شد`);
+            if (player && player.id === t.id) player = t;
+            await saveAll(true);
+            adminPlayerHash = '';
+            renderAdmin();
+            renderActiveTab();
+            toast(`✅ VIP ${days} روزه به ${t.name} اعطا شد`, false, "peace");
+        };
+
+        window.adminRevokeVip = async function() {
+            // 🔒 قبل از تغییر VIP، مطمئن شو یک sync در حال اجرا داده‌ی قدیمی را
+            // جایگزین نکرده (رفع باگ لغو شدن ناخواسته VIP).
+            if (loadInFlight) await loadInFlight;
+            const id = document.getElementById('admVipSel').value;
+            if (!id) return toast("بازیکن انتخاب کنید", true);
+            const t = allPlayers.find(p => p.id === id);
+            if (!t) return toast("بازیکن یافت نشد", true);
+            if (!t.vip) return toast(`${t.name} در حال حاضر VIP نیست`, true);
+            t.vip = false;
+            t.vipExpiry = 0;
+            addActivity(t, `💎 عضویت VIP توسط ادمین لغو شد`);
+            if (player && player.id === t.id) player = t;
+            await saveAll(true);
+            adminPlayerHash = '';
+            renderAdmin();
+            renderActiveTab();
+            toast(`🗑️ VIP از ${t.name} لغو شد`, false, "peace");
+        };
+
         function renderAdmin() {
             if (!isAdmin()) return;
             const currentHash = allPlayers.map(p => p.id + ':' + p.name + ':' + p.xp + ':' + (p.customEmoji || '') + ':' + (p
-                .customColor || '')).join('|') + '|' + assistantNames.join(',');
+                .customColor || '') + ':' + (p.vip ? '1' : '0') + ':' + (p.vipExpiry || 0)).join('|') + '|' + assistantNames
+                .join(',') + '|' + vipRequests.map(r => r.id).join(',');
             const adminContent = document.getElementById('adminContent');
             if (adminPlayerHash === currentHash && adminContent.innerHTML.trim() !== '') {
                 if (adminSavedInputs) {
@@ -8254,6 +9073,7 @@
                 </div>
                 <div style="font-size:0.5rem;color:var(--color-text-muted);margin-top:6px;">دستیاران فعلی: ${assistantNames.length ? assistantNames.map(n=>escapeHtml(n)).join('، ') : 'هیچ‌کدام'}</div>
             </div>`;
+            h += buildAdminVipHtml();
             h +=
                 `<div class="admin-panel-box"><h3>📢 سیستم</h3><input type="text" id="admBroad" placeholder="پیام همگانی..."><div class="flex-wrap" style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;"><button class="btn btn-gold btn-sm" onclick="adminBroadcast()">📨 ارسال</button><button class="btn btn-danger btn-sm" onclick="adminClearChat()">🗑️ پاک چت</button><button class="btn btn-${chatLocked?'green':'red'} btn-sm" onclick="adminToggleChat()">${chatLocked?'🔓 باز':'🔒 بستن'}</button></div></div>`;
             h +=
@@ -8353,7 +9173,10 @@
                 }
 
                 const prevMktLen = savedMkt._prevMktLen || 0;
-                if (activeTab === 'market' && marketOffers.length !== prevMktLen) {
+                const prevVrLen = savedMkt._prevVrLen || 0;
+                const myVipState = player ? (isVip(player) ? '1' : '0') + ':' + (player.vipExpiry || 0) : '';
+                const prevVipState = savedMkt._prevVipState || '';
+                if (activeTab === 'market' && (marketOffers.length !== prevMktLen || vipRequests.length !== prevVrLen || myVipState !== prevVipState)) {
                     renderMarket();
                     restoreInputs(savedMkt);
                 }
@@ -8402,6 +9225,8 @@
 
                 savedChat._prevChatLen = chatMessages.length;
                 savedMkt._prevMktLen = marketOffers.length;
+                savedMkt._prevVrLen = vipRequests.length;
+                savedMkt._prevVipState = player ? (isVip(player) ? '1' : '0') + ':' + (player.vipExpiry || 0) : '';
 
             } catch (e) { console.error('syncLoop error:', e); } finally { syncLoopRunning = false; }
         }
