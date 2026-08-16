@@ -4718,6 +4718,34 @@
             margin-top: 6px;
             animation: modalIn 0.3s ease;
         }
+
+        /* ================================================================ 
+           بهینه سازی کارایی موبایل - بدون هیچ تغییری در ظاهر 
+           این بخش فقط ویژگی های نامرئی مرورگر (contain / touch-action / 
+           will-change / اسکرول روان) را اضافه می کند تا رندر و اسکرول 
+           روی گوشی سریع تر و بدون گیرکردن باشد. هیچ رنگ، فونت، سایز یا 
+           افکت بصری تغییر نکرده است. 
+           ================================================================ */
+        *, *::before, *::after {
+            -webkit-tap-highlight-color: transparent;
+        }
+        button, .btn, .tab, [onclick] {
+            touch-action: manipulation;
+        }
+        .panel, .card, .fac-card, .fac-my-card, .mkt-card, .mkt-offer-card,
+        .player-row, .rank-row, .fac-rank-row, .chat-msg-row,
+        .mil-fighter-card, .mil-missile-card, .mil-defense-card, .research-card {
+            contain: layout style paint;
+        }
+        .battle-log, .chat-box, .fac-members-box, .war-search-result,
+        .profile-modal, .attack-select-modal, .wheel-modal {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+        .sky-twinkle, .fac-hero-icon, .mine-bar-fill.full,
+        .mil-icon, .res-icon, .loader-icon {
+            will-change: transform, opacity;
+        }
     </style>
 </head>
 <body>
