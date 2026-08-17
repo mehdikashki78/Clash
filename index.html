@@ -1454,43 +1454,7 @@
             color: var(--color-text-dim);
             margin-top: 2px;
         }
-        .profile-avatar-selector {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 12px 0;
-            position: relative;
-            z-index: 1;
-            background: var(--bg-card);
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid var(--color-border);
-        }
-        .profile-avatar-selector .emoji-option {
-            font-size: 1.8rem;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 8px;
-            border: 2px solid transparent;
-            transition: 0.2s;
-            background: var(--bg-tab);
-            line-height: 1;
-        }
-        .profile-avatar-selector .emoji-option:hover {
-            border-color: var(--color-accent);
-            transform: scale(1.1);
-        }
-        .profile-avatar-selector .emoji-option.selected {
-            border-color: var(--color-accent);
-            background: var(--color-accent-dim);
-            color: #fff;
-        }
-        .profile-avatar-selector .custom-emoji-input {
-            flex: 1;
-            min-width: 100px;
-            font-size: 1.2rem;
-            text-align: center;
-        }
+        /* 🆕 انتخابگر آواتار ایموجیِ ساده (قدیمی) کامل حذف شد */
 
         /* ================================================================
            آواتار و بنر ویژه VIP
@@ -5345,32 +5309,23 @@
             const name = escapeHtml(p.name);
             const isAdm = p.name === ADMIN_NAME;
             const isAsst = isAssistant(p.name);
-            // آواتار: اگر customEmoji داشته باشد از آن استفاده کن، در غیر این صورت 👤
-            const avatar = p.customEmoji || '👤';
             // تیک آبی VIP (ادمین نیازی به آن ندارد چون خودش نشان مخصوص دارد)
             const vipTag = (!isAdm && isVip(p)) ? vipTickHtml() : '';
             // برای ادمین همیشه 🚬 نمایش داده شود
             if (isAdm) {
                 return `<span class="admin-badge">🚬 ${name}</span>`;
             }
-            if (p.customEmoji || p.customColor) {
-                const emoji = p.customEmoji ? `<span class="custom-emoji">${escapeHtml(p.customEmoji)}</span>` : '';
-                const color = p.customColor ? `color:${escapeHtml(p.customColor)};` : '';
+            // 🆕 ایموجی ساده‌ی سفارشی دیگر نمایش داده نمی‌شود؛ فقط رنگ سفارشی (در صورت وجود) باقی می‌ماند
+            if (p.customColor) {
+                const color = `color:${escapeHtml(p.customColor)};`;
                 let cls = 'player-name-custom';
                 if (isAsst) cls += ' coadmin-badge';
-                return `<span class="${cls}" style="${color}">${emoji} ${name}${vipTag}</span>`;
+                return `<span class="${cls}" style="${color}">${name}${vipTag}</span>`;
             }
             if (isAsst) {
                 return `<span class="coadmin-badge">⚡ ${name}${vipTag}</span>`;
             }
-            return `<span class="player-name-custom">${avatar} ${name}${vipTag}</span>`;
-        }
-
-        function getPlayerAvatar(p) {
-            if (!p) return '👤';
-            // ادمین همیشه 🚬
-            if (p.name === ADMIN_NAME) return '🚬';
-            return p.customEmoji || '👤';
+            return `<span class="player-name-custom">${name}${vipTag}</span>`;
         }
 
         // ===== آواتار و بنر ویژه VIP =====
@@ -5456,7 +5411,31 @@
             </svg>`;
             return svgToDataUri(svg);
         }
-        // ===== آواتار و بنر رندومِ مشترک (برای همه کاربران غیر VIP) =====
+        // ===== آواتار و بنر پیش‌فرض بر اساس جناح (رایگان) =====
+        // 🆕 اگر بازیکن عضو یک جناح باشد، آواتار و بنر پیش‌فرضِ او (که رایگان است و
+        // نیازی به VIP ندارد) دیگر تصادفی نیست؛ بلکه دقیقاً بر اساس ایموجی و رنگ‌بندی
+        // همان جناح ساخته می‌شود (با همان تابع genAvatarImg/genBannerImg که برای
+        // ساخت تصاویر SVG استفاده می‌شود). این تغییر فقط روی نحوه‌ی نمایش تأثیر دارد
+        // و هیچ اطلاعاتی از بازیکنان (طلا، نفت، فلز، XP، دوستان، جناح و ...) را پاک نمی‌کند.
+        const FACTION_VISUALS = {
+            sky_knights:    { emoji: '🛡️', c1: '#0f2038', c2: '#1e3a5f', c3: '#0a1526', accent: '#60a5fa' },
+            red_baron:      { emoji: '🌹', c1: '#450a0a', c2: '#7f1d1d', c3: '#2c0505', accent: '#f87171' },
+            iron_cross:     { emoji: '✠',  c1: '#1c1f24', c2: '#3a3f47', c3: '#0f1114', accent: '#cbd5e1' },
+            grey_wolves:    { emoji: '🐺', c1: '#1e2530', c2: '#3f4a5a', c3: '#10141b', accent: '#9ca3af' },
+            desert_falcons: { emoji: '🦅', c1: '#4a2f06', c2: '#b45309', c3: '#2c1c04', accent: '#fbbf24' },
+            sky_phantoms:   { emoji: '👻', c1: '#1a0a2e', c2: '#4c1d95', c3: '#100620', accent: '#c084fc' }
+        };
+        function getFactionAvatarImg(fId) {
+            const v = FACTION_VISUALS[fId];
+            if (!v) return null;
+            return genAvatarImg(v.emoji, v.c1, v.c2, v.c3, v.accent);
+        }
+        function getFactionBannerImg(fId) {
+            const v = FACTION_VISUALS[fId];
+            if (!v) return null;
+            return genBannerImg(v.emoji, v.c1, v.c2, v.c3, v.accent);
+        }
+        // ===== آواتار و بنر رندومِ مشترک (برای همه کاربران غیر VIP بدون جناح) =====
         // 🆕 این تصویر برای همه‌ی کاربران عادی (غیر VIP) دقیقاً یکسان است و
         // هر ۱۵ روز یک‌بار به‌صورت خودکار عوض می‌شود (بر اساس تاریخ، بدون نیاز به سرور).
         // کاربران VIP اگر آواتار/بنر ویژه انتخاب کرده باشند، همان را (ثابت) می‌بینند
@@ -5571,7 +5550,12 @@
             if (p && p.name === ADMIN_NAME) {
                 return { style: '', inner: '🚬', vip: false };
             }
-            // 🆕 آواتار رندومِ مشترک برای همه‌ی کاربران عادی؛ برای همه یکسان است
+            // 🆕 اگر بازیکن عضو یک جناح باشد، آواتار پیش‌فرض (رایگان) او بر اساس همان جناح است
+            if (p && p.faction && FACTION_VISUALS[p.faction]) {
+                const img = getFactionAvatarImg(p.faction);
+                return { style: `background-image:url('${img}');background-size:cover;background-position:center;background-repeat:no-repeat;`, inner: '', vip: false };
+            }
+            // آواتار رندومِ مشترک برای کاربران عادیِ بدون جناح؛ برای همه یکسان است
             // و هر ۱۵ روز یک‌بار خودکار عوض می‌شود
             const img = getRotatingAvatarImg();
             return { style: `background-image:url('${img}');background-size:cover;background-position:center;background-repeat:no-repeat;`, inner: '', vip: false };
@@ -5582,7 +5566,12 @@
                 const vb = getVipBanner(p.vipBannerId);
                 if (vb) return { css: `url('${vb.img}') center/cover no-repeat`, icon: vb.emoji, style: `background:url('${vb.img}') center/cover no-repeat;`, vip: true };
             }
-            // 🆕 بنر رندومِ مشترک برای همه‌ی کاربران عادی؛ برای همه یکسان است
+            // 🆕 اگر بازیکن عضو یک جناح باشد، بنر پیش‌فرض (رایگان) او بر اساس همان جناح است
+            if (p && p.faction && FACTION_VISUALS[p.faction]) {
+                const img = getFactionBannerImg(p.faction);
+                return { css: `url('${img}') center/cover no-repeat`, icon: '', style: `background:url('${img}') center/cover no-repeat;`, vip: false };
+            }
+            // بنر رندومِ مشترک برای کاربران عادیِ بدون جناح؛ برای همه یکسان است
             // و هر ۱۵ روز یک‌بار خودکار عوض می‌شود
             const img = getRotatingBannerImg();
             return { css: `url('${img}') center/cover no-repeat`, icon: '', style: `background:url('${img}') center/cover no-repeat;`, vip: false };
@@ -7964,7 +7953,7 @@
             h += `<div class="profile-banner ${selfBanner.vip ? 'vip-banner-img' : ''}" style="${selfBanner.style}"></div>`;
             // هدر
             h += `<div class="profile-header">
-                <div class="profile-avatar ${selfAv.vip ? 'vip-avatar-img' : ''}" style="${selfAv.style}" onclick="toggleAvatarSelector()">${selfAv.inner}</div>
+                <div class="profile-avatar ${selfAv.vip ? 'vip-avatar-img' : ''}" style="${selfAv.style}">${selfAv.inner}</div>
                 <div class="profile-name-area">
                     <div class="name">${escapeHtml(player.customName || player.name)}
                         ${!player.nameChanged ? `<button class="edit-btn" onclick="showChangeName()">✏️</button>` : ''}
@@ -7973,15 +7962,9 @@
                 </div>
             </div>`;
 
-            // انتخابگر آواتار ایموجی (برای همه بازیکنان)
-            h += `<div id="avatarSelector" style="display:none;" class="profile-avatar-selector">`;
-            AVATAR_EMOJIS.forEach(emoji => {
-                const selected = emoji === player.customEmoji ? 'selected' : '';
-                h += `<span class="emoji-option ${selected}" onclick="selectAvatar('${emoji}')">${emoji}</span>`;
-            });
-            h +=
-                `<input type="text" class="custom-emoji-input" id="customEmojiInput" placeholder="ایموجی دلخواه" value="${player.customEmoji || ''}" onchange="setCustomEmoji(this.value)">`;
-            h += `</div>`;
+            // 🆕 انتخابگر آواتار ایموجیِ ساده (قدیمی) کامل حذف شد؛ آواتار پیش‌فرض هر
+            // بازیکن دیگر ایموجی ساده نیست و به‌صورت خودکار (بر اساس جناح یا تصویر
+            // رندومِ مشترک) یا از میان آواتارهای گرافیکی VIP انتخاب می‌شود.
 
             // ===== آواتار و بنر ویژه VIP (برای اعضای VIP و همچنین ادمین) =====
             if (canUseVipCosmetics(player)) {
@@ -8157,45 +8140,8 @@
             applyAppTheme();
         }
 
-        // ===== توابع آواتار =====
-        let avatarSelectorOpen = false;
-
-        function toggleAvatarSelector() {
-            const el = document.getElementById('avatarSelector');
-            if (el) {
-                avatarSelectorOpen = !avatarSelectorOpen;
-                el.style.display = avatarSelectorOpen ? 'flex' : 'none';
-            }
-        }
-
-        window.selectAvatar = async function(emoji) {
-            if (!player) return;
-            player.customEmoji = emoji;
-            document.querySelectorAll('.emoji-option').forEach(el => {
-                el.classList.toggle('selected', el.textContent === emoji);
-            });
-            const input = document.getElementById('customEmojiInput');
-            if (input) input.value = emoji;
-            await saveAll(true);
-            updateUI();
-            renderProfile();
-            renderActiveTab();
-            toast(`✅ آواتار به ${emoji} تغییر یافت`, false, "peace");
-        };
-
-        window.setCustomEmoji = async function(value) {
-            if (!player) return;
-            const emoji = value.trim() || '👤';
-            player.customEmoji = emoji;
-            document.querySelectorAll('.emoji-option').forEach(el => {
-                el.classList.toggle('selected', el.textContent === emoji);
-            });
-            await saveAll(true);
-            updateUI();
-            renderProfile();
-            renderActiveTab();
-            toast(`✅ آواتار به ${emoji} تغییر یافت`, false, "peace");
-        };
+        // 🆕 توابع انتخاب آواتار ایموجیِ ساده (قدیمی) کامل حذف شدند؛ آواتار دیگر
+        // با ایموجی ساده انتخاب یا نمایش داده نمی‌شود.
 
         // ===== آواتار و بنر ویژه VIP =====
         window.selectVipAvatar = async function(id) {
@@ -8443,11 +8389,9 @@
         window.adminSetPlayerStyle = async function() {
             const id = document.getElementById('admStylePlayer').value;
             if (!id) return toast("بازیکن انتخاب کنید", true);
-            const emoji = document.getElementById('admStyleEmoji').value.trim() || '👤';
             const color = document.getElementById('admStyleColor').value;
             const t = allPlayers.find(p => p.id === id);
             if (!t) return toast("بازیکن یافت نشد", true);
-            t.customEmoji = emoji;
             t.customColor = color || '';
             await saveAll(true);
             adminPlayerHash = '';
@@ -9628,11 +9572,10 @@
                 h += `<option value="${p.id}">${escapeHtml(p.name)}</option>`;
             });
             h += `</select>
-                    <input type="text" id="admStyleEmoji" placeholder="ایموجی (مثلا ⭐)" style="flex:1;min-width:80px;" value="👤">
                     <input type="color" id="admStyleColor" value="#fbbf24" style="flex:0.5;min-width:50px;padding:2px;height:38px;">
                     <button class="btn btn-purple btn-sm" onclick="adminSetPlayerStyle()" style="flex:0.5;">💾 ذخیره</button>
                 </div>
-                <div style="font-size:0.5rem;color:var(--color-text-muted);">نکته: ایموجی و رنگ انتخاب شده در تمام بخش‌ها نمایش داده می‌شود (چت، رتبه، جنگ، بازار و ...)</div>
+                <div style="font-size:0.5rem;color:var(--color-text-muted);">نکته: آواتار ایموجی ساده دیگر وجود ندارد؛ فقط رنگ نام انتخاب‌شده در تمام بخش‌ها نمایش داده می‌شود (چت، رتبه، جنگ، بازار و ...)</div>
             </div>`;
             h += `<div class="admin-panel-box"><h3>🛡️ مدیریت جناح بازیکنان (فقط ادمین)</h3>
                 <div style="font-size:0.5rem;color:var(--color-text-muted);margin-bottom:8px;">ادمین می‌تواند جناح هر بازیکن (حتی خودش) را تغییر دهد یا از جناح فعلی خارج کند. هیچ اطلاعات دیگری از بازیکن حذف نمی‌شود.</div>
