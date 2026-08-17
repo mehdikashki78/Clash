@@ -506,6 +506,173 @@
             background: var(--color-assistant);
             border-bottom-color: var(--color-assistant);
         }
+
+        /* ================================================================
+           منوی کشویی (Drawer Menu) بالای صفحه — جذاب و شیک
+           ================================================================ */
+        .menu-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 16px 18px;
+            background: linear-gradient(135deg, var(--bg-tab-active) 0%, var(--bg-tab) 100%);
+            border-bottom: 2px solid var(--color-accent-dim);
+            box-shadow: 0 3px 14px rgba(245, 158, 11, 0.18);
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s, border-color 0.3s;
+            position: relative;
+        }
+        .menu-bar:active {
+            background: rgba(245, 158, 11, 0.1);
+        }
+        .menu-bar-current {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+        .menu-bar-icon {
+            font-size: 1.6rem;
+            filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.5));
+        }
+        .menu-bar-label {
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--color-accent);
+            letter-spacing: 0.2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .menu-bar-toggle {
+            width: 30px;
+            height: 22px;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .menu-bar-toggle span {
+            position: absolute;
+            right: 0;
+            width: 100%;
+            height: 3px;
+            border-radius: 3px;
+            background: var(--color-accent);
+            transition: transform 0.3s ease, opacity 0.25s ease, top 0.3s ease, background 0.3s;
+        }
+        .menu-bar-toggle span:nth-child(1) { top: 0; }
+        .menu-bar-toggle span:nth-child(2) { top: 9.5px; width: 70%; }
+        .menu-bar-toggle span:nth-child(3) { top: 19px; }
+        .menu-bar.open .menu-bar-toggle span:nth-child(1) {
+            top: 9.5px;
+            transform: rotate(45deg);
+        }
+        .menu-bar.open .menu-bar-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-bar.open .menu-bar-toggle span:nth-child(3) {
+            top: 9.5px;
+            transform: rotate(-45deg);
+        }
+        .tabs-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 5, 15, 0.55);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.18s ease, visibility 0s linear 0.18s;
+            z-index: 9400;
+        }
+        .tabs-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transition: opacity 0.18s ease;
+        }
+        .tabs {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            width: 100%;
+            max-width: 1100px;
+            max-height: min(78vh, 640px);
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(160deg, var(--bg-tab-active) 0%, var(--bg-tab) 100%);
+            border: 1px solid var(--color-border);
+            border-top: none;
+            border-radius: 0 0 1.4rem 1.4rem;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+            overflow: hidden auto;
+            transform: translateX(-50%) translateY(-10px);
+            transform-origin: top center;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: transform 0.2s ease, opacity 0.18s ease, visibility 0s linear 0.2s;
+            will-change: transform, opacity;
+            z-index: 9500;
+            padding: 6px;
+        }
+        .tabs.open {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transition: transform 0.2s ease, opacity 0.18s ease;
+        }
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--color-text-dim);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border-radius: 0.7rem;
+            text-align: right;
+            transition: background 0.2s ease, color 0.2s ease;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+        }
+        .tab:last-child {
+            border-bottom: none;
+        }
+        .tab .tab-ico {
+            font-size: 1.2rem;
+            width: 26px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .tab .tab-txt {
+            flex: 1;
+        }
+        .tab:hover {
+            color: var(--color-text);
+            background: rgba(245, 158, 11, 0.08);
+        }
+        .tab.active {
+            color: #0f172a;
+            background: var(--color-accent);
+            font-weight: 800;
+        }
+        .tab.admin-tab {
+            color: var(--color-banner-text);
+        }
+        .tab.admin-tab.active {
+            color: #fff;
+            background: var(--color-btn-danger);
+        }
+        .tab.coadmin-tab {
+            color: var(--color-assistant);
+        }
+        .tab.coadmin-tab.active {
+            color: #fff;
+            background: var(--color-assistant);
+        }
         .panel {
             display: none;
             padding: 12px;
@@ -1278,7 +1445,166 @@
             font-size: 1.2rem;
             text-align: center;
         }
-        .profile-stats-grid {
+
+        /* ================================================================
+           آواتار و بنر ویژه VIP
+           ================================================================ */
+        .profile-avatar.vip-avatar-img {
+            position: relative;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.35), 0 0 20px rgba(251, 191, 36, 0.4);
+        }
+        .profile-avatar.vip-avatar-img::after {
+            content: '💎';
+            position: absolute;
+            bottom: -3px;
+            left: -3px;
+            font-size: 0.9rem;
+            background: var(--bg-card);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 6px rgba(251, 191, 36, 0.6);
+        }
+        .chat-avatar.vip-avatar-img {
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35), 0 0 0 2px rgba(251, 191, 36, 0.55);
+        }
+        .profile-banner.vip-banner-img {
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(251, 191, 36, 0.25);
+        }
+        .vip-picker-section .title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .vip-picker-hint {
+            font-size: 0.55rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+        }
+        .vip-avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .vip-avatar-option {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+        }
+        .vip-avatar-option span {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            font-size: 0.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            padding: 3px 2px 4px;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+        }
+        .vip-avatar-option:hover {
+            transform: scale(1.08) translateY(-2px);
+        }
+        .vip-avatar-option.selected {
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.3), 0 4px 14px rgba(251, 191, 36, 0.35);
+        }
+        .vip-avatar-option.none-option {
+            background: var(--bg-tab) !important;
+            font-size: 1.2rem;
+            color: var(--color-text-dim);
+            align-items: center;
+        }
+        .vip-banner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .vip-banner-option {
+            height: 56px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+        }
+        .vip-banner-option::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.05));
+            z-index: 0;
+        }
+        .vip-banner-option span {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+            position: relative;
+            z-index: 1;
+            padding: 0 6px;
+            text-align: center;
+        }
+        .vip-banner-option:hover {
+            transform: scale(1.04) translateY(-2px);
+        }
+        .vip-banner-option.selected {
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.3), 0 4px 14px rgba(251, 191, 36, 0.35);
+        }
+        .vip-banner-option.none-option {
+            background: var(--bg-tab) !important;
+        }
+        .vip-locked-box {
+            text-align: center;
+            background: linear-gradient(160deg, rgba(139, 92, 246, 0.08), rgba(245, 158, 11, 0.06));
+            border: 1px dashed var(--color-border);
+        }
+        .vip-locked-msg {
+            font-size: 0.65rem;
+            color: var(--color-text-dim);
+            line-height: 1.8;
+            margin-top: 4px;
+        }
+                .profile-stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
@@ -4804,19 +5130,30 @@
                 <div class="res-item">⛏️ فلز: <span id="rMetal">0</span></div>
                 <div class="res-item">⭐ XP: <span id="rXP">0</span></div>
             </div>
-            <div class="tabs">
-                <div class="tab active" data-tab="profile">👤 پروفایل</div>
-                <div class="tab" data-tab="mine">🪙 معدن</div>
-                <div class="tab" data-tab="military">⚔️ نظامی</div>
-                <div class="tab" data-tab="war">🔥 جنگ</div>
-                <div class="tab" data-tab="chat">💬 چت</div>
-                <div class="tab" data-tab="factions">🛡️ جناح‌ها</div>
-                <div class="tab" data-tab="market">🛒 بازار</div>
-                <div class="tab" data-tab="research">🔬 تحقیق</div>
-                <div class="tab" data-tab="rank">🏆 رتبه</div>
-                <div class="tab" data-tab="battlelog">📜 گزارش</div>
-                <div class="tab admin-tab admin-el is-hidden" data-tab="admin" id="tabAdmin">🛠️ مدیریت</div>
-                <div class="tab coadmin-tab coadmin-el is-hidden" data-tab="coadmin" id="tabCoadmin">⚡ کوادمین</div>
+            <!-- ===== منوی کشویی تب‌ها ===== -->
+            <div class="menu-bar" id="menuBar" onclick="toggleTabsMenu(event)">
+                <div class="menu-bar-current">
+                    <span class="menu-bar-icon" id="menuCurrentIcon">👤</span>
+                    <span class="menu-bar-label" id="menuCurrentLabel">پروفایل</span>
+                </div>
+                <div class="menu-bar-toggle" id="menuToggleIcon">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+            <div class="tabs-overlay" id="tabsOverlay" onclick="closeTabsMenu()"></div>
+            <div class="tabs" id="tabsMenu">
+                <div class="tab active" data-tab="profile"><span class="tab-ico">👤</span><span class="tab-txt">پروفایل</span></div>
+                <div class="tab" data-tab="mine"><span class="tab-ico">🪙</span><span class="tab-txt">معدن</span></div>
+                <div class="tab" data-tab="military"><span class="tab-ico">⚔️</span><span class="tab-txt">نظامی</span></div>
+                <div class="tab" data-tab="war"><span class="tab-ico">🔥</span><span class="tab-txt">جنگ</span></div>
+                <div class="tab" data-tab="chat"><span class="tab-ico">💬</span><span class="tab-txt">چت</span></div>
+                <div class="tab" data-tab="factions"><span class="tab-ico">🛡️</span><span class="tab-txt">جناح‌ها</span></div>
+                <div class="tab" data-tab="market"><span class="tab-ico">🛒</span><span class="tab-txt">بازار</span></div>
+                <div class="tab" data-tab="research"><span class="tab-ico">🔬</span><span class="tab-txt">تحقیق</span></div>
+                <div class="tab" data-tab="rank"><span class="tab-ico">🏆</span><span class="tab-txt">رتبه</span></div>
+                <div class="tab" data-tab="battlelog"><span class="tab-ico">📜</span><span class="tab-txt">گزارش</span></div>
+                <div class="tab admin-tab admin-el is-hidden" data-tab="admin" id="tabAdmin"><span class="tab-ico">🛠️</span><span class="tab-txt">مدیریت</span></div>
+                <div class="tab coadmin-tab coadmin-el is-hidden" data-tab="coadmin" id="tabCoadmin"><span class="tab-ico">⚡</span><span class="tab-txt">کوادمین</span></div>
             </div>
             <div id="panelProfile" class="panel active"><div id="profileContent"></div></div>
             <div id="panelMine" class="panel"><div id="mineContent"></div></div>
@@ -4965,6 +5302,11 @@
         // این متغیر نگه می‌دارد که آیا یک درخواست loadAll در حال اجراست یا نه،
         // تا بقیه‌ی توابع بتوانند قبل از تغییر داده‌ی حیاتی، منتظر پایان آن بمانند.
         let loadInFlight = null;
+        // 🔒 رفع باگ «انتخاب VIP زود حذف می‌شود»: اگر saveAll به هر دلیلی (قطعی شبکه،
+        // خطای سرور و...) ناموفق باشد، دیتای محلی (مثلاً آواتار/بنر تازه‌انتخاب‌شده)
+        // نباید توسط چرخه‌ی بعدی loadAll با نسخه‌ی قدیمی سرور بازنویسی شود.
+        // این پرچم فقط وقتی false می‌شود که ذخیره‌سازی واقعاً با موفقیت انجام شده باشد.
+        let playerSaveDirty = false;
         let globalBanner = "",
             chatLocked = false,
             mineTimer = null,
@@ -5033,6 +5375,221 @@
             // ادمین همیشه 🚬
             if (p.name === ADMIN_NAME) return '🚬';
             return p.customEmoji || '👤';
+        }
+
+        // ===== آواتار و بنر ویژه VIP =====
+        // 🔒 توجه: قبلاً از عکس‌های تصادفی loremflickr استفاده می‌شد که هیچ تضمینی
+        // نداشت با اسم/برچسب گزینه مرتبط باشد (مثلاً «پادشاه» یک عکس کاملاً بی‌ربط می‌گرفت).
+        // برای رفع کامل این باگ، به‌جای عکس‌های اینترنتی، هر آواتار/بنر با کد به‌صورت
+        // یک تصویر گرافیکی تیره و «خفن» (فریم شش‌ضلعی نئونی + هاله نور + خطوط انرژی)
+        // ساخته می‌شود که دقیقاً حول همان ایموجی/مضمون خودش است؛ یعنی صد در صد با
+        // اسمش مرتبط است، به هیچ سرویس بیرونی وابسته نیست و هرگز لینک مرده نمی‌شود.
+        function svgToDataUri(svg) {
+            return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+        }
+        // 🆕 تصاویر واقعی از ویکی‌مدیا کامنز (رسانه آزاد/مجاز) که دقیقاً با موضوع/اسم
+        // هر آواتار و بنر مرتبط هستند. از Special:FilePath استفاده می‌شود چون این لینک
+        // همیشه پایدار و مستقیم است و هرگز مرده نمی‌شود، حتی اگر فایل جابه‌جا شود.
+        function wikiImg(filename, width) {
+            // 🔒 رفع باگ: encodeURIComponent کاراکترهای ' ( ) ! ~ * را انکود نمی‌کند.
+            // چون این لینک داخل style="background-image:url('...')" (با کوتیشن تک)
+            // قرار می‌گیرد، وجود همین یک آپاستروف در اسم فایل (مثلاً Lion d'Afrique.jpg)
+            // رشته‌ی HTML را می‌شکست و باعث می‌شد کل کارت/ردیف خراب یا ناپدید شود.
+            // اینجا این کاراکترها را هم صریحاً درصدی (percent-encode) می‌کنیم.
+            const encoded = encodeURIComponent(filename)
+                .replace(/'/g, '%27')
+                .replace(/\(/g, '%28')
+                .replace(/\)/g, '%29')
+                .replace(/!/g, '%21')
+                .replace(/\*/g, '%2A');
+            return 'https://commons.wikimedia.org/wiki/Special:FilePath/' + encoded + '?width=' + width;
+        }
+        // تصویر آواتار: پس‌زمینه گرادیانی تیره + فریم شش‌ضلعی نئونی + هاله نور پشت ایموجی
+        // 🔒 نکته فنی: از کوتیشن دوتایی (") داخل SVG استفاده شده، چون encodeURIComponent
+        // کوتیشن تک (') را انکود نمی‌کند و باعث می‌شد data-URI داخل style="...url('...')"
+        // به‌خاطر همان کوتیشن‌های تک‌ِ رمزنشده قطع/خراب شود و اصلاً عکسی نمایش داده نشود.
+        function genAvatarImg(emoji, c1, c2, c3, accent) {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+                <defs>
+                    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="${c1}"/>
+                        <stop offset="55%" stop-color="${c2}"/>
+                        <stop offset="100%" stop-color="${c3}"/>
+                    </linearGradient>
+                    <radialGradient id="glow" cx="50%" cy="42%" r="58%">
+                        <stop offset="0%" stop-color="${accent}" stop-opacity="0.55"/>
+                        <stop offset="100%" stop-color="${accent}" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+                <rect width="200" height="200" fill="url(#g)"/>
+                <circle cx="100" cy="95" r="90" fill="url(#glow)"/>
+                <polygon points="100,6 178,50 178,150 100,194 22,150 22,50" fill="none" stroke="${accent}" stroke-opacity="0.45" stroke-width="2.5"/>
+                <polygon points="100,24 158,58 158,142 100,176 42,142 42,58" fill="none" stroke="${accent}" stroke-opacity="0.22" stroke-width="1.2"/>
+                <line x1="0" y1="100" x2="18" y2="100" stroke="${accent}" stroke-opacity="0.6" stroke-width="3"/>
+                <line x1="182" y1="100" x2="200" y2="100" stroke="${accent}" stroke-opacity="0.6" stroke-width="3"/>
+                <text x="100" y="128" font-size="92" text-anchor="middle">${emoji}</text>
+            </svg>`;
+            return svgToDataUri(svg);
+        }
+        // تصویر بنر: پس‌زمینه گرادیانی عریض + خطوط انرژی مورب + ایموجی بزرگ محو در پس‌زمینه + براکت‌های گوشه (استایل HUD)
+        function genBannerImg(emoji, c1, c2, c3, accent) {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300">
+                <defs>
+                    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="${c1}"/>
+                        <stop offset="50%" stop-color="${c2}"/>
+                        <stop offset="100%" stop-color="${c3}"/>
+                    </linearGradient>
+                    <radialGradient id="bglow" cx="78%" cy="50%" r="55%">
+                        <stop offset="0%" stop-color="${accent}" stop-opacity="0.4"/>
+                        <stop offset="100%" stop-color="${accent}" stop-opacity="0"/>
+                    </radialGradient>
+                    <pattern id="stripes" width="36" height="36" patternTransform="rotate(35)" patternUnits="userSpaceOnUse">
+                        <line x1="0" y1="0" x2="0" y2="36" stroke="${accent}" stroke-opacity="0.10" stroke-width="6"/>
+                    </pattern>
+                </defs>
+                <rect width="900" height="300" fill="url(#bg)"/>
+                <rect width="900" height="300" fill="url(#stripes)"/>
+                <ellipse cx="700" cy="150" rx="340" ry="220" fill="url(#bglow)"/>
+                <text x="700" y="215" font-size="230" text-anchor="middle" opacity="0.5">${emoji}</text>
+                <path d="M18,18 L18,55 M18,18 L55,18" stroke="${accent}" stroke-width="4" stroke-opacity="0.75" fill="none"/>
+                <path d="M882,18 L882,55 M882,18 L845,18" stroke="${accent}" stroke-width="4" stroke-opacity="0.75" fill="none"/>
+                <path d="M18,282 L18,245 M18,282 L55,282" stroke="${accent}" stroke-width="4" stroke-opacity="0.75" fill="none"/>
+                <path d="M882,282 L882,245 M882,282 L845,282" stroke="${accent}" stroke-width="4" stroke-opacity="0.75" fill="none"/>
+                <text x="55" y="195" font-size="90" text-anchor="start">${emoji}</text>
+            </svg>`;
+            return svgToDataUri(svg);
+        }
+        // ===== آواتار و بنر رندومِ مشترک (برای همه کاربران غیر VIP) =====
+        // 🆕 این تصویر برای همه‌ی کاربران عادی (غیر VIP) دقیقاً یکسان است و
+        // هر ۱۵ روز یک‌بار به‌صورت خودکار عوض می‌شود (بر اساس تاریخ، بدون نیاز به سرور).
+        // کاربران VIP اگر آواتار/بنر ویژه انتخاب کرده باشند، همان را (ثابت) می‌بینند
+        // و این چرخش رندوم روی آن‌ها اعمال نمی‌شود؛ فقط وقتی اشتراک VIP‌شان تمام شود
+        // به همین تصویر رندومِ مشترک برمی‌گردند (چون canUseVipCosmetics دیگر true نیست).
+        const ROTATING_VISUALS = [
+            { emoji: '🦅', c1: '#0c2b45', c2: '#1d6fa5', c3: '#08192b', accent: '#7dd3fc' },
+            { emoji: '🐉', c1: '#052e1c', c2: '#0f6b3c', c3: '#031a10', accent: '#34d399' },
+            { emoji: '🔥', c1: '#4a1207', c2: '#c2410c', c3: '#2c0a04', accent: '#fb923c' },
+            { emoji: '⚔️', c1: '#450a0a', c2: '#7f1d1d', c3: '#2c0505', accent: '#f87171' },
+            { emoji: '🛡️', c1: '#0f2038', c2: '#1e3a5f', c3: '#0a1526', accent: '#60a5fa' },
+            { emoji: '🌪️', c1: '#1c1917', c2: '#57534e', c3: '#292524', accent: '#e2e8f0' },
+            { emoji: '⚡', c1: '#1e0a3a', c2: '#6d28d9', c3: '#120524', accent: '#c4b5fd' },
+            { emoji: '🌋', c1: '#1a0402', c2: '#7c1d0a', c3: '#ea580c', accent: '#fb923c' },
+            { emoji: '🧊', c1: '#021018', c2: '#0f5d5d', c3: '#5eead4', accent: '#5eead4' },
+            { emoji: '🐺', c1: '#0a0a0f', c2: '#242430', c3: '#050507', accent: '#a5b4fc' }
+        ];
+        const ROTATION_EPOCH = Date.UTC(2025, 0, 1); // مبدا ثابت برای محاسبه‌ی دوره‌های ۱۵روزه
+        const ROTATION_PERIOD_DAYS = 15;
+        function getCurrentRotatingVisual() {
+            const daysPassed = Math.floor((Date.now() - ROTATION_EPOCH) / 86400000);
+            let idx = Math.floor(daysPassed / ROTATION_PERIOD_DAYS) % ROTATING_VISUALS.length;
+            if (idx < 0) idx += ROTATING_VISUALS.length;
+            return ROTATING_VISUALS[idx];
+        }
+        function getRotatingAvatarImg() {
+            const v = getCurrentRotatingVisual();
+            return genAvatarImg(v.emoji, v.c1, v.c2, v.c3, v.accent);
+        }
+        function getRotatingBannerImg() {
+            const v = getCurrentRotatingVisual();
+            return genBannerImg(v.emoji, v.c1, v.c2, v.c3, v.accent);
+        }
+        const VIP_AVATARS = [
+            { id: 'commander', emoji: '🎖️', label: 'فرمانده', c1: '#3a2f12', c2: '#5c4a1e', c3: '#2a2210', accent: '#f5c14b' },
+            { id: 'general', emoji: '⭐', label: 'ژنرال', c1: '#0f2038', c2: '#1e3a5f', c3: '#0a1526', accent: '#60a5fa' },
+            { id: 'warlord', emoji: '⚔️', label: 'سالار جنگ', c1: '#450a0a', c2: '#7f1d1d', c3: '#2c0505', accent: '#f87171' },
+            { id: 'guardian', emoji: '🤡', label: 'دلقک آشوبگر', c1: '#1a0a2e', c2: '#4c1d95', c3: '#100620', accent: '#c084fc' },
+            { id: 'eagle', emoji: '🦅', label: 'عقاب', c1: '#0c2b45', c2: '#1d6fa5', c3: '#08192b', accent: '#7dd3fc' },
+            { id: 'dragon', emoji: '🐉', label: 'اژدها', c1: '#052e1c', c2: '#0f6b3c', c3: '#031a10', accent: '#34d399' },
+            { id: 'phoenix', emoji: '🔥', label: 'ققنوس', c1: '#4a1207', c2: '#c2410c', c3: '#2c0a04', accent: '#fb923c' },
+            { id: 'ninja', emoji: '🥷', label: 'نینجا', c1: '#0a0a0f', c2: '#242430', c3: '#050507', accent: '#a5b4fc' },
+            { id: 'king', emoji: '👑', label: 'پادشاه', c1: '#4a2f06', c2: '#d4a017', c3: '#2c1c04', accent: '#fde68a' },
+            { id: 'mystic', emoji: '🧙', label: 'جادوگر', c1: '#1e0a3a', c2: '#6d28d9', c3: '#120524', accent: '#c4b5fd' },
+            { id: 'android', emoji: '🤖', label: 'ربات', c1: '#1c2129', c2: '#4b5563', c3: '#11151a', accent: '#93c5fd' },
+            { id: 'astro', emoji: '🧑\u200d🚀', label: 'فضانورد', c1: '#050818', c2: '#1e2a5e', c3: '#02030c', accent: '#818cf8' },
+            { id: 'pilot', emoji: '✈️', label: 'خلبان', c1: '#082a3d', c2: '#2196c9', c3: '#041824', accent: '#67e8f9' },
+            { id: 'ranger', emoji: '🏹', label: 'کماندار', c1: '#0f2c12', c2: '#2e7d32', c3: '#081a09', accent: '#86efac' },
+            { id: 'reaper', emoji: '💀', label: 'مرگ‌آور', c1: '#0a0a0a', c2: '#3a0a0a', c3: '#000000', accent: '#f87171' },
+            { id: 'lion', emoji: '🦁', label: 'شیر', c1: '#3a2408', c2: '#b45309', c3: '#241503', accent: '#fbbf24' }
+        ];
+        // نام فایل تصویر واقعی متناظر با هر آواتار در ویکی‌مدیا کامنز
+        const VIP_AVATAR_PHOTOS = {
+            commander: 'US Army Col. Myung H Kim.jpg',
+            general: 'General Norman Schwarzkopf, USA (uncovered).jpg',
+            warlord: 'Knight-in-Shining-Armour.jpg',
+            guardian: 'YoYo the clown in Circus Flora.jpg',
+            eagle: 'Steinadler Aquila chrysaetos closeup2 Richard Bartz.jpg',
+            dragon: 'Dragon sculpture at Bailuzhou Park, Xiamen.jpg',
+            phoenix: 'Phoenix rising from its ashes.jpg',
+            ninja: 'Ninja in 2006 Aizu parade.JPG',
+            king: 'Gold Diadem or Crown of Tutankhamun.jpg',
+            mystic: 'Cosplay of (wizard) Hatsune Miku.jpg',
+            android: 'Nao humanoid robot.jpg',
+            astro: 'Sunita Williams astronaut spacewalk.jpg',
+            pilot: '020117-N-3692H-502 Pilot in Cockpit.jpg',
+            ranger: 'Trakai Island Castle - archer.jpg',
+            reaper: 'The Grim reaper - geograph.org.uk - 7055506.jpg',
+            lion: "Lion d'Afrique.jpg"
+        };
+        VIP_AVATARS.forEach(a => { a.img = wikiImg(VIP_AVATAR_PHOTOS[a.id], 400); });
+        const VIP_BANNERS = [
+            { id: 'battlefield', name: 'میدان جنگ', emoji: '🔥', c1: '#450a0a', c2: '#7f1d1d', c3: '#c2410c', accent: '#fb923c' },
+            { id: 'night-sky', name: 'آسمان شب', emoji: '🌙', c1: '#020617', c2: '#0f1b3d', c3: '#1e2a5e', accent: '#93c5fd' },
+            { id: 'golden-empire', name: 'امپراتوری طلایی', emoji: '👑', c1: '#3a2606', c2: '#b45309', c3: '#f5c14b', accent: '#fde68a' },
+            { id: 'ocean-fleet', name: 'ناوگان اقیانوس', emoji: '⚓', c1: '#031321', c2: '#0c4a6e', c3: '#0e7490', accent: '#67e8f9' },
+            { id: 'toxic-zone', name: 'منطقه سمی', emoji: '☣️', c1: '#0a0f05', c2: '#1a2e05', c3: '#4d7c0f', accent: '#a3e635' },
+            { id: 'galaxy', name: 'کهکشان', emoji: '🪐', c1: '#0b0420', c2: '#3b0764', c3: '#6d28d9', accent: '#c4b5fd' },
+            { id: 'inferno', name: 'جهنم آتشین', emoji: '🌋', c1: '#1a0402', c2: '#7c1d0a', c3: '#ea580c', accent: '#fb923c' },
+            { id: 'aurora', name: 'شفق قطبی', emoji: '🌌', c1: '#021018', c2: '#0f5d5d', c3: '#5eead4', accent: '#5eead4' },
+            { id: 'crimson-steel', name: 'فولاد سرخ', emoji: '⚔️', c1: '#1c1917', c2: '#57534e', c3: '#7f1d1d', accent: '#f87171' },
+            { id: 'royal-purple', name: 'بنفش سلطنتی', emoji: '💜', c1: '#1e0a3a', c2: '#6d28d9', c3: '#d4a017', accent: '#c4b5fd' }
+        ];
+        // نام فایل تصویر واقعی متناظر با هر بنر در ویکی‌مدیا کامنز
+        const VIP_BANNER_PHOTOS = {
+            battlefield: 'WW1 Trench Warfare.jpg',
+            'night-sky': 'Milky Way Night Sky Black Rock Desert Nevada.jpg',
+            'golden-empire': 'Throne Room Stockholm Palace 2014.jpg',
+            'ocean-fleet': 'Fleet 5 nations.jpg',
+            'toxic-zone': 'Abandoned village near Chernobyl.jpg',
+            galaxy: 'NGC 4414 (NASA-med).jpg',
+            inferno: 'Sarychev peak eruption.jpg',
+            aurora: 'Aurora Borealis Alaska.jpg',
+            'crimson-steel': 'Hot metalwork.jpg',
+            'royal-purple': 'Amethyst (purple quartz) 6 (33060951505).jpg'
+        };
+        VIP_BANNERS.forEach(b => { b.img = wikiImg(VIP_BANNER_PHOTOS[b.id], 900); });
+        function getVipAvatar(id) { return VIP_AVATARS.find(a => a.id === id) || null; }
+        function getVipBanner(id) { return VIP_BANNERS.find(b => b.id === id) || null; }
+        // 🆕 حالا هم VIP و هم ادمین می‌توانند از آواتار/بنر ویژه استفاده کنند
+        function canUseVipCosmetics(p) {
+            return !!(p && (isVip(p) || p.name === ADMIN_NAME));
+        }
+        // خروجی: { style: 'background:...', inner: 'HTML', vip: boolean }
+        function getAvatarVisual(p) {
+            // کاربر VIP (یا ادمین) که آواتار ویژه انتخاب کرده: همان آواتار ثابت خودش را نگه می‌دارد
+            if (canUseVipCosmetics(p) && p.vipAvatarId) {
+                const va = getVipAvatar(p.vipAvatarId);
+                if (va) return { style: `background-image:url('${va.img}');background-size:cover;background-position:center;background-repeat:no-repeat;`, inner: '', vip: true };
+            }
+            // ادمین بدون انتخاب ویژه، همیشه ایموجی ثابت خودش را دارد
+            if (p && p.name === ADMIN_NAME) {
+                return { style: '', inner: '🚬', vip: false };
+            }
+            // 🆕 آواتار رندومِ مشترک برای همه‌ی کاربران عادی؛ برای همه یکسان است
+            // و هر ۱۵ روز یک‌بار خودکار عوض می‌شود
+            const img = getRotatingAvatarImg();
+            return { style: `background-image:url('${img}');background-size:cover;background-position:center;background-repeat:no-repeat;`, inner: '', vip: false };
+        }
+        function getBannerVisual(p) {
+            // کاربر VIP (یا ادمین) که بنر ویژه انتخاب کرده: همان بنر ثابت خودش را نگه می‌دارد
+            if (canUseVipCosmetics(p) && p.vipBannerId) {
+                const vb = getVipBanner(p.vipBannerId);
+                if (vb) return { css: `url('${vb.img}') center/cover no-repeat`, icon: vb.emoji, style: `background:url('${vb.img}') center/cover no-repeat;`, vip: true };
+            }
+            // 🆕 بنر رندومِ مشترک برای همه‌ی کاربران عادی؛ برای همه یکسان است
+            // و هر ۱۵ روز یک‌بار خودکار عوض می‌شود
+            const img = getRotatingBannerImg();
+            return { css: `url('${img}') center/cover no-repeat`, icon: '', style: `background:url('${img}') center/cover no-repeat;`, vip: false };
         }
 
         function styledName(n) {
@@ -5208,10 +5765,11 @@
 
             let h = `<div class="profile-card ${targetIsVip ? 'vip-profile-card' : ''}">`;
             // بنر
-            const bannerColor = target.bannerColor || '#1a1a2e';
-            h += `<div class="profile-banner" style="background:${bannerColor};"></div>`;
+            const targetBanner = getBannerVisual(target);
+            h += `<div class="profile-banner ${targetBanner.vip ? 'vip-banner-img' : ''}" style="${targetBanner.style}"></div>`;
+            const targetAv = getAvatarVisual(target);
             h += `<div class="profile-header">
-                <div class="profile-avatar">${getPlayerAvatar(target)}</div>
+                <div class="profile-avatar ${targetAv.vip ? 'vip-avatar-img' : ''}" style="${targetAv.style}">${targetAv.inner}</div>
                 <div class="profile-name-area">
                     <div class="name">${escapeHtml(target.customName || target.name)}${(!isAdm(target.name) && targetIsVip) ? vipTickHtml() : ''}</div>
                     <div class="sub">${target.nameChanged ? 'نام تغییر یافته' : 'نام اصلی'}</div>
@@ -5474,6 +6032,8 @@
                 sh: p.shieldExpiry,
                 ce: p.customEmoji || '',
                 cc: p.customColor || '',
+                va: p.vipAvatarId || '',
+                vb: p.vipBannerId || '',
                 jd: p.joinDate || ts(),
                 nc: p.nameChanged || false,
                 rc: p.referralCode || '',
@@ -5514,6 +6074,8 @@
                 shieldExpiry: c.sh || 0,
                 customEmoji: c.ce || '',
                 customColor: c.cc || '',
+                vipAvatarId: c.va || '',
+                vipBannerId: c.vb || '',
                 joinDate: c.jd || ts(),
                 nameChanged: c.nc || false,
                 referralCode: c.rc || '',
@@ -5551,12 +6113,14 @@
         async function saveAll(force = false) {
             if (!isConnected || saving) return false;
             saving = true;
+            playerSaveDirty = true;
             syncP();
             try {
                 const { error } = await db.from('game_state').upsert({ id: 'main_game', data: packData() },
                 { onConflict: 'id' });
                 if (error) throw error;
                 updateSyncUI("✅ online", "online");
+                playerSaveDirty = false;
                 return true;
             } catch (e) {
                 console.error(e);
@@ -5596,7 +6160,16 @@
                         vipRequests = j.vr || [];
                         if (player) {
                             const me = allPlayers.find(p => p.id === player.id);
-                            if (me) player = me;
+                            if (me) {
+                                if (playerSaveDirty) {
+                                    // یک ذخیره‌ی قبلی هنوز تایید نشده (مثلاً ناموفق بوده)؛
+                                    // داده‌ی محلی (تازه‌تر) را با نسخه‌ی قدیمی سرور جایگزین نکن،
+                                    // به‌جایش دوباره تلاش کن آن را ذخیره کنی.
+                                    saveAll(true);
+                                } else {
+                                    player = me;
+                                }
+                            }
                         }
                         // ✅ بعد از لود از سرور، ADMIN_PASS رو با player همگام کن
                         // (اگه ادمین باشه و رمزش رو خودش عوض کرده باشه)
@@ -5676,6 +6249,8 @@
                 shieldExpiry: 0,
                 customEmoji: '👤',
                 customColor: '',
+                vipAvatarId: '',
+                vipBannerId: '',
                 joinDate: ts(),
                 nameChanged: false,
                 referralCode: referralCode,
@@ -5876,7 +6451,7 @@
             return allPlayers.map(p => p.id + ':' + p.xp + ':' + p.gold + ':' + p.oil + ':' + p.metal + ':' + (p
                 .customEmoji || '') + ':' + (p.customColor || '') + ':' + p.customName + ':' + p.friends.join(',') +
                 ':' + p.referrals.length + ':' + p.bio + ':' + p.bannerColor + ':' + p.theme + ':' + (p.vip ? '1' :
-                '0') + ':' + (p.vipExpiry || 0)).join('|') + '|' +
+                '0') + ':' + (p.vipExpiry || 0) + ':' + (p.vipAvatarId || '') + ':' + (p.vipBannerId || '')).join('|') + '|' +
                 marketOffers.length + '|' + chatMessages.length + '|' + battleLogs.length + '|' + globalBanner + '|' +
                 chatLocked + '|' + assistantNames.join(',') + '|' + vipRequests.map(r => r.id).join(',');
         }
@@ -7063,13 +7638,17 @@
             const isSys = msg.sys;
             const isAI = msg.ai;
             const time = new Date(msg.ts).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
-            const sender = isAI ? '🤖 هوش مصنوعی' : (isSys ? '📢 سیستم' : getPlayerDisplayName(allPlayers.find(p => p.name === msg.n) || { name: msg.n }));
+            const senderPlayer = (!isSys && !isAI) ? allPlayers.find(p => p.name === msg.n) : null;
+            const sender = isAI ? '🤖 هوش مصنوعی' : (isSys ? '📢 سیستم' : getPlayerDisplayName(senderPlayer || { name: msg.n }));
             const sCls = isAI ? 'sender ai-s' : (isAdm(msg.n) ? 'sender admin-s' : (isAssistant(msg.n) ? 'sender coadmin-s' : 'sender'));
             const nameHtml = (isSys || isAI) ? sender :
-                `<span onclick="showProfileModal('${allPlayers.find(p=>p.name===msg.n)?.id||''}')" style="cursor:pointer;">${sender}</span>`;
+                `<span onclick="showProfileModal('${senderPlayer?.id||''}')" style="cursor:pointer;">${sender}</span>`;
             const hue = nameHue(msg.n);
+            const senderAv = senderPlayer ? getAvatarVisual(senderPlayer) : null;
             const avatarHtml = isAI ? `<div class="chat-avatar ai-avatar">🤖</div>` : (isSys ? `<div class="chat-avatar sys-avatar">📢</div>` :
-                `<div class="chat-avatar" style="background:linear-gradient(135deg, hsl(${hue},70%,45%), hsl(${(hue+40)%360},70%,35%));">${escapeHtml(chatInitials(msg.n))}</div>`);
+                (senderAv && senderAv.vip ?
+                    `<div class="chat-avatar vip-avatar-img" style="${senderAv.style}">${senderAv.inner}</div>` :
+                    `<div class="chat-avatar" style="background:linear-gradient(135deg, hsl(${hue},70%,45%), hsl(${(hue+40)%360},70%,35%));">${escapeHtml(chatInitials(msg.n))}</div>`));
             let replyHtml = '';
             if (msg.re) {
                 replyHtml = `<div class="chat-reply-quote"><span class="chat-reply-name">↩️ ${msg.re.n}</span><span class="chat-reply-text">${msg.re.t}</span></div>`;
@@ -7387,16 +7966,16 @@
                 return { name: f.name, xp: f.xp, gold: f.gold };
             }).sort((a, b) => b.xp - a.xp);
 
+            const selfBanner = getBannerVisual(player);
+            const selfAv = getAvatarVisual(player);
             let h = `<div class="profile-card">`;
-            // بنر با انتخاب رنگ
-            h += `<div class="profile-banner" style="background:${player.bannerColor || '#1a1a2e'};">
-                <div class="banner-color-picker">
-                    <input type="color" value="${player.bannerColor || '#1a1a2e'}" onchange="changeBannerColor(this.value)">
-                </div>
-            </div>`;
+            // بنر با انتخاب رنگ یا بنر ویژه VIP
+            // 🆕 چون بنر پیش‌فرض حالا تصویر رندومِ مشترک (چرخشی هر ۱۵ روز) است،
+            // انتخابگر رنگ بنر دیگر تأثیری روی نمایش ندارد و مخفی شده است.
+            h += `<div class="profile-banner ${selfBanner.vip ? 'vip-banner-img' : ''}" style="${selfBanner.style}"></div>`;
             // هدر
             h += `<div class="profile-header">
-                <div class="profile-avatar" onclick="toggleAvatarSelector()">${getPlayerAvatar(player)}</div>
+                <div class="profile-avatar ${selfAv.vip ? 'vip-avatar-img' : ''}" style="${selfAv.style}" onclick="toggleAvatarSelector()">${selfAv.inner}</div>
                 <div class="profile-name-area">
                     <div class="name">${escapeHtml(player.customName || player.name)}
                         ${!player.nameChanged ? `<button class="edit-btn" onclick="showChangeName()">✏️</button>` : ''}
@@ -7405,7 +7984,7 @@
                 </div>
             </div>`;
 
-            // انتخابگر آواتار
+            // انتخابگر آواتار ایموجی (برای همه بازیکنان)
             h += `<div id="avatarSelector" style="display:none;" class="profile-avatar-selector">`;
             AVATAR_EMOJIS.forEach(emoji => {
                 const selected = emoji === player.customEmoji ? 'selected' : '';
@@ -7414,6 +7993,36 @@
             h +=
                 `<input type="text" class="custom-emoji-input" id="customEmojiInput" placeholder="ایموجی دلخواه" value="${player.customEmoji || ''}" onchange="setCustomEmoji(this.value)">`;
             h += `</div>`;
+
+            // ===== آواتار و بنر ویژه VIP (برای اعضای VIP و همچنین ادمین) =====
+            if (canUseVipCosmetics(player)) {
+                h += `<div class="profile-settings vip-picker-section">
+                    <div class="title">💎 آواتار ویژه ${player.name === ADMIN_NAME ? '(ادمین)' : 'VIP'} <span class="vip-picker-hint">در چت و همه‌جا نمایش داده می‌شود</span></div>
+                    <div class="vip-avatar-grid">`;
+                VIP_AVATARS.forEach(a => {
+                    const sel = player.vipAvatarId === a.id ? 'selected' : '';
+                    h += `<div class="vip-avatar-option ${sel}" style="background-image:url('${a.img}');" onclick="selectVipAvatar('${a.id}')" title="${escapeHtml(a.label)}"><span>${escapeHtml(a.label)}</span></div>`;
+                });
+                h += `<div class="vip-avatar-option none-option ${!player.vipAvatarId ? 'selected' : ''}" onclick="selectVipAvatar('')" title="بدون آواتار ویژه">🚫</div>`;
+                h += `</div></div>`;
+
+                h += `<div class="profile-settings vip-picker-section">
+                    <div class="title">🎞️ بنر ویژه ${player.name === ADMIN_NAME ? '(ادمین)' : 'VIP'}</div>
+                    <div class="vip-banner-grid">`;
+                VIP_BANNERS.forEach(b => {
+                    const sel = player.vipBannerId === b.id ? 'selected' : '';
+                    h += `<div class="vip-banner-option ${sel}" style="background-image:url('${b.img}');" onclick="selectVipBanner('${b.id}')">
+                        <span>${sel ? '✓ ' : ''}${escapeHtml(b.name)}</span>
+                    </div>`;
+                });
+                h += `<div class="vip-banner-option none-option ${!player.vipBannerId ? 'selected' : ''}" onclick="selectVipBanner('')"><span>🚫 بدون بنر ویژه</span></div>`;
+                h += `</div></div>`;
+            } else {
+                h += `<div class="profile-settings vip-locked-box">
+                    <div class="title">💎 آواتار و بنر ویژه VIP</div>
+                    <div class="vip-locked-msg">با ارتقا به عضویت VIP، مجموعه‌ای از آواتارهای اختصاصی و بنرهای زیبا برای پروفایل، چت و همه‌جای بازی باز می‌شود. 🔒</div>
+                </div>`;
+            }
 
             // تغییر نام
             if (!player.nameChanged) {
@@ -7632,6 +8241,27 @@
             renderProfile();
             renderActiveTab();
             toast(`✅ آواتار به ${emoji} تغییر یافت`, false, "peace");
+        };
+
+        // ===== آواتار و بنر ویژه VIP =====
+        window.selectVipAvatar = async function(id) {
+            if (!player) return;
+            if (!canUseVipCosmetics(player)) return toast('این قابلیت مخصوص اعضای ویژه VIP است 💎', true);
+            player.vipAvatarId = id || '';
+            await saveAll(true);
+            updateUI();
+            renderProfile();
+            renderActiveTab();
+            toast(id ? '✅ آواتار ویژه اعمال شد' : '✅ آواتار ویژه حذف شد', false, "peace");
+        };
+
+        window.selectVipBanner = async function(id) {
+            if (!player) return;
+            if (!canUseVipCosmetics(player)) return toast('این قابلیت مخصوص اعضای ویژه VIP است 💎', true);
+            player.vipBannerId = id || '';
+            await saveAll(true);
+            renderProfile();
+            toast(id ? '✅ بنر ویژه اعمال شد' : '✅ بنر ویژه حذف شد', false, "peace");
         };
 
         // ===== توابع پروفایل جدید =====
@@ -8922,6 +9552,8 @@
             });
             h += `</select>
                     <select id="admVipDays" style="flex:1;min-width:90px;">
+                        <option value="3">۳ روزه</option>
+                        <option value="7">۷ روزه</option>
                         <option value="30">۳۰ روزه</option>
                         <option value="60">۶۰ روزه</option>
                         <option value="90">۹۰ روزه</option>
@@ -9259,8 +9891,58 @@
             } catch (e) { console.error('syncLoop error:', e); } finally { syncLoopRunning = false; }
         }
 
+        // ===== منوی کشویی: باز/بسته کردن =====
+        const TAB_META = {
+            profile: { icon: '👤', label: 'پروفایل' },
+            mine: { icon: '🪙', label: 'معدن' },
+            military: { icon: '⚔️', label: 'نظامی' },
+            war: { icon: '🔥', label: 'جنگ' },
+            chat: { icon: '💬', label: 'چت' },
+            factions: { icon: '🛡️', label: 'جناح\u200cها' },
+            market: { icon: '🛒', label: 'بازار' },
+            research: { icon: '🔬', label: 'تحقیق' },
+            rank: { icon: '🏆', label: 'رتبه' },
+            battlelog: { icon: '📜', label: 'گزارش' },
+            admin: { icon: '🛠️', label: 'مدیریت' },
+            coadmin: { icon: '⚡', label: 'کوادمین' }
+        };
+        function updateMenuBarLabel(t) {
+            const meta = TAB_META[t];
+            if (!meta) return;
+            const ic = document.getElementById('menuCurrentIcon');
+            const lb = document.getElementById('menuCurrentLabel');
+            if (ic) ic.textContent = meta.icon;
+            if (lb) lb.textContent = meta.label;
+        }
+        function toggleTabsMenu(e) {
+            if (e) e.stopPropagation();
+            const menu = document.getElementById('tabsMenu');
+            const overlay = document.getElementById('tabsOverlay');
+            const bar = document.getElementById('menuBar');
+            if (!menu || !overlay || !bar) return;
+            const isOpen = menu.classList.contains('open');
+            if (isOpen) closeTabsMenu();
+            else {
+                menu.classList.add('open');
+                overlay.classList.add('active');
+                bar.classList.add('open');
+            }
+        }
+        function closeTabsMenu() {
+            const menu = document.getElementById('tabsMenu');
+            const overlay = document.getElementById('tabsOverlay');
+            const bar = document.getElementById('menuBar');
+            if (menu) menu.classList.remove('open');
+            if (overlay) overlay.classList.remove('active');
+            if (bar) bar.classList.remove('open');
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeTabsMenu();
+        });
+
         document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', function() {
+            tab.addEventListener('click', function(ev) {
+                ev.stopPropagation();
                 const t = this.dataset.tab;
                 if (t === 'admin' && !isAdmin()) return;
                 if (t === 'coadmin' && !isCoadmin()) return;
@@ -9269,8 +9951,10 @@
                 this.classList.add('active');
                 document.getElementById('panel' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active');
                 activeTab = t;
+                updateMenuBarLabel(t);
                 renderActiveTab();
                 setTimeout(syncLoop, 100);
+                setTimeout(closeTabsMenu, 160);
             });
         });
 
