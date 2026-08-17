@@ -9967,6 +9967,16 @@
             setInterval(syncLoop, SYNC_INTERVAL);
             setTimeout(syncLoop, 300);
         })();
+
+        // ===== ثبت Service Worker برای نمایش صفحه‌ی اختصاصی «قطع اینترنت» =====
+        // 🔒 این کار جایگزین صفحه‌ی خطای پیش‌فرض مرورگر (که آدرس واقعی سایت را
+        // نشان می‌دهد) با صفحه‌ی offline.html هم‌سبک با لوگوی خود بازی می‌شود.
+        // sw.js باید در همان مسیر/دامنه‌ی index.html آپلود شده باشد.
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(() => {});
+            });
+        }
     </script>
 </body>
 </html>
