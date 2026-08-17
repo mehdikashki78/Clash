@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!-- 🔒 عمداً هیچ‌جای این صفحه آدرس/دامنه‌ی واقعی سایت نوشته یا خوانده نمی‌شود -->
+<title>ارتباط برقرار نیست</title>
+<style>
+    :root {
+        --bg-body: #0a0a1a;
+        --color-text: #e2e8f0;
+        --color-text-dim: #94a3b8;
+        --color-accent: #fbbf24;
+        --color-accent-dim: #f59e0b;
+        --color-border: #f59e0b44;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    html, body {
+        height: 100%;
+        background: radial-gradient(ellipse at center, #0f0f2a 0%, #05050f 100%);
+    }
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        color: var(--color-text);
+        text-align: center;
+    }
+    .box {
+        max-width: 380px;
+        width: 100%;
+    }
+    .icon-wrap {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        margin: 0 auto 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .icon-wrap .ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 2px solid var(--color-border);
+        opacity: 0.5;
+    }
+    .icon-wrap .ring:nth-child(1) { inset: 0; }
+    .icon-wrap .ring:nth-child(2) { inset: 12px; opacity: 0.3; }
+    .icon-wrap .bolt {
+        font-size: 2.6rem;
+        filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.5));
+        opacity: 0.55;
+        animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 0.35; transform: scale(0.96); }
+        50% { opacity: 0.75; transform: scale(1.04); }
+    }
+    .title {
+        font-size: 1.9rem;
+        font-weight: 900;
+        letter-spacing: 3px;
+        background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 4px;
+    }
+    .sub {
+        font-size: 0.8rem;
+        color: var(--color-text-dim);
+        letter-spacing: 3px;
+        margin-bottom: 28px;
+        opacity: 0.85;
+    }
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #1a0a0a;
+        color: #fca5a5;
+        border: 1px solid #ef444455;
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 18px;
+    }
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ef4444;
+        box-shadow: 0 0 8px #ef4444;
+        animation: blink 1.4s ease-in-out infinite;
+    }
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+    .msg {
+        font-size: 1rem;
+        line-height: 1.9;
+        color: var(--color-text);
+        margin-bottom: 8px;
+    }
+    .msg-sub {
+        font-size: 0.78rem;
+        color: var(--color-text-dim);
+        line-height: 1.8;
+        margin-bottom: 28px;
+    }
+    .retry-btn {
+        background: linear-gradient(90deg, var(--color-accent), var(--color-accent-dim));
+        color: #0f172a;
+        border: none;
+        border-radius: 30px;
+        padding: 12px 32px;
+        font-size: 0.9rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+    }
+    .retry-btn:active {
+        transform: scale(0.97);
+    }
+    .retry-note {
+        margin-top: 14px;
+        font-size: 0.68rem;
+        color: var(--color-text-dim);
+        opacity: 0.7;
+    }
+</style>
+</head>
+<body>
+    <div class="box">
+        <div class="icon-wrap">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="bolt">⚡</div>
+        </div>
+        <div class="title">IRON SKY</div>
+        <div class="sub">آسمان آهنین</div>
+
+        <div class="status-badge">
+            <span class="status-dot"></span>
+            <span>ارتباط قطع است</span>
+        </div>
+
+        <div class="msg">📶 اتصال به اینترنت برقرار نیست</div>
+        <div class="msg-sub">لطفاً ارتباط اینترنت خود را بررسی کنید و دوباره تلاش کنید.</div>
+
+        <button class="retry-btn" onclick="location.reload()">🔄 تلاش دوباره</button>
+        <div class="retry-note" id="autoNote">به‌محض وصل شدن اینترنت، صفحه به‌صورت خودکار تازه می‌شود…</div>
+    </div>
+
+    <script>
+        // 🔒 هیچ آدرس/دامنه‌ای در این صفحه نمایش داده نمی‌شود.
+        window.addEventListener('online', function () {
+            location.reload();
+        });
+        // اگر مرورگر همین الان هم آنلاین تشخیص داد (مثلاً کش قدیمی این صفحه لود شده)، بررسی مجدد
+        if (navigator.onLine) {
+            setTimeout(function () { location.reload(); }, 600);
+        }
+    </script>
+</body>
+</html>
